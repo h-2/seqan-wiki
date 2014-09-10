@@ -96,7 +96,7 @@ int main()
 <pre>
 #FoldOut
 ----
-[[Include(source:tags/seqan-1.4.0/core/demos/tutorial/index/indices_assignment_1.cpp)]]
+```html:github:seqan/seqan/master/core/demos/tutorial/index/indices_assignment_1.cpp```
 </pre>
 </pre>
 
