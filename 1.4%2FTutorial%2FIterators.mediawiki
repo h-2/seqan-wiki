@@ -1,19 +1,20 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
-=  Iterators =
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[Tutorial]] if you need the documentation for the trunk version.'''
+==  Iterators ==
 
 [[TOC()]]
 
- Learning Objective :: You will learn how to use iterators to traverse containers in SeqAn. After this tutorial, you will be ready to continue with the tutorials about iterating on more complex structures, e.g. [wiki:Tutorial/IndexIterators]. 
+ Learning Objective :: You will learn how to use iterators to traverse containers in SeqAn. After this tutorial, you will be ready to continue with the tutorials about iterating on more complex structures, e.g. [[Tutorial/IndexIterators]]. 
  Difficulty :: Basic
  Duration :: 30 min
  Prerequisites :: 
-  [wiki:Tutorial/Sequences]
+  [[Tutorial/Sequences]]
 
 Iterators are objects that can be used to browse through the values of containers such as [seqan:Class.String Strings] or [seqan:Class.Segment Segments].
 SeqAn also offers a range of iterators to traverse efficiently more complex data structures, e.g. [seqan:Class.Graph Graphs], whose specific usage will be explained in the corresponding tutorials.
 This tutorial will introduce you into the basic concept of iterators using seqan:Class.String iterators as illustration.
 
-== Defining Iterators ==
+=== Defining Iterators ===
 
 This section will show you how to define different kinds of iterators.
 
@@ -24,53 +25,53 @@ The more elaborated [seqan:"Tag.Iterator Spec" Rooted] iterator, i.e., an iterat
 [seqan:"Tag.Iterator Spec" Rooted] tag.
 The construction of an iterator in SeqAn, e.g. for a seqan:Shortcut.DnaString, could look like the following:
 
-{{{
-#!cpp
+<pre>
+#cpp
 Iterator<DnaString>::Type it1; // A standard iterator 
 Iterator<DnaString, Standard>::Type it2;  // Same as above
 Iterator<DnaString, Rooted>::Type   it3;  // A rooted iterator 
-}}}
+</pre>
 
 
-{{{#!InfoBox
+<pre>#InfoBox
 '''In-Depth Information:''' The default iterator implementation is [seqan:"Tag.Iterator Spec" Standard].
 Rooted iterators offer some convenience for the user: They offer additional functions like seqan:Function.container for determining the container on which the iterator works, and they simplify the interface for other functions like seqan:Function.atEnd.
 Moreover, rooted iterators may change the container’s length or capacity, which makes it possible to implement a more intuitive variant of a remove algorithm. 
 
 While rooted iterators can usually be converted into standard iterators, it is not always possible to convert standard iterators back into rooted iterators, since standard iterators may lack the information about the container they work on. Therefore, many functions that return iterators like seqan:function.begin or seqan:function.end return rooted iterators instead of standard iterators; this way, they can be used to set both rooted and standard iterator variables. Alternatively it is possible to specify the returned iterator type explicitly by passing the iterator kind as a tag argument, e.g. 
-`begin(str, Standard())`. 
-}}}
+<tt>begin(str, Standard())</tt>. 
+</pre>
 
-== Traversing Containers ==
+=== Traversing Containers ===
 
 In this section you will learn how to iterate over a container using the basic functionality of iterators.
 
 An iterator always points to one value of the container.
-The function seqan:Function.value, which is equivalent to the {{{operator*}}}, can be used to access this value by reference. 
+The function seqan:Function.value, which is equivalent to the <tt>operator*</tt>, can be used to access this value by reference. 
 In contrast seqan:Function.getValue return a copy of the value.
-Functions like seqan:Function.goNext or seqan:Function.goPrevious, which are equivalent to {{{operator++}}} and {{{operator--}}} respectively, can be used to move the iterator to other values within the container.
+Functions like seqan:Function.goNext or seqan:Function.goPrevious, which are equivalent to <tt>operator++</tt> and <tt>operator--</tt> respectively, can be used to move the iterator to other values within the container.
 
 The functions seqan:Function.begin and seqan:Function.end, applied to a container, return iterators to the begin and to the end of the container.
 Note that similar to C++ standard library iterators, the iterator returned by seqan:Function.end does not point to the last value of the container but to the position behind the last one.
-If the container is empty then {{{end() == begin()}}}.
+If the container is empty then <tt>end() == begin()</tt>.
 
 The following code prints out a sequence and demonstrates how to iterate over a string.
 
-{{{#!cpp
+<pre>#cpp
 DnaString genome = "ACGTACGTACGTN";
 typedef Iterator<DnaString>::Type TIterator;
 for (TIterator it = begin(str); it != end(str); goNext(it))
 {
     std::cout << value(it);
 }
-}}}
+</pre>
 
-{{{#!ShellBox
+<pre>#ShellBox
 ACGTACGTACGTN
-}}}
+</pre>
 
 
-== A Working Example ==
+=== A Working Example ===
 
 Let us now clarify the usage of iterators with a working example.
 
@@ -87,18 +88,18 @@ We can use iterators to iterate over the elements of a container, e.g. to print 
 
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/iterators/sequence_iterator_demo.cpp, fragment=iterators)]]
 
-Instead of comparing the two iterators `it` and `itEnd`, we could also use the function  seqan:Function.atEnd to check whether we reached the end of the container.
+Instead of comparing the two iterators <tt>it</tt> and <tt>itEnd</tt>, we could also use the function  seqan:Function.atEnd to check whether we reached the end of the container.
  
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/iterators/sequence_iterator_demo.cpp, fragment=standard-iterators)]]
 
 Next we will use [seqan:"Tag.Iterator Spec" Rooted Iterators].
 Since [seqan:"Tag.Iterator Spec" Rooted Iterators] know their container, the functions seqan:Function.goBegin and seqan:Function.atEnd do not need to get the container as an argument.
-The following example prints for each element of the seqan:Shortcut.Dna5String {{{genome}}} its complement:
+The following example prints for each element of the seqan:Shortcut.Dna5String <tt>genome</tt> its complement:
 
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/iterators/sequence_iterator_demo.cpp, fragment=rooted-iterators)]]
 
 Some iterators support iteration in reverse order with seqan:Function.goPrevious as you can see in the next example.
-Note that seqan:Function.goPrevious is called before the value of {{{it2}}} is accessed.
+Note that seqan:Function.goPrevious is called before the value of <tt>it2</tt> is accessed.
 Remember that the end position of a container is always the position behind the last item in the container.
 
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/iterators/sequence_iterator_demo.cpp, fragment=iterator-reverse)]]
@@ -109,24 +110,24 @@ seqan:Function.assignValue can be used to change the value of an iterator.
 
 The output of the program is:
 
-{{{#!ShellBox
+<pre>#ShellBox
 TATANNNGCGCG
 TATANNNGCGCG
 ATATNNNCGCGC
 GCGCGNNNATAT
 NATANNNGCGCG
-}}}
+</pre>
 
 
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 
-=== Assignment 1 ===
+==== Assignment 1 ====
  Type :: 
   Review
  Objective :: 
   Copy the code below, which replaces all N's of a given seqan:Class.String with A's. Adjust the code to use iterators to traverse the container. Use the [seqan:"Tag.Iterator Spec" Standard] iterator.
 
-{{{#!cpp
+<pre>#cpp
 #include <iostream>
 #include <seqan/sequence.h>
 #include <seqan/file.h>
@@ -143,36 +144,36 @@ int main()
     std::cout << "Modified genome: " << genome << std::endl;
     return 0;
 }
-}}}
+</pre>
 
  Solution :: 
   Click ''more...'' to see the solution. 
-{{{#!FoldOut
+<pre>#FoldOut
 ----
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/iterators/iterators_assignment_1_solution.cpp)]]
-}}}
+</pre>
 
 
-=== Assignment 2 ===
+==== Assignment 2 ====
  Type :: 
   Application
  Objective :: 
   Use the code from above and change the [seqan:"Tag.Iterator Spec" Standard] to a [seqan:"Tag.Iterator Spec" Rooted] iterator. Try to shorten the code wherever possible.
  Solution :: 
   Click ''more...'' to see the solution. 
-{{{#!FoldOut
+<pre>#FoldOut
 ----
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/iterators/iterators_assignment_2_solution.cpp)]]
-}}}
+</pre>
 
-=== Workshop Assignment 3 ===
+==== Workshop Assignment 3 ====
  Type ::
   Review
  Objective :: 
    In this assignment, we pick up the example from the workshop assignments from the sequences tutorial. Take the last solution and change the code to use Iterators. First, use Standard Iterators to do this.
-[[br]]
+<br>
  
-{{{#!cpp
+<pre>#cpp
 #include <iostream>
 #include <seqan/sequence.h> 
 #include <seqan/file.h>
@@ -234,38 +235,42 @@ int main(int, char const **)
 
     // Iterators :)
     // Print alignments using Iterators: Do the same as above, but use Iterators to iterate over the read list.
-    // First, use Standard Iterators: Build two iterators {{{it}}} and {{{itEnd}}} to traverse {{{readList}}}.
+    // First, use Standard Iterators: Build two iterators <tt>it</tt> and <tt>itEnd</tt> to traverse <tt>readList</tt>.
     
     std::cout << " \n Print alignment using Standard Iterators: " << std::endl;
 
     return 1;
 }
-}}}
+</pre>
  Solution :: 
   Click ''more...'' to see the first solution.
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/iterators/iterators_assignment_3_workshop_solution.cpp)]]
-}}}
+</pre>
 
 
-=== Workshop Assignment 4 ===
+==== Workshop Assignment 4 ====
  Type ::
   Review
  Objective :: 
-   Now, use Rooted Iterators in the example from Workshop Assignment 3.[[br]]
+   Now, use Rooted Iterators in the example from Workshop Assignment 3.<br>
 
  Solution ::
    Click ''more...'' to see the solution.
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/iterators/iterators_assignment_4_workshop_solution.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
 
-== Submit a  Comment ==
+=== Submit a  Comment ===
 If you found a mistake, or have suggestions about an improvement of this page press:
 [/newticket?component=Documentation&description=Tutorial+Enhancement+for+page+http://trac.seqan.de/wiki/Tutorial/Template&type=enhancement submit your comment]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

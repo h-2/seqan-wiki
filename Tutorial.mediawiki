@@ -1,254 +1,259 @@
-{{{
-#!comment
+
+<pre>
+#comment
 BEGIN versionized-tutorial-section
-}}}
-{{{#!comment
+</pre>
+<pre>#comment
 <div id="notice" class="system-message">
 These tutorials use the current SeqAn <b>trunk</b> version and not a previous released version.
 The Tutorial is also available for the versions <a href="/wiki/1.4/Tutorial">1.4</a>.
 </div>
-}}}
-{{{
-#!comment
+</pre>
+<pre>
+#comment
 END versionized-tutorial-section
-}}}
+</pre>
 
-= SeqAn Tutorials =
+== SeqAn Tutorials ==
 [[TOC()]]
 
 The SeqAn tutorials are the best way to get started with learning how to develop using SeqAn.
-In contrast, the [http://docs.seqan.de API Documentation] gives more comprehensive but less verbose documentation about the library while the [wiki:HowTo How-Tos] are strictly task driven and narrower in scope.
+In contrast, the [http://docs.seqan.de API Documentation] gives more comprehensive but less verbose documentation about the library while the [[HowTo| How-Tos]] are strictly task driven and narrower in scope.
 
 The main audience of the tutorials are graduate students and professionals who want to learn how to use SeqAn.
 Previous programming knowledge is required, knowledge of C++ is recommended.
 
-{{{#!comment
-The chapter [wiki:Tutorial/HowToReadTutorials How To Read Tutorials] explains the different assignment types and typographic conventions used in the tutorials.
-}}}
+<pre>#comment
+The chapter [[Tutorial/HowToReadTutorials| How To Read Tutorials]] explains the different assignment types and typographic conventions used in the tutorials.
+</pre>
 
 ---- 
-== Introduction ==
+=== Introduction ===
 
-These tutorials show you how to get started with SeqAn, including the '''[wiki:Tutorial/GettingStarted installation]'''.
+These tutorials show you how to get started with SeqAn, including the '''[[Tutorial/GettingStarted| installation]]'''.
 Then, you can learn about the background and motivation of SeqAn.
-You should then definitely start your engines and read the '''[wiki:Tutorial/FirstStepsInSeqAn First Steps in SeqAn]''' tutorial to see an example highlighting many important concepts in the SeqAn library.
+You should then definitely start your engines and read the '''[[Tutorial/FirstStepsInSeqAn| First Steps in SeqAn]]''' tutorial to see an example highlighting many important concepts in the SeqAn library.
 
- * '''[wiki:Tutorial/GettingStarted Getting Started]'''
+*'''[[Tutorial/GettingStarted| Getting Started]]'''
    This tutorial will walk you through the installation of SeqAn and its dependencies.
    Then, you will create your first minimal SeqAn application!
- * '''[wiki:Tutorial/FirstStepsInSeqAn First Steps in SeqAn]'''
+*'''[[Tutorial/FirstStepsInSeqAn| First Steps in SeqAn]]'''
    This tutorial gives practical examples and applications of the most important basic techniques.
    You should read this tutorial if you are starting out with SeqAn.
- * '''[wiki:Tutorial/BackgroundAndMotivation Background and Motivation]'''
+*'''[[Tutorial/BackgroundAndMotivation| Background and Motivation]]'''
    This tutorial gives an overview over the design aims and principles of SeqAn and a motivation for the employed mechanisms.
-{{{#!comment 
+<pre>#comment 
 This material will be most interesting to those with above-average programming experience and you might want to skip it and go to the First Examples tutorial.
-}}}
+</pre>
 
 
 We highly recommend you to follow the Getting Started instructions if you are starting out with SeqAn.
 Note that it is also possible to use SeqAn strictly as a library with your own build system.
-The [wiki:BuildManual/IntegrationWithYourOwnBuildSystem How To: Use SeqAn In Your Projects] contains detailed information about this.
+The [[BuildManual/IntegrationWithYourOwnBuildSystem| How To: Use SeqAn In Your Projects]] contains detailed information about this.
 
 ----
-== A Stroll Through SeqAn ==
+=== A Stroll Through SeqAn ===
 If you enter this part of the tutorial we introduce you to the content of SeqAn. 
 We grouped the content into (somewhat arbitrary) categories, following those of the
 SeqAn book, namely:
- {{{#!comment  
- [wiki:Tutorial/Basics Basics]::
-   This section of the tutorial introduces you into the concepts of ''containers'' and ''values'', ''memory allocation'', ''alphabet types'' and different ''iterators'' in  !SeqAn.
-}}}
+ <pre>#comment  
+ [[Tutorial/Basics| Basics]]::
+   This section of the tutorial introduces you into the concepts of ''containers'' and ''values'', ''memory allocation'', ''alphabet types'' and different ''iterators'' in  SeqAn.
+</pre>
 
 '''Sequences'''
 
- * '''[wiki:Tutorial/Sequences Sequences]'''
-   This tutorial introduces you to the basics of fundamental concept of sequences, namely ```Strings``` and ```Segments```.
- * '''[wiki:Tutorial/Alphabets Alphabets]'''
+*'''[[Tutorial/Sequences| Sequences]]'''
+   This tutorial introduces you to the basics of fundamental concept of sequences, namely <tt><tt><tt>Strings</tt></tt><tt> and </tt><tt><tt>Segments</tt></tt></tt>.
+*'''[[Tutorial/Alphabets| Alphabets]]'''
    This tutorial introduces you to SeqAn's alphabets, or in other words, the contained types of sequences.
- * '''[wiki:Tutorial/StringSets StringSets]'''
-   This tutorial introduces you to SeqAn's ```StringSet```, an efficient data structure to store a set of sequences.
- * '''[wiki:Tutorial/SequencesInDepth Sequences In-Depth]'''
-   In this tutorial you will learn how to optimize the work with sequences, using different specializations of ```Strings``` and different overflow strategies for capacity changes.
+*'''[[Tutorial/StringSets| StringSets]]'''
+   This tutorial introduces you to SeqAn's <tt><tt><tt>StringSet</tt></tt></tt>, an efficient data structure to store a set of sequences.
+*'''[[Tutorial/SequencesInDepth| Sequences In-Depth]]'''
+   In this tutorial you will learn how to optimize the work with sequences, using different specializations of <tt><tt><tt>Strings</tt></tt></tt> and different overflow strategies for capacity changes.
 
 '''Iterators'''
 
- * '''[wiki:Tutorial/Iterators Iterators]'''
+*'''[[Tutorial/Iterators| Iterators]]'''
  This tutorial explains how to use iterators in SeqAn, illustrated on containers. 
  
 '''Alignments'''
- * '''[wiki:Tutorial/AlignmentRepresentation Alignment Representation]'''
+*'''[[Tutorial/AlignmentRepresentation| Alignment Representation]]'''
    This section of the tutorial introduces you to the data structures that are used to represent alignments in SeqAn. 
- * '''[wiki:Tutorial/PairwiseSequenceAlignment Pairwise Sequence Alignment]''' 
+*'''[[Tutorial/PairwiseSequenceAlignment| Pairwise Sequence Alignment]]''' 
    In this part of the tutorial we demonstrate how to compute pairwise sequence alignments in SeqAn. It shows the use of different scoring schemes, and which parameters can be used to customize the alignment algorithms.
- * '''[wiki:Tutorial/MultipleSequenceAlignment Multiple Sequence Alignment]''' 
+*'''[[Tutorial/MultipleSequenceAlignment| Multiple Sequence Alignment]]''' 
    In the last section of this tutorial we show how to compute multiple sequence alignments in SeqAn using a scoring matrix.
  
 '''Indices'''
 
- * '''[wiki:Tutorial/Indices Indices]'''
+*'''[[Tutorial/Indices| Indices]]'''
    This tutorial introduces you to the various indices in SeqAn like extended suffix arrays or k-mer indices.
- * '''[wiki:Tutorial/IndexIterators Index Iterators]'''
+*'''[[Tutorial/IndexIterators| Index Iterators]]'''
    This tutorial introduces you to the various index iterators with which you can use indices as if traversing search trees or tries.
- * '''[wiki:Tutorial/IndexQGram q-gram Index]'''
+*'''[[Tutorial/IndexQGram| q-gram Index]]'''
    This tutorial introduces you to SeqAn's q-gram index.
  
 '''Pattern Matching'''
- * '''[wiki:Tutorial/PatternMatching Pattern Matching]'''
+*'''[[Tutorial/PatternMatching| Pattern Matching]]'''
    This section of the tutorial introduces you to the algorithms in SeqAn for exact and approximate pattern matching.
 
 '''Graphs'''
 
- * '''[wiki:Tutorial/Graphs Graphs]'''
+*'''[[Tutorial/Graphs| Graphs]]'''
    This section of the tutorial introduces you to the graph type in SeqAn.
    We will discuss the various graph specializations and show you how to create directed and undirected graphs as well as HMMs, how to store additional information for edges and vertices and last but not least how to apply standard algorithms to the graphs.
 
 '''I/O Basics'''
 
- * '''[wiki:Tutorial/BasicSequenceIO Basic Sequence I/O]'''
+*'''[[Tutorial/BasicSequenceIO| Basic Sequence I/O]]'''
    This tutorial explains how to use the high-level API for reading and writing sequence files.
- * '''[wiki:Tutorial/IndexedFastaIO Indexed FASTA I/O]'''
+*'''[[Tutorial/IndexedFastaIO| Indexed FASTA I/O]]'''
    This tutorial explains how to use FASTA index files for quick random access within FASTA files: Read contigs or just sections without having to read through whole FASTA file.
- * '''[wiki:Tutorial/BasicSamBamIO Basic SAM and BAM I/O]'''
+*'''[[Tutorial/BasicSamBamIO| Basic SAM and BAM I/O]]'''
    This tutorial explains how to use the high-level API for reading and writing SAM and BAM files.
- * [[TextIcon(new, color=gray)]] '''[wiki:Tutorial/VcfIO VCF I/O]'''
+*[[TextIcon(new, color=gray)]] '''[[Tutorial/VcfIO| VCF I/O]]'''
    This tutorial explains how to use the high-level API for reading and writing VCF files.
- * [[TextIcon(new, color=gray)]] '''[wiki:Tutorial/BedIO BED I/O]'''
+*[[TextIcon(new, color=gray)]] '''[[Tutorial/BedIO| BED I/O]]'''
    This tutorial explains how to use the high-level API for reading and writing BED files.
- * [[TextIcon(new, color=gray)]] '''[wiki:Tutorial/GffGtfIO GFF and GTF I/O]'''
+*[[TextIcon(new, color=gray)]] '''[[Tutorial/GffGtfIO| GFF and GTF I/O]]'''
    This tutorial explains how to use the high-level API for reading and writing GFF and GTF files.
 
 '''Modifiers'''
 
- * '''[wiki:Tutorial/Modifiers Modifiers]'''
+*'''[[Tutorial/Modifiers| Modifiers]]'''
    Modifiers can be used to change the elements of a container without touching them. Here you will see, what modifiers are available in SeqAn.
 
 '''Randomness'''
 
- * '''[wiki:Tutorial/Randomness Randomness]'''
-   This chapter shows module `random` that provides pseudo random number generation functionality.
+*'''[[Tutorial/Randomness| Randomness]]'''
+   This chapter shows module <tt>random</tt> that provides pseudo random number generation functionality.
 
 '''Seed-And-Extend'''
 
- * [[TextIcon(updated, color=gray)]] '''[wiki:Tutorial/Seed-and-Extend Seed-And-Extend]'''
-   In this part of the tutorial we will introduce !SeqAn's seed class, demonstrate seed extension and banded alignment with seeds, and finally show the usage of seed chaining algorithms.
+*[[TextIcon(updated, color=gray)]] '''[[Tutorial/Seed-and-Extend| Seed-And-Extend]]'''
+   In this part of the tutorial we will introduce SeqAn's seed class, demonstrate seed extension and banded alignment with seeds, and finally show the usage of seed chaining algorithms.
 
 '''Parsing Command Line Arguments'''
 
- * '''[wiki:Tutorial/ParsingCommandLineArguments Parsing Command Line Arguments]'''
+*'''[[Tutorial/ParsingCommandLineArguments| Parsing Command Line Arguments]]'''
    In this tutorial, you will learn how to use the dox:ArgumentParser class for parsing command line arguments.
 
 '''Genome Annotations'''
 
- * '''[wiki:Tutorial/AnnotationStore Genome Annotations]'''
+*'''[[Tutorial/AnnotationStore| Genome Annotations]]'''
    You will learn how to work with annotations in SeqAn and analyzing them, using the dox:FragmentStore::annotationStore which is part of SeqAn's dox:FragmentStore.
 
 '''More I/O'''
 
 These tutorials explain how to use the I/O functionality in SeqAn beyond the basic sequence, SAM/BAM and indexed FASTA I/O from above.
 The tutorials are targeted at developers that either want to use the lower level I/O routines in SeqAn or write their own parsers.
-We recommended to start out reading the [wiki:Tutorial/InputOutputOverview I/O Overview] and then jump to the chapter that interests you most.
+We recommended to start out reading the [[Tutorial/InputOutputOverview| I/O Overview]] and then jump to the chapter that interests you most.
 
- * '''[wiki:Tutorial/InputOutputOverview I/O Overview]'''
+*'''[[Tutorial/InputOutputOverview| I/O Overview]]'''
    This article gives an overview of the I/O functionality in SeqAn.
    After reading, you will have a better understanding of the different bits in this section of the library.
 
 The following tutorials introduce the lower level I/O routines for specific file formats.
 
- * '''[wiki:Tutorial/SequenceFileIO Reading Sequence Files]'''
-   This tutorial explains the `RecordReader`- and `Stream`-based interface for reading sequence files.
- * '''[wiki:Tutorial/SamBamIO SAM and BAM I/O]'''
+*'''[[Tutorial/SequenceFileIO| Reading Sequence Files]]'''
+   This tutorial explains the <tt>RecordReader</tt>- and <tt>Stream</tt>-based interface for reading sequence files.
+*'''[[Tutorial/SamBamIO| SAM and BAM I/O]]'''
    This tutorial explains the lower level API for reading and writing SAM and BAM files.
 
 Read the following tutorials to learn how to write your own I/O routines.
 
- * '''[wiki:Tutorial/FileIO File I/O]'''
+*'''[[Tutorial/FileIO| File I/O]]'''
    This chapter shows how to use the file I/O facilities of SeqAn, including streams, compressed streams and memory mapped files.
- * '''[wiki:Tutorial/LexicalCasting Lexical Casting]'''
+*'''[[Tutorial/LexicalCasting| Lexical Casting]]'''
    This tutorial explains the dox:lexicalCast and dox:lexicalCast2 functions that allow to convert strings representing numbers into their numeric values.
- * '''[wiki:Tutorial/Parsing Parsing]'''
-   In this part of the tutorial, you will be introduced to the parsing and tokenizing functionality using the `RecordReader` class.
+*'''[[Tutorial/Parsing| Parsing]]'''
+   In this part of the tutorial, you will be introduced to the parsing and tokenizing functionality using the <tt>RecordReader</tt> class.
    You will get the necessary information to write your own file parsers.
 
 '''Motif Finding'''
 
- * '''[wiki:Tutorial/MotifFinding Motif Finding]'''
+*'''[[Tutorial/MotifFinding| Motif Finding]]'''
    This section of the tutorial introduces you to the algorithms in SeqAn for motif finding.
 
 ----
-== Advanced Tutorials ==
- [wiki:Tutorial/FragmentStore Fragment Store]::
+=== Advanced Tutorials ===
+ [[Tutorial/FragmentStore| Fragment Store]]::
    This tutorial shows how to use the fragment store which is a database for read mapping, sequence assembly or gene annotation.
    It supports to read/write multiple read alignments in SAM or AMOS format and access and modify them.
    It supports to read/write gene annotations in GFF/GTF and UCSC format, to create custom annotation types, and to traverse and modify the annotation tree.
- [wiki:Tutorial/SimpleRnaSeq Simple RNA-Seq]::
+ [[Tutorial/SimpleRnaSeq| Simple RNA-Seq]]::
    In this tutorial you will learn how to implement a simple RNA-Seq based gene quantification tool, that computes RPKM expression levels based on a given genome annotation and RNA-Seq read alignments.
- [wiki:Tutorial/SimpleReadMapping Simple Read Mapping]::
+ [[Tutorial/SimpleReadMapping| Simple Read Mapping]]::
    This tutorial shows how to implement a simple read mapping program based on the SWIFT filter and online Hamming finder for verification.
- [wiki:Tutorial/MiniBowtie Mini-Bowtie]::
- Mini-Bowtie is a very basic read aligner that is inspired by the well known Bowtie program [wiki:Bibliography#Langmead2009 (Langmead, 2009)]. It serves as an example to show that you can write sophisticated programs with SeqAn using few lines of code.
- [wiki:Tutorial/JournalSet Data Journaling]::
+ [[Tutorial/MiniBowtie| Mini-Bowtie]]::
+ Mini-Bowtie is a very basic read aligner that is inspired by the well known Bowtie program [[Bibliography#Langmead2009| (Langmead, 2009)]]. It serves as an example to show that you can write sophisticated programs with SeqAn using few lines of code.
+ [[Tutorial/JournalSet| Data Journaling]]::
  In this tutorial we demonstrate how you can handle multiple large sequence in main memory while the data structures themself support a certain parallel sequence analysis.
-  '''[wiki:Tutorial/KnimeNode SeqAn KNIME Nodes]'''::
+  '''[[Tutorial/KnimeNode| SeqAn KNIME Nodes]]'''::
  Here you can learn how to use SeqAn apps in KNIME.
 
 ----
-== Developers Corner ==
+=== Developers Corner ===
 First, congratulations on becoming an offical SeqAn developer!
-After you went through the tutorials and before you actually start to develop your own application with SeqAn you might want to learn how we: [wiki:HowTo/DocumentCode document code] or [HowTo/WriteTests write tests], [wiki:HowTo/WriteTickets write ticket], [wiki:HowTo/SubmitPatches submit patches], etc. 
-In addition we follow a SeqAn specific [wiki:StyleGuide Style Guide].
+After you went through the tutorials and before you actually start to develop your own application with SeqAn you might want to learn how we: [[HowTo/DocumentCode| document code]] or [HowTo/WriteTests write tests], [[HowTo/WriteTickets| write ticket]], [[HowTo/SubmitPatches| submit patches]], etc. 
+In addition we follow a SeqAn specific [[StyleGuide| Style Guide]].
 Information like this can be found on the HowTo site.
 There are plenty of information completing your knowledge about SeqAn so have a look!
 
-{{{#!comment
-== Before you start programming ==
+<pre>#comment
+=== Before you start programming ===
 
- [wiki:Tutorial/TestingDocumenting Testing and Documenting in SeqAn]::
-   In this section we show you how to use the internal documentation system in !SeqAn and also how to write tests for your code.
- [wiki:Tutorial/FileIO I/O for commonly used data]::
+ [[Tutorial/TestingDocumenting| Testing and Documenting in SeqAn]]::
+   In this section we show you how to use the internal documentation system in SeqAn and also how to write tests for your code.
+ [[Tutorial/FileIO| I/O for commonly used data]]::
    In this section we show you how you efficiently get your data in and out of SeqAn.
-}}}
+</pre>
 
-=== Frequently used Software Techniques ===
+==== Frequently used Software Techniques ====
 We assume that the user is acquainted with the basic data types of SeqAn, the introductory example and the demo programs. 
 Also you should be acquainted with the STL and template programming.
 In this Section we introduce the three main techniques of programming in SeqAn, namely the ''global function interface'', the use of
 ''Metafunctions'', and the concept of  ''Template subclassing''. 
 
- [wiki:Tutorial/BasicTechniques STL and template programming]::
+ [[Tutorial/BasicTechniques| STL and template programming]]::
    Here we remind you of the basics of template programming and the use of the STL.
 
- [wiki:Tutorial/Metafunctions Metafunctions]::
-   In this section you find an introductory explanation how Metafunctions are used in !SeqAn to obtain information about data types used which will only be instantiated at compile time.
+ [[Tutorial/Metafunctions| Metafunctions]]::
+   In this section you find an introductory explanation how Metafunctions are used in SeqAn to obtain information about data types used which will only be instantiated at compile time.
 
- [wiki:Tutorial/TemplateSubclassing Template subclassing]::
+ [[Tutorial/TemplateSubclassing| Template subclassing]]::
    In this section you find a short example that illustrates the power of template subclassing.
 
- [wiki:Tutorial/GlobalFunction Global function interface]::
+ [[Tutorial/GlobalFunction| Global function interface]]::
    In this section you find a useful piece of code that shows you the flexibility of the global function interface. 
-{{{#!comment
+<pre>#comment
 ----
-== How Tos ==
+=== How Tos ===
 This section of the tutorial will be a growing list of popular code pieces and examples that
 have proven quite useful for the SeqAn team and developers.
 
 '''File I/O of SeqAn types:'''
-   * [wiki:HowTo/EfficientImportOfMillionsOfSequences How To: Efficiently Import Millions Of Sequences]
+**[[HowTo/EfficientImportOfMillionsOfSequences| How To: Efficiently Import Millions Of Sequences]]
 '''Indices:'''
-   * [wiki:HowTo/AccessIndexFibres How To: Accessing Index Fibres Directly]
-   * [wiki:HowTo/FilterSimilarSequences How To: Filtering Similar Sequences]
+**[[HowTo/AccessIndexFibres| How To: Accessing Index Fibres Directly]]
+**[[HowTo/FilterSimilarSequences| How To: Filtering Similar Sequences]]
 '''Misc'''
-   * [wiki:HowTo/WorkWithCustomScoreMatrices How To: Work With Custom Score Matrices]
-   * [wiki:HowTo/ParseCommandLine How To: Parse Command Line Parameters]
+**[[HowTo/WorkWithCustomScoreMatrices| How To: Work With Custom Score Matrices]]
+**[[HowTo/ParseCommandLine| How To: Parse Command Line Parameters]]
 ----
-== Information For Developers ==
+=== Information For Developers ===
 
 The following pages focus on specific points for Seqan developers.
 They have a more reference than tutorial like character:
 
- * [wiki:HowTo/WriteTickets How To: Write Tickets]
- * [wiki:HowTo/SubmitPatches How To: Submit Patches]
- * [HowTo/DocumentCode How To: Document Code]
- * [HowTo/WriteTests How To: Write Tests]
- * [wiki:StyleGuide The SeqAn Style Guide]
-}}}
+*[[HowTo/WriteTickets| How To: Write Tickets]]
+*[[HowTo/SubmitPatches| How To: Submit Patches]]
+*[HowTo/DocumentCode How To: Document Code]
+*[HowTo/WriteTests How To: Write Tests]
+*[[StyleGuide| The SeqAn Style Guide]]
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

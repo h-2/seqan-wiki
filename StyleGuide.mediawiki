@@ -1,6 +1,11 @@
-= SeqAn Style Guides =
 
- * [wiki:StyleGuide/DoxApiDocs API Documentation Style Guide]
- * [wiki:StyleGuide/Cpp C++ Style Guide]
- * [wiki:StyleGuide/Python Python Style Guide]
- * [wiki:StyleGuide/JavaScript JavaScript Style Guide]
+== SeqAn Style Guides ==
+
+*[[StyleGuide/DoxApiDocs| API Documentation Style Guide]]
+*[[StyleGuide/Cpp| C++ Style Guide]]
+*[[StyleGuide/Python| Python Style Guide]]
+*[[StyleGuide/JavaScript| JavaScript Style Guide]]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

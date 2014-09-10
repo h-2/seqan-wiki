@@ -1,9 +1,10 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:HowTo] if you need the documentation for the trunk version.'''
-= How To: Work With Custom Score Matrices =
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[HowTo]] if you need the documentation for the trunk version.'''
+== How To: Work With Custom Score Matrices ==
 
 This How To describes how to create new scoring matrices for Amino Acids and DNA alphabets and how to load score matrices from files.
 
-== Creating A New Built-In Score Matrix ==
+=== Creating A New Built-In Score Matrix ===
 
 The following example can be found in the file [source:tags/seqan-1.4.0/core/demos/howto/scores/init_score.cpp init_score.cpp].
 First, we include the required Seqan headers.
@@ -13,31 +14,31 @@ First, we include the required Seqan headers.
 Then, we perform the necessary definitions for the matrix.
 This consists of three steps:
 
- * defining a tag struct
- * specializing the class `ScoringMatrixData_` with your tag
+*defining a tag struct
+*specializing the class <tt>ScoringMatrixData_</tt> with your tag
 
 Note how we use enum values to compute the matrix size which itself is retrieved from the seqan:Metafunction.ValueSize metafunction.
 
 [[Include(source:tags/seqan-1.4.0/core/demos/howto/scores/init_score.cpp, fragment=user-defined-matrix)]]
 
-We define a function `showScoringMatrix` for displaying a matrix.
+We define a function <tt>showScoringMatrix</tt> for displaying a matrix.
 
 [[Include(source:tags/seqan-1.4.0/core/demos/howto/scores/init_score.cpp, fragment=show-scoring-matrix)]]
 
-Finally, the function `main` function demostrates some of the things you can do with scores:
+Finally, the function <tt>main</tt> function demostrates some of the things you can do with scores:
 
- * Construct empty score matrix object (2.)
- * Programatically fill the matrix with a built-in matrix values (3.1)
- * Programmatically fill the score matrix in a loop (3.2)
- * Programatically fill the matrix with the user-defined matrix values (3.3)
- * Directly create a score matrix with the user-defined matrix values (4)
+*Construct empty score matrix object (2.)
+*Programatically fill the matrix with a built-in matrix values (3.1)
+*Programmatically fill the score matrix in a loop (3.2)
+*Programatically fill the matrix with the user-defined matrix values (3.3)
+*Directly create a score matrix with the user-defined matrix values (4)
 
 [[Include(source:tags/seqan-1.4.0/core/demos/howto/scores/init_score.cpp, fragment=main)]]
 
 Here is the output of the program:
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 $ make tutorial_init_score
 $ ./demos/tutorial_init_score 
@@ -153,10 +154,10 @@ G	0	0	1	0	0
 T	0	0	0	1	0
 N	0	0	0	0	0
 </pre>
-}}}
+</pre>
 
 
-== Loading Score Matrices From File ==
+=== Loading Score Matrices From File ===
 
 This small demo program shows how to load a score matrix from a file.
 Examples for score file are [source:tags/seqan-1.4.0/core/demos/howto/scores/dna_example.txt dna_example.txt] for DNA alphabets and [source:tags/seqan-1.4.0/projects/tests/score/PAM250 PAM250] for amino acids.
@@ -175,8 +176,8 @@ Finally, the main program loads the scoring matrix from the file given on the co
 
 Here's the program output.
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 $ make tutorial_load_score
 $ ./demos/tutorial_load_score ../../demos/howto/scores/dna_example.txt
@@ -186,4 +187,8 @@ C	-1	1	-1	-1
 G	-1	-1	1	-1
 T	-1	-1	-1	1
 </pre>
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

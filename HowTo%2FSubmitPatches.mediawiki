@@ -1,4 +1,5 @@
-= How To: Submit Patches =
+
+== How To: Submit Patches ==
 [[TOC]]
 
 Also see: wiki:HowTo/WriteTickets
@@ -6,54 +7,54 @@ Also see: wiki:HowTo/WriteTickets
 Patches are the easiest way to get bugs fixed and features added to SeqAn.
 You can submit patches by creating a new ticket and attaching a patch file.
 
-== Creating A Patch With Subversion ==
+=== Creating A Patch With Subversion ===
 
 Patches should be written against the trunk version.
 First, check out SeqAn if you are not working with the trunk version and update SeqAn if you are already working at the SVN trunk:
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 $ svn co http://svn.seqan.de/seqan/trunk seqan-trunk
 $ cd seqan-trunk
 </pre>
-}}}
+</pre>
 
 OR
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 $ cd seqan-trunk
 $ svn update
 </pre>
-}}}
+</pre>
 
 Now, we update the file ''random.h'' and add a new file in the module ''random'':
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 $ cd core/include/seqan
 $ vi random.h
 ... some changes ...
 $ vi random/MYFILE
 </pre>
-}}}
+</pre>
 
 We have to register the file with the local Subversion repository:
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 $ svn add random/MYFILE
 </pre>
-}}}
+</pre>
 
 Now, we can create a patch file:
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 $ svn diff > my_patch.diff
 $ cat my_patch_diff
@@ -77,13 +78,17 @@ Index: random.h
  
  #ifndef SEQAN_RANDOM_H_
 </pre>
-}}}
+</pre>
 
 Then, go to [/seqan/newticket New Ticket] in the Trac system, create a ticket and attach the patch file.
 
-== Properties Of A Good Patch ==
+=== Properties Of A Good Patch ===
 
- * Describe what the patch does.
- * If the patch fixes a bug then give a short example of the problem.
- * Please include a test that highlights the bug, i.e. it does not compile or fail without the patch to SeqAn but the patch fixes this issue.
- * Indicate what configuration is required for the bug to appear, i.e. the operating system, compiler and, trunk revision.
+*Describe what the patch does.
+*If the patch fixes a bug then give a short example of the problem.
+*Please include a test that highlights the bug, i.e. it does not compile or fail without the patch to SeqAn but the patch fixes this issue.
+*Indicate what configuration is required for the bug to appear, i.e. the operating system, compiler and, trunk revision.
+
+
+
+{{TracNotice|{{PAGENAME}}}}

@@ -1,8 +1,9 @@
-= Logging In SeqAn =
+
+== Logging In SeqAn ==
 
 This page describes how a logging mechanism could work in SeqAn.
 
-== Motivation ==
+=== Motivation ===
 
 Logging is very useful to have for debugging but also for detailed error/warning reports in a library.
 Traditionally, log messages are written to stderr in Unix.
@@ -10,25 +11,25 @@ In SeqAn, we currently do logging to stderr only.
 Any activation and log messages is manual and inconsistent.
 Thus, a unified logging mechanism would be nice.
 
-== Requirements ==
+=== Requirements ===
 
- * Easy to use, use familiar interfaces.
- * Multiple log levels (e.g. info, warning, error).
- * It should be possible to control log levels statically and dynamically.
+*Easy to use, use familiar interfaces.
+*Multiple log levels (e.g. info, warning, error).
+*It should be possible to control log levels statically and dynamically.
    When developing, users might want to enable all log levels, a distributed build might only include warning and error logs.
    The info log calls should not infer any overhead, e.g. by replacing log calls by nops.
 
-== Proposal ==
+=== Proposal ===
 
-Introduce a global function `seqan::errs()` that returns a reference to a C++ stream.
-Thus, `operator<<()` is available for the returned object.
+Introduce a global function <tt>seqan::errs()</tt> that returns a reference to a C++ stream.
+Thus, <tt>operator<<()</tt> is available for the returned object.
 The type is available through a metafunction.
 Users can override this by using metafunctions.
 
 The definition in SeqAn could look as follows:
 
-{{{
-#!cpp
+<pre>
+#cpp
 
 namespace seqan {
 
@@ -69,12 +70,12 @@ LogStream<Error>::Type errs()
 }
 
 }  // namespace seqan
-}}}
+</pre>
 
 Users could override it like this:
 
-{{{
-#!cpp
+<pre>
+#cpp
 
 namespace seqan {
 
@@ -85,6 +86,10 @@ struct LogStream<Info>
 };
 
 }  // namespace seqan
-}}}
+</pre>
 
-Where `NullStream` is a class defined in the SeqAn library and implements the interface of `std::ostream`, [http://www.cplusplus.com/reference/iostream/ostream/operator%3C%3C/ as documented here].
+Where <tt>NullStream</tt> is a class defined in the SeqAn library and implements the interface of <tt>std::ostream</tt>, [http://www.cplusplus.com/reference/iostream/ostream/operator%3C%3C/ as documented here].
+
+
+
+{{TracNotice|{{PAGENAME}}}}

@@ -1,9 +1,10 @@
-= I/O Overview =
+
+== I/O Overview ==
 [[TOC()]]
 
  Learning Objective ::
   This article will give you an overview of the I/O infrastruction in SeqAn.
-  You will learn how the different pieces work together and how to open files for reading/writing and create `RecordReader` objects for reading.
+  You will learn how the different pieces work together and how to open files for reading/writing and create <tt>RecordReader</tt> objects for reading.
  Difficulty ::
   Advanced
  Duration ::
@@ -20,16 +21,16 @@ The article first gives a rough overview of the I/O functionality in SeqAn.
 This is then followed by an overview of the [dox:StreamConcept StreamConcept] concept, the [dox:StreamConcept StreamConcept] class and adaptions to the [dox:StreamConcept StreamConcept] concept.
 Finally, the [dox:RecordReader RecordReader] class is introduced and you learn about the record and document reading API.
 After reading this tutorial, you will have an overview about the I/O layers in SeqAn.
-You can then proceed to read the [wiki:Tutorial/FileIO File I/O] and the [wiki:Tutorial/Parsing Parsing] tutorials to learn more about Streams and RecordReaders.
+You can then proceed to read the [[Tutorial/FileIO| File I/O]] and the [[Tutorial/Parsing| Parsing]] tutorials to learn more about Streams and RecordReaders.
 
-{{{#!comment
-{{{#!WarningBox
+<pre>#comment
+<pre>#WarningBox
 This tutorial and the described library contents are currently in '''beta state'''.
 They might change in the future. In this case, notice will be given.
-}}}
-}}}
+</pre>
+</pre>
 
-== Overview ==
+=== Overview ===
 
 The following picture shows an overview of the I/O and parsing related Layers in SeqAn.
 Note that the aim of this tutorial is not explaining each detail of the I/O system in SeqAn but giving you a good first impression of the I/O layers.
@@ -37,7 +38,7 @@ These impression should give you a good overview of the I/O system.
 
 [[Image(iolayers.png, align=center)]]
 
-=== High-Level I/O ===
+==== High-Level I/O ====
 
 The topmost layer High-Level I/O provides easy-to-use APIs for reading and writing files.
 This comes at the potential cost of some performance and genericity.
@@ -48,10 +49,10 @@ The API on this layer consists of one (or very few) classes and few functions fo
 
 Here is an example for using the high-level I/O:
 
-{{{#!cpp
+<pre>#cpp
 // Open file and automatically guess that it is gzip-compressed FASTA.
 seqan::SequenceStream seqStream("filename.fasta.gz");
-if (!isGood(seqStream))
+if (isGood(seqStream))
     std::cerr << "Could not open filename.fasta.gz\n";
 
 // Read one record.
@@ -59,37 +60,37 @@ seqan::CharString id;
 seqan::Dna5String seq;
 if (readRecord(id, seq, seqStream) != 0)
     std::cerr << "There was an error reading filename.fasta.gz\n";
-}}}
+</pre>
 
 We use the [dox:SequenceStream SequenceStream] class to open a gzip-compressed FASTA file.
 If this succeeds, we read one record (identifier and sequence) from the sequence stream.
-The exact usage is explained in the [wiki:Tutorial/BasicSequenceIO Basic Sequence I/O] tutorial.
+The exact usage is explained in the [[Tutorial/BasicSequenceIO| Basic Sequence I/O]] tutorial.
 
-=== Lower-Level I/O ===
+==== Lower-Level I/O ====
 
 The second-highest layer Lower-Level I/O provides a more basic and verbose API for reading and writing files.
 Usually, the main logic of the I/O code is implemented on this layer and this code uses templates and no virtual functions to implement functionality in a generic way.
 This leads to code that can be highly optimized by the compiler.
 
-One characteristic of this layer is using tags such as `Fasta()` for `Fastq()` in function calls to distinguish between formats.
+One characteristic of this layer is using tags such as <tt>Fasta()</tt> for <tt>Fastq()</tt> in function calls to distinguish between formats.
 In contrast, the format selection is hidden in the high-level API.
 
 For many formats, we can simply write to a Stream (a concept from the Implementation Support Layer introduced below) but for reading, we need a [dox:RecordReader RecordReader] object.
 
-In the following example we open a FASTA file directly using `std::fstream`.
+In the following example we open a FASTA file directly using <tt>std::fstream</tt>.
 Then, we write one FASTA record to the stream.
 The example below looks similar to the example above that used [dox:SequenceStream SequenceStream].
 The main difference is that the file format is not detected automatically but the code is fixed to read FASTA only.
 Also, the code below does not allow reading from compressed files.
 
-Note that it would be possible to change the code to also read FASTQ by first detecting the file format manually and then calling `readRecord()` with the tag `seqan::Fastq()` instead of `seqan::Fasta()` if the file format is FASTQ.
+Note that it would be possible to change the code to also read FASTQ by first detecting the file format manually and then calling <tt>readRecord()</tt> with the tag <tt>seqan::Fastq()</tt> instead of <tt>seqan::Fasta()</tt> if the file format is FASTQ.
 It would also be possible to first manually detect whether the file is compressed and use [dox:GzFileStream GzFileStream] to read from a gzip compressed stream.
 In this case, the user has full control about the code and thus the performance but the code gets much more verbose.
 
-{{{#!cpp
+<pre>#cpp
 // Open file for writing using the standard C++ IOStreams library.
 std::fstream outStream("filename.fasta", std::ios::out | std::ios::binary);
-if (!outStream.good())
+if (outStream.good())
     std::cerr << "Could not open filename.fasta\n";
 
 // Write one record.
@@ -97,16 +98,16 @@ seqan::CharString id = "seq1";
 seqan::Dna5String seq = "CGATCCAGATGT";
 if (writeRecord(seqStream, id, seq, seqan::Fasta()) != 0)
     std::cerr << "There was an error writing to filename.fasta\n";
-}}}
+</pre>
 
 The [dox:RecordReader RecordReader] class provides important wrapping functionality for underlying file representations (let us stick to streams for now).
 You usually open a stream and then create a [dox:SinglePassRecordReader Single-Pass RecordReader].
 You then read using this reader:
 
-{{{#!cpp
+<pre>#cpp
 // Open file for reading using the standard C++ IOStreams library.
 std::fstream inStream("filename.fasta", std::ios::in | std::ios::binary);
-if (!inStream.good())
+if (inStream.good())
     std::cerr << "Could not open filename.fasta\n";
 
 // Create record reader.
@@ -117,7 +118,7 @@ seqan::CharString id;
 seqan::Dna5String seq;
 if (readRecord(id, seq, reader, Fasta()))
     std::cerr << "There was an error reading from filename.fasta\n";
-}}}
+</pre>
 
 These two layers are meant to be used by SeqAn library users directly.
 The layers below are used by the high-level I/O and lower level I/O routines.
@@ -125,24 +126,24 @@ Library users only get in contact with them when they initiate reading or writin
 When ''writing'', users open a stream and then use the SeqAn I/O routines to write records to the stream.
 When ''reading'', users open a stream, create a [dox:RecordReader RecordReader] and then read records from the stream via the [dox:RecordReader RecordReader].
 
-=== Implementation Support ===
+==== Implementation Support ====
 
 The Implementation Support layers contain:
 
- 1. Adaptions of system library provided file and stream routines to the SeqAn [dox:StreamConcept StreamConcept] concept.
+#Adaptions of system library provided file and stream routines to the SeqAn [dox:StreamConcept StreamConcept] concept.
  2. The [dox:RecordReader RecordReader] hierarchy for wrapping streams.
     They provide functionality that is important for the efficient implementation of I/O code.
  3. Code for tokenization and parsing, based on [dox:RecordReader RecordReader] objects.
  4. Conversion from textual number representations to numeric values (aka "lexical casting").
 
-The Implementation Support Layers will be described in detail in the [wiki:Tutorial/Parsing Parsing Tutorial].
+The Implementation Support Layers will be described in detail in the [[Tutorial/Parsing| Parsing Tutorial]].
 
-=== System / External Libraries ===
+==== System / External Libraries ====
 
 The System / External Libraries layer contains libraries provided by the operating system or third-party libraries such as [http://zlib.net zlib] for compression.
 These libraries are used by the layers above to actually access the files on disk.
 
-== Streams ==
+=== Streams ===
 
 Most data formats in Bioinformatics simply contain a series of records, often preceded by a header.
 The most important use case if reading sequentially over such a data stream, with the occasional jump.
@@ -150,18 +151,18 @@ In computer science, it is common to call the abstraction to such data sources '
 In SeqAn, the concept [dox:StreamConcept StreamConcept] provides an interface for such stream data types.
 
 SeqAn provides adaptions from the standardized C and C++ file interfaces to the [dox:StreamConcept StreamConcept] concept.
-You can use the I/O streams from the `<iostream>` library, the string buffer streams from the `<sstream>` library as well as the `FILE *` type from the `<cstdio>` library.
-Furthermore, SeqAn provides the [dox:Stream Stream] class and specializations for accessing `char` arrays and zlib and bzip compressed files as streams.
-The [wiki:Tutorial/StreamIO Stream I/O] tutorial gives a more detailed introduction into this topic.
+You can use the I/O streams from the <tt><iostream></tt> library, the string buffer streams from the <tt><sstream></tt> library as well as the <tt>FILE *</tt> type from the <tt><cstdio></tt> library.
+Furthermore, SeqAn provides the [dox:Stream Stream] class and specializations for accessing <tt>char</tt> arrays and zlib and bzip compressed files as streams.
+The [[Tutorial/StreamIO| Stream I/O]] tutorial gives a more detailed introduction into this topic.
 
-You already saw above how the streams from the `<iostream>` library can be used for reading and writing.
-Using the adaption in the SeqAn library, we can simply use `FILE *` instead of `std::fstream`.
-The following example uses `std::fstream`.
+You already saw above how the streams from the <tt><iostream></tt> library can be used for reading and writing.
+Using the adaption in the SeqAn library, we can simply use <tt>FILE *</tt> instead of <tt>std::fstream</tt>.
+The following example uses <tt>std::fstream</tt>.
 
-{{{#!cpp
+<pre>#cpp
 // Open file for writing using the standard C++ IOStreams library.
 std::fstream outStream("filename.fasta", std::ios::binary | std::ios::out);
-if (!outStream.good())
+if (outStream.good())
     std::cerr << "Could not open filename.fasta\n";
 
 // Write one record, this will write the following to filename.fasta:
@@ -171,13 +172,13 @@ if (write2(outStream, "id1", "CGATTTTT", Fasta()) != 0)
     std::cerr << "There was an error writing to filename.fasta\n";
 
 fclose(outStream);
-}}}
+</pre>
 
-Now, we simply replace the constructor of `std::fstream` by calls to `fopen()` and of course have to close the file again manually using `fclose()`
-We use `ferror()` instead of the member function `good()`.
+Now, we simply replace the constructor of <tt>std::fstream</tt> by calls to <tt>fopen()</tt> and of course have to close the file again manually using <tt>fclose()</tt>
+We use <tt>ferror()</tt> instead of the member function <tt>good()</tt>.
 The modified example looks as follows.
 
-{{{#!cpp
+<pre>#cpp
 // Open file for reading using the standard C++ IOStreams library.
 FILE * inStream = fopen("filename.fasta", "rb");
 if (ferror(inStream))
@@ -193,9 +194,9 @@ if (readRecord(id, seq, reader, Fasta()))
     std::cerr << "There was an error reading from filename.fasta\n";
 
 fclose(inStream);
-}}}
+</pre>
 
-{{{#!InfoBox
+<pre>#InfoBox
 '''Information:''' Binary File Open Mode
 
 Note that we open the files in binary mode above in all cases.
@@ -204,35 +205,35 @@ You always read exactly what is written on the disk and you write to the disk ex
 
 On Windows, however, there is a difference.
 When opening a file in non-binary, and thus "text" mode, all line endings will automatically be converted into Windows style.
-If your file contains `"\n"`, you will actually read `"\r\n"`.
+If your file contains <tt>"\n"</tt>, you will actually read <tt>"\r\n"</tt>.
 '''This wreaks havoc when getting or setting the position in the current file.'''
 
 Thus: '''Always open your file in binary mode.'''
 This will avoid weird crashes and malfunction on Windows.
-}}}
+</pre>
 
-== Record Readers ==
+=== Record Readers ===
 
 The [dox:RecordReader RecordReader] class is a wrapper around file-like objects, such as Streams.
-However, as you will learn in the [wiki:Tutorial/FileIO File I/O] tutorial, it also provides a generalized interface for memory mapped files that are accessed as [dox:MMapString MMap String] objects.
+However, as you will learn in the [[Tutorial/FileIO| File I/O]] tutorial, it also provides a generalized interface for memory mapped files that are accessed as [dox:MMapString MMap String] objects.
 Depending on the actual specialization, [[dox:RecordReader RecordReader] RecordReaders] also add a buffer which allows to re-read the first several thousand characters of a file which is very useful for automatic file type detection.
 
 When using the [dox:RecordReader RecordReader] class in the Lower-Level I/O layer, you only have to know how to create a [dox:RecordReader RecordReader] for reading.
 You do not have to know how to implement parsing functionality with them.
 
 Constructing [dox:RecordReader RecordReader] objects is easy.
-You parametrize the class template with the underlying stream type (e.g. `FILE *` or `std::fstream`) and choose the specialization `SinglePass<>`.
+You parametrize the class template with the underlying stream type (e.g. <tt>FILE *</tt> or <tt>std::fstream</tt>) and choose the specialization <tt>SinglePass<></tt>.
 To the constructor, you pass the stream object as the only argument.
 Note that the file already has to be opened for reading.
 
-{{{#!cpp
+<pre>#cpp
 std::fstream inputFile("filename.fasta", std::ios::input | std::ios::binary);
 seqan::RecordReader<std::fstream, seqan::SinglePass<> > reader(inputFile);
-}}}
+</pre>
 
-You can learn about how to implement parsers using the [dox:RecordReader RecordReader] API in the [wiki:Tutorial/Parsing Parsing] Tutorial.
+You can learn about how to implement parsers using the [dox:RecordReader RecordReader] API in the [[Tutorial/Parsing| Parsing]] Tutorial.
 
-== Record vs. Document I/O ==
+=== Record vs. Document I/O ===
 
 Most file formats in Bioinformatics are structured as lists of records.
 Often, they start out with a header that itself contains different header records.
@@ -249,22 +250,22 @@ This approach is useful for reading a smaller file into main memory, for example
 This leads to the two types of APIs in SeqAn:
 Record-reading and document reading of files.
 
-When reading a file record-by-record, the function `readRecord()` is overloaded.
+When reading a file record-by-record, the function <tt>readRecord()</tt> is overloaded.
 The function overloads are structured as follows:
 
- * The first parameters are the output parameters where the read data is written to.
- * Where applicable, this is followed by a state or context object for the given file type (see below for more detail).
- * This is followed by the [dox:RecordReader RecordReader] object to read from.
- * Where applicable, a tag is used to indicate the file format.
- * The function returns an integer status code.
-   `0` is returned to indicate that no error occured while `1` is returned to indicate an error.
+*The first parameters are the output parameters where the read data is written to.
+*Where applicable, this is followed by a state or context object for the given file type (see below for more detail).
+*This is followed by the [dox:RecordReader RecordReader] object to read from.
+*Where applicable, a tag is used to indicate the file format.
+*The function returns an integer status code.
+   <tt>0</tt> is returned to indicate that no error occured while <tt>1</tt> is returned to indicate an error.
 
 This is best explained with an example.
 When reading FASTQ, the first three parameters are the strings to store the identifier, sequence characters, and base qualities into.
 The fourth parameter is the [dox:RecordReader RecordReader] object to read the data from.
-The last parameter `seqan::Fastq()` is a tag indicating the file format.
+The last parameter <tt>seqan::Fastq()</tt> is a tag indicating the file format.
 
-{{{#!cpp
+<pre>#cpp
 std::fstream in("file.fq", std::ios::binary | std::ios::in);
 seqan::RecordReader<std::fstream, seqan::SinglePass<> > reader(in);
 
@@ -272,15 +273,15 @@ seqan::CharString id;
 seqan::Dna5String seq;
 seqan::CharString qual;
 int res = readRecord(id, seq, qual, reader, seqan::Fastq());
-}}}
+</pre>
 
 When reading SAM, we first have to read the header.
 Then, we can read a record from the file which is passed as the first parameter.
 For reading the record, we have to pass a [dox:BamIOContext BamIOContext] object that is necessary for translating the reference name to its numeric id.
-This is then followed by the [dox:RecordReader RecordReader] object to read from and the tag `seqan::Sam()` to specify the format.
+This is then followed by the [dox:RecordReader RecordReader] object to read from and the tag <tt>seqan::Sam()</tt> to specify the format.
 The full initialization of the [dox:BamAlignmentRecord BamAlignmentRecord] is a bit complex and omitted below.
 
-{{{#!cpp
+<pre>#cpp
 std::fstream in("file.sam", std::ios::binary | std::ios::in);
 seqan::RecordReader<std::fstream, seqan::SinglePass<> > reader(in);
 
@@ -290,51 +291,55 @@ int res1 = readRecord(header, context, reader, seqan::Sam());
 
 seqan::BamAlignmentRecord record;
 int res2 = readRecord(record, context, reader, seqan::Sam());
-}}}
+</pre>
 
-When reading a whole file into main memory, an overload of the function `read()` is used.
-The parameter order is the same as in case of `readRecord()` but the types are [dox:String Strings] or [dox:StringSet StringSets] of the types of the `readRecord()` variant.
+When reading a whole file into main memory, an overload of the function <tt>read()</tt> is used.
+The parameter order is the same as in case of <tt>readRecord()</tt> but the types are [dox:String Strings] or [dox:StringSet StringSets] of the types of the <tt>readRecord()</tt> variant.
 For example, consider the following example of reading a whole FASTA file into main memory.
 
-{{{#!cpp
+<pre>#cpp
 std::fstream in("file.fa", std::ios::binary | std::ios::in);
 seqan::RecordReader<std::fstream, seqan::SinglePass<> > reader(in);
 
 seqan::StringSet<seqan::CharString> ids;
 seqan::StringSet<seqan::Dna5String> seqs;
 int res = read2(ids, seqs, reader, seqan::Fasta());
-}}}
+</pre>
 
-For writing files, SeqAn provides overloads of the function `write()` and `writeRecord()`.
+For writing files, SeqAn provides overloads of the function <tt>write()</tt> and <tt>writeRecord()</tt>.
 Their usage is similar.
 However, the parameter order is different, accordingly to the SeqAn coding style guide:
 
- * The first parameter is the output stream to write the data to.
- * This is followed by the data to write out.
- * Where applicable, this is followed by a context object.
- * Where applicable, a tag is used to indicate the file format.
- * The function returns an integer status code.
-   `0` is returned to indicate that no error occured while `1` is returned to indicate an error.
+*The first parameter is the output stream to write the data to.
+*This is followed by the data to write out.
+*Where applicable, this is followed by a context object.
+*Where applicable, a tag is used to indicate the file format.
+*The function returns an integer status code.
+   <tt>0</tt> is returned to indicate that no error occured while <tt>1</tt> is returned to indicate an error.
 
-== Next Steps ==
+=== Next Steps ===
 
 If you want, you can now have a look at the API documentation of the [dox:StreamConcept StreamConcept] concept and its implementations as well as the documentation of the [dox:RecordReader RecordReader] class.
 
 There are two "tracks" in this section of the tutorials which you can follow.
 First, you can now read the tutorials for '''specific already supported file formats'''.
 
- * [wiki:Tutorial/SequenceFileIO Sequence File I/O]
- * [wiki:Tutorial/SamBamIO SAM and BAM I/O]
+*[[Tutorial/SequenceFileIO| Sequence File I/O]]
+*[[Tutorial/SamBamIO| SAM and BAM I/O]]
 
 Second, if you want to learn how to write '''support for new file formats''' then read the following articles in order.
 
- * [wiki:Tutorial/FileIO File I/O]
- * [wiki:Tutorial/LexicalCasting Lexical Casting]
- * [wiki:Tutorial/Parsing Parsing]
+*[[Tutorial/FileIO| File I/O]]
+*[[Tutorial/LexicalCasting| Lexical Casting]]
+*[[Tutorial/Parsing| Parsing]]
 
-If you want, you can also go to the [wiki:Tutorial Tutorials table of contents].
+If you want, you can also go to the [[Tutorial| Tutorials table of contents]].
 
-=== Submit a Comment ===
+==== Submit a Comment ====
 
 If you found a mistake, or have suggestions about an improvement of this page:
 [/newticket?component=Documentation&description=Tutorial+Enhancement+for+page+http://trac.seqan.de/wiki/Tutorial/IOOverview&type=enhancement submit your comment]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

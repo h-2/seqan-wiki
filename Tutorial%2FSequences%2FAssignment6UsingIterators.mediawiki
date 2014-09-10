@@ -1,21 +1,26 @@
-= Task 6: Using Iterators =
 
-== Task ==
+== Task 6: Using Iterators ==
 
-Write a function {{{replaceAs}}} that accepts a seqan:Shortcut.CharString and replaces all occurences of {{{'a'}}} by an {{{'X'}}}.
-Run it on the strings {{{"abcdefghijklmnopqrstuvxyz"}}}, {{{"Hello SeqAn!"}}} and {{{"Hello Seqan!"}}}.
+=== Task ===
 
-== Solution ==
+Write a function <tt>replaceAs</tt> that accepts a seqan:Shortcut.CharString and replaces all occurences of <tt>'a'</tt> by an <tt>'X'</tt>.
+Run it on the strings <tt>"abcdefghijklmnopqrstuvxyz"</tt>, <tt>"Hello SeqAn!"</tt> and <tt>"Hello Seqan!"</tt>.
+
+=== Solution ===
 
 [[Include(source:trunk/core/demos/tutorial/sequence/replace_as.cpp)]]
 
-== Program Output ==
+=== Program Output ===
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 Xbcdefghijklmnopqrstuvwxyz
 Hello SeqAn!
 Hello SeqXn!
 </pre>
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

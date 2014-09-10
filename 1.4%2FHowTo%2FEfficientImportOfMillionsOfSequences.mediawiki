@@ -1,12 +1,13 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:HowTo] if you need the documentation for the trunk version.'''
-= How To: Efficiently Import Millions Of Sequences =
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[HowTo]] if you need the documentation for the trunk version.'''
+== How To: Efficiently Import Millions Of Sequences ==
 [[TOC]]
 
-== Memory Mapped Files ==
+=== Memory Mapped Files ===
 
 The fastest way to import tons of sequences in Fasta/Fastq/GSeq/... file format is to avoid slow C++ I/O streams and instead map the file directly into memory.
 This can be done via the seqan:"Spec.MMap String" which uses memory mapping of the operating system or via the seqan:"Spec.External String" which emulates memory mapping by doing the paging by-hand.
-Most commonly used file formats concatenate sequences separated by a delimiter, e.g. {{{>}}}, {{{@}}}, line-break, that marks the begin of each sequence.
+Most commonly used file formats concatenate sequences separated by a delimiter, e.g. <tt>></tt>, <tt>@</tt>, line-break, that marks the begin of each sequence.
 In SeqAn there is also a data structure that represents multiple sequences using one concatenation string and the begin positions of each sequence, the seqan:Spec.ConcatDirect StringSet.
 We therefore defined the type seqan:Shortcut.MultiSeqFile as an alias for a seqan:Spec.ConcatDirect StringSet using a single seqan:"Spec.MMap String".
 
@@ -20,7 +21,7 @@ Next we guess the file format of the single concatenation string and store the r
 seqan:Function.split expects a seqan:Spec.ConcatDirect StringSet and divides the underlying string into sequence fragments separated by a file format specific delimiter.
 [[Include(source:tags/seqan-1.4.0/core/demos/howto/efficiently_import_sequences.cpp, fragment=guess_and_split)]]
 
-After calling seqan:Function.split the {{{multiSeqFile}}} StringSet represents the sequence fragments and
+After calling seqan:Function.split the <tt>multiSeqFile</tt> StringSet represents the sequence fragments and
 can be used to reserve memory for the StringSets that store sequences and ids.
 [[Include(source:tags/seqan-1.4.0/core/demos/howto/efficiently_import_sequences.cpp, fragment=reserve)]]
 
@@ -31,10 +32,10 @@ The quality values are encoded in ASCII and have to be converted into integer va
 Finally we output the number of imported sequences, the overall runtime and the first 10 sequences in Fasta format.
 [[Include(source:tags/seqan-1.4.0/core/demos/howto/efficiently_import_sequences.cpp, fragment=output)]]
 
-== Program output ==
+=== Program output ===
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 $ cd build/Release
 $ make efficiently_import_sequences
@@ -63,15 +64,19 @@ GCATATTCTATAAATGCTAAGCATAAAAATAATTTTC
 >HWI-EAS299_3_30MAPAAXX:6:1:720:1208/2
 TGCCTGTTTACCATTTAGACAGGGTTCACAAATTTCA
 </pre>
-}}}
+</pre>
 
-== Remarks ==
+=== Remarks ===
 
- * We intentionally use seqan:Function.appendValue to fill the StringSets as for some applications it is more memory efficient to use a seqan:Spec.ConcatDirect StringSet to store imported sequences and ids.
- seqan:Spec.ConcatDirect StringSet consists of only one seqan:Class.String concatenating all sequences and a String containing the begin positions which induce less overhead compared to storing millions of single Strings separately on heap with their own begin, end and capacity information.[[br]]
- * Although not visible in the example, the import functions can of course also import large sequences spanning multiple lines in various formats.
+*We intentionally use seqan:Function.appendValue to fill the StringSets as for some applications it is more memory efficient to use a seqan:Spec.ConcatDirect StringSet to store imported sequences and ids.
+ seqan:Spec.ConcatDirect StringSet consists of only one seqan:Class.String concatenating all sequences and a String containing the begin positions which induce less overhead compared to storing millions of single Strings separately on heap with their own begin, end and capacity information.<br>
+*Although not visible in the example, the import functions can of course also import large sequences spanning multiple lines in various formats.
 
-== Fragment Store ==
+=== Fragment Store ===
 
 The whole program above is condensed into the function seqan:Function.loadReads working on a seqan:Class.FragmentStore.
-An example for this function is given in the [wiki:HowTo/FilterSimilarSequences Filter Similar Sequences Howto].
+An example for this function is given in the [[HowTo/FilterSimilarSequences| Filter Similar Sequences Howto]].
+
+
+
+{{TracNotice|{{PAGENAME}}}}

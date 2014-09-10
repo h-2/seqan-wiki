@@ -1,4 +1,5 @@
-= How To: Delete Spam Comments =
+
+== How To: Delete Spam Comments ==
 
 For Admins.
 
@@ -11,8 +12,12 @@ First, get [https://addons.mozilla.org/en-US/firefox/addon/2393 CheckFox], a Fir
 
 Then, when seeing a ticket with a lot of spam:
 
- 1. Click ''delete'' button next to comment.
+#Click ''delete'' button next to comment.
  2. Use Cmd-A or Ctrl-A (depending on your operating system) to select all text on this page.
  3. Right-click and select "Check".
- 4. Uncheck the boxes with non-spam changes, either by clicking on the check boxes or by selecting the boxes to uncheck and use !CheckFox using right-click, "Uncheck".
+ 4. Uncheck the boxes with non-spam changes, either by clicking on the check boxes or by selecting the boxes to uncheck and use CheckFox using right-click, "Uncheck".
  5. Scroll down to the bottom of the page and click "delete checked".
+
+
+
+{{TracNotice|{{PAGENAME}}}}

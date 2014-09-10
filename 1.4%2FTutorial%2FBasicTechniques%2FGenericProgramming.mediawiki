@@ -1,2 +1,7 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
 
+'''Note: this page documents the 1.4 version of SeqAn, see [[Tutorial]] if you need the documentation for the trunk version.'''
+
+
+
+
+{{TracNotice|{{PAGENAME}}}}

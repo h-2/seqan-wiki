@@ -1,4 +1,5 @@
-= WikiFormatting =
+
+== WikiFormatting ==
 [[TracGuideToc]]
 
 Wiki markup is a core feature in Trac, tightly integrating all the other parts of Trac into a flexible and powerful whole.
@@ -18,279 +19,408 @@ A few other wiki pages present the advanced features of the Trac wiki markup in 
  - WikiProcessors and WikiHtml details how parts of the wiki text can be processed in special ways
 
 
-== Cheat sheet ==
+=== Cheat sheet ===
 
-||= '''Category''' =||= '''Wiki Markup''' =||= '''Display''' =||
+{| border=1 class="simple"
+!= '''Category''' =
+!= '''Wiki Markup''' =
+!= '''Display''' =
+|}
+
 |-----------------------------------------------------------
-{{{#!th rowspan=3
+<pre>#th rowspan=3
 [#FontStyles Font Styles]
-}}}
-|| `'''bold'''`, `''italic''`, `'''''Wikipedia style'''''` || \
-|| '''bold''', ''italic'', '''''Wikipedia style''''' ||
-|| {{{`monospaced and ''nowiki''`}}} || \
-|| `monospaced and ''nowiki''` ||
-|| `**bold**`, `//italic//`, `**//!WikiCreole style//**` || \
-|| **bold**, //italic//, **//!WikiCreole style//** ||
+</pre>
+{| border=1 class="simple"
+! <tt>'''bold'''</tt>, <tt>''italic''</tt>, <tt>'''''Wikipedia style'''''</tt> 
+! \
+|- 
+| colspan=2| '''bold''', ''italic'', '''''Wikipedia style''''' 
+|- 
+|  <tt><tt>monospaced and ''nowiki''</tt></tt> 
+|  \
+|- 
+| colspan=2| <tt>monospaced and ''nowiki''</tt> 
+|- 
+|  <tt>**bold**</tt>, <tt>//italic//</tt>, <tt>**//WikiCreole style//**</tt> 
+|  \
+|- 
+| colspan=2| **bold**, //italic//, **//WikiCreole style//** 
+|}
+
 |-----------------------------------------------------------
-||= [#Headings Headings] =||\
-{{{#!td 
- {{{
+{| border=1 class="simple"
+!= [#Headings Headings] =
+!\
+|}
+
+<pre>#td 
+ <pre>
  == Level 2 ==
- === Level 3 ^([#hn note])^
- }}}
-}}}
-{{{#!td style="padding-left: 2em"
-== Level 2 ==
-=== Level 3 ^([#hn note])^
-}}}
+ === Level 3 <sup>([#hn note])</sup>
+ </pre>
+</pre>
+<pre>#td style="padding-left: 2em"
+=== Level 2 ===
+=== Level 3 <sup>([#hn note])</sup>
+</pre>
 |-----------------------------------------------------------
-||= [#Paragraphs Paragraphs]  =||\
-{{{#!td
- {{{
+{| border=1 class="simple"
+!= [#Paragraphs Paragraphs]  =
+!\
+|}
+
+<pre>#td
+ <pre>
  First paragraph
  on multiple lines.
 
  Second paragraph.
- }}}
-}}}
-{{{#!td
+ </pre>
+</pre>
+<pre>#td
 First paragraph
 on multiple lines.
 
 Second paragraph.
-}}}
+</pre>
 |-----------------------------------------------------------
-||= [#Lists Lists] =||\
-{{{#!td
- {{{
- * bullets list
+{| border=1 class="simple"
+!= [#Lists Lists] =
+!\
+|}
+
+<pre>#td
+ <pre>
+*bullets list
    on multiple lines
-   1. nested list
-     a. different numbering 
+##nested list
+###different numbering 
         styles
- }}}
-}}}
-{{{#!td
-* bullets list
+ </pre>
+</pre>
+<pre>#td
+*bullets list
   on multiple lines
-  1. nested list
-    a. different numbering
+##nested list
+###different numbering
        styles
-}}}
+</pre>
 |-----------------------------------------------------------
-{{{#!th
+<pre>#th
 [#DefinitionLists Definition Lists]
-}}}
-{{{#!td
- {{{
+</pre>
+<pre>#td
+ <pre>
   term:: definition on
          multiple lines
- }}}
-}}}
-{{{#!td
+ </pre>
+</pre>
+<pre>#td
  term:: definition on
         multiple lines
-}}}
+</pre>
 |-----------------------------------------------------------
-||= [#PreformattedText Preformatted Text] =||\
-{{{#!td
- {{{
- {{{
+{| border=1 class="simple"
+!= [#PreformattedText Preformatted Text] =
+!\
+|}
+
+<pre>#td
+ <pre>
+ <pre>
  multiple lines, ''no wiki''
        white space respected
- }}}
- }}}
-}}}
-{{{#!td
- {{{
+ </pre>
+ </pre>
+</pre>
+<pre>#td
+ <pre>
  multiple lines, ''no wiki''
        white space respected
- }}}
-}}}
+ </pre>
+</pre>
 |-----------------------------------------------------------
-||= [#Blockquotes Blockquotes] =||\
-{{{#!td
- {{{
+{| border=1 class="simple"
+!= [#Blockquotes Blockquotes] =
+!\
+|}
+
+<pre>#td
+ <pre>
    if there's some leading
    space the text is quoted
- }}}
-}}}
-{{{#!td
+ </pre>
+</pre>
+<pre>#td
  if there's some leading
  space the text is quoted
-}}}
+</pre>
 |-----------------------------------------------------------
-||= [#DiscussionCitations Discussion Citations] =||\
-{{{#!td
- {{{
+{| border=1 class="simple"
+!= [#DiscussionCitations Discussion Citations] =
+!\
+|}
+
+<pre>#td
+ <pre>
  >> ... (I said)
  > (he replied)
- }}}
-}}}
-{{{#!td
+ </pre>
+</pre>
+<pre>#td
 >>... (I said)
 > (he replied)
-}}}
+</pre>
 |-----------------------------------------------------------
-||= [#Tables Tables] =||\
-{{{#!td
- {{{
- ||= Table Header =|| Cell ||
- ||||  (details below)  ||
- }}}
-}}}
-{{{#!td
-||= Table Header =|| Cell ||
-||||  (details below)  ||
-}}}
+{| border=1 class="simple"
+!= [#Tables Tables] =
+!\
+|}
+
+<pre>#td
+ <pre>
+{| border=1 class="simple"
+!= Table Header =
+! Cell 
+|}
+
+{| border=1 class="simple"
+!
+!  (details below)  
+|}
+
+ </pre>
+</pre>
+<pre>#td
+{| border=1 class="simple"
+!= Table Header =
+! Cell 
+|- 
+| 
+|   (details below)  
+|}
+
+</pre>
 |-----------------------------------------------------------
-{{{#!th rowspan=2
+<pre>#th rowspan=2
 [#Links Links]
-}}}
-|| `http://trac.edgewall.org` ||\
-|| http://trac.edgewall.org ||
-|| `WikiFormatting (CamelCase)` ||\
-|| WikiFormatting (CamelCase) ||
+</pre>
+{| border=1 class="simple"
+! <tt>http://trac.edgewall.org</tt> 
+!\
+|- 
+| colspan=2| http://trac.edgewall.org 
+|- 
+|  <tt>WikiFormatting (CamelCase)</tt> 
+| \
+|- 
+| colspan=2| WikiFormatting (CamelCase) 
+|}
+
 |-----------------------------------------------------------
-{{{#!th rowspan=5
+<pre>#th rowspan=5
 [#TracLinks TracLinks]
-}}}
-|| `wiki:WikiFormatting`, `wiki:"WikiFormatting"` ||\
-|| wiki:WikiFormatting, wiki:"WikiFormatting" ||
-|| `#1 (ticket)`, `[1] (changeset)`, `{1} (report)` ||\
-|| #1 (ticket), [1] (changeset), {1} (report) ||
-|| `ticket:1, ticket:1#comment:1` ||\
-|| ticket:1, ticket:1#comment:1 ||
-|| `Ticket [ticket:1]`, `[ticket:1 ticket one]` ||\
-|| Ticket [ticket:1], [ticket:1 ticket one] ||
-|| `Ticket [[ticket:1]]`, `[[ticket:1|ticket one]]` ||\
-|| Ticket [[ticket:1]], [[ticket:1|ticket one]] ||
+</pre>
+{| border=1 class="simple"
+! <tt>wiki:WikiFormatting</tt>, <tt>wiki:"WikiFormatting"</tt> 
+!\
+|- 
+| colspan=2| wiki:WikiFormatting, wiki:"WikiFormatting" 
+|- 
+|  <tt>#1 (ticket)</tt>, <tt>[1] (changeset)</tt>, <tt>{1} (report)</tt> 
+| \
+|- 
+| colspan=2| #1 (ticket), [1] (changeset), {1} (report) 
+|- 
+|  <tt>ticket:1, ticket:1#comment:1</tt> 
+| \
+|- 
+| colspan=2| ticket:1, ticket:1#comment:1 
+|- 
+|  <tt>Ticket [ticket:1]</tt>, <tt>[ticket:1 ticket one]</tt> 
+| \
+|- 
+| colspan=2| Ticket [ticket:1], [ticket:1 ticket one] 
+|- 
+|  <tt>Ticket [[ticket:1]]</tt>, <tt>[[ticket:1/ticket one]]</tt> 
+| \
+|- 
+| colspan=2| Ticket [[ticket:1]], [[ticket:1/ticket one]] 
+|}
+
 |-----------------------------------------------------------
-{{{#!th rowspan=2 
+<pre>#th rowspan=2 
 [#SettingAnchors Setting Anchors]
-}}}
-|| `[=#point1 (1)] First...` ||\
-|| [=#point1 (1)] First... ||
-|| `see [#point1 (1)]` ||\
-|| see [#point1 (1)] ||
+</pre>
+{| border=1 class="simple"
+! <tt>[=#point1 (1)] First...</tt> 
+!\
+|- 
+| colspan=2| [=#point1 (1)] First... 
+|- 
+|  <tt>see [#point1 (1)]</tt> 
+| \
+|- 
+| colspan=2| see [#point1 (1)] 
+|}
+
 |-----------------------------------------------------------
-{{{#!th rowspan=3
+<pre>#th rowspan=3
 [#Escaping Escaping Markup]
-}}}
-|| `!'' doubled quotes` ||\
-|| !'' doubled quotes ||
-|| `!wiki:WikiFormatting`, `!WikiFormatting` ||\
-|| !wiki:WikiFormatting, !WikiFormatting ||
-|| `{{{-}}} curly brackets` ||\
-|| {{{-}}} curly brackets ||
+</pre>
+{| border=1 class="simple"
+! <tt>!'' doubled quotes</tt> 
+!\
+|- 
+| colspan=2| !'' doubled quotes 
+|- 
+|  <tt>wiki:WikiFormatting</tt>, <tt>WikiFormatting</tt> 
+| \
+|- 
+| colspan=2| wiki:WikiFormatting, WikiFormatting 
+|- 
+|  <tt><tt>-</tt> curly brackets</tt> 
+| \
+|- 
+| colspan=2| <tt>-</tt> curly brackets 
+|}
+
 |-----------------------------------------------------------
-||= [#Images Images] =|| `[[Image(`''link''`)]]` || [[Image(htdocs:../common/trac_logo_mini.png)]] ||
+{| border=1 class="simple"
+!= [#Images Images] =
+! <tt>[[Image(</tt>''link''<tt>)]]</tt> 
+! [[Image(htdocs:../common/trac_logo_mini.png)]] 
+|}
+
 |-----------------------------------------------------------
-{{{#!th rowspan=2
+<pre>#th rowspan=2
 [#Macros Macros]
-}}}
-|| `[[MacroList(*)]]` ||  ''(short list of all available macros)''  ||
-|| `[[Image?]]` ||  ''(help for the Image macro)''  ||
+</pre>
+{| border=1 class="simple"
+! <tt>[[MacroList(*)]]</tt> 
+!  ''(short list of all available macros)''  
+|- 
+|  <tt>[[Image?]]</tt> 
+|   ''(help for the Image macro)''  
+|}
+
 |-----------------------------------------------------------
-||= [#Processors Processors] =||\
-{{{#!td
- {{{
- {{{
- #!div style="font-size: 80%"
+{| border=1 class="simple"
+!= [#Processors Processors] =
+!\
+|}
+
+<pre>#td
+ <pre>
+ <pre>
+ #div style="font-size: 80%"
  Code highlighting:
-   {{{#!python
+   <pre>#python
    hello = lambda: "world"
-   }}}
- }}}
- }}}
-}}}
-{{{#!td style="padding-left: 2em"
- {{{
- #!div style="font-size: 80%"
+   </pre>
+ </pre>
+ </pre>
+</pre>
+<pre>#td style="padding-left: 2em"
+ <pre>
+ #div style="font-size: 80%"
  Code highlighting:
-   {{{#!python 
+   <pre>#python 
    hello = lambda: "world"
-   }}}
- }}}
-}}}
+   </pre>
+ </pre>
+</pre>
 |-----------------------------------------------------------
-||= [#Comments Comments] =||\
-{{{#!td
- {{{
- {{{#!comment
+{| border=1 class="simple"
+!= [#Comments Comments] =
+!\
+|}
+
+<pre>#td
+ <pre>
+ <pre>#comment
  Note to Editors: ...
- }}}
- }}}
-}}}
-{{{#!td style="padding-left: 2em"
- {{{#!comment
+ </pre>
+ </pre>
+</pre>
+<pre>#td style="padding-left: 2em"
+ <pre>#comment
  Note to Editors: ...
- }}}
-}}}
+ </pre>
+</pre>
 |-----------------------------------------------------------
-||= [#Miscellaneous Miscellaneous] =||\
-{{{#!td
- {{{
- Line [[br]] break 
+{| border=1 class="simple"
+!= [#Miscellaneous Miscellaneous] =
+!\
+|}
+
+<pre>#td
+ <pre>
+ Line <br> break 
  Line \\ break
  ----
- }}}
-}}}
-{{{#!td style="padding-left: 2em"
-Line [[br]] break
+ </pre>
+</pre>
+<pre>#td style="padding-left: 2em"
+Line <br> break
 Line \\ break
 ----
-}}}
+</pre>
 
 
-== Font Styles ==
+=== Font Styles ===
 
 The Trac wiki supports the following font styles:
-||= Wiki Markup =||= Display =||
-{{{#!td
-  {{{
-   * '''bold''', 
+{| border=1 class="simple"
+!= Wiki Markup =
+!= Display =
+|}
+
+<pre>#td
+  <pre>
+**'''bold''', 
      ''' triple quotes !''' 
      can be bold too if prefixed by ! ''', 
-   * ''italic''
-   * '''''bold italic''''' or ''italic and
+**''italic''
+**'''''bold italic''''' or ''italic and
      ''' italic bold ''' ''
-   * __underline__
-   * {{{monospace}}} or `monospace`
-     (hence `{{{` or {{{`}}} quoting)
-   * ~~strike-through~~
-   * ^superscript^ 
-   * ,,subscript,,
-   * **also bold**, //italic as well//, 
+**<u>underline</u>
+**<tt>monospace</tt> or <tt>monospace</tt>
+     (hence <tt><tt></tt> or <pre>`</tt> quoting)
+**<s>strike-through</s>
+**<sup>superscript</sup> 
+**<sub>subscript</sub>
+****also bold**, //italic as well//, 
      and **'' bold italic **'' //(since 0.12)//
-  }}}
-}}}
-{{{#!td
- * '''bold''', 
+  </pre>
+</pre>
+<pre>#td
+*'''bold''', 
    ''' triple quotes !''' 
    can be bold too if prefixed by ! ''', 
- * ''italic''
- * '''''bold italic''''' or ''italic and
+*''italic''
+*'''''bold italic''''' or ''italic and
    ''' italic bold ''' ''
- * __underline__
- * {{{monospace}}} or `monospace`
-   (hence `{{{` or {{{`}}} quoting)
- * ~~strike-through~~
- * ^superscript^ 
- * ,,subscript,,
- * **also bold**, //italic as well//, 
+*<u>underline</u>
+*<tt>monospace</tt> or <tt>monospace</tt>
+   (hence <tt><tt></tt> or <pre>`</tt> quoting)
+*<s>strike-through</s>
+*<sup>superscript</sup> 
+*<sub>subscript</sub>
+***also bold**, //italic as well//, 
    and **'' bold italic **'' //(since 0.12)//
-}}}
+</pre>
 
 Notes:
- * `{{{...}}}` and {{{`...`}}} commands not only select a monospace font, but also treat their content as verbatim text, meaning that no further wiki processing is done on this text.
- * {{{ ! }}} tells wiki parser to not take the following characters as wiki format, so pay attention to put a space after !, e.g. when ending bold.
- * all the font styles marks have to be used in opening/closing pairs, 
-   and they must nest properly (in particular, an `''` italic can't be paired 
-   with a `//` one, and `'''` can't be paired with `**`)
+*<tt><tt>...</tt></tt> and <tt><tt>...</tt></tt> commands not only select a monospace font, but also treat their content as verbatim text, meaning that no further wiki processing is done on this text.
+*<tt> ! </tt> tells wiki parser to not take the following characters as wiki format, so pay attention to put a space after !, e.g. when ending bold.
+*all the font styles marks have to be used in opening/closing pairs, 
+   and they must nest properly (in particular, an <tt>''</tt> italic can't be paired 
+   with a <tt>//</tt> one, and <tt>'''</tt> can't be paired with <tt>**</tt>)
 
 
-== Headings ==
+=== Headings ===
 
 You can create heading by starting a line with one up to six ''equal'' characters ("=")
 followed by a single space and the headline text. 
@@ -300,708 +430,957 @@ The headline text can be followed by the same number of "=" characters, but this
 
 Finally, the heading might optionally be followed by an explicit id. If not, an implicit but nevertheless readable id will be generated.
 
-||= Wiki Markup =||= Display =||
-{{{#!td
-  {{{
-  = Heading =
-  == Subheading
-  === About ''this'' ===
-  === Explicit id === #using-explicit-id-in-heading
-  == Subheading #sub2
-}}}
-}}}
-{{{#!td style="padding: 1em;"
-  {{{
-  #!div
-  = Heading =
-  == Subheading
-  === About ''this'' ===
-  === Explicit id === #using-explicit-id-in-heading
-  == Subheading #sub2
-  }}}
-}}}
+{| border=1 class="simple"
+!= Wiki Markup =
+!= Display =
+|}
 
-== Paragraphs ==
+<pre>#td
+  <pre>
+  = Heading =
+  == Subheading
+  === About ''this'' ===
+  === Explicit id === #using-explicit-id-in-heading
+  == Subheading #sub2
+</pre>
+</pre>
+<pre>#td style="padding: 1em;"
+  <pre>
+  #div
+  = Heading =
+  == Subheading
+  === About ''this'' ===
+  === Explicit id === #using-explicit-id-in-heading
+  == Subheading #sub2
+  </pre>
+</pre>
+
+=== Paragraphs ===
 
 A new text paragraph is created whenever two blocks of text are separated by one or more empty lines.
 
 A forced line break can also be inserted, using:
-||= Wiki Markup =||= Display =||
-{{{#!td
-  {{{
-  Line 1[[BR]]Line 2
-  }}}
-  {{{
+{| border=1 class="simple"
+!= Wiki Markup =
+!= Display =
+|}
+
+<pre>#td
+  <pre>
+  Line 1<br>Line 2
+  </pre>
+  <pre>
   Paragraph
   one
 
   Paragraph 
   two
-  }}}
-}}}
-{{{#!td
-  Line 1[[BR]]Line 2
+  </pre>
+</pre>
+<pre>#td
+  Line 1<br>Line 2
 
   Paragraph 
   one
 
   Paragraph 
   two
-}}}
+</pre>
 
-== Lists ==
+=== Lists ===
 
 The wiki supports both ordered/numbered and unordered lists.
 
 Example:
-||= Wiki Markup =||= Display =||
-{{{#!td
-  {{{
-   * Item 1
-     * Item 1.1
-        * Item 1.1.1   
-        * Item 1.1.2
-        * Item 1.1.3
-     * Item 1.2
-   * Item 2
+{| border=1 class="simple"
+!= Wiki Markup =
+!= Display =
+|}
+
+<pre>#td
+  <pre>
+**Item 1
+***Item 1.1
+*****Item 1.1.1   
+*****Item 1.1.2
+*****Item 1.1.3
+***Item 1.2
+**Item 2
   - items can start at the beginning of a line
     and they can span multiple lines
     - be careful though to continue the line 
     with the appropriate indentation, otherwise
   that will start a new paragraph...
   
-   1. Item 1
-     a. Item 1.a
-     a. Item 1.b
-        i. Item 1.b.i
-        i. Item 1.b.ii
-   1. Item 2
+##Item 1
+###Item 1.a
+###Item 1.b
+#####Item 1.b.i
+#####Item 1.b.ii
+##Item 2
   And numbered lists can also be restarted
   with an explicit number:
    3. Item 3
-  }}}
-}}}
-{{{#!td
- * Item 1
-   * Item 1.1
-      * Item 1.1.1   
-      * Item 1.1.2
-      * Item 1.1.3
-   * Item 1.2
- * Item 2
+  </pre>
+</pre>
+<pre>#td
+*Item 1
+**Item 1.1
+****Item 1.1.1   
+****Item 1.1.2
+****Item 1.1.3
+**Item 1.2
+*Item 2
 - items can start at the beginning of a line
   and they can span multiple lines
   - be careful though to continue the line 
   with the appropriate indentation, otherwise
 that will start a new paragraph...
 
- 1. Item 1
-   a. Item 1.a
-   a. Item 1.b
-      i. Item 1.b.i
-      i. Item 1.b.ii
- 1. Item 2
+#Item 1
+##Item 1.a
+##Item 1.b
+####Item 1.b.i
+####Item 1.b.ii
+#Item 2
 And numbered lists can also be restarted with an explicit number:
  3. Item 3
-}}}
+</pre>
 
 
-== Definition Lists ==
+=== Definition Lists ===
 
 The wiki also supports definition lists.
 
-||= Wiki Markup =||= Display =||
-{{{#!td
-  {{{
+{| border=1 class="simple"
+!= Wiki Markup =
+!= Display =
+|}
+
+<pre>#td
+  <pre>
    llama::
      some kind of mammal, with hair
    ppython::
      some kind of reptile, without hair
      (can you spot the typo?)
-  }}}
-}}}
-{{{#!td
+  </pre>
+</pre>
+<pre>#td
  llama::
    some kind of mammal, with hair
  ppython::
    some kind of reptile, without hair
    (can you spot the typo?)
-}}}
+</pre>
 
 Note that you need a space in front of the defined term.
 
 
-== Preformatted Text ==
+=== Preformatted Text ===
 
 Block containing preformatted text are suitable for source code snippets, notes and examples. Use three ''curly braces'' wrapped around the text to define a block quote. The curly braces need to be on a separate line.
   
-||= Wiki Markup =||= Display =||
-{{{#!td
-  {{{
-  {{{
+{| border=1 class="simple"
+!= Wiki Markup =
+!= Display =
+|}
+
+<pre>#td
+  <pre>
+  <pre>
   def HelloWorld():
       print '''Hello World'''
-  }}}
-  }}}
-}}}
-{{{#!td
-  {{{
+  </pre>
+  </pre>
+</pre>
+<pre>#td
+  <pre>
   def HelloWorld():
       print '''Hello World'''
-  }}}
-}}}
+  </pre>
+</pre>
 
 Note that this kind of block is also used for selecting lines that should be processed through WikiProcessors.
 
-== Blockquotes ==
+=== Blockquotes ===
 
 In order to mark a paragraph as blockquote, indent that paragraph with two spaces.
 
-||= Wiki Markup =||= Display =||
-{{{#!td
-{{{
-Paragraph
-  This text is a quote from someone else.
-}}}
-}}}
-{{{#!td
-Paragraph
-  This text is a quote from someone else.
-}}}
+{| border=1 class="simple"
+!= Wiki Markup =
+!= Display =
+|}
 
-== Discussion Citations ==
+<pre>#td
+<pre>
+Paragraph
+  This text is a quote from someone else.
+</pre>
+</pre>
+<pre>#td
+Paragraph
+  This text is a quote from someone else.
+</pre>
+
+=== Discussion Citations ===
 
 To delineate a citation in an ongoing discussion thread, such as the ticket comment area, e-mail-like citation marks (">", ">>", etc.) may be used.  
 
-||= Wiki Markup =||= Display =||
-{{{#!td
-  {{{
+{| border=1 class="simple"
+!= Wiki Markup =
+!= Display =
+|}
+
+<pre>#td
+  <pre>
   >> Someone's original text
   > Someone else's reply text
   >  - which can be any kind of Wiki markup
   My reply text
-  }}}
-}}}
-{{{#!td
+  </pre>
+</pre>
+<pre>#td
 >> Someone's original text
 > Someone else's reply text
 >  - which can be any kind of Wiki markup
 My reply text
-}}}
+</pre>
 
 
-== Tables ==
-=== Simple Tables ===
+=== Tables ===
+==== Simple Tables ====
 Simple tables can be created like this:
-||= Wiki Markup =||= Display =||
-{{{#!td
-  {{{
-  ||Cell 1||Cell 2||Cell 3||
-  ||Cell 4||Cell 5||Cell 6||
-  }}}
-}}}
-{{{#!td style="padding: 2em;"
-||Cell 1||Cell 2||Cell 3||
-||Cell 4||Cell 5||Cell 6||
-}}}
+{| border=1 class="simple"
+!= Wiki Markup =
+!= Display =
+|}
+
+<pre>#td
+  <pre>
+{| border=1 class="simple"
+!Cell 1
+!Cell 2
+!Cell 3
+|}
+
+{| border=1 class="simple"
+!Cell 4
+!Cell 5
+!Cell 6
+|}
+
+  </pre>
+</pre>
+<pre>#td style="padding: 2em;"
+{| border=1 class="simple"
+!Cell 1
+!Cell 2
+!Cell 3
+|- 
+| Cell 4
+| Cell 5
+| Cell 6
+|}
+
+</pre>
 
 Cell headings can be specified by wrapping the content in a pair of '=' characters.
 Note that the '=' characters have to stick to the cell separators, like this:
-||= Wiki Markup =||= Display =||
-{{{#!td
-  {{{
-  ||        ||= stable =||= latest =||
-  ||= 0.10 =||  0.10.5  || 0.10.6dev||
-  ||= 0.11 =||  0.11.6  || 0.11.7dev||
-  }}}
-}}}
-{{{#!td style="padding: 2em;"
-||        ||= stable =||= latest =||
-||= 0.10 =||  0.10.5  || 0.10.6dev||
-||= 0.11 =||  0.11.6  || 0.11.7dev||
-}}}
+{| border=1 class="simple"
+!= Wiki Markup =
+!= Display =
+|}
+
+<pre>#td
+  <pre>
+{| border=1 class="simple"
+!        
+!= stable =
+!= latest =
+|}
+
+{| border=1 class="simple"
+!= 0.10 =
+!  0.10.5  
+! 0.10.6dev
+|}
+
+{| border=1 class="simple"
+!= 0.11 =
+!  0.11.6  
+! 0.11.7dev
+|}
+
+  </pre>
+</pre>
+<pre>#td style="padding: 2em;"
+{| border=1 class="simple"
+!        
+!= stable =
+!= latest =
+|- 
+| = 0.10 =
+|   0.10.5  
+|  0.10.6dev
+|- 
+| = 0.11 =
+|   0.11.6  
+|  0.11.7dev
+|}
+
+</pre>
 
 Finally, specifying an empty cell means that the next non empty cell will span the empty cells. For example:
-||= Wiki Markup =||= Display =||
-{{{#!td
-  {{{
-  || 1 || 2 || 3 ||
-  |||| 1-2 || 3 ||
-  || 1 |||| 2-3 ||
-  |||||| 1-2-3 ||
-  }}}
-}}}
-{{{#!td style="padding: 2em;"
-|| 1 || 2 || 3 ||
-|||| 1-2 || 3 ||
-|| 1 |||| 2-3 ||
-|||||| 1-2-3 ||
-}}}
+{| border=1 class="simple"
+!= Wiki Markup =
+!= Display =
+|}
+
+<pre>#td
+  <pre>
+{| border=1 class="simple"
+! 1 
+! 2 
+! 3 
+|}
+
+{| border=1 class="simple"
+!
+! 1-2 
+! 3 
+|}
+
+{| border=1 class="simple"
+! 1 
+!
+! 2-3 
+|}
+
+{| border=1 class="simple"
+!
+!
+! 1-2-3 
+|}
+
+  </pre>
+</pre>
+<pre>#td style="padding: 2em;"
+{| border=1 class="simple"
+! 1 
+! 2 
+! 3 
+|- 
+| 
+|  1-2 
+|  3 
+|- 
+|  1 
+| 
+|  2-3 
+|- 
+| 
+| 
+|  1-2-3 
+|}
+
+</pre>
 
 Note that if the content of a cell "sticks" to one side of the cell and only one, then the text will be aligned on that side. Example:
-||= Wiki Markup =||= Display =||
-{{{#!td
-  {{{
-  ||=Text =||= Numbers =||
-  ||left align    ||        1.0||
-  ||  center      ||        4.5||
-  ||      right align||     4.5||
-  || default alignment ||   2.5||
-  ||default||         2.5||
-  ||  default ||      2.5||
-  || default ||       2.5||
-  }}}
-}}}
-{{{#!td style="padding: 2em;"
-||=Text =||= Numbers =||
-||left align    ||        1.0||
-||  center      ||        4.5||
-||      right align||     4.5||
-|| default alignment ||   2.5||
-||default||         2.5||
-||  default ||      2.5||
-|| default ||       2.5||
-}}}
+{| border=1 class="simple"
+!= Wiki Markup =
+!= Display =
+|}
 
-If contrary to the example above, the cells in your table contain more text, it might be convenient to spread a table row over multiple lines of markup. The `\` character placed at the end of a line after a cell separator tells Trac to not start a new row for the cells on the next line.
+<pre>#td
+  <pre>
+{| border=1 class="simple"
+!=Text =
+!= Numbers =
+|}
 
-||= Wiki Markup =||
-{{{#!td
-  {{{
-  || this is column 1 [http://trac.edgewall.org/newticket new ticket] || \
-  || this is column 2 [http://trac.edgewall.org/roadmap the road ahead] || \
-  || that's column 3 and last one ||
-  }}}
-}}}
+{| border=1 class="simple"
+!left align    
+!        1.0
+|}
+
+{| border=1 class="simple"
+!  center      
+!        4.5
+|}
+
+{| border=1 class="simple"
+!      right align
+!     4.5
+|}
+
+{| border=1 class="simple"
+! default alignment 
+!   2.5
+|}
+
+{| border=1 class="simple"
+!default
+!         2.5
+|}
+
+{| border=1 class="simple"
+!  default 
+!      2.5
+|}
+
+{| border=1 class="simple"
+! default 
+!       2.5
+|}
+
+  </pre>
+</pre>
+<pre>#td style="padding: 2em;"
+{| border=1 class="simple"
+!=Text =
+!= Numbers =
+|- 
+| left align    
+|         1.0
+|- 
+|   center      
+|         4.5
+|- 
+|       right align
+|      4.5
+|- 
+|  default alignment 
+|    2.5
+|- 
+| default
+|          2.5
+|- 
+|   default 
+|       2.5
+|- 
+|  default 
+|        2.5
+|}
+
+</pre>
+
+If contrary to the example above, the cells in your table contain more text, it might be convenient to spread a table row over multiple lines of markup. The <tt>\</tt> character placed at the end of a line after a cell separator tells Trac to not start a new row for the cells on the next line.
+
+{| border=1 class="simple"
+!= Wiki Markup =
+|}
+
+<pre>#td
+  <pre>
+{| border=1 class="simple"
+! this is column 1 [http://trac.edgewall.org/newticket new ticket] 
+! \
+|}
+
+{| border=1 class="simple"
+! this is column 2 [http://trac.edgewall.org/roadmap the road ahead] 
+! \
+|}
+
+{| border=1 class="simple"
+! that's column 3 and last one 
+|}
+
+  </pre>
+</pre>
 |-------------
-||= Display =||
-{{{#!td style="padding: 2em;"
-|| this is column 1 [http://trac.edgewall.org/newticket new ticket] || \
-|| this is column 2 [http://trac.edgewall.org/roadmap the road ahead] || \
-|| that's column 3 and last one ||
-}}}
+{| border=1 class="simple"
+!= Display =
+|}
 
-=== Complex Tables ===
+<pre>#td style="padding: 2em;"
+{| border=1 class="simple"
+! this is column 1 [http://trac.edgewall.org/newticket new ticket] 
+! \
+|- 
+|  this is column 2 [http://trac.edgewall.org/roadmap the road ahead] 
+|  \
+|- 
+| colspan=2| that's column 3 and last one 
+|}
+
+</pre>
+
+==== Complex Tables ====
 
 If the possibilities offered by the simple "pipe"-based markup for tables described above are not enough for your needs, you can create more elaborated tables by using [#Processors-example-tables WikiProcessor based tables].
 
 
-== Links ==
+=== Links ===
 
-Hyperlinks are automatically created for WikiPageNames and URLs. !WikiPageLinks can be disabled by prepending an exclamation mark "!" character, such as {{{!WikiPageLink}}}.
+Hyperlinks are automatically created for WikiPageNames and URLs. WikiPageLinks can be disabled by prepending an exclamation mark "!" character, such as <tt>WikiPageLink</tt>.
 
-||= Wiki Markup =||= Display =||
-{{{#!td
-  {{{
-  TitleIndex, http://www.edgewall.com/, !NotAlink
-  }}}
-}}}
-{{{#!td
-TitleIndex, http://www.edgewall.com/, !NotAlink
-}}}
+{| border=1 class="simple"
+!= Wiki Markup =
+!= Display =
+|}
+
+<pre>#td
+  <pre>
+  TitleIndex, http://www.edgewall.com/, NotAlink
+  </pre>
+</pre>
+<pre>#td
+TitleIndex, http://www.edgewall.com/, NotAlink
+</pre>
 
 Links can be given a more descriptive title by writing the link followed by a space and a title and all this inside square brackets. 
 If the descriptive title is omitted, then the explicit prefix is discarded, unless the link is an external link. This can be useful for wiki pages not adhering to the WikiPageNames convention.
 
-||= Wiki Markup =||= Display =||
-{{{#!td
-  {{{
-   * [http://www.edgewall.com Edgewall Software]
-   * [wiki:TitleIndex Title Index] 
-   * [wiki:TitleIndex] 
-   * [wiki:ISO9000]
-  }}}
-}}}
-{{{#!td
-   * [http://www.edgewall.com Edgewall Software]
-   * [wiki:TitleIndex Title Index] 
-   * [wiki:TitleIndex] 
-   * [wiki:ISO9000]
-}}}
+{| border=1 class="simple"
+!= Wiki Markup =
+!= Display =
+|}
+
+<pre>#td
+  <pre>
+**[http://www.edgewall.com Edgewall Software]
+**[[TitleIndex| Title Index]] 
+**[[TitleIndex]] 
+**[[ISO9000]]
+  </pre>
+</pre>
+<pre>#td
+**[http://www.edgewall.com Edgewall Software]
+**[[TitleIndex| Title Index]] 
+**[[TitleIndex]] 
+**[[ISO9000]]
+</pre>
 
 Following the [trac:WikiCreole] trend, the descriptive title can also be specified by writing the link followed by a pipe ('|') and a title and all this inside //double// square brackets. 
 
-{{{#!td
-  {{{
-   * [[http://www.edgewall.com|Edgewall Software]]
-   * [[wiki:TitleIndex|Title Index]]
+<pre>#td
+  <pre>
+**[[http://www.edgewall.com|Edgewall Software]]
+**[[[TitleIndex|Title| Index]]]
      or even [[TitleIndex|Title Index]]
-   * [[wiki:TitleIndex]]
+**[[[TitleIndex]]]
      ''' but not ![[TitleIndex]]! '''
-   * [[ISO9000]]
-  }}}
-}}}
-{{{#!td
-   * [[http://www.edgewall.com|Edgewall Software]]
-   * [[wiki:TitleIndex|Title Index]]
+**[[ISO9000]]
+  </pre>
+</pre>
+<pre>#td
+**[[http://www.edgewall.com|Edgewall Software]]
+**[[[TitleIndex|Title| Index]]]
      or even [[TitleIndex|Title Index]]
-   * [[wiki:TitleIndex]]
+**[[[TitleIndex]]]
      ''' but not ![[TitleIndex]]! '''
-   * [[ISO9000]]
-}}}
+**[[ISO9000]]
+</pre>
 
 '''Note''': the [trac:WikiCreole] style for links is quick to type and
 certainly looks familiar as it's the one used on Wikipedia and in many
 other wikis. Unfortunately it conflicts with the syntax for [#Macros macros].
 So in the rare case when you need to refer to a page which is named after
 a macro (typical examples being TitleIndex, InterTrac and InterWiki), 
-by writing `[[TitleIndex]]` you will actually call the macro instead of linking
+by writing <tt>[[TitleIndex]]</tt> you will actually call the macro instead of linking
 to the page.
 
-== Trac Links ==
+=== Trac Links ===
 
 Wiki pages can link directly to other parts of the Trac system. Pages can refer to tickets, reports, changesets, milestones, source files and other Wiki pages using the following notations:
 
-||= Wiki Markup =||= Display =||
-{{{#!td
-  {{{
-   * Tickets: #1 or ticket:1
-   * Reports: {1} or report:1
-   * Changesets: r1, [1] or changeset:1
-   * ...
-   * targeting other Trac instances, 
+{| border=1 class="simple"
+!= Wiki Markup =
+!= Display =
+|}
+
+<pre>#td
+  <pre>
+**Tickets: #1 or ticket:1
+**Reports: {1} or report:1
+**Changesets: r1, [1] or changeset:1
+**...
+**targeting other Trac instances, 
      so called InterTrac links:
      - Tickets: #Trac1 or Trac:ticket:1
      - Changesets: [Trac1] or Trac:changeset:1
-  }}}
-}}}
-{{{#!td
- * Tickets: #1 or ticket:1
- * Reports: {1} or report:1
- * Changesets: r1, [1] or changeset:1
- * ... 
- * targeting other Trac instances, 
+  </pre>
+</pre>
+<pre>#td
+*Tickets: #1 or ticket:1
+*Reports: {1} or report:1
+*Changesets: r1, [1] or changeset:1
+*... 
+*targeting other Trac instances, 
    so called InterTrac links:
    - Tickets: #Trac1 or Trac:ticket:1
    - Changesets: [Trac1] or Trac:changeset:1
-}}}
+</pre>
 
 There are many more flavors of Trac links, see TracLinks for more in-depth information and a reference for all the default link resolvers.
 
 
-== Setting Anchors ==
+=== Setting Anchors ===
 
 An anchor, or more correctly speaking, an [http://www.w3.org/TR/REC-html40/struct/links.html#h-12.2.1 anchor name] can be added explicitly at any place in the Wiki page, in order to uniquely identify a position in the document:
 
-{{{
+<pre>
 [=#point1]
-}}}
+</pre>
 
 This syntax was chosen to match the format for explicitly naming the header id [#Headings documented above]. For example:
-{{{
-== Long title == #title
-}}}
+<pre>
+=== Long title === #title
+</pre>
 
 It's also very close to the syntax for the corresponding link to that anchor:
-{{{
+<pre>
 [#point1]
-}}}
+</pre>
 
 Optionally, a label can be given to the anchor:
-{{{
+<pre>
 [[=#point1 '''Point 1''']]
-}}}
+</pre>
 
-||= Wiki Markup =||= Display =||
+{| border=1 class="simple"
+!= Wiki Markup =
+!= Display =
+|}
+
 |----------------------------------
-{{{#!td
-  {{{
+<pre>#td
+  <pre>
   [#point2 jump to the second point]
 
   ...
 
   Point2:  [=#point2] Jump here
-  }}}
-}}}
-{{{#!td
+  </pre>
+</pre>
+<pre>#td
   [#point2 jump to the second point]
 
   ...
 
   Point2:  [=#point2] Jump here
-}}}
+</pre>
 
-For more complex anchors (e.g. when a custom title is wanted), one can use the Span macro, e.g. `[[span(id=point2, class=wikianchor, title=Point 2, ^(2)^)]]`.
+For more complex anchors (e.g. when a custom title is wanted), one can use the Span macro, e.g. <tt>[[span(id=point2, class=wikianchor, title=Point 2, <sup>(2)</sup>)]]</tt>.
 
 
-== Escaping Links, WikiPageNames and other Markup == #Escaping
+=== Escaping Links, WikiPageNames and other Markup === #Escaping
 
 You may avoid making hyperlinks out of TracLinks by preceding an expression with a single "!" (exclamation mark).
 
-||= Wiki Markup =||= Display =||
-{{{#!td
-  {{{
-   !NoHyperLink
+{| border=1 class="simple"
+!= Wiki Markup =
+!= Display =
+|}
+
+<pre>#td
+  <pre>
+   NoHyperLink
    !#42 is not a link
-  }}}
-  {{{
+  </pre>
+  <pre>
 Various forms of escaping for list markup:
- `-` escaped minus sign \\
+ <tt>-</tt> escaped minus sign \\
  ``1. escaped number  \\
- {{{*}}} escaped asterisk sign
-  }}}
-}}}
-{{{#!td
- !NoHyperLink
+ <tt>*</tt> escaped asterisk sign
+  </pre>
+</pre>
+<pre>#td
+ NoHyperLink
  !#42 is not a link
 
 Various forms of escaping for list markup:
- `-` escaped minus sign \\
+ <tt>-</tt> escaped minus sign \\
  ``1. escaped number  \\
- {{{*}}} escaped asterisk sign
-}}}
+ <tt>*</tt> escaped asterisk sign
+</pre>
 
-== Images ==
+=== Images ===
 
-Urls ending with `.png`, `.gif` or `.jpg` are no longer automatically interpreted as image links, and converted to `<img>` tags.
+Urls ending with <tt>.png</tt>, <tt>.gif</tt> or <tt>.jpg</tt> are no longer automatically interpreted as image links, and converted to <tt><img></tt> tags.
 
-You now have to use the ![[Image]] macro. The simplest way to include an image is to upload it as attachment to the current page, and put the filename in a macro call like `[[Image(picture.gif)]]`.
+You now have to use the ![[Image]] macro. The simplest way to include an image is to upload it as attachment to the current page, and put the filename in a macro call like <tt>[[Image(picture.gif)]]</tt>.
 
 In addition to the current page, it is possible to refer to other resources:
- * `[[Image(wiki:WikiFormatting:picture.gif)]]` (referring to attachment on another page)
- * `[[Image(ticket:1:picture.gif)]]` (file attached to a ticket)
- * `[[Image(htdocs:picture.gif)]]` (referring to a file inside the [TracEnvironment environment] `htdocs` directory)
- * `[[Image(source:/trunk/trac/htdocs/trac_logo_mini.png)]]` (a file in repository)
+*<tt>[[Image(wiki:WikiFormatting:picture.gif)]]</tt> (referring to attachment on another page)
+*<tt>[[Image(ticket:1:picture.gif)]]</tt> (file attached to a ticket)
+*<tt>[[Image(htdocs:picture.gif)]]</tt> (referring to a file inside the [TracEnvironment environment] <tt>htdocs</tt> directory)
+*<tt>[[Image(source:/trunk/trac/htdocs/trac_logo_mini.png)]]</tt> (a file in repository)
 
-||= Wiki Markup =||= Display =||
-{{{#!td
-  {{{
+{| border=1 class="simple"
+!= Wiki Markup =
+!= Display =
+|}
+
+<pre>#td
+  <pre>
   [[Image(htdocs:../common/trac_logo_mini.png)]]
-  }}}
-}}}
-{{{#!td
+  </pre>
+</pre>
+<pre>#td
 [[Image(htdocs:../common/trac_logo_mini.png)]]
-}}}
+</pre>
 
-See WikiMacros for further documentation on the `[[Image()]]` macro, which has several useful options (`title=`, `link=`, etc.)
+See WikiMacros for further documentation on the <tt>[[Image()]]</tt> macro, which has several useful options (<tt>title=</tt>, <tt>link=</tt>, etc.)
 
 
-== Macros ==
+=== Macros ===
 
 Macros are ''custom functions'' to insert dynamic content in a page.
 
-||= Wiki Markup =||= Display =||
-{{{#!td
-  {{{
+{| border=1 class="simple"
+!= Wiki Markup =
+!= Display =
+|}
+
+<pre>#td
+  <pre>
   [[RecentChanges(Trac,3)]]
-  }}}
-}}}
-{{{#!td style="padding-left: 2em"
+  </pre>
+</pre>
+<pre>#td style="padding-left: 2em"
 [[RecentChanges(Trac,3)]]
-}}}
+</pre>
 
 See WikiMacros for more information, and a list of installed macros.
 
 The detailed help for a specific macro can also be obtained more directly by appending a "?" to the macro name.
 
-||= Wiki Markup =||= Display =||
-{{{#!td
-  {{{
+{| border=1 class="simple"
+!= Wiki Markup =
+!= Display =
+|}
+
+<pre>#td
+  <pre>
   [[MacroList?]]
-  }}}
-}}}
-{{{#!td style="padding-left: 2em"
+  </pre>
+</pre>
+<pre>#td style="padding-left: 2em"
 [[MacroList?]]
-}}}
+</pre>
 
 
-== Processors ==
+=== Processors ===
 
 Trac supports alternative markup formats using WikiProcessors. For example, processors are used to write pages in 
-[wiki:WikiRestructuredText reStructuredText] or [wiki:WikiHtml HTML]. 
+[[WikiRestructuredText| reStructuredText]] or [[WikiHtml| HTML]]. 
 
-||= Wiki Markup =||= Display =||
+{| border=1 class="simple"
+!= Wiki Markup =
+!= Display =
+|}
+
 |--------------------------------------------------------
-{{{#!td align="center" colspan=2 style="border: 0px; font-size: 90%"
+<pre>#td align="center" colspan=2 style="border: 0px; font-size: 90%"
 
    [=#Processors-example-html Example 1:] HTML
 
-}}}
+</pre>
 |--------------------------------------------------------
-{{{#!td style="border: 0px"
-  {{{
-  {{{
-  #!html
+<pre>#td style="border: 0px"
+  <pre>
+  <pre>
+  #html
   <h1 style="text-align: right; color: blue">
    HTML Test
   </h1>
-  }}}
-  }}}
-}}}
-{{{#!td valign="top"  style="border: 0px"
+  </pre>
+  </pre>
+</pre>
+<pre>#td valign="top"  style="border: 0px"
 
-{{{
-#!html
+<pre>
+#html
 <h1 style="text-align: right; color: blue">HTML Test</h1>
-}}}
+</pre>
 
-}}}
+</pre>
 |--------------------------------------------------------
-{{{#!td align="center" colspan=2 style="border: 0px; font-size: 90%"
+<pre>#td align="center" colspan=2 style="border: 0px; font-size: 90%"
 
    [=#Processors-example-highlight Example 2:] Code Highlighting
 
-}}}
+</pre>
 |--------------------------------------------------------
-{{{#!td style="border: 0px"
-  {{{
-  {{{
-  #!python
+<pre>#td style="border: 0px"
+  <pre>
+  <pre>
+  #python
   class Test:
   
-      def __init__(self):
+      def <u>init</u>(self):
           print "Hello World"
-  if __name__ == '__main__':
+  if <u>name</u> == '<u>main</u>':
      Test()
-  }}}
-  }}}
-}}}
-{{{
-#!td valign="top"  style="border: 0px"
+  </pre>
+  </pre>
+</pre>
+<pre>
+#td valign="top"  style="border: 0px"
 
-{{{
-#!python
+<pre>
+#python
 class Test:
-    def __init__(self):
+    def <u>init</u>(self):
         print "Hello World"
-if __name__ == '__main__':
+if <u>name</u> == '<u>main</u>':
    Test()
-}}}
+</pre>
 
-}}}
+</pre>
 |--------------------------------------------------------
-{{{#!td align="center" colspan=2 style="border: 0px; font-size: 90%"
+<pre>#td align="center" colspan=2 style="border: 0px; font-size: 90%"
 
        [=#Processors-example-tables Example 3:] Complex Tables
 
-}}}
+</pre>
 |--------------------------------------------------------
-{{{#!td style="border: 0px"
-  {{{
-  {{{#!th rowspan=4 align=justify
-  With the `#td` and `#th` processors,
+<pre>#td style="border: 0px"
+  <pre>
+  <pre>#th rowspan=4 align=justify
+  With the <tt>#td</tt> and <tt>#th</tt> processors,
   table cells can contain any content:
-  }}}
+  </pre>
   |----------------
-  {{{#!td
+  <pre>#td
     - lists
     - embedded tables
     - simple multiline content
-  }}}
+  </pre>
   |----------------
-  {{{#!td
+  <pre>#td
   As processors can be easily nested, 
   so can be tables:
-    {{{#!th
+    <pre>#th
     Example:
-    }}}
-    {{{#!td style="background: #eef"
-    || must be at the third level now... ||
-    }}}
-  }}}
+    </pre>
+    <pre>#td style="background: #eef"
+{| border=1 class="simple"
+! must be at the third level now... 
+|}
+
+    </pre>
+  </pre>
   |----------------
-  {{{#!td
+  <pre>#td
   Even when you don't have complex markup,
   this form of table cells can be convenient
   to write content on multiple lines.
-  }}}
-  }}}
-}}}
-{{{
-#!td  valign="top"  style="border: 0px"
+  </pre>
+  </pre>
+</pre>
+<pre>
+#td  valign="top"  style="border: 0px"
 
-  {{{#!th rowspan=4 align=justify
-  With the `#td` and `#th` processors,
+  <pre>#th rowspan=4 align=justify
+  With the <tt>#td</tt> and <tt>#th</tt> processors,
   table cells can contain any content:
-  }}}
+  </pre>
   |----------------
-  {{{#!td
+  <pre>#td
     - lists
     - embedded tables
     - simple multiline content
-  }}}
+  </pre>
   |----------------
-  {{{#!td
+  <pre>#td
   As processors can be easily nested, 
   so can be tables:
-    {{{#!th
+    <pre>#th
     Example:
-    }}}
-    {{{#!td style="background: #eef"
-    || must be at the third level now... ||
-    }}}
-  }}}
+    </pre>
+    <pre>#td style="background: #eef"
+{| border=1 class="simple"
+! must be at the third level now... 
+|}
+
+    </pre>
+  </pre>
   |----------------
-  {{{#!td
+  <pre>#td
   Even when you don't have complex markup,
   this form of table cells can be convenient
   to write content on multiple lines.
-  }}}
+  </pre>
 
-}}}
+</pre>
 
 See WikiProcessors for more information.
 
 
-== Comments ==
+=== Comments ===
 
 Comments can be added to the plain text. These will not be rendered and will not display in any other format than plain text.
 
-||= Wiki Markup =||= Display =||
-{{{#!td
-  {{{
-  Nothing to
-  {{{
-  #!comment
-  Your comment for editors here
-  }}}
-  see ;-)
-  }}}
-}}}
-{{{#!td
-  Nothing to
-  {{{
-  #!comment
-  Your comment for editors here
-  }}}
-  see ;-)
-}}}
+{| border=1 class="simple"
+!= Wiki Markup =
+!= Display =
+|}
 
-== Miscellaneous ==
+<pre>#td
+  <pre>
+  Nothing to
+  <pre>
+  #comment
+  Your comment for editors here
+  </pre>
+  see ;-)
+  </pre>
+</pre>
+<pre>#td
+  Nothing to
+  <pre>
+  #comment
+  Your comment for editors here
+  </pre>
+  see ;-)
+</pre>
+
+=== Miscellaneous ===
 
 An horizontal line can be used to separated different parts of your page:
 
-||= Wiki Markup =||= Display =||
-{{{#!td
-  {{{
+{| border=1 class="simple"
+!= Wiki Markup =
+!= Display =
+|}
+
+<pre>#td
+  <pre>
   Four or more dashes will be replaced 
   by an horizontal line (<HR>)
   ----
   See?
-  }}}
-}}}
-{{{#!td
+  </pre>
+</pre>
+<pre>#td
 Four or more dashes will be replaced
 by an horizontal line (<HR>)
 ----
 See?
-}}}
+</pre>
 |----------------------------------
-{{{#!td
-  {{{
-  "macro" style [[br]] line break
-  }}}
-}}}
-{{{#!td
-"macro" style [[br]] line break
-}}}
+<pre>#td
+  <pre>
+  "macro" style <br> line break
+  </pre>
+</pre>
+<pre>#td
+"macro" style <br> line break
+</pre>
 |----------------------------------
-{{{#!td
-  {{{
-  !WikiCreole style \\ line\\break
-  }}}
-}}}
-{{{#!td
-!WikiCreole style \\ line\\break
-}}}
+<pre>#td
+  <pre>
+  WikiCreole style \\ line\\break
+  </pre>
+</pre>
+<pre>#td
+WikiCreole style \\ line\\break
+</pre>
 
+
+
+{{TracNotice|{{PAGENAME}}}}

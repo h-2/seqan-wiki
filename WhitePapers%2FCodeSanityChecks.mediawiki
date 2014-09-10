@@ -1,15 +1,20 @@
-= Code Sanity Checks =
+
+== Code Sanity Checks ==
 
 The following checks should be applied to new code on a syntactical level:
 
- * All files should have a newline at the end of the file.
- * Newlines should be set to native in SVN.
- * All files should have a Seqan header with an Author tag.
- * Files should follow the Forwards/Classes,Enums,Typedefs/Metafunctions/Functions pattern.
- * Include guards (#ifndef...) should have the expected format.
- * No identifier should be `_Uppercase`, `__anything`.
- * Metafunctions should only declare a Type/VALUE publically, all other typedefs should have an underscore postfixed.
- * There should be no private and protected fields in classes.
- * Todos should follow the standard format.
- * All initial documentation of items should have an include tag.
- * Line length < 200/300.
+*All files should have a newline at the end of the file.
+*Newlines should be set to native in SVN.
+*All files should have a Seqan header with an Author tag.
+*Files should follow the Forwards/Classes,Enums,Typedefs/Metafunctions/Functions pattern.
+*Include guards (#ifndef...) should have the expected format.
+*No identifier should be <tt>_Uppercase</tt>, <tt>__anything</tt>.
+*Metafunctions should only declare a Type/VALUE publically, all other typedefs should have an underscore postfixed.
+*There should be no private and protected fields in classes.
+*Todos should follow the standard format.
+*All initial documentation of items should have an include tag.
+*Line length < 200/300.
+
+
+
+{{TracNotice|{{PAGENAME}}}}

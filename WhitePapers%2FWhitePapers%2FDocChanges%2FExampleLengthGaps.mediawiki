@@ -1,16 +1,17 @@
 
-{{{#!html
+
+<pre>#html
 <small>Function</small>
-}}}
-= Gaps # length =
+</pre>
+== Gaps # length ==
 
-{{{#!html
+<pre>#html
 <small>Part of the interface of the Class <a href="#">Gaps</a></small>
-}}}
+</pre>
 
-{{{#!cpp
+<pre>#cpp
 TSize length(gaps)
-}}}
+</pre>
 
 Returns the length of the clipped view of a [# Gaps] object.
 
@@ -18,25 +19,29 @@ This length is the number of characters and gaps.
 You can change the begin and end position of the clipping using [# Gaps#setClippedBeginPosition] and [# Gaps#setClippedEndPosition].
 Use [# Gaps#unclippedLength] to get the length of the whole Gaps object without clipping.
 
-== Parameters ==
+=== Parameters ===
 
-{{{#!td valign=top
-`TGaps`
-}}}
-{{{#!td valign=top
-`gaps`
-}}}
-{{{#!td valign=top
+<pre>#td valign=top
+<tt>TGaps</tt>
+</pre>
+<pre>#td valign=top
+<tt>gaps</tt>
+</pre>
+<pre>#td valign=top
 The Gaps object to query.
-`TGaps` is a specialization of the `Gaps` class template.
-}}}
+<tt>TGaps</tt> is a specialization of the <tt>Gaps</tt> class template.
+</pre>
 
-== Return Values ==
+=== Return Values ===
 
-{{{#!td valign=top
-`TSize`
-}}}
-{{{#!td valign=top
+<pre>#td valign=top
+<tt>TSize</tt>
+</pre>
+<pre>#td valign=top
 The length of the sequence.
-`TSize` is the [# Size] type of `TGaps` (`Size<TGaps>::Type`)
-}}}
+<tt>TSize</tt> is the [# Size] type of <tt>TGaps</tt> (<tt>Size<TGaps>::Type</tt>)
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

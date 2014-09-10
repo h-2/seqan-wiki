@@ -1,32 +1,37 @@
-= API Documentation TODO =
+
+== API Documentation TODO ==
 [[TOC()]]
 
-== IDE Integration ==
+=== IDE Integration ===
 
 Integration of the documentation in the IDE should not be mixed up with having code completion.
 Code completion works automatically for many modern IDEs.
 
 Integration of the documentation is tricky since there is no documentation format standard.
-Also getting the type of a variable at a certain position might not be possible and thus it cannot be decided whether to show the documentation of `String#length` or `Gaps#length`.
-Of course, we could have index pages for the token `length` which lists all interface function overloads.
+Also getting the type of a variable at a certain position might not be possible and thus it cannot be decided whether to show the documentation of <tt>String#length</tt> or <tt>Gaps#length</tt>.
+Of course, we could have index pages for the token <tt>length</tt> which lists all interface function overloads.
 
 This will be a lot of work and we should probably postpone it.
 Preference should be given to creating to a good online (and downloadable) API documentation.
 
-== Documentation Bugs ==
+=== Documentation Bugs ===
 
 Documentation bugs should be reported by email or ticker and will then be tackled individually.
 We can also collect bugs on wiki pages.
 
-== Documentation Search ==
+=== Documentation Search ===
 
 Preference should be given to type names.
 Otherwise, a better ranking and true scored approximate search should be used.
 
-== Joining Separation of Types ==
+=== Joining Separation of Types ===
 
 Maybe better list Enums, Specialization, Classes together.
 
-== Documentation Template ==
+=== Documentation Template ===
 
 We should switch to a more Doxygen- or JavaDoc-like layout.
+
+
+
+{{TracNotice|{{PAGENAME}}}}

@@ -1,1 +1,6 @@
-See [wiki:"BuildManual/UsingTheSeqAnBuildSystem"].
+
+See [["BuildManual/UsingTheSeqAnBuildSystem"]].
+
+
+
+{{TracNotice|{{PAGENAME}}}}

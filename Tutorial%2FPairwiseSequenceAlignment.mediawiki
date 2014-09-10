@@ -1,4 +1,5 @@
-= Pairwise Sequence Alignment =
+
+== Pairwise Sequence Alignment ==
 
 [[TOC]]
 
@@ -9,13 +10,13 @@
  Duration ::
   1h
  Prerequisites ::
-  [wiki:Tutorial/Basics Basics], [wiki:Tutorial/Iterators Iterators], [wiki:Tutorial/Alphabets Alphabets], [wiki:Tutorial/Sequences Sequences], [wiki:Tutorial/AlignmentRepresentation Alignment Representation]
+  [[Tutorial/Basics| Basics]], [[Tutorial/Iterators| Iterators]], [[Tutorial/Alphabets| Alphabets]], [[Tutorial/Sequences| Sequences]], [[Tutorial/AlignmentRepresentation| Alignment Representation]]
 
 Alignments are one of the most basic and important ways to measure similarity between two or more sequences. In general, a pairwise sequence alignment is an optimization problem which determines the best transcript of how one sequence was derived from the other. In order to give an optimal solution to this problem, all possible alignments between two sequences are computed using a '''Dynamic Programming''' approach. Scoring schemes allow the comparison of the alignments such that the one with the best score can be picked. Despite of the common strategy to compute an alignment, there are different variations of the standard DP algorithm laid out for special purposes.
 
 We will first introduce you to the scoring schemes followed by the global alignments. Subsequent, you will learn how to compute local alignments. Finally, we will demonstrate  how you can reduce the search space using a band.
 
-== Scoring Schemes ==
+=== Scoring Schemes ===
 
 Scoring schemes define the score for aligning two characters of a given alphabet and the score for gaps within alignments.
 Given an alignment between two sequences and a scoring scheme, the score of the alignment can be computed as the sum of the scores for aligned character pairs plus the sum of the scores for all gaps.
@@ -26,218 +27,241 @@ Translated into scores instead of costs, misalignments get a score of -1 and gap
 This scoring scheme is the default for [dox:SimpleScore Simple Score].
 
 SeqAn offers two kinds of scoring scheme:
-||= [dox:SimpleScore Simple Score] =||= Scoring matrices =|| 
-{{{#!td valign=top width=350
-This scoring scheme differentiates between "match" (the two aligned characters are the same), "mismatch" (the two aligned characters are different), and gaps. The score for a gap of length `k` is `gap open + (k - 1) * gap extend`. If `gap open` equals `gap extend` the score scheme uses linear gap costs, otherwise it uses affine gap costs.
+{| border=1 class="simple"
+!= [dox:SimpleScore Simple Score] =
+!= Scoring matrices =
+|}
+
+<pre>#td valign=top width=350
+This scoring scheme differentiates between "match" (the two aligned characters are the same), "mismatch" (the two aligned characters are different), and gaps. The score for a gap of length <tt>k</tt> is <tt>gap open + (k - 1) * gap extend</tt>. If <tt>gap open</tt> equals <tt>gap extend</tt> the score scheme uses linear gap costs, otherwise it uses affine gap costs.
 The functions [dox:SimpleScore#scoreMatch scoreMatch] and [dox:SimpleScore#scoreMismatch scoreMismatch] access values for match and mismatch. The function [dox:SimpleScore#scoreGap scoreGap], or [dox:SimpleScore#scoreGapExtend scoreGapExtend] and [dox:SimpleScore#scoreGapOpen scoreGapOpen] access values for gaps. 
-}}}
-{{{#!td valign=top width=350
-These scoring schemes store a score value for each pair of characters. This value can be accessed using [dox:Score#score score]. Examples for this kind of scoring scheme are [dox:Pam120 Pam120] and [dox:Blosum62 Blosum62]. The class [dox:MatrixScore Matrix Score]" can be used to store arbitrary scoring matrices. Also see the [wiki:HowTo/WorkWithCustomScoreMatrices HowTo on custom scoring matrices].
-}}}
+</pre>
+<pre>#td valign=top width=350
+These scoring schemes store a score value for each pair of characters. This value can be accessed using [dox:Score#score score]. Examples for this kind of scoring scheme are [dox:Pam120 Pam120] and [dox:Blosum62 Blosum62]. The class [dox:MatrixScore Matrix Score]" can be used to store arbitrary scoring matrices. Also see the [[HowTo/WorkWithCustomScoreMatrices| HowTo on custom scoring matrices]].
+</pre>
 
-{{{#!InfoBox
-The order of the different costs in the scoring scheme is `match`, `mismatch`, `gap extend` and `gap open`. If you want to use linear gap costs you could also omit the last parameter `gap open` and the scoring scheme would automatically choose the linear gap cost function.
-}}}
+<pre>#InfoBox
+The order of the different costs in the scoring scheme is <tt>match</tt>, <tt>mismatch</tt>, <tt>gap extend</tt> and <tt>gap open</tt>. If you want to use linear gap costs you could also omit the last parameter <tt>gap open</tt> and the scoring scheme would automatically choose the linear gap cost function.
+</pre>
 
-== Global Alignments ==
+=== Global Alignments ===
 
 In this section, we want to compute a global alignment using the Needleman-Wunsch algorithm.
 We will use the Levenshtein distance as our scoring scheme.
 
-A program always starts with including the headers that contain the components (data structures and algorithms) we want to use. To gain access to the alignment algorithms we need to include the `align.h` header file. We tell the program that it has to use the `seqan` namespace and write the `main` function with an empty body. 
+A program always starts with including the headers that contain the components (data structures and algorithms) we want to use. To gain access to the alignment algorithms we need to include the <tt>align.h</tt> header file. We tell the program that it has to use the <tt>seqan</tt> namespace and write the <tt>main</tt> function with an empty body. 
 
-A good programming practice is to define all types that shall be used by the function at the beginning of the function body. In our case, we define a `TSequence` type for our input sequences and an [dox:Align Align] object (`TAlign`) type to store the alignment. For more information on the Align datastructure, please read the tutorial [wiki:Tutorial/AlignmentRepresentation Alignment Representation]. 
+A good programming practice is to define all types that shall be used by the function at the beginning of the function body. In our case, we define a <tt>TSequence</tt> type for our input sequences and an [dox:Align Align] object (<tt>TAlign</tt>) type to store the alignment. For more information on the Align datastructure, please read the tutorial [[Tutorial/AlignmentRepresentation| Alignment Representation]]. 
 
 [[Include(source:trunk/core/demos/tutorial/alignments/alignment_global_standard.cpp, fragment=main)]]
 
-After we defined the types, we can define the variables and objects. First, we create two input sequences `seq1 = "CDFGHC"` and `seq2 = "CDEFGAHC"`. We then define an 'align' object where we want to put the sequences into, we resize it to manage two [dox:Gaps Gaps] objects, and then assign the sequences to it.
+After we defined the types, we can define the variables and objects. First, we create two input sequences <tt>seq1 = "CDFGHC"</tt> and <tt>seq2 = "CDEFGAHC"</tt>. We then define an 'align' object where we want to put the sequences into, we resize it to manage two [dox:Gaps Gaps] objects, and then assign the sequences to it.
 
 [[Include(source:trunk/core/demos/tutorial/alignments/alignment_global_standard.cpp, fragment=init)]]
 
-Now, we can compute our first alignment. To do so, we simply call the function [dox:globalAlignment globalAlignment()] and give as input parameters the `align` object and the scoring scheme representing the Levenshtein distance. The globalAlignment function returns the score of the best alignment, which we store in the `score` variable. Afterwards, we print the computed score and the corresponding alignment.
+Now, we can compute our first alignment. To do so, we simply call the function [dox:globalAlignment globalAlignment()] and give as input parameters the <tt>align</tt> object and the scoring scheme representing the Levenshtein distance. The globalAlignment function returns the score of the best alignment, which we store in the <tt>score</tt> variable. Afterwards, we print the computed score and the corresponding alignment.
 
 [[Include(source:trunk/core/demos/tutorial/alignments/alignment_global_standard.cpp, fragment=alignment)]]
 
 Here the output.
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 Score: -2
       0     .    
         CD-FG-HC
-        || || ||
+{| border=1 class="simple"
+! 
+! 
+|}
+
         CDEFGAHC
-}}}
+</pre>
 
 ==== Assignment 1 ====
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 
  Type :: Review
  Objective :: Compute a global alignment between the DNA sequences "AAATGACGGATTG"
-   "AGTCGGATCTACTG" using the Gotoh algorithm with the following scoring parameters: `match = 4`, `mismatch = -2`, `gap open = -4` and `gap extend = -2`. Store the alignment in an Align object and and print it together with the score.
+   "AGTCGGATCTACTG" using the Gotoh algorithm with the following scoring parameters: <tt>match = 4</tt>, <tt>mismatch = -2</tt>, <tt>gap open = -4</tt> and <tt>gap extend = -2</tt>. Store the alignment in an Align object and and print it together with the score.
 
  Hints ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
-The Gotoh algorithm uses an affine gap function. In SeqAn you can switch between linear and affine gap functions using the scoring scheme by setting different parameters for `gap open` and `gap extend`. Note, the order of the scoring parameters is important. Have a look on the scoring scheme section above if you are not sure about the correct ordering.
-}}}
+The Gotoh algorithm uses an affine gap function. In SeqAn you can switch between linear and affine gap functions using the scoring scheme by setting different parameters for <tt>gap open</tt> and <tt>gap extend</tt>. Note, the order of the scoring parameters is important. Have a look on the scoring scheme section above if you are not sure about the correct ordering.
+</pre>
 
  Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 You can find a complete solution with some more explanations 
-[wiki:Tutorial/PairwiseSequenceAlignment/Assignment/GlobalAlignmentGotoh here].
-}}}
+[[Tutorial/PairwiseSequenceAlignment/Assignment/GlobalAlignmentGotoh| here]].
+</pre>
 
-}}}
+</pre>
 
-=== Overlap Alignments ===
+==== Overlap Alignments ====
 
 [[Image(alignment_AlignConfig.png, 40%, align=right)]]
 In contrast to the global alignment, an overlap alignment does not penalize gaps at the beginning and at the end of the sequences. This is referred to as '''free end-gaps'''. It basically means that overlap alignments can be shifted such that the end of the one sequence matches  the beginning of the other sequence, while the respective other ends are gapped. 
 
-We use the [dox:AlignConfig AlignConfig] object to tell the algorithm which gaps are free. The AlignConfig object takes four explicitly defined bool arguments. The first argument stands for `initial gaps` in the vertical sequence of the alignment matrix (first row) and the second argument stands for `initial gaps` in the horizontal sequence (first column). The third parameter stands for `end` gaps in the horizontal sequence (last column) and the fourth parameter stands for `end gaps` in the vertical sequence (last row). Per default the arguments of AlignConfig are set to `false` indicating a standard global alignment as you have seen above. In an overlap alignment all arguments are set to `true`. This means the first row and first column are initialized with zeros and the maximal score is searched in the last column and in the last row.
+We use the [dox:AlignConfig AlignConfig] object to tell the algorithm which gaps are free. The AlignConfig object takes four explicitly defined bool arguments. The first argument stands for <tt>initial gaps</tt> in the vertical sequence of the alignment matrix (first row) and the second argument stands for <tt>initial gaps</tt> in the horizontal sequence (first column). The third parameter stands for <tt>end</tt> gaps in the horizontal sequence (last column) and the fourth parameter stands for <tt>end gaps</tt> in the vertical sequence (last row). Per default the arguments of AlignConfig are set to <tt>false</tt> indicating a standard global alignment as you have seen above. In an overlap alignment all arguments are set to <tt>true</tt>. This means the first row and first column are initialized with zeros and the maximal score is searched in the last column and in the last row.
 
-Just let us compute an overlap alignment to see how it works. We will also make use of the [dox:AlignmentGraph Alignment Graph] to store the alignment this time. We start again with including the necessary headers and defining all types that we need. We define the `TStringSet` type to store our input sequences in a StringSet and we define the `TDepStringSet` which is an [dox:DependentStringSet Dependent StringSet] used internally by the AlignmentGraph.
+Just let us compute an overlap alignment to see how it works. We will also make use of the [dox:AlignmentGraph Alignment Graph] to store the alignment this time. We start again with including the necessary headers and defining all types that we need. We define the <tt>TStringSet</tt> type to store our input sequences in a StringSet and we define the <tt>TDepStringSet</tt> which is an [dox:DependentStringSet Dependent StringSet] used internally by the AlignmentGraph.
 
 [[Include(source:trunk/core/demos/tutorial/alignments/alignment_global_overlap.cpp, fragment=main)]]
 
-Before we can initialize the AlignmentGraph we append the input sequences to the StringSet `strings`. Then we simply pass `strings` as an argument to the constructor of the AlignmentGraph `alignG`. 
+Before we can initialize the AlignmentGraph we append the input sequences to the StringSet <tt>strings</tt>. Then we simply pass <tt>strings</tt> as an argument to the constructor of the AlignmentGraph <tt>alignG</tt>. 
 
 [[Include(source:trunk/core/demos/tutorial/alignments/alignment_global_overlap.cpp, fragment=init)]]
 
-Now we are ready to compute the alignment. This time we change two things when calling the `globalAlignment` function. First, we use an AlignmentGraph to store the computed alignment and second we use the AlignConfig object to compute the overlap alignment.
+Now we are ready to compute the alignment. This time we change two things when calling the <tt>globalAlignment</tt> function. First, we use an AlignmentGraph to store the computed alignment and second we use the AlignConfig object to compute the overlap alignment.
 
 [[Include(source:trunk/core/demos/tutorial/alignments/alignment_global_overlap.cpp, fragment=alignment)]]
 
 Here the output.
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 Score: 2
 Alignment matrix:
       0     .    : 
         blablubalu
-          ||  ||  
+{| border=1 class="simple"
+!  
+|}
+
         --ab--ba--
-}}}
+</pre>
 
 ==== Assignment 2 ====
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 
  Type :: Review
- Objective :: Compute a semi-global alignment between the sequences `AAATGACGGATTG` and `TGGGA` using the costs 1, -1, -1 for match, mismatch and gap, respectively. Use an AlignmentGraph to store the alignment. Print the score and the resulting alignment to the standard output.
+ Objective :: Compute a semi-global alignment between the sequences <tt>AAATGACGGATTG</tt> and <tt>TGGGA</tt> using the costs 1, -1, -1 for match, mismatch and gap, respectively. Use an AlignmentGraph to store the alignment. Print the score and the resulting alignment to the standard output.
 
  Hint ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 A semi-global alignment is a special form of an overlap alignment often used when aligning short sequences again a long sequence. Here we only allow free free end-gaps at the beginning and the end of the shorter sequence.
-}}}
+</pre>
 
  Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 You can find a complete solution with some more explanations 
-[wiki:Tutorial/PairwiseSequenceAlignment/Assignment/SemiGlobalAlignment here].
-}}}
+[[Tutorial/PairwiseSequenceAlignment/Assignment/SemiGlobalAlignment| here]].
+</pre>
 
-}}}
+</pre>
 
-=== Specialized Alignments ===
+==== Specialized Alignments ====
 
 SeqAn offers specialized algorithms that can be selected using a tag. Note that often these specializations are restricted in some manner. The following table lists the different specialized alignments and how they are restricted.
 
-||= Alignment Tag =||= Description =|| 
-{{{#!td valign=top width=150
+{| border=1 class="simple"
+!= Alignment Tag =
+!= Description =
+|}
+
+<pre>#td valign=top width=150
 Hirschberg 
-}}}
-{{{#!td valign=top width=550
+</pre>
+<pre>#td valign=top width=550
 The Hirschberg algorithm computes an alignment between two sequences in linear space. The algorithm can only be used with an Align object (or Gaps). It uses only linear gap costs and does no overlap alignments. 
-}}}
+</pre>
 
-{{{#!td valign=top width=150
+<pre>#td valign=top width=150
 MyersBitVector
-}}}
-{{{#!td valign=top width=550
+</pre>
+<pre>#td valign=top width=550
 The MyersBitVector is a fast alignment specialization using bit parallelism. It only works with the Levenshtein distance and outputs no alignments.
-}}}
+</pre>
 
-{{{#!td valign=top width=150
+<pre>#td valign=top width=150
 MyersHirschberg
-}}}
-{{{#!td valign=top width=550
+</pre>
+<pre>#td valign=top width=550
 The MyersHirschberg is an combination of the rapid MyersBitVector and the space efficient Hirschberg algorithm, which additionally enables the computation of an alignment. It only works with the Levenshtein distance and for Align objects.
-}}}
+</pre>
 
-{{{#!InfoBox
+<pre>#InfoBox
 In SeqAn you can omit the computation of the traceback to get only the score by using the function [dox:globalAlignmentScore globalAlignmentScore()]. This way you can use the alignment algorithms for verification purposes, etc..
-}}}
+</pre>
 
-In the following example, we want to compute a global alignment of two sequences using the Hirschberg algorithm. We are setting the `match` score to `1`, and `mismatch` as well as `gap` penalty to `-1`. We print the alignment and the score. 
+In the following example, we want to compute a global alignment of two sequences using the Hirschberg algorithm. We are setting the <tt>match</tt> score to <tt>1</tt>, and <tt>mismatch</tt> as well as <tt>gap</tt> penalty to <tt>-1</tt>. We print the alignment and the score. 
 
 First the necessary includes and typedefs:
 
 [[Include(source:trunk/core/demos/tutorial/alignments/alignment_global_specialised.cpp, fragment=main)]]
 
-In addition to the previous examined examples we tell the globalAlignment function to use the desired Hirschberg algorithm by explicitly passing the  tag `Hirschberg` as last parameter (for an overview of available alignment algorithms see [dox:PairwiseAlignmentAlgorithms Pairwise Alignment Algorithms]). The resulting alignment and score are then printed.
+In addition to the previous examined examples we tell the globalAlignment function to use the desired Hirschberg algorithm by explicitly passing the  tag <tt>Hirschberg</tt> as last parameter (for an overview of available alignment algorithms see [dox:PairwiseAlignmentAlgorithms Pairwise Alignment Algorithms]). The resulting alignment and score are then printed.
 
 [[Include(source:trunk/core/demos/tutorial/alignments/alignment_global_specialised.cpp, fragment=alignment)]]
 
 Here the output:
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 Score: 11
       0     .    :    .   
         GARFIELDTHE---CAT
-        |||||||||||   |||
+{| border=1 class="simple"
+!
+!
+!
+!
+!/   
+!/
+|}
+
         GARFIELDTHEBIGCAT
-}}}
+</pre>
 
 ==== Assignment 3 ====
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 
  Type :: Application
- Objective :: Write a program that computes a fast global alignment between the [dox:Rna Rna] sequences `AAGUGACUUAUUG` and `AGUCGGAUCUACUG` using the Align data structure and the Levenshtein distance. Print the score and the alignment. Additionally, output for each row of the Align object the view positions of the gaps.
+ Objective :: Write a program that computes a fast global alignment between the [dox:Rna Rna] sequences <tt>AAGUGACUUAUUG</tt> and <tt>AGUCGGAUCUACUG</tt> using the Align data structure and the Levenshtein distance. Print the score and the alignment. Additionally, output for each row of the Align object the view positions of the gaps.
 
  Hint ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 You can use an iterator to iterate over a row. Use the metafunction [dox:Align#Row Row] to get the type of the row used by the Align object.
-}}}
+</pre>
 
  Hint ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 Use the function [dox:Gaps#isGap isGap] to check whether the current value of the iterator is a gap or not.
-}}}
+</pre>
 
  Hint ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 The gaps are already in the view space.
-}}}
+</pre>
 
  Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 You can find a complete solution with some more explanations 
-[wiki:Tutorial/PairwiseSequenceAlignment/Assignment/Assignment3MyersHirschberg here].
-}}}
+[[Tutorial/PairwiseSequenceAlignment/Assignment/Assignment3MyersHirschberg| here]].
+</pre>
 
-}}}
+</pre>
   
-== Local Alignments ==
+=== Local Alignments ===
 
 Now let's look at local pairwise alignments.
 
@@ -258,31 +282,39 @@ Next, several local alignments of the two given DNA sequences are going to be co
 [[Include(source:trunk/core/demos/tutorial/alignments/alignment_pairwise_local.cpp, fragment=init2)]]
 
 
-A [dox:LocalAlignmentEnumerator LocalAlignmentEnumerator] object needs to be initialized on the [dox:Align Align] object. In addition to the Align object and the scoring scheme, we now also pass the `finder` and a minimal score value, 4 in this case, to the localAlignment function. The `WatermanEggert` tag specifies the desired Waterman-Eggert algorithm. While the score of the local alignment satisfies the minimal score cutoff, the alignments are printed with their scores and the subsequence begin and end positions.
+A [dox:LocalAlignmentEnumerator LocalAlignmentEnumerator] object needs to be initialized on the [dox:Align Align] object. In addition to the Align object and the scoring scheme, we now also pass the <tt>finder</tt> and a minimal score value, 4 in this case, to the localAlignment function. The <tt>WatermanEggert</tt> tag specifies the desired Waterman-Eggert algorithm. While the score of the local alignment satisfies the minimal score cutoff, the alignments are printed with their scores and the subsequence begin and end positions.
 [[Include(source:trunk/core/demos/tutorial/alignments/alignment_pairwise_local.cpp, fragment=ali2)]]
 
 Here is the output of the first part of our example program:
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 Score = 19
       0     .    :
         a-philolog
-        | ||| ||||
+{| border=1 class="simple"
+!/ 
+!
+!
+|}
+
         amphibolog
 
 
 Aligns Seq1[0:9] and Seq2[7:16]
-}}}
+</pre>
 
 The second part outputs two alignments:
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 Score = 9
       0     .
         ATAAGCGT
-        ||| | ||
+{| border=1 class="simple"
+!/ | 
+|}
+
         ATA-GAGT
 
 
@@ -291,150 +323,161 @@ Aligns Seq1[0:7] and Seq2[2:9]
 Score = 5
       0     .
         TC-TCG
-        || | |
+{| border=1 class="simple"
+! / |
+|}
+
         TCATAG
 
 
 Aligns Seq1[7:12] and Seq2[0:5]
-}}}
+</pre>
 
 ==== Assignment 4 ====
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 
  Type :: Review
- Objective :: Write a program which computes the 3 best local alignments of the two [dox:AminoAcid AminoAcid] sequences "`PNCFDAKQRTASRPL`" and "`CFDKQKNNRTATRDTA`" using the following scoring parameters: `match = 3`, `mismatch = -2`, `gap open = -5`, `gap extension = -1`. 
+ Objective :: Write a program which computes the 3 best local alignments of the two [dox:AminoAcid AminoAcid] sequences "<tt>PNCFDAKQRTASRPL</tt>" and "<tt>CFDKQKNNRTATRDTA</tt>" using the following scoring parameters: <tt>match = 3</tt>, <tt>mismatch = -2</tt>, <tt>gap open = -5</tt>, <tt>gap extension = -1</tt>. 
  
  Hint ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
-Use an extra variable to enumerate the `k` best alignments.
-}}}
+Use an extra variable to enumerate the <tt>k</tt> best alignments.
+</pre>
 
  Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 You can find a complete solution with some more explanations 
-[wiki:Tutorial/Alignments/AssignmentPairwiseLocalAlignment1 here].
-}}}
+[[Tutorial/Alignments/AssignmentPairwiseLocalAlignment1| here]].
+</pre>
 
-}}}
+</pre>
 
-== Banded Alignments ==
+=== Banded Alignments ===
 
 [[Image(alignment_band.png, 50%, align=right)]]
-Often it is quite useful to reduce the search space in which the optimal alignment can be found, e.g., if the sequences are very similar, or if only a certain number of errors is allowed. To do so you can define a band, whose intersection with the alignment matrix defines the search space. To define a band we have to pass two additional parameters to the alignment function. The first one specifies the position where the lower diagonal of the band crosses the vertical axis. The second one specifies the position where the upper diagonal of the band crosses the horizontal axis. You can imagine the matrix as the fourth quadrant of the Cartesian coordinate system. Then the main diagonal of an alignment matrix is described by the function `f(x) = -x` and all diagonals that crosses the vertical axis below this point are specified with negative values and all diagonals that crosses the horizontal axis right of it are specified with positive values (see image). A given band is valid as long as the relation `lower diagonal <= upper diagonal` holds. In case of equality, the alignment is equivalent to the hamming distance problem, where only substitutions are considered.
+Often it is quite useful to reduce the search space in which the optimal alignment can be found, e.g., if the sequences are very similar, or if only a certain number of errors is allowed. To do so you can define a band, whose intersection with the alignment matrix defines the search space. To define a band we have to pass two additional parameters to the alignment function. The first one specifies the position where the lower diagonal of the band crosses the vertical axis. The second one specifies the position where the upper diagonal of the band crosses the horizontal axis. You can imagine the matrix as the fourth quadrant of the Cartesian coordinate system. Then the main diagonal of an alignment matrix is described by the function <tt>f(x) = -x</tt> and all diagonals that crosses the vertical axis below this point are specified with negative values and all diagonals that crosses the horizontal axis right of it are specified with positive values (see image). A given band is valid as long as the relation <tt>lower diagonal <= upper diagonal</tt> holds. In case of equality, the alignment is equivalent to the hamming distance problem, where only substitutions are considered.
 
-{{{
-#!ImportantBox
-The alignment algorithms return `MinValue<ScoreValue>::VALUE` if a correct alignment cannot be computed due to invalid compositions of the band and the specified alignment preferences. Assume, you compute a global alignment and the given band does not cover the last cell of the alignment matrix. In this case it is not possible to compute a correct alignment, hence `MinValue<ScoreValue>::VALUE` is returned, while no further alignment information are computed.
-}}}
+<pre>
+#ImportantBox
+The alignment algorithms return <tt>MinValue<ScoreValue>::VALUE</tt> if a correct alignment cannot be computed due to invalid compositions of the band and the specified alignment preferences. Assume, you compute a global alignment and the given band does not cover the last cell of the alignment matrix. In this case it is not possible to compute a correct alignment, hence <tt>MinValue<ScoreValue>::VALUE</tt> is returned, while no further alignment information are computed.
+</pre>
 
-Let's compute a banded alignment. The first step is to write the `main` function body including the type definitions and the initializations.
+Let's compute a banded alignment. The first step is to write the <tt>main</tt> function body including the type definitions and the initializations.
 [[Include(source:trunk/core/demos/tutorial/alignments/alignment_banded.cpp, fragment=main)]]
 
-After we initialized everything, we will compute the banded alignment. We pass the values `-2` for the lower diagonal and `2` for the upper diagonal.
+After we initialized everything, we will compute the banded alignment. We pass the values <tt>-2</tt> for the lower diagonal and <tt>2</tt> for the upper diagonal.
 
 [[Include(source:trunk/core/demos/tutorial/alignments/alignment_banded.cpp, fragment=alignment)]]
 
 And here is the output:
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 Score: -2
       0     .
         CD-FG-HC
-        || || ||
+{| border=1 class="simple"
+! 
+! 
+|}
+
         CDEFGAHC
-}}}
+</pre>
 
 
 ==== Assignment 5 ====
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 
  Type :: Transfer
- Objective :: Write an approximate pattern matching algorithm using alignment algorithms. Report the positions of all hits where the pattern matches the text with at most `2` errors. Output the number of total edits used to match the pattern and print the corresponding cigar string of the alignment without leading and trailing gaps in the pattern. Text: "`MISSISSIPPIANDMISSOURI`" Pattern: "`SISSI`"
+ Objective :: Write an approximate pattern matching algorithm using alignment algorithms. Report the positions of all hits where the pattern matches the text with at most <tt>2</tt> errors. Output the number of total edits used to match the pattern and print the corresponding cigar string of the alignment without leading and trailing gaps in the pattern. Text: "<tt>MISSISSIPPIANDMISSOURI</tt>" Pattern: "<tt>SISSI</tt>"
  
  Hint ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 The first step would be to verify at which positions in the text the pattern matches with at most 2 errors.
-}}}
+</pre>
 
  Hint ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 Use the [dox:SegmentableConcept#infix infix] function to return a subsequence of a string.
-}}}
+</pre>
 
  Hint ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
-A cigar string is a different representation of an alignment. It consists of a number followed by an operation. The number indicates how many consecutive operations of the same type are executed. Operations can be `M` for match, `S` for mismatch, `I` for insertion and `D` for deletion. Here is an example:
-{{{
-#!html
+A cigar string is a different representation of an alignment. It consists of a number followed by an operation. The number indicates how many consecutive operations of the same type are executed. Operations can be <tt>M</tt> for match, <tt>S</tt> for mismatch, <tt>I</tt> for insertion and <tt>D</tt> for deletion. Here is an example:
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 ref: AC--GTCATTT
 r01: ACGTCTCA---
 Cigar of r01: 2M2I1S3M3D
-}}}
-}}}
+</pre>
+</pre>
 
  Solution Step 1 ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:trunk/core/demos/tutorial/alignments/pairwise_sequence_alignment_assignment5_step1.cpp, fragment=main)]]
-}}}
+</pre>
 
  Solution Step 2  ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:trunk/core/demos/tutorial/alignments/pairwise_sequence_alignment_assignment5_step2.cpp, fragment=main)]]
-}}}
+</pre>
 
  Solution Step 3 ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:trunk/core/demos/tutorial/alignments/pairwise_sequence_alignment_assignment5_step3.cpp, fragment=main)]]
-}}}
+</pre>
 
  Solution Step 4  ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:trunk/core/demos/tutorial/alignments/pairwise_sequence_alignment_assignment5_step4.cpp, fragment=main)]]
-}}}
+</pre>
 
  Solution Step 5 ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:trunk/core/demos/tutorial/alignments/pairwise_sequence_alignment_assignment5_step5.cpp, fragment=main)]]
-}}}
+</pre>
 
  Solution Step 6  ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:trunk/core/demos/tutorial/alignments/pairwise_sequence_alignment_assignment5_step6.cpp, fragment=main)]]
-}}}
+</pre>
 
  Complete Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 You can find a complete solution with some more explanations 
-[wiki:Tutorial/PairwiseSequenceAlignment/Assignment/Assignment5ApproximatePatternMatching here].
-}}}
+[[Tutorial/PairwiseSequenceAlignment/Assignment/Assignment5ApproximatePatternMatching| here]].
+</pre>
 
-}}}
-=== Submit a  comment ===
+</pre>
+==== Submit a  comment ====
 If you found a mistake, or have suggestions about an improvement of this page press:
 [/newticket?component=Documentation&description=Tutorial+Enhancement+for+page+http://trac.seqan.de/wiki/Tutorial/Alignments&type=enhancement submit your comment]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

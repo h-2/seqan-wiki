@@ -1,47 +1,52 @@
-= SeqAn Users =
+
+== SeqAn Users ==
 
 [http://scholar.google.de/scholar?cites=6133524701503406018 Citations of SeqAn paper from Google Scholar].
 
 The list of organizations using SeqAn includes the following.
 If you are using SeqAn and want to be added to this list, [mailto:manuel.holtgrewe@fu-berlin.de send us an email]!
 
-=== Academic ===
+==== Academic ====
 
- * [http://www.charite.de/ Charite Universitätsmedizin Berlin]
- * [http://www.fu-berlin.de Freie Universität Berlin]
- * [http://www.pasteur.fr/ip/easysite/pasteur/en Institute Pasteur]
- * [http://www.mdc-berlin.de/en/ Max Delbrück Center for Molecular Medicine]
- * [http://www.molgen.mpg.de/ Max Planck Institute for Molecular Genetics]
- * [http://www.mrc-bsu.cam.ac.uk/index.html MRC Biostatistics Unit]
- * [http://uq.edu.au/ University of Queensland]
+*[http://www.charite.de/ Charite Universitätsmedizin Berlin]
+*[http://www.fu-berlin.de Freie Universität Berlin]
+*[http://www.pasteur.fr/ip/easysite/pasteur/en Institute Pasteur]
+*[http://www.mdc-berlin.de/en/ Max Delbrück Center for Molecular Medicine]
+*[http://www.molgen.mpg.de/ Max Planck Institute for Molecular Genetics]
+*[http://www.mrc-bsu.cam.ac.uk/index.html MRC Biostatistics Unit]
+*[http://uq.edu.au/ University of Queensland]
 
-=== Commercial ===
+==== Commercial ====
 
- * [http://www.illumina.com Illumina, Inc.]
- * [http://www.febit.com Febit Biomed GmbH]
+*[http://www.illumina.com Illumina, Inc.]
+*[http://www.febit.com Febit Biomed GmbH]
 
-== Projects using SeqAn ==
+=== Projects using SeqAn ===
 
 The following list contains projects and tools using SeqAn.
 It is probably incomplete.
 [mailto:manuel.holtgrewe@fu-berlin.de Send us an email] if you want to have your publication added.
 
 2011
- * [http://www.ncbi.nlm.nih.gov/pubmed/22247280 Estimation of pairwise sequence similarity of mammalian enhancers with word neighbourhood counts.] Göke J, Schulz MH, Lasserre J, Vingron M. Bioinformatics. 2012 Mar 1.
- * [http://www.ncbi.nlm.nih.gov/pubmed/22238266 Detecting genomic indel variants with exact breakpoints in single- and paired-end sequencing data using SplazerS.] Emde AK, Schulz MH, Weese D, Sun R, Vingron M, Kalscheuer VM, Haas SA, Reinert K. Bioinformatics. 2012 Mar 1.
- * [http://www.ncbi.nlm.nih.gov/pubmed/22151882 STELLAR: fast and exact local alignments.] BMC Bioinformatics. Kehr B, Weese D, Reinert K. 2011 Oct 5.
- * [http://www.ncbi.nlm.nih.gov/pubmed/21785132 STEME: efficient EM to find motifs in large data sets.] Reid JE, Wernisch L. Nucleic Acids Res. 2011 Jul 23.
- * [http://www.ncbi.nlm.nih.gov/pubmed/21615913 A novel and well-defined benchmarking method for second generation read mapping.] Holtgrewe M, Emde AK, Weese D, Reinert K. BMC Bioinformatics. 2011 May 26;12:210.
- * [http://www.ncbi.nlm.nih.gov/pubmed/21148543 Mugsy: fast multiple alignment of closely related whole genomes.] Angiuoli SV, Salzberg SL. Bioinformatics. 2011 Feb 1;27(3):334-42.
+*[http://www.ncbi.nlm.nih.gov/pubmed/22247280 Estimation of pairwise sequence similarity of mammalian enhancers with word neighbourhood counts.] Göke J, Schulz MH, Lasserre J, Vingron M. Bioinformatics. 2012 Mar 1.
+*[http://www.ncbi.nlm.nih.gov/pubmed/22238266 Detecting genomic indel variants with exact breakpoints in single- and paired-end sequencing data using SplazerS.] Emde AK, Schulz MH, Weese D, Sun R, Vingron M, Kalscheuer VM, Haas SA, Reinert K. Bioinformatics. 2012 Mar 1.
+*[http://www.ncbi.nlm.nih.gov/pubmed/22151882 STELLAR: fast and exact local alignments.] BMC Bioinformatics. Kehr B, Weese D, Reinert K. 2011 Oct 5.
+*[http://www.ncbi.nlm.nih.gov/pubmed/21785132 STEME: efficient EM to find motifs in large data sets.] Reid JE, Wernisch L. Nucleic Acids Res. 2011 Jul 23.
+*[http://www.ncbi.nlm.nih.gov/pubmed/21615913 A novel and well-defined benchmarking method for second generation read mapping.] Holtgrewe M, Emde AK, Weese D, Reinert K. BMC Bioinformatics. 2011 May 26;12:210.
+*[http://www.ncbi.nlm.nih.gov/pubmed/21148543 Mugsy: fast multiple alignment of closely related whole genomes.] Angiuoli SV, Salzberg SL. Bioinformatics. 2011 Feb 1;27(3):334-42.
 2010
- * [http://www.ncbi.nlm.nih.gov/pubmed/20628575 Integration preferences of wildtype AAV-2 for consensus rep-binding sites at numerous loci in the human genome.] Hüser D, Gogol-Döring A, Lutter T, Weger S, Winter K, Hammer EM, Cathomen T, Reinert K, Heilbronn R. PLoS Pathog. 2010 Jul 8;6(7):e1000985
- * [http://www.ncbi.nlm.nih.gov/pubmed/19880369 MicroRazerS: rapid alignment of small RNA reads.] Emde AK, Grunert M, Weese D, Reinert K, Sperling SR. Bioinformatics. 2010 Jan 1;26(1):123-4
+*[http://www.ncbi.nlm.nih.gov/pubmed/20628575 Integration preferences of wildtype AAV-2 for consensus rep-binding sites at numerous loci in the human genome.] Hüser D, Gogol-Döring A, Lutter T, Weger S, Winter K, Hammer EM, Cathomen T, Reinert K, Heilbronn R. PLoS Pathog. 2010 Jul 8;6(7):e1000985
+*[http://www.ncbi.nlm.nih.gov/pubmed/19880369 MicroRazerS: rapid alignment of small RNA reads.] Emde AK, Grunert M, Weese D, Reinert K, Sperling SR. Bioinformatics. 2010 Jan 1;26(1):123-4
 2009
- * [http://genome.cshlp.org/content/19/9/1646 RazerS--fast read mapping with sensitivity control.] Weese D, Emde AK, Rausch T, Döring A, Reinert K. Genome Res. 2009 Sep;19(9):1646-54.
- * [http://www.ncbi.nlm.nih.gov/pubmed/19435513 Measuring differential gene expression by short read sequencing: quantitative comparison to 2-channel gene expression microarrays.] Bloom JS, Khan Z, Kruglyak L, Singh M, Caudy AA. BMC Genomics. 2009 May 12;10:221.
- * [http://bioinformatics.oxfordjournals.org/content/25/9/1105.full TopHat: discovering splice junctions with RNA-Seq.] Trapnell C, Pachter L, Salzberg SL. Bioinformatics. 2009 May 1;25(9):1105-11.
- * [http://genomebiology.com/content/10/3/R25 Ultrafast and memory-efficient alignment of short DNA sequences to the human genome.] Langmead B, Trapnell C, Pop M, Salzberg SL. Genome Biol. 2009;10(3):R25.
+*[http://genome.cshlp.org/content/19/9/1646 RazerS--fast read mapping with sensitivity control.] Weese D, Emde AK, Rausch T, Döring A, Reinert K. Genome Res. 2009 Sep;19(9):1646-54.
+*[http://www.ncbi.nlm.nih.gov/pubmed/19435513 Measuring differential gene expression by short read sequencing: quantitative comparison to 2-channel gene expression microarrays.] Bloom JS, Khan Z, Kruglyak L, Singh M, Caudy AA. BMC Genomics. 2009 May 12;10:221.
+*[http://bioinformatics.oxfordjournals.org/content/25/9/1105.full TopHat: discovering splice junctions with RNA-Seq.] Trapnell C, Pachter L, Salzberg SL. Bioinformatics. 2009 May 1;25(9):1105-11.
+*[http://genomebiology.com/content/10/3/R25 Ultrafast and memory-efficient alignment of short DNA sequences to the human genome.] Langmead B, Trapnell C, Pop M, Salzberg SL. Genome Biol. 2009;10(3):R25.
 2008
- * [http://www.ncbi.nlm.nih.gov/pubmed/18689823 Segment-based multiple sequence alignment.] Rausch T, Emde AK, Weese D, Döring A, Notredame C, Reinert K. Bioinformatics. 2008 Aug 15;24(16):i187-92.
- * [http://www.springerlink.com/content/w786686m07554mw2/ Fast and Adaptive Variable Order Markov Chain Construction.] Schulz, M. H. and Weese, D. and Rausch, T. and Döring, A. and Reinert, K. and Vingron, M. (2008). WABI'08.
- * http://www.springerlink.com/content/xr2q4w73m623xl52/?MUD=MP Efficient String Mining under Constraints Via the Deferred Frequency Index.] David Weese und Marcel H. Schulz. Lecture Notes in Computer Science, 2008, Volume 5077/2008, 374-388
+*[http://www.ncbi.nlm.nih.gov/pubmed/18689823 Segment-based multiple sequence alignment.] Rausch T, Emde AK, Weese D, Döring A, Notredame C, Reinert K. Bioinformatics. 2008 Aug 15;24(16):i187-92.
+*[http://www.springerlink.com/content/w786686m07554mw2/ Fast and Adaptive Variable Order Markov Chain Construction.] Schulz, M. H. and Weese, D. and Rausch, T. and Döring, A. and Reinert, K. and Vingron, M. (2008). WABI'08.
+*http://www.springerlink.com/content/xr2q4w73m623xl52/?MUD=MP Efficient String Mining under Constraints Via the Deferred Frequency Index.] David Weese und Marcel H. Schulz. Lecture Notes in Computer Science, 2008, Volume 5077/2008, 374-388
+
+
+
+{{TracNotice|{{PAGENAME}}}}

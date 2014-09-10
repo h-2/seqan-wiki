@@ -1,12 +1,13 @@
+
 '''WORK IN PROGRESS'''
-= Documentation Updates =
+== Documentation Updates ==
 [[TOC()]]
 
-== Documentation Structure ==
+=== Documentation Structure ===
 
- * We need to decide and document how the DDDoc tree looks like.
+*We need to decide and document how the DDDoc tree looks like.
 
-{{{
+<pre>
 .Concept.Container
 ..summary:A class for objects that contains other objects of a fixed type.
 
@@ -32,15 +33,19 @@ The Alloc String provides a String specialization based on dynamic arrays.
 .Class.Gaps
 ..class.Concept.Sequence
 ..summary:Wrapper for @Concept.Sequence|sequences@ that stores gaps outside the wrapped object.
-}}}
+</pre>
 
-== Documentation Guideline ==
+=== Documentation Guideline ===
 
- * We need to specify how a good documentation page looks like.
+*We need to specify how a good documentation page looks like.
 
- * Class Naming in Documentation
-  * Specializations extend the name "to the left" and must contain the name of their base class, e.g. "Spec.Alloc String" and "Spec.MMap String" are specializations of the class "Class.String".
+*Class Naming in Documentation
+**Specializations extend the name "to the left" and must contain the name of their base class, e.g. "Spec.Alloc String" and "Spec.MMap String" are specializations of the class "Class.String".
 
-== DDDoc Syntax ==
+=== DDDoc Syntax ===
 
- * We need an updated explanation of the DDDoc syntax.
+*We need an updated explanation of the DDDoc syntax.
+
+
+
+{{TracNotice|{{PAGENAME}}}}

@@ -1,32 +1,37 @@
-= Trac Backup =
+
+== Trac Backup ==
 [[TracGuideToc]]
 
-Since Trac uses a database backend, some extra care is required to safely create a backup of a [wiki:TracEnvironment project environment]. Luckily, [wiki:TracAdmin trac-admin] has a command to make backups easier: `hotcopy`.
+Since Trac uses a database backend, some extra care is required to safely create a backup of a [[TracEnvironment| project environment]]. Luckily, [[TracAdmin| trac-admin]] has a command to make backups easier: <tt>hotcopy</tt>.
 
-  ''Note: Trac uses the `hotcopy` nomenclature to match that of [http://subversion.tigris.org/ Subversion], to make it easier to remember when managing both Trac and Subversion servers.''
+  ''Note: Trac uses the <tt>hotcopy</tt> nomenclature to match that of [http://subversion.tigris.org/ Subversion], to make it easier to remember when managing both Trac and Subversion servers.''
 
-== Creating a Backup ==
+=== Creating a Backup ===
 
 To create a backup of a live TracEnvironment, simply run:
-{{{
+<pre>
 
   $ trac-admin /path/to/projenv hotcopy /path/to/backupdir
 
-}}}
+</pre>
 
-[wiki:TracAdmin trac-admin] will lock the database while copying.''
+[[TracAdmin| trac-admin]] will lock the database while copying.''
 
-The resulting backup directory is safe to handle using standard file-based backup tools like `tar` or `dump`/`restore`.
+The resulting backup directory is safe to handle using standard file-based backup tools like <tt>tar</tt> or <tt>dump</tt>/<tt>restore</tt>.
 
-Please, note, that hotcopy command does not overwrite target directory and when such exists, hotcopy ends with error: `Command failed: [Errno 17] File exists:` This is discussed in [trac:ticket:3198 #3198].
+Please, note, that hotcopy command does not overwrite target directory and when such exists, hotcopy ends with error: <tt>Command failed: [Errno 17] File exists:</tt> This is discussed in [trac:ticket:3198 #3198].
 
-=== Restoring a Backup ===
+==== Restoring a Backup ====
 
-Backups are simply a copied snapshot of the entire [wiki:TracEnvironment project environment] directory, including the SQLite database. 
+Backups are simply a copied snapshot of the entire [[TracEnvironment| project environment]] directory, including the SQLite database. 
 
-To restore an environment from a backup, stop the process running Trac (i.e. the Web server or [wiki:TracStandalone tracd]), restore the contents of your backup (path/to/backupdir) to your [wiki:TracEnvironment project environment] directory and restart the service.
+To restore an environment from a backup, stop the process running Trac (i.e. the Web server or [[TracStandalone| tracd]]), restore the contents of your backup (path/to/backupdir) to your [[TracEnvironment| project environment]] directory and restart the service.
 
   ''Note: Automatic backup of environments that don't use SQLite as database backend is not supported at this time. As a workaround, we recommend that you stop the server, copy the environment directory, and make a backup of the database using whatever mechanism is provided by the database system.''
 
 ----
 See also: TracAdmin, TracEnvironment, TracGuide, [trac:TracMigrate TracMigrate]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

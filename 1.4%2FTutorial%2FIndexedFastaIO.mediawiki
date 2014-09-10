@@ -1,26 +1,27 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
-= Indexed FASTA I/O =
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[Tutorial]] if you need the documentation for the trunk version.'''
+== Indexed FASTA I/O ==
 [[TOC()]]
 
  Learning Objective ::
-  In this tutorial, you will learn how to use a FASTA Index file (`.fai`) for indexed random-access to FASTA files.
-  This is useful for retrieving regions (e.g. `chr1:123-10004`) or single sequences (e.g. `chr1`) from FASTA files quickly.
+  In this tutorial, you will learn how to use a FASTA Index file (<tt>.fai</tt>) for indexed random-access to FASTA files.
+  This is useful for retrieving regions (e.g. <tt>chr1:123-10004</tt>) or single sequences (e.g. <tt>chr1</tt>) from FASTA files quickly.
  Difficulty ::
   Average
  Duration ::
   30 min
  Prerequisites ::
-  Tutorials: [wiki:Tutorial/Sequences Sequences]
+  Tutorials: [[Tutorial/Sequences| Sequences]]
 
 The idea of FASTA index files (''FAI'') comes from the [http://samtools.sourceforge.net/samtools.shtml samtools] program by Heng Li.
-The program provides a command `samtools faidx` for rapidly accessing parts of a large FASTA file (e.g. querying for the first chromosome by the identifier "chr1" or querying for 900 characters starting from character 100 (1-based) by `chr1:100-1,000`).
+The program provides a command <tt>samtools faidx</tt> for rapidly accessing parts of a large FASTA file (e.g. querying for the first chromosome by the identifier "chr1" or querying for 900 characters starting from character 100 (1-based) by <tt>chr1:100-1,000</tt>).
 To do this, the program creates an index file that contains one entry for each sequence.
-If the FASTA file is named `path/sequence.fasta`, the index file is usually named `path/sequence.fasta.fai`.
+If the FASTA file is named <tt>path/sequence.fasta</tt>, the index file is usually named <tt>path/sequence.fasta.fai</tt>.
 
 Using such index files, it is possible to rapidly read parts of the given sequence file.
-The module `seqan/seq_io.h` allows to create and read such `.fai` index files and exposes an API to read parts randomly of FASTA file.
+The module <tt>seqan/seq_io.h</tt> allows to create and read such <tt>.fai</tt> index files and exposes an API to read parts randomly of FASTA file.
 
-{{{#!InfoBox
+<pre>#InfoBox
 '''Information:''' FASTA/FASTQ Meta Data and Sequence Ids
 
 FASTA and FASTQ files have one meta data record for each sequence.
@@ -32,9 +33,9 @@ The id is unique to the whole file and often identifies the associate sequence u
 
 While not documented anywhere explicitely, '''only the characters up to the first space are used as the identifiers''' by widely used tools such as [http://bio-bwa.sourceforge.net/ BWA].
 Only the identifier is carried over into files generated from the input files (BWA uses the sequence id from the genome FASTA to identify the contig/chromosome and the read id as the read name in the SAM output).
-}}}
+</pre>
 
-== How Does It Work? ==
+=== How Does It Work? ===
 
 There are two requirements that a FASTA file has to fulfill to work with the FAI scheme:
 For each sequence in the FASTA file, the number of characters stored per line has to be the same and the number of bytes per line has to be the same.
@@ -44,37 +45,37 @@ The index file then stores records of sequence identifier, length, the offset of
 With this information, we can easily compute the byte offset of the i-th character of a sequence in a file by looking at its index record.
 We skip to this byte offset in the file and from there, we can read the necessary sequence characters.
 
-== Building the Index ==
+=== Building the Index ===
 
 The class seqan:Class.FaiIndex allows for building and loading FAI indices.
 To build such an index, we use the function seqan:Function.FaiIndex#build of the class seqan:Class.FaiIndex.
 The first parameter is the seqan:Class.FaiIndex object, the second is the path to the FASTA file.
-The function returns an integer indicating the result (as usual, `0` for no errors, a value different from `0` indicating an error).
+The function returns an integer indicating the result (as usual, <tt>0</tt> for no errors, a value different from <tt>0</tt> indicating an error).
 
-{{{#!cpp
+<pre>#cpp
 #include <seqan/seq_io.h>
 
 seqan::FaiIndex faiIndex;
 int res = build(faiIndex, "path/to/file.fasta");
 if (res != 0)
     std::cerr << "ERROR: Could not build the index!\n";
-}}}
+</pre>
 
 There is an alternative variant of this function where you can pass the path to the FAI file that is to be built as third parameter.
 The FAI file name will be stored in the seqan:Class.FaiIndex.
 
-{{{#!cpp
+<pre>#cpp
 #include <seqan/seq_io.h>
 
 seqan::FaiIndex faiIndex;
 int res = build(faiIndex, "path/to/file.fasta", "another/path/file.fasta.fai");
 if (res != 0)
     std::cerr << "ERROR: Could not build the index!\n";
-}}}
+</pre>
 
 We can write out the index after building it using the function seqan:Function.FaiIndex#write:
 
-{{{#!cpp
+<pre>#cpp
 #include <seqan/seq_io.h>
 
 seqan::FaiIndex faiIndex;
@@ -83,69 +84,69 @@ seqan::FaiIndex faiIndex;
 int res = write(faiIndex, "path/to/file.fasta.fai");
 if (res != 0)
     std::cerr << "ERROR: Could not write the index to file!\n";
-}}}
+</pre>
 
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 '''Assignment 1:''' Building a FAI index
 
  Type ::
   Application
  Objective ::
-  Write a small program `build_fai` that takes one parameter from the command line:
+  Write a small program <tt>build_fai</tt> that takes one parameter from the command line:
   A path to a FASTA file.
   The program should then build a FAI index and write it out.
  Hints ::
-{{{#!FoldOut
+<pre>#FoldOut
 ----
 Using the two-parameter variant of seqan:Function.FaiIndex#build is good enough.
-}}}
+</pre>
  Solution ::
-{{{#!FoldOut
+<pre>#FoldOut
 ----
 [[Include(source:/trunk/extras/demos/tutorial/indexed_fasta_io/solution1.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
-== Using the Index ==
+=== Using the Index ===
 
 To load a FAI file, we use the function seqan:Function.FaiIndex#read:
 We pass the seqan:Class.FaiIndex object as the first and the path to the FASTA file as the second parameter.
-The function returns an `int` indicating success (value `0`) or failure (non-`0` value).
+The function returns an <tt>int</tt> indicating success (value <tt>0</tt>) or failure (non-<tt>0</tt> value).
 
-{{{#!cpp
+<pre>#cpp
 #include <seqan/seq_io.h>
 
 seqan::FaiIndex faiIndex;
 int res = read(faiIndex, "path/to/file.fasta");
 if (res != 0)
     std::cerr << "ERROR: Could not read FAI index path/to/file.fasta.fai\n";
-}}}
+</pre>
 
-In the example above, the FAI file `"path/to/file.fasta.fai"` would be loaded.
+In the example above, the FAI file <tt>"path/to/file.fasta.fai"</tt> would be loaded.
 Optionally, we can specify an extra path to the FAI file:
 
-{{{#!cpp
+<pre>#cpp
 #include <seqan/seq_io.h>
 
 seqan::FaiIndex faiIndex;
 int res = read(faiIndex, "path/to/file.fasta", "path/to/index.fai");
 if (res != 0)
     std::cerr << "ERROR: Could not load FAI index path/to/index.fai\n";
-}}}
+</pre>
 
 After loading the index, we can then use the index to map a sequence id to its (zero-based) position (a position ''i'' meaning that it is the ''i''-th sequence) in the FASTA file using seqan:Function.FaiIndex#getIdByName.
-The function gets the seqan:Class.FaiIndex to use, the id of the sequence, and an `unsigned` position as parameters.
-It returns a `bool` indicating whether the mapping was successful (`true` on success, `false` on failure).
+The function gets the seqan:Class.FaiIndex to use, the id of the sequence, and an <tt>unsigned</tt> position as parameters.
+It returns a <tt>bool</tt> indicating whether the mapping was successful (<tt>true</tt> on success, <tt>false</tt> on failure).
 
-{{{#!cpp
+<pre>#cpp
 unsigned idx = 0;
-if (!getIdByName(faiIndex, "chr1", idx))
+if (getIdByName(faiIndex, "chr1", idx))
     std::cerr << "ERROR: FAI index has no entry for chr1.\n";
-}}}
+</pre>
 
 Once we have the index for the sequence in the FASTA file, we can then query the seqan:Class.FaiIndex for the length of the sequence using seqan:Function.FaiIndex#sequenceLength, get the whole sequence using seqan:Function.FaiIndex#readSequence, or get just a part of the sequence using seqan:Function.FaiIndex#readRegion.
 
-{{{#!cpp
+<pre>#cpp
 unsigned seqLength = sequenceLength(faiIndex, idx);
 
 // Load first 1000 characters of chr1.
@@ -157,43 +158,47 @@ if (readRegion(seqChr1Prefix, faiIndex, idx, 0, 1000) != 0)
 seqan::CharString seqChr1;
 if (readSequence(seqChr1, faiIndex, idx) != 0)
     std::cerr << "ERROR: Could not load chr1.\n";
-}}}
+</pre>
 
 The sequence length can be determined by only looking at the index.
 When loading the sequence or a sequence infix, only the relevant part of the file will be touched.
 Thus, only the minimal amount of memory, time, and disk I/O is used.
 
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 '''Assignment 2:''' Using the FAI index
 
  Type ::
   Application
  Objective ::
-  Write a small program `query_fai` that takes four parameters from the command line:
+  Write a small program <tt>query_fai</tt> that takes four parameters from the command line:
   A path to a FASTA file, the id of the sequence, a begin and an end position.
   The program should then read the given infix of the given sequence from the file and print it to stdout.
  Hint ::
-{{{#!FoldOut
+<pre>#FoldOut
 ----
 Use the seqan:Function.lexicalCast2 to convert strings of numbers into integers.
-}}}
+</pre>
  Solution ::
-{{{#!FoldOut
+<pre>#FoldOut
 ----
 The program appears to be very long, but most is error handling, as usual with robust I/O code.
 
 [[Include(source:/trunk/extras/demos/tutorial/indexed_fasta_io/solution2.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
-== Next Steps ==
+=== Next Steps ===
 
- * Read the Wikipedia articles about the [http://en.wikipedia.org/wiki/FASTA_format FASTA file format] and the [http://en.wikipedia.org/wiki/FASTQ_format FASTQ file format and quality values] to refresh your knowledge.
- * Read the API documentation of the seqan:Class.GenomicRegion class for storing regions (sequence identifier, start and end position).
-   There also is functionality for parsing strings like `chr1:2,032-3,212` into seqan:Class.GenomicRegion objects.
- * Continue with the [wiki:Tutorial rest of the tutorials].
+*Read the Wikipedia articles about the [http://en.wikipedia.org/wiki/FASTA_format FASTA file format] and the [http://en.wikipedia.org/wiki/FASTQ_format FASTQ file format and quality values] to refresh your knowledge.
+*Read the API documentation of the seqan:Class.GenomicRegion class for storing regions (sequence identifier, start and end position).
+   There also is functionality for parsing strings like <tt>chr1:2,032-3,212</tt> into seqan:Class.GenomicRegion objects.
+*Continue with the [[Tutorial| rest of the tutorials]].
 
-== Submit a  Comment ==
+=== Submit a  Comment ===
 
 If you found a mistake, or have suggestions about an improvement of this page press:
 [/newticket?component=Documentation&description=Tutorial+Enhancement+for+page+http://trac.seqan.de/wiki/Tutorial/IndexedFastaIO&type=enhancement submit your comment]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

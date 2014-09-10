@@ -1,25 +1,30 @@
-= SeqAn Developer Wiki Frontpage =
 
- * wiki:ChangeLog
- * wiki:HowTo/UseC++11Standard
- * For Admins: HowTo/DeleteSpamComments
- * Follow this link [wiki:"SeqAn toolbox"] to find an internal discussion about the SeqAn toolbox.
- * wiki:CodeSanityChecks
- * wiki:ParallelismInSeqan
- * wiki:IoRevision
- * Retreat 2010
-  * Renaming of files/identifiers [wiki:Retreat2010/Renaming]
-  * Propose tasks for the SeqAn retreat code review days: [wiki:Retreat2010/TODO]
-  * wiki:Retreat2010/NewFeatures
-  * wiki:Retreat2010/DeveloperDiscussion
-  * wiki:Retreat2010/TicketTypes
-  * wiki:Retreat2010/WishList
- * wiki:FileNaming
- * wiki:ConversionRevision
- * wiki:NewsLetter/DraftVersions
- * Discussion of seqan:Class.Finder specialization specifications: WhitePapers/ModuleFind
- * Care for some useful shell magick? Have a look at HowTo/UnixShellTricks
- * Warnings when including headers from Boost, STL, system headers? wiki:HowTo/DeactivateWarningsLocally
- * Look at the [wiki:Bibliography Bibliography].
- * wiki:Specifications/Sequences
- * wiki:WhitePapers/Concepts
+== SeqAn Developer Wiki Frontpage ==
+
+*wiki:ChangeLog
+*wiki:HowTo/UseC++11Standard
+*For Admins: HowTo/DeleteSpamComments
+*Follow this link [["SeqAn| toolbox"]] to find an internal discussion about the SeqAn toolbox.
+*wiki:CodeSanityChecks
+*wiki:ParallelismInSeqan
+*wiki:IoRevision
+*Retreat 2010
+**Renaming of files/identifiers [[Retreat2010/Renaming]]
+**Propose tasks for the SeqAn retreat code review days: [[Retreat2010/TODO]]
+**wiki:Retreat2010/NewFeatures
+**wiki:Retreat2010/DeveloperDiscussion
+**wiki:Retreat2010/TicketTypes
+**wiki:Retreat2010/WishList
+*wiki:FileNaming
+*wiki:ConversionRevision
+*wiki:NewsLetter/DraftVersions
+*Discussion of seqan:Class.Finder specialization specifications: WhitePapers/ModuleFind
+*Care for some useful shell magick? Have a look at HowTo/UnixShellTricks
+*Warnings when including headers from Boost, STL, system headers? wiki:HowTo/DeactivateWarningsLocally
+*Look at the [[Bibliography| Bibliography]].
+*wiki:Specifications/Sequences
+*wiki:WhitePapers/Concepts
+
+
+
+{{TracNotice|{{PAGENAME}}}}

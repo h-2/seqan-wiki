@@ -1,23 +1,24 @@
-= Sequence Specification =
+
+== Sequence Specification ==
 [[TOC()]]
 
 This page describes the interface of sequences, and ultimately which operations sequences should support.
 It is not distinct from the [seqan:Concept.Container Container Concept Specification] but focuses more on the why and how than on the what.
 
-Note that some functions, e.g. `getFront`, `getBack`, `prepend`, are mentioned here that are not part of the sequence/container concept yet.
+Note that some functions, e.g. <tt>getFront</tt>, <tt>getBack</tt>, <tt>prepend</tt>, are mentioned here that are not part of the sequence/container concept yet.
 
-== Unresolved Issues ==
+=== Unresolved Issues ===
 
- * The concept could be called ''Sequence'' instead of ''Container'', this would make sense in my eye (Manuel).
- * Is GetValue<T>::Type == Value<T>::Type in all cases? (Manuel)
- * Do we need an `Id` Metafunction for sequences as there is one for graphs? (Manuel)
- * The semantics of `resizeSpace` are unclear. Functions creating uninitialized memory should not be exposed to the user (Manuel).
- * Do `beginPosition` and `endPosition` return get values only? What about references, const-references? Are coordinates always faster to copy than to take by reference? Do we need `Position`, `GetPosition` and `RefPosition` Metafunctions? I hope not! (Manuel)
- * What about moving and setting whole infixes? A tag to `replace` could be sufficient. (Manuel)
- * `resizeSpace` is very internal? The semantics are not clear to me. (Manuel)
- * dependent objects could also be called "indirection objects" (Manuel)
+*The concept could be called ''Sequence'' instead of ''Container'', this would make sense in my eye (Manuel).
+*Is GetValue<T>::Type == Value<T>::Type in all cases? (Manuel)
+*Do we need an <tt>Id</tt> Metafunction for sequences as there is one for graphs? (Manuel)
+*The semantics of <tt>resizeSpace</tt> are unclear. Functions creating uninitialized memory should not be exposed to the user (Manuel).
+*Do <tt>beginPosition</tt> and <tt>endPosition</tt> return get values only? What about references, const-references? Are coordinates always faster to copy than to take by reference? Do we need <tt>Position</tt>, <tt>GetPosition</tt> and <tt>RefPosition</tt> Metafunctions? I hope not! (Manuel)
+*What about moving and setting whole infixes? A tag to <tt>replace</tt> could be sufficient. (Manuel)
+*<tt>resizeSpace</tt> is very internal? The semantics are not clear to me. (Manuel)
+*dependent objects could also be called "indirection objects" (Manuel)
 
-== Metafunctions, Functions And Their Relations ==
+=== Metafunctions, Functions And Their Relations ===
 
 This is not limited to containers.
 
@@ -27,15 +28,15 @@ This makes perfect sense with Functions seqan:Function.length and seqan.Function
 However, the correspondence for seqan:Function.length is Metafunction seqan:Metafunction.Size and Metafunction seqan:Metafunction.Value is the value of an element in container.
 Function seqan:Function.value returns references (given by Metafunction seqan:Metafunction.Reference).
 
-== Types/Metafunctions For Sequences ==
+=== Types/Metafunctions For Sequences ===
 
 For sequences, the following types (given by their Metafunction names) are relevant:
 
  seqan:Metafunction.Size::
   The length type for the sequence; type for the number of elements in a container.
-  It corresponds but is not equal to the `size_t` type in ANSI C.
+  It corresponds but is not equal to the <tt>size_t</tt> type in ANSI C.
   This is an unsigned integer in all cases.
-  For one-character-per-position sequences, this cannot be larger than `size_t`, i.e. 32 bit on 32 bit computers.
+  For one-character-per-position sequences, this cannot be larger than <tt>size_t</tt>, i.e. 32 bit on 32 bit computers.
   However, for compacted strings or externally stored strings, it makes sense to have 64 bit sizes on 32 bit computers, too.
  seqan:Metafunction.Position::
   The type of a position in the container.
@@ -44,289 +45,293 @@ For sequences, the following types (given by their Metafunction names) are relev
   Thus, this type can be signed, too.
  seqan:Metafunction.Value::
   The value of a sequence entry.
-  For example, `String<char>` has `Value` type `char`.
+  For example, <tt>String<char></tt> has <tt>Value</tt> type <tt>char</tt>.
  seqan:Metafunction.Reference::
-  For sequences, it is desirable to behave like arrays, including the subscript `operator[]`.
-  This means that `operator[]` has to return a valid lvalue, i.e. a type that can be assigned a value.
-  Thus, the return type of this function cannot be `Value` of the string in the `String<char>` case.
-  Instead, it has to be `char &`.
-  For [seqan:"Spec.Packed String" Packed Strings], however, this cannot simply be `Value<Sequence>::Type &` but must be a seqan:Class.Proxy object.
+  For sequences, it is desirable to behave like arrays, including the subscript <tt>operator[]</tt>.
+  This means that <tt>operator[]</tt> has to return a valid lvalue, i.e. a type that can be assigned a value.
+  Thus, the return type of this function cannot be <tt>Value</tt> of the string in the <tt>String<char></tt> case.
+  Instead, it has to be <tt>char &</tt>.
+  For [seqan:"Spec.Packed String" Packed Strings], however, this cannot simply be <tt>Value<Sequence>::Type &</tt> but must be a seqan:Class.Proxy object.
   Note that compilers will translate references to pointers in the most general case.
   Also, most proxies in SeqAn are implemented in terms of iterators which can be described as "a pointer plus X".
   Thus, for large elements with expensive copy semantics, using Function seqan:Function.value and thus types as returned by Metafunction seqan:Metafunction.Reference is faster in the general case.
   This is also the case if you do not want to create a copy because of semantics reasons.
  seqan:Metafunction.GetValue::
   Function seqan:Function.getValue returns value of type seqan:Metafunction.GetValue.
-  This type is "a fast, non-mutable version of `Reference`", possibly a copy.
-  For example, for `String<char>`, it is `char const &`, whereas it is `Infix<TSequence const>::Type const` for seqan:Class.StringSet Specialization seqan:Spec.ConcatDirect.
+  This type is "a fast, non-mutable version of <tt>Reference</tt>", possibly a copy.
+  For example, for <tt>String<char></tt>, it is <tt>char const &</tt>, whereas it is <tt>Infix<TSequence const>::Type const</tt> for seqan:Class.StringSet Specialization seqan:Spec.ConcatDirect.
  seqan:Metafunction.Iterator ::
   Iterator specialization for iterating the function.
-  The first parameter is the container, the second either `Standard` or `Rooted`, where `Rooted` is the default value.
+  The first parameter is the container, the second either <tt>Standard</tt> or <tt>Rooted</tt>, where <tt>Rooted</tt> is the default value.
   Rooted iterators have a pointer to their container and standard iterators are as lean as possible, possibly only a single pointer.
   For alloc strings, iterators are simply pointers to their elements, for packed elements, an additional position within one machine word is required.
  seqan:Metafunction.IsContiguous ::
-  Returns `true` for containers that store their members in contiguous memory.
-  The `begin()` iterator can be converted into a pointer to this memory.
+  Returns <tt>true</tt> for containers that store their members in contiguous memory.
+  The <tt>begin()</tt> iterator can be converted into a pointer to this memory.
  seqan:Metafunction.LENGTH ::
   Length of fixed-sized containers.
 
-== Default Implementation Of Metafunctions ==
+=== Default Implementation Of Metafunctions ===
 
-== Generic Functions ==
+=== Generic Functions ===
 
 The following functions are implemented for all built-in types and should be implemented by all classes and specializations thereof.
 
- seqan:Function.assign — `assign(left, right)`::
-  Assign the value `rhv` of the right-hand parameter `left` to the value `lhv` of the left-hand parameter `right`.
-  `right` is const and left intact.
+ seqan:Function.assign — <tt>assign(left, right)</tt>::
+  Assign the value <tt>rhv</tt> of the right-hand parameter <tt>left</tt> to the value <tt>lhv</tt> of the left-hand parameter <tt>right</tt>.
+  <tt>right</tt> is const and left intact.
   Everything is copied, the old value of the left-hand side is discarded and possibly freed.
   In some languages, this is called ''deep copying.''
- seqan:Function.set — `set(left, right)`::
+ seqan:Function.set — <tt>set(left, right)</tt>::
   Fast, assignment of left-hand parameter to the value of the right-hand parameter.
   Here, only ''shallow copies'' are created, e.g. for Holders and pointers, the value of the Holder/pointer is set but the value itself is not copied.
- seqan:Function.move — `move(left, right)`::
+ seqan:Function.move — <tt>move(left, right)</tt>::
   The value of the left-hand parameter is discarded, the value of the right-hand parameter assigned to the left-hand parameter.
   The right-hand parameter is left in an empty state.
   Also see [http://en.wikipedia.org/wiki/C%2B%2B0x#Rvalue_reference_and_move_semantics Wikipedia on C++0x Move Semantics]
- seqan:Function.swap — `swap(left, right)`::
+ seqan:Function.swap — <tt>swap(left, right)</tt>::
   The value of both parameters are swapped.
-  This is equivalent to the STL `std::swap`.
+  This is equivalent to the STL <tt>std::swap</tt>.
 
 '''Missing'''
 
- * construct
- * destroy
- * Spec
- * DeepestSpec
+*construct
+*destroy
+*Spec
+*DeepestSpec
 
-== Sequence Functions ==
+=== Sequence Functions ===
 
 This is the public sequence interface.
-Many functions can simply be implemented in terms of other functions, an example for a widely applicable function is `replace`.
+Many functions can simply be implemented in terms of other functions, an example for a widely applicable function is <tt>replace</tt>.
 
-=== Query Functions ===
+==== Query Functions ====
 
 This functions do not change the sequence ''per se''.
 Their results can be references, however, to be used to change the sequence.
 
- seqan:Function.length — `length(seq)` ::
+ seqan:Function.length — <tt>length(seq)</tt> ::
   Returns of the sequence.
   Type is return type of Metafunction seqan:Metafunction.Size.
- seqan:Function.capacity — `capacity(seq)` ::
+ seqan:Function.capacity — <tt>capacity(seq)</tt> ::
   Returns capacity of the sequence.
   Type is return type of Metafunction seqan:Metafunction.Size.
- seqan:Function.value — `value(seq, pos)`::
+ seqan:Function.value — <tt>value(seq, pos)</tt>::
   Returns reference to a value in a sequence, possibly a proxy, assignment through this is more expensive than seqan:Function.assignValue etc.
   Type is return type of Metafunction seqan:Metafunction.Value.
- seqan:Function.getValue — `getValue(seq, pos)`::
+ seqan:Function.getValue — <tt>getValue(seq, pos)</tt>::
   Returns fast, read-only value in a sequence.
   Type is return type of Metafunction seqan:Metafunction.GetValue.
- seqan:Function.front — `front(seq)`::
+ seqan:Function.front — <tt>front(seq)</tt>::
   Returns reference to first value in a sequence, possibly a proxy, assignment through this is more expensive than seqan:Function.assignValue etc.
   Type is return type of Metafunction seqan:Metafunction.Value.
- seqan:Function.getFront — `getFront(seq)`::
+ seqan:Function.getFront — <tt>getFront(seq)</tt>::
   Returns first value fast and read-only.
   Type is return type of Metafunction seqan:Metafunction.GetValue.
- seqan:Function.back — `back(seq, pos)`::
+ seqan:Function.back — <tt>back(seq, pos)</tt>::
   Returns reference to last value in a sequence, possibly a proxy, assignment through this is more expensive than seqan:Function.assignValue etc.
   Type is return type of Metafunction seqan:Metafunction.Value.
- seqan:Function.getBack — `getBack(seq, pos)`::
+ seqan:Function.getBack — <tt>getBack(seq, pos)</tt>::
   Returns last value fast and read-only.
   Type is return type of Metafunction seqan:Metafunction.GetValue.
- seqan:Function.empty — `empty(seq)`::
-  Returns `bool` on whether the sequence is empty, in the sense that `(length(seq) == 0) == empty(seq)` but possibly faster.
- seqan:Function.id — `id(seq)`::
-  Returns `void const *` identifier.
+ seqan:Function.empty — <tt>empty(seq)</tt>::
+  Returns <tt>bool</tt> on whether the sequence is empty, in the sense that <tt>(length(seq) == 0) == empty(seq)</tt> but possibly faster.
+ seqan:Function.id — <tt>id(seq)</tt>::
+  Returns <tt>void const *</tt> identifier.
   Two sequences should have the same id, if they share the same resource, e.g. the same memory buffer.
-  Typically, the id of a string is a `void const *` to the end of the string.
- seqan:Function.shareResources — `shareResources(leftSeq, rightSeq)`::
-  Returns `bool`, depending on whether the two sequences share resources, i.e. their `id` is equal.
+  Typically, the id of a string is a <tt>void const *</tt> to the end of the string.
+ seqan:Function.shareResources — <tt>shareResources(leftSeq, rightSeq)</tt>::
+  Returns <tt>bool</tt>, depending on whether the two sequences share resources, i.e. their <tt>id</tt> is equal.
 
-=== Mutating Functions ===
+==== Mutating Functions ====
 
 Sequences also provide functions seqan:Function.assign, seqan:Function.set, seqan:Function.move and seqan:Function.swap.
 
 assignValue, moveValue, setValue are possibly faster than calling assign, move, set on the reference.
 
- seqan:Function.replace — `replace(target, from, to, source)` ::
+ seqan:Function.replace — <tt>replace(target, from, to, source)</tt> ::
   Replaces an infix of a sequence with another sequence.
   Most other operations can be implemented in terms of seqan:Function.replace.
- seqan:Function.erase — `erase(sequence, at)`, `erase(sequence, from, to)` ::
+ seqan:Function.erase — <tt>erase(sequence, at)</tt>, <tt>erase(sequence, from, to)</tt> ::
   Remove one or multiple characters, the characters behind the removed one(s) move to the left, adjacent to the last non-removed character.
- seqan:Function.eraseBack — `eraseBack(seq)` ::
+ seqan:Function.eraseBack — <tt>eraseBack(seq)</tt> ::
   seqan:Function.erase on the last position.
- seqan:Function.eraseFront — `eraseFront(seq)` ::
+ seqan:Function.eraseFront — <tt>eraseFront(seq)</tt> ::
   seqan:Function.erase on the first position.
- seqan:Function.append — `append(seq, newSuffix)` ::
+ seqan:Function.append — <tt>append(seq, newSuffix)</tt> ::
   Append a sequence to the end of a sequence.
- seqan:Function.appendValue — `append(seq, newSuffixChar)` ::
+ seqan:Function.appendValue — <tt>append(seq, newSuffixChar)</tt> ::
   Append a single value to the end of sequence.
- seqan:Function.prepend — `prepend(seq, newPrefix)` ::
+ seqan:Function.prepend — <tt>prepend(seq, newPrefix)</tt> ::
   Prepend a sequence to the beginning of a sequence.
- seqan:Function.prependValue — `prependValue(seq, newPrefixChar)`::
+ seqan:Function.prependValue — <tt>prependValue(seq, newPrefixChar)</tt>::
   Prepend a single value to the beginning of a sequence.
- seqan:Function.insert — `insert(seq, pos, newInfix)` ::
+ seqan:Function.insert — <tt>insert(seq, pos, newInfix)</tt> ::
   Insert a sequence into another sequence at the given position.
- seqan:Function.insertValue — `insertValue(seq, pos, newInfixChar)` ::
+ seqan:Function.insertValue — <tt>insertValue(seq, pos, newInfixChar)</tt> ::
   Insert a single value into a sequence.
- seqan:Function.assignValue — `assignValue(seq, i, val)` ::
+ seqan:Function.assignValue — <tt>assignValue(seq, i, val)</tt> ::
   Assign a value to a position in the sequence.
- seqan:Function.moveValue — `moveValue(seq, i, val)` ::
+ seqan:Function.moveValue — <tt>moveValue(seq, i, val)</tt> ::
   Move a value to a position in the sequence.
- seqan:Function.setValue — `setValue(seq, i, val)` ::
+ seqan:Function.setValue — <tt>setValue(seq, i, val)</tt> ::
   Set a value to a position in the sequence.
- seqan:Function.reserve — `reserve(seq, limit, tag)` ::
-  Reserve enough memory to store `limit` values.
- seqan:Function.resize — `resize(seq, newSize, [prototype])` ::
-  Resize a sequence, possibly shrinking or expanding `seq`.
-  When expanded, the memory is filled with `prototype` or default-constructed values.
- seqan:Function.resizeSpace — `resizeSpace(seq, newSuffix)` ::
+ seqan:Function.reserve — <tt>reserve(seq, limit, tag)</tt> ::
+  Reserve enough memory to store <tt>limit</tt> values.
+ seqan:Function.resize — <tt>resize(seq, newSize, [prototype])</tt> ::
+  Resize a sequence, possibly shrinking or expanding <tt>seq</tt>.
+  When expanded, the memory is filled with <tt>prototype</tt> or default-constructed values.
+ seqan:Function.resizeSpace — <tt>resizeSpace(seq, newSuffix)</tt> ::
   Allocate space in a string, possibly leaving memory uninitialized!
 
-=== Iteration / Position Related Functions ===
+==== Iteration / Position Related Functions ====
 
- seqan:Function.begin — `begin(seq)`, `begin(seq, tag)` ::
+ seqan:Function.begin — <tt>begin(seq)</tt>, <tt>begin(seq, tag)</tt> ::
   Returns iterator to beginning of sequence.
   Return value is of type seqan:Metafunction.Iterator.
- seqan:Function.end — `end(seq)`, `end(seq, tag)` ::
+ seqan:Function.end — <tt>end(seq)</tt>, <tt>end(seq, tag)</tt> ::
   Returns iterator to end (i.e. after last character) of sequence.
   Return value is of type seqan:Metafunction.Iterator.
- seqan:Function.iter — `iter(seq, pos)` ::
+ seqan:Function.iter — <tt>iter(seq, pos)</tt> ::
   Return an iterator into the sequence at the given position.
   Return type is seqan:Metafunction.Iterator of the segment.
   (Rooted iterators are iterators to the segment, non-rooted iterators are iterators into the sequences).
 
-== Dependent Objects ==
+=== Dependent Objects ===
 
 Dependent objects have a host, e.g. the underlying string in the case of segments.
 We describe this here for the "dependent object" aspect of segments.
 
-=== Metafunctions ===
+==== Metafunctions ====
 
  seqan:Metafunction.Host ::
   Return the type of the hosting object.
 
-=== Host-Related Functions ===
+==== Host-Related Functions ====
 
- seqan:Function.host — `host(dep)` ::
+ seqan:Function.host — <tt>host(dep)</tt> ::
   Return a reference to the host.
-  The type is `Host<TDependentClass>::Type &`.
- seqan:Function.setHost — `setHost(dep, value)` ::
-  Set the host to of object `dep` to `value`.
- seqan:Function.hasHost — `hasHost(dep)` ::
-  Return true if `dep` has an assigned host.
- seqan:Function.clear — `clear(dep)` ::
+  The type is <tt>Host<TDependentClass>::Type &</tt>.
+ seqan:Function.setHost — <tt>setHost(dep, value)</tt> ::
+  Set the host to of object <tt>dep</tt> to <tt>value</tt>.
+ seqan:Function.hasHost — <tt>hasHost(dep)</tt> ::
+  Return true if <tt>dep</tt> has an assigned host.
+ seqan:Function.clear — <tt>clear(dep)</tt> ::
   Clear the value of the dependent object
 
-=== Value-Related Functions ===
+==== Value-Related Functions ====
 
- seqan:Function.assignValue — `assignValue(dep, val)` ::
-  Assign `val` to the host of `dep`.
- seqan:Function.setValue — `setValue(dep, value)` ::
-  Set `val` to the host of `dep`.
- seqan:Function.moveValue — `moveValue(dep, value)` ::
-  Move `val` to the host of `dep`.
+ seqan:Function.assignValue — <tt>assignValue(dep, val)</tt> ::
+  Assign <tt>val</tt> to the host of <tt>dep</tt>.
+ seqan:Function.setValue — <tt>setValue(dep, value)</tt> ::
+  Set <tt>val</tt> to the host of <tt>dep</tt>.
+ seqan:Function.moveValue — <tt>moveValue(dep, value)</tt> ::
+  Move <tt>val</tt> to the host of <tt>dep</tt>.
 
-== Segment Functions ==
+=== Segment Functions ===
 
 The following functions are defined for segments, in addition to the functions for sequences and dependent object.
 
-=== Mutating Functions ===
+==== Mutating Functions ====
 
- seqan:Function.setBeginPosition — `setBeginPosition(seq, pos)` ::
-  Return begin position of `seq` in host to `pos`.
- seqan:Function.setEndPosition — `setEndPosition(seq, pos)` ::
-  Set end position of `seq` in host to `pos`.
- seqan:Function.setBegin — `setBegin(seq, iter)` ::
+ seqan:Function.setBeginPosition — <tt>setBeginPosition(seq, pos)</tt> ::
+  Return begin position of <tt>seq</tt> in host to <tt>pos</tt>.
+ seqan:Function.setEndPosition — <tt>setEndPosition(seq, pos)</tt> ::
+  Set end position of <tt>seq</tt> in host to <tt>pos</tt>.
+ seqan:Function.setBegin — <tt>setBegin(seq, iter)</tt> ::
   Set beginning of infix or suffix with an iterator.
- seqan:Function.setEnd — `setEnd(seq, iter)` ::
+ seqan:Function.setEnd — <tt>setEnd(seq, iter)</tt> ::
   Set ending of infix or preffix with an iterator.
 
-=== Queries ===
+==== Queries ====
 
-They could also be provided by sequenc classes and always return `0` and `length(seq)`.
-The following functions do not modify their parameter `seq`.
+They could also be provided by sequenc classes and always return <tt>0</tt> and <tt>length(seq)</tt>.
+The following functions do not modify their parameter <tt>seq</tt>.
 
- seqan:Function.beginPosition — `beginPosition(seq)` ::
+ seqan:Function.beginPosition — <tt>beginPosition(seq)</tt> ::
   Return begin position of sequence in host.
   Return type is seqan:Metafunction.Position of the host type.
- seqan:Function.endPosition — `endPosition(seq)` ::
+ seqan:Function.endPosition — <tt>endPosition(seq)</tt> ::
   Return end position of sequence in host.
   Return type is seqan:Metafunction.Position of the host type.
 
-=== Segment-to-Sequence Bridging ===
+==== Segment-to-Sequence Bridging ====
 
- seqan:Function.infix — `infix(seq, beginPos, endPos)` ::
-  Returns an infix of type seqan:Metafunction.Infix of `seq` from `beginPos` to `endPos`.
- seqan:Function.infixWithLength — `infixWithLength(seq, beginPos, len)` ::
-  Returns an infix of type seqan:Metafunction.Infix of `seq` from `beginPos` to `beginPos + len`.
- seqan:Function.prefix — `prefix(seq, len)` ::
-  Returns a prefix of type seqan:Metafunction.Prefix of `seq` with length `len`.
- seqan:Function.suffix — `suffix(seq, len)` ::
-  Returns a suffix of type seqan:Metafunction.Suffix of `seq` with length `len`.
+ seqan:Function.infix — <tt>infix(seq, beginPos, endPos)</tt> ::
+  Returns an infix of type seqan:Metafunction.Infix of <tt>seq</tt> from <tt>beginPos</tt> to <tt>endPos</tt>.
+ seqan:Function.infixWithLength — <tt>infixWithLength(seq, beginPos, len)</tt> ::
+  Returns an infix of type seqan:Metafunction.Infix of <tt>seq</tt> from <tt>beginPos</tt> to <tt>beginPos + len</tt>.
+ seqan:Function.prefix — <tt>prefix(seq, len)</tt> ::
+  Returns a prefix of type seqan:Metafunction.Prefix of <tt>seq</tt> with length <tt>len</tt>.
+ seqan:Function.suffix — <tt>suffix(seq, len)</tt> ::
+  Returns a suffix of type seqan:Metafunction.Suffix of <tt>seq</tt> with length <tt>len</tt>.
 
 ------------
 
 '''Construction Zone Below. Wear A Helmet!'''
 
-= Iterator Specification =
+== Iterator Specification ==
 
- * seqan:Metafunction.Difference
- * seqan:Metafunction.Position
- * seqan:Metafunction.Value
- * seqan:Metafunction.GetValue
- * seqan:Metafunction.Reference
- * seqan:Metafunction.Host
- * seqan:Metafunction.IterMakeConst
- * seqan:Metafunction.IterComplementConst
- * seqan:Metafunction.Container
+*seqan:Metafunction.Difference
+*seqan:Metafunction.Position
+*seqan:Metafunction.Value
+*seqan:Metafunction.GetValue
+*seqan:Metafunction.Reference
+*seqan:Metafunction.Host
+*seqan:Metafunction.IterMakeConst
+*seqan:Metafunction.IterComplementConst
+*seqan:Metafunction.Container
 
- * seqan:Function.value
- * seqan:Function.getValue
- * seqan:Function.setValue
- * seqan:Function.assignValue
- * seqan:Function.moveValue
- * seqan:Function.goNext
- * seqan:Function.goPrevious
- * seqan:Function.atEnd
- * seqan:Function.assign
+*seqan:Function.value
+*seqan:Function.getValue
+*seqan:Function.setValue
+*seqan:Function.assignValue
+*seqan:Function.moveValue
+*seqan:Function.goNext
+*seqan:Function.goPrevious
+*seqan:Function.atEnd
+*seqan:Function.assign
 
-= Alphabet Specification =
+== Alphabet Specification ==
 
 This could go into its own page.
 It will probably be very tricky to get everything fleshed out.
 
 Note that actually, all classes have to conform to part of the interface, i.e. the construction/deconstruction interface.
 
-== Value Size Related ==
+=== Value Size Related ===
 
 Metaprogramming is used so these types can be possibly compacted.
 
- * BitsPerValue
- * BytesPerValue
- * Comparator
- * CompareType
- * IsIntegral
- * IsSimple
+*BitsPerValue
+*BytesPerValue
+*Comparator
+*CompareType
+*IsIntegral
+*IsSimple
 
-== Copy Related ==
+=== Copy Related ===
 
 Any?
 
-== Value Related ==
+=== Value Related ===
 
- * maxValue
- * minValue
- * ordValue
+*maxValue
+*minValue
+*ordValue
 
-== Conversion Related ==
+=== Conversion Related ===
 
- * seqan:Function.convert
- * seqan:Function.convertImpl
+*seqan:Function.convert
+*seqan:Function.convertImpl
 
-== Quality Related ==
+=== Quality Related ===
 
- * assignQualities
- * assignQualityValue
- * gapValue
- * getQualityValue
+*assignQualities
+*assignQualityValue
+*gapValue
+*getQualityValue
+
+
+
+{{TracNotice|{{PAGENAME}}}}

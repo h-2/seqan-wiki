@@ -1,10 +1,11 @@
-= Assignment 2 =
 
-== Task ==
+== Assignment 2 ==
+
+=== Task ===
 
 Write a program that outputs all maximal unique matches (MUMs) between "CDFGHC" and "CDEFGAHC".
 
-== Solution ==
+=== Solution ===
 
 Again we start to create a seqan:Class.StringSet of seqan:Shortcut.CharString and append the 2 strings.
 [[Include(source:trunk/core/demos/tutorial/index/index_assignment2.cpp, fragment=initialization)]]
@@ -17,11 +18,15 @@ The corresponding match is the node's seqan:Function.representative.
 [[Include(source:trunk/core/demos/tutorial/index/index_assignment2.cpp, fragment=iteration)]]
 
 Program output:
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 CD
 FG
 HC
 </pre>
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

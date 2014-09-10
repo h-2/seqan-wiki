@@ -1,14 +1,15 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
-= Assignment 5 =
 
-== Task ==
+'''Note: this page documents the 1.4 version of SeqAn, see [[Tutorial]] if you need the documentation for the trunk version.'''
+== Assignment 5 ==
+
+=== Task ===
 
 Write a program that outputs all occurrences of the gapped q-gram "AT-A" in "CATGATTACATA".
 
-== Solution ==
+=== Solution ===
 
 Before we can create a seqan:Shortcut.DnaString index of "CATGATTACATA", we have to choose an appropriate seqan:Class.Shape.
-Because our shape {{{1101}}} is known at compile-time and contains only one gap we could choose seqan:Spec.OneGappedShape, seqan:Spec.GappedShape or seqan:Spec.GenericShape (see the commented-out code).
+Because our shape <tt>1101</tt> is known at compile-time and contains only one gap we could choose seqan:Spec.OneGappedShape, seqan:Spec.GappedShape or seqan:Spec.GenericShape (see the commented-out code).
 Although the seqan:Spec.GenericShape could be used for every possible shape, it is a good idea to choose a seqan:Class.Shape with restrictions as its seqan:Function.hash functions are more efficient in general.
 
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/index/index_assignment5.cpp, fragment=initialization)]]
@@ -18,15 +19,19 @@ This initialization is not necessary for seqan:Class.Shape that are defined at c
 To search for "AT-A" we first have to hash it with the index shape or any other seqan:Class.Shape with the same bitmap.
 The we can use seqan:Function.getOccurrences to output all matches.
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/index/index_assignment5.cpp, fragment=output)]]
-'''Hint:''' Instead of {{{length(getOccurrences(...))}}} we could have used seqan:Function.countOccurrences.
-But beware that seqan:Function.countOccurrences requires only the {{{QGram_Dir}}} fibre, whereas seqan:Function.getOccurrences requires both {{{QGram_Dir}}} and  {{{QGram_SA}}}, see [wiki:HowTo/AccessIndexFibres Index Fibre HowTo].
-Because {{{QGram_SA}}} can be much more efficiently constructed during the construction of {{{QGram_Dir}}}, {{{QGram_Dir}}} would be constructed twice.
+'''Hint:''' Instead of <tt>length(getOccurrences(...))</tt> we could have used seqan:Function.countOccurrences.
+But beware that seqan:Function.countOccurrences requires only the <tt>QGram_Dir</tt> fibre, whereas seqan:Function.getOccurrences requires both <tt>QGram_Dir</tt> and  <tt>QGram_SA</tt>, see [[HowTo/AccessIndexFibres| Index Fibre HowTo]].
+Because <tt>QGram_SA</tt> can be much more efficiently constructed during the construction of <tt>QGram_Dir</tt>, <tt>QGram_Dir</tt> would be constructed twice.
 
 Program output:
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 1
 4
 </pre>
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

@@ -1,12 +1,13 @@
-= SeqAn Pecularities =
+
+== SeqAn Pecularities ==
 
 This could also be called "Seqan Gotchas".
 
-== Generated Forwards ==
+=== Generated Forwards ===
 
 '''TODO'''
 
-== Function {{{length}}} Always Returns 1 ==
+=== Function <tt>length</tt> Always Returns 1 ===
 
 '''Problem:'''
 For some reason, seqan:Function.length always returns 1.
@@ -15,7 +16,7 @@ For some reason, seqan:Function.length always returns 1.
 Currently, seqan:Function.length is defined for all types.
 If the argument is not a container, the return value is 1.
 
-== {{{append}}} appends each single character seperately instead of the whole String to String of Strings  ==
+=== <tt>append</tt> appends each single character seperately instead of the whole String to String of Strings  ===
 
 '''Problem:'''
 When trying to append a String to a String of String not the string as whole but lots of String of a String character are appended.
@@ -27,7 +28,7 @@ append in this case interprets the container to be appended as a String of Strin
 
 We are aware of this problem and plan to fix it in a future release.
 
-== Default Function Arguments ==
+=== Default Function Arguments ===
 
 You cannot provide default arguments for functions.
 The reason lies in the [#GeneratedForwards generated forwards].
@@ -41,27 +42,27 @@ Thus, the default value would appear after the original declaration.
 
 Consider the following example.
 
-{{{
-#!cpp
+<pre>
+#cpp
 template <typename T>
 inline void foo(cont T& x, int i = 0)
 {
   // ...
 }
-}}}
+</pre>
 
 The forwards generation script would make the following out of this:
 
-{{{
-#!cpp
+<pre>
+#cpp
 template <typename T>
 inline void foo(cont T& x, int i);
-}}}
+</pre>
 
 Now, when the generated forwards file is included, the compiler will see this:
 
-{{{
-#!cpp
+<pre>
+#cpp
 template <typename T>
 inline void foo(const T& x, int i);
 
@@ -72,18 +73,18 @@ inline void foo(const T& x, int i = 0)
 {
   // ...
 }
-}}}
+</pre>
 
 and seemingly, for some reason cannot find the function with the default parameter any more.
 
-=== Solution ===
+==== Solution ====
 
 Create two functions.
 One with the parameter that is to have a default, one without.
 The second function calls the first function with the default parameter:
 
-{{{
-#!cpp
+<pre>
+#cpp
 template <typename T>
 inline void foo(const T& x)
 {
@@ -95,18 +96,22 @@ inline void foo(const T& x, int i)
 {
   // ...
 }
-}}}
+</pre>
 
-== My {{{begin}}} And {{{end}}} Functions Are Not Called ==
+=== My <tt>begin</tt> And <tt>end</tt> Functions Are Not Called ===
 
 '''Problem:'''
-You write functions {{{begin}}} and {{{end}}} for your objects but they are not called.
-Instead, you get weird error messages saying you cannot cast {{{seqan::Iter<Your Type>::Type}}} to some other type.
+You write functions <tt>begin</tt> and <tt>end</tt> for your objects but they are not called.
+Instead, you get weird error messages saying you cannot cast <tt>seqan::Iter<Your Type>::Type</tt> to some other type.
 
 '''Explanation:'''
-There is a default implementation of {{{begin}}} and {{{end}}} with one parameter.
-These functions forward to functions {{{begin}}} and {{{end}}} with a second tags parameter.
+There is a default implementation of <tt>begin</tt> and <tt>end</tt> with one parameter.
+These functions forward to functions <tt>begin</tt> and <tt>end</tt> with a second tags parameter.
 This tag selects the kind of iterator (i.e. standard or rooted iterator)
 
 '''Solution:'''
 None as of yet.
+
+
+
+{{TracNotice|{{PAGENAME}}}}

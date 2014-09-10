@@ -1,39 +1,40 @@
-= Module find2 =
+
+== Module find2 ==
 
 '''WORK IN PROGRESS'''
 
 [[TOC]]
 
-== Problem Statement ==
+=== Problem Statement ===
 
 Find in one/multiple haystacks all occurrences of one/multiple needles respecting a score threshold under a given scoring scheme.
 
-== Functional Requirements ==
+=== Functional Requirements ===
 
-* Preprocess haystack(s).
-* Preprocess needle(s).
-* Specify a scoring scheme.
-* Impose a threshold for occurrences.
+*Preprocess haystack(s).
+*Preprocess needle(s).
+*Specify a scoring scheme.
+*Impose a threshold for occurrences.
 
-* Search algorithms can be easily interchanged.
-* Search algorithms can be either iterative or recursive.
-* Search algorithms depend on a generic state.
-* Start search with a predefined or custom search state?
-* Stop after finding one/k/all occurrences.
-* Buffer up to one/k/all occurrences?
+*Search algorithms can be easily interchanged.
+*Search algorithms can be either iterative or recursive.
+*Search algorithms depend on a generic state.
+*Start search with a predefined or custom search state?
+*Stop after finding one/k/all occurrences.
+*Buffer up to one/k/all occurrences?
 
-* Get start/end positions of of occurrence in haystack/needle.
-* Get iterators at start/end positions of of occurrence in haystack/needle.
-* Get infix of occurrence in haystack/needle.
-* Get length of occurrence in haystack/needle.
-* Get score of occurrence.
-* Compute an alignment for occurrences.
-* Count occurrences.
+*Get start/end positions of of occurrence in haystack/needle.
+*Get iterators at start/end positions of of occurrence in haystack/needle.
+*Get infix of occurrence in haystack/needle.
+*Get length of occurrence in haystack/needle.
+*Get score of occurrence.
+*Compute an alignment for occurrences.
+*Count occurrences.
 
-* Use preprocessed haystack(s) or needle(s) for concurrent searches.
-* Reuse algorithm state in subsequent searches.
+*Use preprocessed haystack(s) or needle(s) for concurrent searches.
+*Reuse algorithm state in subsequent searches.
 
-== Occurrences ==
+=== Occurrences ===
 
 An occurrence is completely identified by its start/end positions in haystack/needle.
 
@@ -43,44 +44,154 @@ For instance, in Sellers' algorithm one has to perform a traceback to get start 
 Start/end positions in needle do not always coincide with needle ends.
 This happens, for instance, in approximate search under edit distance or with wildcards.
 
-== Algorithms ==
+=== Algorithms ===
 
-The following table shows algorithms implemented in !SeqAn. [DPSearch is Sellers' algorithm]
+The following table shows algorithms implemented in SeqAn. [DPSearch is Sellers' algorithm]
 
-|| '''Algorithm''' || '''Search Type''' || '''Precomputation''' || '''Needle''' ||
-|| Simple || Exact || None || One ||
-|| Horspool || Exact || Needle || One ||
-|| ShiftOr || Exact || Needle || One ||
-|| Bfam || Exact || Needle || One ||
-|| BndmAlgo || Exact || Needle || One ||
-|| WuManber || Exact || Needle || Multiple ||
-|| MultiBfam || Exact || Needle || Multiple ||
-|| AhoCorasick || Exact || Needle || Multiple ||
-|| MultipleShiftAnd || Exact || Needle || Multiple ||
-|| ShiftHorspool || Exact || Needle || Multiple ||
-|| DPSearch || Edit || None  || One ||
-|| Myers || Edit || Needle || One ||
-|| BandedMyers || Edit || None || One ||
-|| Pex || Edit || Needle || One ||
-|| AbndmAlgo || Edit || Needle || One ||
-|| HammingSimple || Hamming || None || One ||
-|| HammingHorspool || Hamming || Needle || One ||
-|| WildShiftAnd || Wildcard || Needle || One ||
-|| FindMlr || Exact || Haystack || One ||
-|| FindSTree || Exact || Haystack || One ||
-|| FindQGram || Exact || Haystack || One ||
-|| SwiftLocal || Edit or Hamming || Haystack || One ||
-|| SwiftSemiGlobal || Edit or Hamming || Haystack || One ||
-|| Backtracking || Edit or Hamming || Haystack || One ||
-|| MultipleBacktracking || Edit or Hamming || Haystack and Needle || Multiple ||
+{| border=1 class="simple"
+! '''Algorithm''' 
+! '''Search Type''' 
+! '''Precomputation''' 
+! '''Needle''' 
+|- 
+|  Simple 
+|  Exact 
+|  None 
+|  One 
+|- 
+|  Horspool 
+|  Exact 
+|  Needle 
+|  One 
+|- 
+|  ShiftOr 
+|  Exact 
+|  Needle 
+|  One 
+|- 
+|  Bfam 
+|  Exact 
+|  Needle 
+|  One 
+|- 
+|  BndmAlgo 
+|  Exact 
+|  Needle 
+|  One 
+|- 
+|  WuManber 
+|  Exact 
+|  Needle 
+|  Multiple 
+|- 
+|  MultiBfam 
+|  Exact 
+|  Needle 
+|  Multiple 
+|- 
+|  AhoCorasick 
+|  Exact 
+|  Needle 
+|  Multiple 
+|- 
+|  MultipleShiftAnd 
+|  Exact 
+|  Needle 
+|  Multiple 
+|- 
+|  ShiftHorspool 
+|  Exact 
+|  Needle 
+|  Multiple 
+|- 
+|  DPSearch 
+|  Edit 
+|  None  
+|  One 
+|- 
+|  Myers 
+|  Edit 
+|  Needle 
+|  One 
+|- 
+|  BandedMyers 
+|  Edit 
+|  None 
+|  One 
+|- 
+|  Pex 
+|  Edit 
+|  Needle 
+|  One 
+|- 
+|  AbndmAlgo 
+|  Edit 
+|  Needle 
+|  One 
+|- 
+|  HammingSimple 
+|  Hamming 
+|  None 
+|  One 
+|- 
+|  HammingHorspool 
+|  Hamming 
+|  Needle 
+|  One 
+|- 
+|  WildShiftAnd 
+|  Wildcard 
+|  Needle 
+|  One 
+|- 
+|  FindMlr 
+|  Exact 
+|  Haystack 
+|  One 
+|- 
+|  FindSTree 
+|  Exact 
+|  Haystack 
+|  One 
+|- 
+|  FindQGram 
+|  Exact 
+|  Haystack 
+|  One 
+|- 
+|  SwiftLocal 
+|  Edit or Hamming 
+|  Haystack 
+|  One 
+|- 
+|  SwiftSemiGlobal 
+|  Edit or Hamming 
+|  Haystack 
+|  One 
+|- 
+|  Backtracking 
+|  Edit or Hamming 
+|  Haystack 
+|  One 
+|- 
+|  MultipleBacktracking 
+|  Edit or Hamming 
+|  Haystack and Needle 
+|  Multiple 
+|}
 
-== Entities ==
 
-* Haystack: seqan:Class.String or seqan:Class.StringSet.
-* Needle: seqan:Class.String or seqan:Class.StringSet.
-* ScoringScheme: seqan:Class.ScoringScheme.
-* Text: holds Haystack and its preprocessing, e.g. seqan:Class.Index.
-* Pattern: holds Needle and its preprocessing.
-* Finder: implements a search algorithm.
-* FinderState: holds the search state.
-* Occurrence: has start/end position in haystack/needle and an associated score.
+=== Entities ===
+
+*Haystack: seqan:Class.String or seqan:Class.StringSet.
+*Needle: seqan:Class.String or seqan:Class.StringSet.
+*ScoringScheme: seqan:Class.ScoringScheme.
+*Text: holds Haystack and its preprocessing, e.g. seqan:Class.Index.
+*Pattern: holds Needle and its preprocessing.
+*Finder: implements a search algorithm.
+*FinderState: holds the search state.
+*Occurrence: has start/end position in haystack/needle and an associated score.
+
+
+
+{{TracNotice|{{PAGENAME}}}}

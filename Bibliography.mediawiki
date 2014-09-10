@@ -1,49 +1,54 @@
+
 [[TOC]]
-= Bibliography =
+== Bibliography ==
 
 This page contains references to literature.
 
-== How To Add New Entries ==
+=== How To Add New Entries ===
 
 Add new references here the way you see it and link to them by:
 
- * One author: [wiki:Bibliography#AuthorYear (Author, Year)] ({{{[wiki:Bibliography#AuthorYear (Author, Year)]}}})
- * Two authors: [wiki:Bibliography#Author1Author2Year (Author1, Author2, Year)] ({{{[wiki:Bibliography#Author1Author2Year (Author1, Author2, Year)]}}})
- * More authors: [wiki:Bibliography#Author1etal.2008 (Author1 et al., Year)] ({{{[wiki:Bibliography#Author1etal.2008 (Author1 et al., Year)]}}})
+*One author: [[Bibliography#AuthorYear| (Author, Year)]] (<tt>[[Bibliography#AuthorYear| (Author, Year)]]</tt>)
+*Two authors: [[Bibliography#Author1Author2Year| (Author1, Author2, Year)]] (<tt>[[Bibliography#Author1Author2Year| (Author1, Author2, Year)]]</tt>)
+*More authors: [[Bibliography#Author1etal.2008| (Author1 et al., Year)]] (<tt>[[Bibliography#Author1etal.2008| (Author1 et al., Year)]]</tt>)
 
-If this is ambiguous, add letters a, b, c etc. after the year, e.g. [wiki:Bibliography#AuthorYear (Author, Year)] ({{{[wiki:Bibliography#AuthorYear (Author, Yeara)]}}})
+If this is ambiguous, add letters a, b, c etc. after the year, e.g. [[Bibliography#AuthorYear| (Author, Year)]] (<tt>[[Bibliography#AuthorYear| (Author, Yeara)]]</tt>)
 
-== Bibliography List ==
+=== Bibliography List ===
 
-[=#Abouelhodaetal.2004 M. I. Abouelhoda, S. K. and E. Ohlebusch.][[BR]]
-[http://dl.acm.org/citation.cfm?id=985389 Replacing suffix trees with enhanced suffix arrays.][[BR]] J. Discrete Algorithms 2(1): 53-86 (2004)
+[=#Abouelhodaetal.2004 M. I. Abouelhoda, S. K. and E. Ohlebusch.]<br>
+[http://dl.acm.org/citation.cfm?id=985389 Replacing suffix trees with enhanced suffix arrays.]<br> J. Discrete Algorithms 2(1): 53-86 (2004)
 
-[=#AhoCorasick1975 A. V. Aho and M. J. Corasick.][[BR]]
-[http://doi.acm.org/10.1145/360825.360855 Efficient string matching: an aid to bibliographic search.][[BR]] Commun. ACM 18, 6 (Jun. 1975), 333-340.
+[=#AhoCorasick1975 A. V. Aho and M. J. Corasick.]<br>
+[http://doi.acm.org/10.1145/360825.360855 Efficient string matching: an aid to bibliographic search.]<br> Commun. ACM 18, 6 (Jun. 1975), 333-340.
 
-[=#Baeza-YatesNavarro1999 R. Baeza-Yates and G. Navarro.][[BR]]
-[http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.21.1448 Faster approximate string matching.][[BR]] Algorithmica, 23(2):127-158 (1999).
+[=#Baeza-YatesNavarro1999 R. Baeza-Yates and G. Navarro.]<br>
+[http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.21.1448 Faster approximate string matching.]<br> Algorithmica, 23(2):127-158 (1999).
 
-[=#Giegerichetal.2003 R. Giegerich, S. Kurtz and J. Stoye.][[BR]]
-[http://bibiserv.techfak.uni-bielefeld.de/wotd/GieKurSto2003.pdf Efficient implementation of lazy suffix trees.][[BR]] Software Practice and Experience, 33(11), 1035-1049 (2003).
+[=#Giegerichetal.2003 R. Giegerich, S. Kurtz and J. Stoye.]<br>
+[http://bibiserv.techfak.uni-bielefeld.de/wotd/GieKurSto2003.pdf Efficient implementation of lazy suffix trees.]<br> Software Practice and Experience, 33(11), 1035-1049 (2003).
 
-[=#Horspool1980 R. N. Horspool.][[BR]]
-[http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.63.3421 Practical fast searching in strings.][[BR]] Software Practice & Experience, Volume 10, Pages:501-506 (1980)
+[=#Horspool1980 R. N. Horspool.]<br>
+[http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.63.3421 Practical fast searching in strings.]<br> Software Practice & Experience, Volume 10, Pages:501-506 (1980)
 
-[=#Myers1999 G. Myers.][[BR]]
-[http://doi.acm.org/10.1145/316542.316550 A fast bit-vector algorithm for approximate string matching based on dynamic programming.][[BR]] J. ACM 46, 3, 395-415 (1999).
+[=#Myers1999 G. Myers.]<br>
+[http://doi.acm.org/10.1145/316542.316550 A fast bit-vector algorithm for approximate string matching based on dynamic programming.]<br> J. ACM 46, 3, 395-415 (1999).
 
-[=#Schulzetal.2008 Marcel H. Schulz, David Weese, Tobias Rausch, Andreas Döring, Knut Reinert and Martin Vingron.][[BR]] [http://www.inf.fu-berlin.de/inst/ag-bio-expired/FILES/ROOT/Publications/weese/VOMCwabi2008.pdf Fast and Adaptive Variable Order Markov Chain Construction.][[BR]] WABI'08, page 306-317.
+[=#Schulzetal.2008 Marcel H. Schulz, David Weese, Tobias Rausch, Andreas Döring, Knut Reinert and Martin Vingron.]<br> [http://www.inf.fu-berlin.de/inst/ag-bio-expired/FILES/ROOT/Publications/weese/VOMCwabi2008.pdf Fast and Adaptive Variable Order Markov Chain Construction.]<br> WABI'08, page 306-317.
 LNBI 5251, Springer Verlag (2008)
 
-[=#WeeseSchulz2008 D. Weese, M. H. Schulz.][[BR]]
-[http://www.seqan.de/projects/dfi.html Efficient String Mining under Constraints via the Deferred Frequency Index.][[BR]] ICDM'08, LNAI 5077, pp 374-388, Springer Verlag (2008).
+[=#WeeseSchulz2008 D. Weese, M. H. Schulz.]<br>
+[http://www.seqan.de/projects/dfi.html Efficient String Mining under Constraints via the Deferred Frequency Index.]<br> ICDM'08, LNAI 5077, pp 374-388, Springer Verlag (2008).
 
-[=#Ukkonen1985 E. Ukkonen.][[BR]]
-[http://www.cs.helsinki.fi/u/ukkonen/JAlg.pdf Finding approximate patterns in strings.][[BR]] J. Algorithms 6, 132-137 (1985)
+[=#Ukkonen1985 E. Ukkonen.]<br>
+[http://www.cs.helsinki.fi/u/ukkonen/JAlg.pdf Finding approximate patterns in strings.]<br> J. Algorithms 6, 132-137 (1985)
 
-[=#Langmead2009 B. Langmead et al.][[BR]]
-[http://www.biomedcentral.com/content/pdf/gb-2009-10-3-r25.pdfSimilarYou Ultrafast and memory-efficient alignment of short DNA sequences to the human genome.][[BR]] Genome Biology 10, R25 (2009)
+[=#Langmead2009 B. Langmead et al.]<br>
+[http://www.biomedcentral.com/content/pdf/gb-2009-10-3-r25.pdfSimilarYou Ultrafast and memory-efficient alignment of short DNA sequences to the human genome.]<br> Genome Biology 10, R25 (2009)
 
-[=#FerraginaManzini2001 P. Ferragina., G. Manzini.][[BR]]
-[http://delivery.acm.org/10.1145/370000/365458/p269-ferragina.pdf?ip=160.45.112.63&acc=ACTIVE%20SERVICE&CFID=144895251&CFTOKEN=25410500&__acm__=1345644011_cb498ce595c510612bfc095fcab78d95 An  experimental study  of an  opportunistic  index.][[BR]] Proceedings of the twelfth annual ACM-SIAM symposium on Discrete algorithms, 269-278 (2001)
+[=#FerraginaManzini2001 P. Ferragina., G. Manzini.]<br>
+[http://delivery.acm.org/10.1145/370000/365458/p269-ferragina.pdf?ip=160.45.112.63&acc=ACTIVE%20SERVICE&CFID=144895251&CFTOKEN=25410500&__acm__=1345644011_cb498ce595c510612bfc095fcab78d95 An  experimental study  of an  opportunistic  index.]<br> Proceedings of the twelfth annual ACM-SIAM symposium on Discrete algorithms, 269-278 (2001)
+
+
+
+{{TracNotice|{{PAGENAME}}}}

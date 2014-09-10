@@ -1,1185 +1,4739 @@
-= Renaming =
+
+== Renaming ==
 [[TOC]]
 
 DW:
-   * We decided to distinguish between metafunction that return a Type or a VALUE, see HowTo/StyleGuide.
-   * Functions that return boolean tags are considered as type-returning metafunctions, e.g. IsSameType, IsSigned, ...
-   * The corresponding bool value can be determined by IsSameType<...>::Type::VALUE, as True/False have VALUE members true/false.
-   * For convenience the boolean tag returning meta-functions currently define also the VALUE directly.
+**We decided to distinguish between metafunction that return a Type or a VALUE, see HowTo/StyleGuide.
+**Functions that return boolean tags are considered as type-returning metafunctions, e.g. IsSameType, IsSigned, ...
+**The corresponding bool value can be determined by IsSameType<...>::Type::VALUE, as True/False have VALUE members true/false.
+**For convenience the boolean tag returning meta-functions currently define also the VALUE directly.
 
-== Files ==
+=== Files ===
 
-=== Other ===
+==== Other ====
 
- || '''from''' || '''to''' || '''remark''' ||
- || ~~file.h~~ || ~~io.h~~ || ~~Keep file.h for backwards compatibility~~ MH: Postponed to later release after I/O rework.  ||
- || ~~align/hirschberg_set.h~~ || ~~align/align_hirschberg_set.h~~ || ~~When reorganizing align module?~~ ||
- || ~~graph_msa/graph_align_tcoffee_guidetree.h~~ ||  || ~~Should be moved to another module, e.g. phylogenetics.~~ ||
- || ~~graph_msa/graph_align_*~~ || ~~graph_msa/graph_msa_*~~ ||  ||
- || ~~refinement~~ || - || add contents of module refinement to module graph_align? ||
+{| border=1 class="simple"
+! '''from''' 
+! '''to''' 
+! '''remark''' 
+|}
+
+{| border=1 class="simple"
+! <s>file.h</s> 
+! <s>io.h</s> 
+! <s>Keep file.h for backwards compatibility</s> MH: Postponed to later release after I/O rework.  
+|}
+
+{| border=1 class="simple"
+! <s>align/hirschberg_set.h</s> 
+! <s>align/align_hirschberg_set.h</s> 
+! <s>When reorganizing align module?</s> 
+|}
+
+{| border=1 class="simple"
+! <s>graph_msa/graph_align_tcoffee_guidetree.h</s> 
+!  
+! <s>Should be moved to another module, e.g. phylogenetics.</s> 
+|}
+
+{| border=1 class="simple"
+! <s>graph_msa/graph_align_*</s> 
+! <s>graph_msa/graph_msa_*</s> 
+!  
+|}
+
+{| border=1 class="simple"
+! <s>refinement</s> 
+! - 
+! add contents of module refinement to module graph_align? 
+|}
+
 
 Alignment stuff postponed.
 Future: Merge modules align and graph_align to new module align.
 Module refinement becomes module graph_align.
 
-=== Adaptions ===
+==== Adaptions ====
 
- || '''from''' || '''to''' || '''remark''' ||
- || basic/basic_iterator_adapt_std.h || basic/adapt_std_iterator.h ||
- || map/map_adapter_stl.h || map/adapt_std_map.h ||
- || basic/basic_allocator_to_std.h || basic/adapt_std_allocator.h ||
- || sequence/std_string.h || sequence/adapt_std_string.h ||
+{| border=1 class="simple"
+! '''from''' 
+! '''to''' 
+! '''remark''' 
+|}
 
-=== Upper/Lower Case ===
+{| border=1 class="simple"
+! basic/basic_iterator_adapt_std.h 
+! basic/adapt_std_iterator.h 
+|}
 
- || '''from''' || '''to''' || '''remark''' ||
- || paramChooser || param_chooser ||
- || indelSimulator || indel_simulator ||
- || snpStore || snp_store ||
+{| border=1 class="simple"
+! map/map_adapter_stl.h 
+! map/adapt_std_map.h 
+|}
 
-== Other ==
+{| border=1 class="simple"
+! basic/basic_allocator_to_std.h 
+! basic/adapt_std_allocator.h 
+|}
+
+{| border=1 class="simple"
+! sequence/std_string.h 
+! sequence/adapt_std_string.h 
+|}
+
+
+==== Upper/Lower Case ====
+
+{| border=1 class="simple"
+! '''from''' 
+! '''to''' 
+! '''remark''' 
+|}
+
+{| border=1 class="simple"
+! paramChooser 
+! param_chooser 
+|}
+
+{| border=1 class="simple"
+! indelSimulator 
+! indel_simulator 
+|}
+
+{| border=1 class="simple"
+! snpStore 
+! snp_store 
+|}
+
+
+=== Other ===
 
 Append  underscore to internal typedefs in types, see #289
 
-== Tutorial Pages ==
+=== Tutorial Pages ===
 Rename links to documentation and identifiers in code snippets.
 
- || Basic Techniques || Knut || DONE ||
- || Basics || Anne-Katrin || DONE ||
- || Sequences || Manuel || DONE ||
- || Modifiers || David || DONE ||
- || Alignments || Anne-Katrin || DONE ||
- || Pattern Matching || Birte || done ||
- || Motif Finding || Birte || done ||
- || Indices || Birte || done ||
- || Graphs || Birte || done ||
- || Seed-And-Extend || Birte || done ||
- || Randomness || Manuel || done ||
- || Advanced Tutorials || Manuel || done ||
- || Before you start programming || Anne-Katrin || DONE ||
- || How Tos || Birte || done ||
+{| border=1 class="simple"
+! Basic Techniques 
+! Knut 
+! DONE 
+|}
 
-== Zum Schluss ==
- || fill || resize ||
- || _Fill_String || ResizeString_ ||
- || _Resize_String || ResizeString_ ||
- || TypeCmp nach Umbenennung doppelt definiert  ||
- || qgram* || qgram* ||
- || Qgram* || Qgram* ||
+{| border=1 class="simple"
+! Basics 
+! Anne-Katrin 
+! DONE 
+|}
 
-== Identifiers ==
+{| border=1 class="simple"
+! Sequences 
+! Manuel 
+! DONE 
+|}
 
- || '''old name''' || '''new name''' || '''remark''' ||
- || supremumValue || maxValue ||
- || SupremumValue || MaxValue ||
- || infimumValue || minValue ||
- || InfimumValue || MinValue ||
- || _STLIterator || StlIterator_ ||
- || STLSetIterator || StlSetIterator ||
- || STLMapIterator || StlMapIterator ||
- || _MiniSumList_assignValue || _miniSumListAssignValue ||
- || _MiniSumList_sizeOfValues || _miniSumListSizeOfValues ||
- || _MapValue_Impl || MapValueImpl_ ||
- || _Impl_mapValue || ImplMapValue_ ||
- || _Skiplist_mapValue || SkipListMapValue_ ||
- || _VectorSet_Insert || VectorSetInsert_ ||
- || _MiniSumList_insertValues || _miniSumListInsertValues ||
- || _MiniSumList_searchSumList || _miniSumListSearchSumList ||
+{| border=1 class="simple"
+! Modifiers 
+! David 
+! DONE 
+|}
+
+{| border=1 class="simple"
+! Alignments 
+! Anne-Katrin 
+! DONE 
+|}
+
+{| border=1 class="simple"
+! Pattern Matching 
+! Birte 
+! done 
+|}
+
+{| border=1 class="simple"
+! Motif Finding 
+! Birte 
+! done 
+|}
+
+{| border=1 class="simple"
+! Indices 
+! Birte 
+! done 
+|}
+
+{| border=1 class="simple"
+! Graphs 
+! Birte 
+! done 
+|}
+
+{| border=1 class="simple"
+! Seed-And-Extend 
+! Birte 
+! done 
+|}
+
+{| border=1 class="simple"
+! Randomness 
+! Manuel 
+! done 
+|}
+
+{| border=1 class="simple"
+! Advanced Tutorials 
+! Manuel 
+! done 
+|}
+
+{| border=1 class="simple"
+! Before you start programming 
+! Anne-Katrin 
+! DONE 
+|}
+
+{| border=1 class="simple"
+! How Tos 
+! Birte 
+! done 
+|}
+
+
+=== Zum Schluss ===
+{| border=1 class="simple"
+! fill 
+! resize 
+|}
+
+{| border=1 class="simple"
+! _Fill_String 
+! ResizeString_ 
+|}
+
+{| border=1 class="simple"
+! _Resize_String 
+! ResizeString_ 
+|}
+
+{| border=1 class="simple"
+! TypeCmp nach Umbenennung doppelt definiert  
+|}
+
+{| border=1 class="simple"
+! qgram* 
+! qgram* 
+|}
+
+{| border=1 class="simple"
+! Qgram* 
+! Qgram* 
+|}
+
+
+=== Identifiers ===
+
+{| border=1 class="simple"
+! '''old name''' 
+! '''new name''' 
+! '''remark''' 
+|}
+
+{| border=1 class="simple"
+! supremumValue 
+! maxValue 
+|}
+
+{| border=1 class="simple"
+! SupremumValue 
+! MaxValue 
+|}
+
+{| border=1 class="simple"
+! infimumValue 
+! minValue 
+|}
+
+{| border=1 class="simple"
+! InfimumValue 
+! MinValue 
+|}
+
+{| border=1 class="simple"
+! _STLIterator 
+! StlIterator_ 
+|}
+
+{| border=1 class="simple"
+! STLSetIterator 
+! StlSetIterator 
+|}
+
+{| border=1 class="simple"
+! STLMapIterator 
+! StlMapIterator 
+|}
+
+{| border=1 class="simple"
+! _MiniSumList_assignValue 
+! _miniSumListAssignValue 
+|}
+
+{| border=1 class="simple"
+! _MiniSumList_sizeOfValues 
+! _miniSumListSizeOfValues 
+|}
+
+{| border=1 class="simple"
+! _MapValue_Impl 
+! MapValueImpl_ 
+|}
+
+{| border=1 class="simple"
+! _Impl_mapValue 
+! ImplMapValue_ 
+|}
+
+{| border=1 class="simple"
+! _Skiplist_mapValue 
+! SkipListMapValue_ 
+|}
+
+{| border=1 class="simple"
+! _VectorSet_Insert 
+! VectorSetInsert_ 
+|}
+
+{| border=1 class="simple"
+! _MiniSumList_insertValues 
+! _miniSumListInsertValues 
+|}
+
+{| border=1 class="simple"
+! _MiniSumList_searchSumList 
+! _miniSumListSearchSumList 
+|}
+
 
 align module:
 
- || _align_trace_print || _alignTracePrint ||
- || _pump_trace_2_Align || _pumpTraceToAlign ||
- || beginPosition_AlignCols || _beginPositionAlignCols ||
- || endPosition_AlignCols || _endPositionAlignCols ||
- || _needleman_wunsch || _needlemanWunsch ||
- || _needleman_wunsch_trace || _needlemanWunschTrace ||
- || _gotoh_trace || _gotohTrace ||
- || write_debug_matrix || _writeDebugMatrix ||
- || _smith_waterman_get_matrix || _smithWatermanGetMatrix ||
- || _smith_waterman_declump || _smithWatermanDeclump ||
- || _smith_waterman_trace || _smithWatermanTrace ||
- || _get_next_best_end_position || _getNextBestEndPosition ||
- || _align_banded_sw_trace || _alignBandedSmithWatermanTrace ||
- || _align_banded_sw_declump || _alignBandedSmithWatermanDeclump ||
- || _align_banded_sw || _alignBandedSmithWaterman ||
- || _CoordinatesToPositions || _coordinatesToPositions ||
- || _PositionsToCoordinates || _positionsToCoordinates ||
- || _init_to_resize || _initToResize ||
- || _iterator_gaps_array || _iteratorGapsArray ||
- || _goNext_arrayGapsIterator || _goNextArrayGapsIterator ||
- || _goPrevious_arrayGapsIterator || _goPreviousArrayGapsIterator ||
- || _SumList_of_Gaps || SumListOfGaps_ ||
- || _goNext_sumlistGapsIterator || _goNextSumlistGapsIterator  ||
- || _goPrevious_sumlistGapsIterator || _goPreviousSumlistGapsIterator ||
+{| border=1 class="simple"
+! _align_trace_print 
+! _alignTracePrint 
+|}
+
+{| border=1 class="simple"
+! _pump_trace_2_Align 
+! _pumpTraceToAlign 
+|}
+
+{| border=1 class="simple"
+! beginPosition_AlignCols 
+! _beginPositionAlignCols 
+|}
+
+{| border=1 class="simple"
+! endPosition_AlignCols 
+! _endPositionAlignCols 
+|}
+
+{| border=1 class="simple"
+! _needleman_wunsch 
+! _needlemanWunsch 
+|}
+
+{| border=1 class="simple"
+! _needleman_wunsch_trace 
+! _needlemanWunschTrace 
+|}
+
+{| border=1 class="simple"
+! _gotoh_trace 
+! _gotohTrace 
+|}
+
+{| border=1 class="simple"
+! write_debug_matrix 
+! _writeDebugMatrix 
+|}
+
+{| border=1 class="simple"
+! _smith_waterman_get_matrix 
+! _smithWatermanGetMatrix 
+|}
+
+{| border=1 class="simple"
+! _smith_waterman_declump 
+! _smithWatermanDeclump 
+|}
+
+{| border=1 class="simple"
+! _smith_waterman_trace 
+! _smithWatermanTrace 
+|}
+
+{| border=1 class="simple"
+! _get_next_best_end_position 
+! _getNextBestEndPosition 
+|}
+
+{| border=1 class="simple"
+! _align_banded_sw_trace 
+! _alignBandedSmithWatermanTrace 
+|}
+
+{| border=1 class="simple"
+! _align_banded_sw_declump 
+! _alignBandedSmithWatermanDeclump 
+|}
+
+{| border=1 class="simple"
+! _align_banded_sw 
+! _alignBandedSmithWaterman 
+|}
+
+{| border=1 class="simple"
+! _CoordinatesToPositions 
+! _coordinatesToPositions 
+|}
+
+{| border=1 class="simple"
+! _PositionsToCoordinates 
+! _positionsToCoordinates 
+|}
+
+{| border=1 class="simple"
+! _init_to_resize 
+! _initToResize 
+|}
+
+{| border=1 class="simple"
+! _iterator_gaps_array 
+! _iteratorGapsArray 
+|}
+
+{| border=1 class="simple"
+! _goNext_arrayGapsIterator 
+! _goNextArrayGapsIterator 
+|}
+
+{| border=1 class="simple"
+! _goPrevious_arrayGapsIterator 
+! _goPreviousArrayGapsIterator 
+|}
+
+{| border=1 class="simple"
+! _SumList_of_Gaps 
+! SumListOfGaps_ 
+|}
+
+{| border=1 class="simple"
+! _goNext_sumlistGapsIterator 
+! _goNextSumlistGapsIterator  
+|}
+
+{| border=1 class="simple"
+! _goPrevious_sumlistGapsIterator 
+! _goPreviousSumlistGapsIterator 
+|}
+
  
 graph_types module: none
 
 graph_algorithms module:
 
- || breadth_first_search || breadthFirstSearch ||
- || _dfs_visit || _dfsVisit ||
- || depth_first_search || depthFirstSearch ||
- || topological_sort || topologicalSort ||
- || strongly_connected_components || stronglyConnectedComponents ||
- || _cc_visit || _connectedComponentVisit ||
- || connected_components || connectedComponents ||
- || prims_algorithm || primsAlgorithm ||
- || prims_algorithm_spaceEfficient || primsAlgorithmSpaceEfficient ||
- || __callLessPair || LessPairI1_ ||
- || kruskals_algorithm || kruskalsAlgorithm ||
- || _print_path || _printPath ||
- || _collect_Edges || _collectEdges ||
- || _initialize_single_source || _initializeSingleSource ||
- || dag_shortest_path || dagShortestPath ||
- || bellman_ford_algorithm || bellmanFordAlgorithm ||
- || _print_all_pairs_shortest_path || _printAllPairsShortestPath ||
- || _initialize_all_pairs || _initializeAllPairs ||
- || _extend_shortest_paths || _extendShortestPaths ||
- || all_pairs_shortest_path || allPairsShortestPath ||
- || floyd_warshall || floydWarshallAlgorithm ||
- || transitive_closure || transitiveClosure ||
- || _build_residual_graph || _buildResidualGraph ||
- || _get_minimum_aug || _getMinimumAug ||
- || ford_fulkerson || fordFulkersonAlgorithm ||
- || path_growing_algorithm || pathGrowingAlgorithm ||
- || _bipartite_matching || bipartiteMatching ||
- || __weighted_bipartite_matching || _weightedBipartiteMatching ||
- || weighted_bipartite_matching || weightedBipartiteMatching ||
- || __MyHeapCompare || LessPairI2WithFunctor ||
- || __forwardAlgorithm || _forwardAlgorithm ||
- || __backwardAlgorithm || _backwardAlgorithm ||
- || __parameterEstimator || _parameterEstimator ||
- || __fillHmmUniform || _fillHmmUniform ||
- || __fillHmmRandom || _fillHmmRandom ||
- || __baumWelchAlgorithm || _baumWelchAlgorithm ||
- || __profileHmmCounter || _profileHmmCounter ||
- || __createProfileHmm || _createProfileHmm ||
+{| border=1 class="simple"
+! breadth_first_search 
+! breadthFirstSearch 
+|}
+
+{| border=1 class="simple"
+! _dfs_visit 
+! _dfsVisit 
+|}
+
+{| border=1 class="simple"
+! depth_first_search 
+! depthFirstSearch 
+|}
+
+{| border=1 class="simple"
+! topological_sort 
+! topologicalSort 
+|}
+
+{| border=1 class="simple"
+! strongly_connected_components 
+! stronglyConnectedComponents 
+|}
+
+{| border=1 class="simple"
+! _cc_visit 
+! _connectedComponentVisit 
+|}
+
+{| border=1 class="simple"
+! connected_components 
+! connectedComponents 
+|}
+
+{| border=1 class="simple"
+! prims_algorithm 
+! primsAlgorithm 
+|}
+
+{| border=1 class="simple"
+! prims_algorithm_spaceEfficient 
+! primsAlgorithmSpaceEfficient 
+|}
+
+{| border=1 class="simple"
+! __callLessPair 
+! LessPairI1_ 
+|}
+
+{| border=1 class="simple"
+! kruskals_algorithm 
+! kruskalsAlgorithm 
+|}
+
+{| border=1 class="simple"
+! _print_path 
+! _printPath 
+|}
+
+{| border=1 class="simple"
+! _collect_Edges 
+! _collectEdges 
+|}
+
+{| border=1 class="simple"
+! _initialize_single_source 
+! _initializeSingleSource 
+|}
+
+{| border=1 class="simple"
+! dag_shortest_path 
+! dagShortestPath 
+|}
+
+{| border=1 class="simple"
+! bellman_ford_algorithm 
+! bellmanFordAlgorithm 
+|}
+
+{| border=1 class="simple"
+! _print_all_pairs_shortest_path 
+! _printAllPairsShortestPath 
+|}
+
+{| border=1 class="simple"
+! _initialize_all_pairs 
+! _initializeAllPairs 
+|}
+
+{| border=1 class="simple"
+! _extend_shortest_paths 
+! _extendShortestPaths 
+|}
+
+{| border=1 class="simple"
+! all_pairs_shortest_path 
+! allPairsShortestPath 
+|}
+
+{| border=1 class="simple"
+! floyd_warshall 
+! floydWarshallAlgorithm 
+|}
+
+{| border=1 class="simple"
+! transitive_closure 
+! transitiveClosure 
+|}
+
+{| border=1 class="simple"
+! _build_residual_graph 
+! _buildResidualGraph 
+|}
+
+{| border=1 class="simple"
+! _get_minimum_aug 
+! _getMinimumAug 
+|}
+
+{| border=1 class="simple"
+! ford_fulkerson 
+! fordFulkersonAlgorithm 
+|}
+
+{| border=1 class="simple"
+! path_growing_algorithm 
+! pathGrowingAlgorithm 
+|}
+
+{| border=1 class="simple"
+! _bipartite_matching 
+! bipartiteMatching 
+|}
+
+{| border=1 class="simple"
+! __weighted_bipartite_matching 
+! _weightedBipartiteMatching 
+|}
+
+{| border=1 class="simple"
+! weighted_bipartite_matching 
+! weightedBipartiteMatching 
+|}
+
+{| border=1 class="simple"
+! __MyHeapCompare 
+! LessPairI2WithFunctor 
+|}
+
+{| border=1 class="simple"
+! __forwardAlgorithm 
+! _forwardAlgorithm 
+|}
+
+{| border=1 class="simple"
+! __backwardAlgorithm 
+! _backwardAlgorithm 
+|}
+
+{| border=1 class="simple"
+! __parameterEstimator 
+! _parameterEstimator 
+|}
+
+{| border=1 class="simple"
+! __fillHmmUniform 
+! _fillHmmUniform 
+|}
+
+{| border=1 class="simple"
+! __fillHmmRandom 
+! _fillHmmRandom 
+|}
+
+{| border=1 class="simple"
+! __baumWelchAlgorithm 
+! _baumWelchAlgorithm 
+|}
+
+{| border=1 class="simple"
+! __profileHmmCounter 
+! _profileHmmCounter 
+|}
+
+{| border=1 class="simple"
+! __createProfileHmm 
+! _createProfileHmm 
+|}
+
 
 graph_align module:
 
- || _align_banded_gotoh_trace || _alignBandedGotohTrace ||
- || _align_banded_gotoh || _alignBandedGotoh ||
- || _align_banded_nw_trace || _alignBandedNeedlemanWunschTrace ||
- || _align_banded_nw || _alignBandedNeedlemanWunsch ||
- || _Translate_Table_Byte_2_TraceBack || TranslateTableByteToTraceback_ ||
- || _Align_Traceback || AlignTraceback ||
- || __myInitTop || _configValueTop ||
- || __myInitLeft || _configValueLeft ||
- || __myInitRight || _configValueRight ||
- || __myInitBottom || _configValueBottom ||
- || _align_gotoh_trace || _alignGotohTrace ||
- || _align_gotoh || _alignGotoh ||
- || _align_hirschberg_trace || _alignHirschbergTrace ||
- || _align_hirschberg || _alignHirschberg ||
- || _align_needleman_wunsch_matrix || _alignNeedlemanWunschMatrix ||
- || _align_needleman_wunsch_trace || _alignNeedlemanWunschTrace ||
- || _align_needleman_wunsch || _alignNeedlemanWunsch ||
- || _align_smith_waterman_trace || _alignSmithWatermanTrace ||
- || _align_smith_waterman || _alignSmithWaterman ||
+{| border=1 class="simple"
+! _align_banded_gotoh_trace 
+! _alignBandedGotohTrace 
+|}
+
+{| border=1 class="simple"
+! _align_banded_gotoh 
+! _alignBandedGotoh 
+|}
+
+{| border=1 class="simple"
+! _align_banded_nw_trace 
+! _alignBandedNeedlemanWunschTrace 
+|}
+
+{| border=1 class="simple"
+! _align_banded_nw 
+! _alignBandedNeedlemanWunsch 
+|}
+
+{| border=1 class="simple"
+! _Translate_Table_Byte_2_TraceBack 
+! TranslateTableByteToTraceback_ 
+|}
+
+{| border=1 class="simple"
+! _Align_Traceback 
+! AlignTraceback 
+|}
+
+{| border=1 class="simple"
+! __myInitTop 
+! _configValueTop 
+|}
+
+{| border=1 class="simple"
+! __myInitLeft 
+! _configValueLeft 
+|}
+
+{| border=1 class="simple"
+! __myInitRight 
+! _configValueRight 
+|}
+
+{| border=1 class="simple"
+! __myInitBottom 
+! _configValueBottom 
+|}
+
+{| border=1 class="simple"
+! _align_gotoh_trace 
+! _alignGotohTrace 
+|}
+
+{| border=1 class="simple"
+! _align_gotoh 
+! _alignGotoh 
+|}
+
+{| border=1 class="simple"
+! _align_hirschberg_trace 
+! _alignHirschbergTrace 
+|}
+
+{| border=1 class="simple"
+! _align_hirschberg 
+! _alignHirschberg 
+|}
+
+{| border=1 class="simple"
+! _align_needleman_wunsch_matrix 
+! _alignNeedlemanWunschMatrix 
+|}
+
+{| border=1 class="simple"
+! _align_needleman_wunsch_trace 
+! _alignNeedlemanWunschTrace 
+|}
+
+{| border=1 class="simple"
+! _align_needleman_wunsch 
+! _alignNeedlemanWunsch 
+|}
+
+{| border=1 class="simple"
+! _align_smith_waterman_trace 
+! _alignSmithWatermanTrace 
+|}
+
+{| border=1 class="simple"
+! _align_smith_waterman 
+! _alignSmithWaterman 
+|}
+
  
 graph_msa module:
 
- || __EdgeCargo || MsaEdgeCargo_ ||
- || __LessEdgeCargo || LessMsaEdgeCargo_ ||
- || __includeFragment || _appendFragment ||
- || __appendNewMatch || _appendNewMatch ||
- || GlobalPairwise_Library_ || GlobalPairwiseLibrary_ ||
- || GlobalPairwise_Library || GlobalPairwiseLibrary ||
- || LocalPairwise_Library_ || LocalPairwiseLibrary_ ||
- || LocalPairwise_Library || LocalPairwiseLibrary ||
- || Kmer_Library_ || KmerLibrary_ ||
- || Kmer_Library || KmerLibrary ||
- || Lcs_Library_ || LcsLibrary_ ||
- || Lcs_Library || LcsLibrary ||
- || __resizeWithRespectToDistance || _resizeWithRespectToDistance ||
- || __setDistanceValue || _setDistanceValue ||
- || __appendSegmentMatches || _appendSegmentMatches ||
- || __matchScore || _matchScore ||
- || __mismatchScore || _mismatchScore ||
+{| border=1 class="simple"
+! __EdgeCargo 
+! MsaEdgeCargo_ 
+|}
+
+{| border=1 class="simple"
+! __LessEdgeCargo 
+! LessMsaEdgeCargo_ 
+|}
+
+{| border=1 class="simple"
+! __includeFragment 
+! _appendFragment 
+|}
+
+{| border=1 class="simple"
+! __appendNewMatch 
+! _appendNewMatch 
+|}
+
+{| border=1 class="simple"
+! GlobalPairwise_Library_ 
+! GlobalPairwiseLibrary_ 
+|}
+
+{| border=1 class="simple"
+! GlobalPairwise_Library 
+! GlobalPairwiseLibrary 
+|}
+
+{| border=1 class="simple"
+! LocalPairwise_Library_ 
+! LocalPairwiseLibrary_ 
+|}
+
+{| border=1 class="simple"
+! LocalPairwise_Library 
+! LocalPairwiseLibrary 
+|}
+
+{| border=1 class="simple"
+! Kmer_Library_ 
+! KmerLibrary_ 
+|}
+
+{| border=1 class="simple"
+! Kmer_Library 
+! KmerLibrary 
+|}
+
+{| border=1 class="simple"
+! Lcs_Library_ 
+! LcsLibrary_ 
+|}
+
+{| border=1 class="simple"
+! Lcs_Library 
+! LcsLibrary 
+|}
+
+{| border=1 class="simple"
+! __resizeWithRespectToDistance 
+! _resizeWithRespectToDistance 
+|}
+
+{| border=1 class="simple"
+! __setDistanceValue 
+! _setDistanceValue 
+|}
+
+{| border=1 class="simple"
+! __appendSegmentMatches 
+! _appendSegmentMatches 
+|}
+
+{| border=1 class="simple"
+! __matchScore 
+! _matchScore 
+|}
+
+{| border=1 class="simple"
+! __mismatchScore 
+! _mismatchScore 
+|}
+
 
 find module:
 
- || _WuManber || WuManber_ ||
- || _WuManber_Hash || WuManberHash_ ||
- || _WuManber_Imp || WuManberImpl_ ||
- || _setHost_WuManber || _setHostWuManber ||
- || _WildShiftAnd || WildShiftAnd_ ||
- || _length_wo_wild || _lengthWithoutWildcards ||
- || _findShiftAnd_SmallNeedle || _findShiftAndSmallNeedle ||
- || _findShiftAnd_LargeNeedle || _findShiftAndLargeNeedle ||
- || _ShiftOr || ShiftOr_ ||
- || _findShiftOr_SmallNeedle || _findShiftOrSmallNeedle ||
- || _findShiftOr_LargeNeedle || _findShiftOrLargeNeedle ||
- || _ShiftAnd || ShiftAnd_ ||
- || _findShiftAnd_SmallNeedle || _findShiftAndSmallNeedle ||
- || _findShiftAnd_LargeNeedle || _findShiftAndLargeNeedle ||
- || _SetHorspool || SetHorspool_ ||
- || _FindBegin || FindBegin_ ||
- || _find_score_simple_proportional || _findScoreSimpleProportional ||
- || _MyersUkkonenHP0 || MyersUkkonenHP0_ ||
- || _MyersSmallPattern || MyersSmallPattern_ ||
- || _MyersLargePattern || MyersLargePattern_ ||
- || _MyersSmallState || MyersSmallState_ ||
- || _MyersLargeState || MyersLargeState_ ||
- || _PatternState || PatternState_ ||
- || SSE2_int128 || Sse2Int128 ||
- || _MultipleShiftAnd || MultipleShiftAnd_ ||
- || _findShiftAnd_SmallNeedle || _findShiftAndSmallNeedle ||
- || _findShiftAnd_LargeNeedle || _findShiftAndLargeNeedle ||
- || MultiBFAM || MultiBfam ||
- || _buildAutomaton_MultiBFAM || _buildAutomatonMultiBfam ||
- || _setHost_MultiBFAM || _setHostMultiBfam ||
- || _startVerify_MultiBFAM || _startVerifyMultiBfam ||
- || _MultipatternFinder || MultiPatternFinder_ ||
- || _Horspool || Horspool_ ||
- || find_horspool || _findHorspool ||
- || _HammingSimple || HammingSimple_ ||
- || _find_HammingSimple_charsEqual || _findHammingSimpleCharsEqual ||
- || BFAM || Bfam ||
- || _findBndm_SmallNeedle || _findBndmSmallNeedle ||
- || _findBndm_LargeNeedle || _findBndmLargeNeedle ||
- || _FindBegin_Impl || FindBeginImpl_ ||
- || _AhoCorasick || AhoCorasick_ ||
- || _findAbndm_SmallNeedle || _findAbndmSmallNeedle ||
- || _findAbndm_LargeNeedle || _findAbndmLargeNeedle ||
+{| border=1 class="simple"
+! _WuManber 
+! WuManber_ 
+|}
+
+{| border=1 class="simple"
+! _WuManber_Hash 
+! WuManberHash_ 
+|}
+
+{| border=1 class="simple"
+! _WuManber_Imp 
+! WuManberImpl_ 
+|}
+
+{| border=1 class="simple"
+! _setHost_WuManber 
+! _setHostWuManber 
+|}
+
+{| border=1 class="simple"
+! _WildShiftAnd 
+! WildShiftAnd_ 
+|}
+
+{| border=1 class="simple"
+! _length_wo_wild 
+! _lengthWithoutWildcards 
+|}
+
+{| border=1 class="simple"
+! _findShiftAnd_SmallNeedle 
+! _findShiftAndSmallNeedle 
+|}
+
+{| border=1 class="simple"
+! _findShiftAnd_LargeNeedle 
+! _findShiftAndLargeNeedle 
+|}
+
+{| border=1 class="simple"
+! _ShiftOr 
+! ShiftOr_ 
+|}
+
+{| border=1 class="simple"
+! _findShiftOr_SmallNeedle 
+! _findShiftOrSmallNeedle 
+|}
+
+{| border=1 class="simple"
+! _findShiftOr_LargeNeedle 
+! _findShiftOrLargeNeedle 
+|}
+
+{| border=1 class="simple"
+! _ShiftAnd 
+! ShiftAnd_ 
+|}
+
+{| border=1 class="simple"
+! _findShiftAnd_SmallNeedle 
+! _findShiftAndSmallNeedle 
+|}
+
+{| border=1 class="simple"
+! _findShiftAnd_LargeNeedle 
+! _findShiftAndLargeNeedle 
+|}
+
+{| border=1 class="simple"
+! _SetHorspool 
+! SetHorspool_ 
+|}
+
+{| border=1 class="simple"
+! _FindBegin 
+! FindBegin_ 
+|}
+
+{| border=1 class="simple"
+! _find_score_simple_proportional 
+! _findScoreSimpleProportional 
+|}
+
+{| border=1 class="simple"
+! _MyersUkkonenHP0 
+! MyersUkkonenHP0_ 
+|}
+
+{| border=1 class="simple"
+! _MyersSmallPattern 
+! MyersSmallPattern_ 
+|}
+
+{| border=1 class="simple"
+! _MyersLargePattern 
+! MyersLargePattern_ 
+|}
+
+{| border=1 class="simple"
+! _MyersSmallState 
+! MyersSmallState_ 
+|}
+
+{| border=1 class="simple"
+! _MyersLargeState 
+! MyersLargeState_ 
+|}
+
+{| border=1 class="simple"
+! _PatternState 
+! PatternState_ 
+|}
+
+{| border=1 class="simple"
+! SSE2_int128 
+! Sse2Int128 
+|}
+
+{| border=1 class="simple"
+! _MultipleShiftAnd 
+! MultipleShiftAnd_ 
+|}
+
+{| border=1 class="simple"
+! _findShiftAnd_SmallNeedle 
+! _findShiftAndSmallNeedle 
+|}
+
+{| border=1 class="simple"
+! _findShiftAnd_LargeNeedle 
+! _findShiftAndLargeNeedle 
+|}
+
+{| border=1 class="simple"
+! MultiBFAM 
+! MultiBfam 
+|}
+
+{| border=1 class="simple"
+! _buildAutomaton_MultiBFAM 
+! _buildAutomatonMultiBfam 
+|}
+
+{| border=1 class="simple"
+! _setHost_MultiBFAM 
+! _setHostMultiBfam 
+|}
+
+{| border=1 class="simple"
+! _startVerify_MultiBFAM 
+! _startVerifyMultiBfam 
+|}
+
+{| border=1 class="simple"
+! _MultipatternFinder 
+! MultiPatternFinder_ 
+|}
+
+{| border=1 class="simple"
+! _Horspool 
+! Horspool_ 
+|}
+
+{| border=1 class="simple"
+! find_horspool 
+! _findHorspool 
+|}
+
+{| border=1 class="simple"
+! _HammingSimple 
+! HammingSimple_ 
+|}
+
+{| border=1 class="simple"
+! _find_HammingSimple_charsEqual 
+! _findHammingSimpleCharsEqual 
+|}
+
+{| border=1 class="simple"
+! BFAM 
+! Bfam 
+|}
+
+{| border=1 class="simple"
+! _findBndm_SmallNeedle 
+! _findBndmSmallNeedle 
+|}
+
+{| border=1 class="simple"
+! _findBndm_LargeNeedle 
+! _findBndmLargeNeedle 
+|}
+
+{| border=1 class="simple"
+! _FindBegin_Impl 
+! FindBeginImpl_ 
+|}
+
+{| border=1 class="simple"
+! _AhoCorasick 
+! AhoCorasick_ 
+|}
+
+{| border=1 class="simple"
+! _findAbndm_SmallNeedle 
+! _findAbndmSmallNeedle 
+|}
+
+{| border=1 class="simple"
+! _findAbndm_LargeNeedle 
+! _findAbndmLargeNeedle 
+|}
+
 
 random module:
 
- || RNG || Rng ||
- || PDF || Pdf ||
+{| border=1 class="simple"
+! RNG 
+! Rng 
+|}
+
+{| border=1 class="simple"
+! PDF 
+! Pdf 
+|}
+
 
 consensus module:
 
- || Majority_Vote || MajorityVote ||
- || Majority_Vote_ || MajorityVote_ || 
- || Overlap_Library || OverlapLibrary ||
- || Overlap_Library_ || OverlapLibrary_ || 
- || _LessPair || LessPair_ || 
- || _LessTriple || LessTriple_ || 
- || __getAlignmentStatistics || _getAlignmentStatistics || 
- || __countLetters || _countLetters ||
+{| border=1 class="simple"
+! Majority_Vote 
+! MajorityVote 
+|}
+
+{| border=1 class="simple"
+! Majority_Vote_ 
+! MajorityVote_ 
+|}
+
+{| border=1 class="simple"
+! Overlap_Library 
+! OverlapLibrary 
+|}
+
+{| border=1 class="simple"
+! Overlap_Library_ 
+! OverlapLibrary_ 
+|}
+
+{| border=1 class="simple"
+! _LessPair 
+! LessPair_ 
+|}
+
+{| border=1 class="simple"
+! _LessTriple 
+! LessTriple_ 
+|}
+
+{| border=1 class="simple"
+! __getAlignmentStatistics 
+! _getAlignmentStatistics 
+|}
+
+{| border=1 class="simple"
+! __countLetters 
+! _countLetters 
+|}
+
 
 score module:
 
- || _Blosum30 || Blosum30_ || 
- || _Blosum45 || Blosum45_ || 
- || _Blosum62 || Blosum62_ || 
- || _Blosum80 || Blosum80_ || 
- || _Pam120 || Pam120_ || 
- || _Pam200 || Pam200_ || 
- || _Pam250 || Pam250_ || 
- || _Pam40 || Pam40_ || 
- || _ScoringMatrixData || ScoringMatrixData_ || Has to be corrected in Howto/Tutorial, too, i.e. Wiki. || 
+{| border=1 class="simple"
+! _Blosum30 
+! Blosum30_ 
+|}
+
+{| border=1 class="simple"
+! _Blosum45 
+! Blosum45_ 
+|}
+
+{| border=1 class="simple"
+! _Blosum62 
+! Blosum62_ 
+|}
+
+{| border=1 class="simple"
+! _Blosum80 
+! Blosum80_ 
+|}
+
+{| border=1 class="simple"
+! _Pam120 
+! Pam120_ 
+|}
+
+{| border=1 class="simple"
+! _Pam200 
+! Pam200_ 
+|}
+
+{| border=1 class="simple"
+! _Pam250 
+! Pam250_ 
+|}
+
+{| border=1 class="simple"
+! _Pam40 
+! Pam40_ 
+|}
+
+{| border=1 class="simple"
+! _ScoringMatrixData 
+! ScoringMatrixData_ 
+! Has to be corrected in Howto/Tutorial, too, i.e. Wiki. 
+|}
+
 
 score seeds:
 
- || _Chain_Merge || ChainMerge_ || 
- || _Free_Int || FreeInt_ || 
- || _Free_Pointer || FreePointer_ || 
- || _Seed_multi || SeedMulti_ || 
- || _Seed_simple || SeedSimple_ || 
- || _extendSeed_GappedXDrop || ExtendSeedGappedXDrop_ || 
- || _extendSeed_UngappedXDrop || ExtendSeedUngappedXDrop_ || 
- || _banded_gotoh || _bandedGotoh || 
- || _banded_gotoh_rectangle_first || _bandedGotohRectangleFirst || 
- || _banded_gotoh_trace || _bandedGotohTrace || 
- || _banded_gotoh_trace2 || _bandedGotohTrace2 || 
- || _banded_needleman_wunsch || _bandedNeedlemanWunsch || 
- || _banded_needleman_wunsch_rectangle_first || _bandedNeedlemanWunschRectangleFirst || 
- || _banded_needleman_wunsch_trace || _bandedNeedlemanWunschTrace || 
- || _banded_needleman_wunsch_trace2 || _bandedNeedlemanWunschTrace2 || 
- || _gotoh_rectangle || _gotohRectangle || 
- || _gotoh_trace_lastRectangle || _gotohTraceLastRectangle || 
- || _gotoh_trace_rectangle || _gotohTraceRectangle || 
- || _needleman_wunsch_rectangle || _needlemanWunschRectangle || 
- || _needleman_wunsch_trace_lastRectangle || _needlemanWunschTraceLastRectangle || 
- || _needleman_wunsch_trace_rectangle || _needlemanWunschTraceRectangle || 
- || _rec_delete || _recDelete || 
- || chain_to_alignment_gotoh || _chainToAlignmentGotoh || 
- || chain_to_alignment_needlemanwunsch || _chainToAlignmentNeedlemanWunsch || 
- || delete_everything || _deleteEverything || 
+{| border=1 class="simple"
+! _Chain_Merge 
+! ChainMerge_ 
+|}
+
+{| border=1 class="simple"
+! _Free_Int 
+! FreeInt_ 
+|}
+
+{| border=1 class="simple"
+! _Free_Pointer 
+! FreePointer_ 
+|}
+
+{| border=1 class="simple"
+! _Seed_multi 
+! SeedMulti_ 
+|}
+
+{| border=1 class="simple"
+! _Seed_simple 
+! SeedSimple_ 
+|}
+
+{| border=1 class="simple"
+! _extendSeed_GappedXDrop 
+! ExtendSeedGappedXDrop_ 
+|}
+
+{| border=1 class="simple"
+! _extendSeed_UngappedXDrop 
+! ExtendSeedUngappedXDrop_ 
+|}
+
+{| border=1 class="simple"
+! _banded_gotoh 
+! _bandedGotoh 
+|}
+
+{| border=1 class="simple"
+! _banded_gotoh_rectangle_first 
+! _bandedGotohRectangleFirst 
+|}
+
+{| border=1 class="simple"
+! _banded_gotoh_trace 
+! _bandedGotohTrace 
+|}
+
+{| border=1 class="simple"
+! _banded_gotoh_trace2 
+! _bandedGotohTrace2 
+|}
+
+{| border=1 class="simple"
+! _banded_needleman_wunsch 
+! _bandedNeedlemanWunsch 
+|}
+
+{| border=1 class="simple"
+! _banded_needleman_wunsch_rectangle_first 
+! _bandedNeedlemanWunschRectangleFirst 
+|}
+
+{| border=1 class="simple"
+! _banded_needleman_wunsch_trace 
+! _bandedNeedlemanWunschTrace 
+|}
+
+{| border=1 class="simple"
+! _banded_needleman_wunsch_trace2 
+! _bandedNeedlemanWunschTrace2 
+|}
+
+{| border=1 class="simple"
+! _gotoh_rectangle 
+! _gotohRectangle 
+|}
+
+{| border=1 class="simple"
+! _gotoh_trace_lastRectangle 
+! _gotohTraceLastRectangle 
+|}
+
+{| border=1 class="simple"
+! _gotoh_trace_rectangle 
+! _gotohTraceRectangle 
+|}
+
+{| border=1 class="simple"
+! _needleman_wunsch_rectangle 
+! _needlemanWunschRectangle 
+|}
+
+{| border=1 class="simple"
+! _needleman_wunsch_trace_lastRectangle 
+! _needlemanWunschTraceLastRectangle 
+|}
+
+{| border=1 class="simple"
+! _needleman_wunsch_trace_rectangle 
+! _needlemanWunschTraceRectangle 
+|}
+
+{| border=1 class="simple"
+! _rec_delete 
+! _recDelete 
+|}
+
+{| border=1 class="simple"
+! chain_to_alignment_gotoh 
+! _chainToAlignmentGotoh 
+|}
+
+{| border=1 class="simple"
+! chain_to_alignment_needlemanwunsch 
+! _chainToAlignmentNeedlemanWunsch 
+|}
+
+{| border=1 class="simple"
+! delete_everything 
+! _deleteEverything 
+|}
+
 
 find2 module:
 
- || _FindInfix || FindInfix_ || 
- || _FindPrefix || FindPrefix_ || 
- || _HammingSimple || HammingSimple_ || 
- || _MultipleSimple || MultipleSimple_ || 
- || _ShiftAnd || ShiftAnd_ || 
- || _UseScore || UseScore_ || 
- || _UseScoreLimit || UseScoreLimit_ || 
- || _WildShiftAnd || WildShiftAnd_ || 
- || _find_ShiftAnd_LongNeedle || _findShiftAndLargeNeedle || 
- || _find_ShiftAnd_ShortNeedle || _findShiftAndSmallNeedle || 
- || _find_WildShiftAnd_LargeNeedle || _findWildShiftAndLargeNeedle || 
- || _find_WildShiftAnd_SmallNeedle || _findWildShiftAndSmallNeedle || 
- || _find_WildShiftAnd_getCharacterClass || _findWildShiftAndGetCharacterClass || 
- || _find_WildShiftAnd_isValid || _findWildShiftAndIsValid || 
- || _find_WildShiftAnd_lengthWithoutWildcards || _findWildShiftAndLengthWithoutWildcards || 
- || _setEndPosition_ShiftAnd_LongNeedle || _setEndPositionShiftAndLargeNeedle || 
- || _setEndPosition_ShiftAnd_ShortNeedle || _setEndPositionShiftAndSmallNeedle || 
+{| border=1 class="simple"
+! _FindInfix 
+! FindInfix_ 
+|}
+
+{| border=1 class="simple"
+! _FindPrefix 
+! FindPrefix_ 
+|}
+
+{| border=1 class="simple"
+! _HammingSimple 
+! HammingSimple_ 
+|}
+
+{| border=1 class="simple"
+! _MultipleSimple 
+! MultipleSimple_ 
+|}
+
+{| border=1 class="simple"
+! _ShiftAnd 
+! ShiftAnd_ 
+|}
+
+{| border=1 class="simple"
+! _UseScore 
+! UseScore_ 
+|}
+
+{| border=1 class="simple"
+! _UseScoreLimit 
+! UseScoreLimit_ 
+|}
+
+{| border=1 class="simple"
+! _WildShiftAnd 
+! WildShiftAnd_ 
+|}
+
+{| border=1 class="simple"
+! _find_ShiftAnd_LongNeedle 
+! _findShiftAndLargeNeedle 
+|}
+
+{| border=1 class="simple"
+! _find_ShiftAnd_ShortNeedle 
+! _findShiftAndSmallNeedle 
+|}
+
+{| border=1 class="simple"
+! _find_WildShiftAnd_LargeNeedle 
+! _findWildShiftAndLargeNeedle 
+|}
+
+{| border=1 class="simple"
+! _find_WildShiftAnd_SmallNeedle 
+! _findWildShiftAndSmallNeedle 
+|}
+
+{| border=1 class="simple"
+! _find_WildShiftAnd_getCharacterClass 
+! _findWildShiftAndGetCharacterClass 
+|}
+
+{| border=1 class="simple"
+! _find_WildShiftAnd_isValid 
+! _findWildShiftAndIsValid 
+|}
+
+{| border=1 class="simple"
+! _find_WildShiftAnd_lengthWithoutWildcards 
+! _findWildShiftAndLengthWithoutWildcards 
+|}
+
+{| border=1 class="simple"
+! _setEndPosition_ShiftAnd_LongNeedle 
+! _setEndPositionShiftAndLargeNeedle 
+|}
+
+{| border=1 class="simple"
+! _setEndPosition_ShiftAnd_ShortNeedle 
+! _setEndPositionShiftAndSmallNeedle 
+|}
+
 
 seeds2 module:
 
- || _AlignmentChain || AlignmentChain_ || 
- || _AlignmentMatrixDimension || AlignmentMatrixDimension_ || 
- || _Chained || Chained_ || 
- || _Chaos || Chaos_ || 
- || _GappedXDrop || GappedXDrop_ || 
- || _MatchExtend || MatchExtend_ || 
- || _Merge || Merge_ || 
- || _MinScore || MinScore_ || 
- || _MinScoreMixin || MinScoreMixin_ || 
- || _MinSeedSize || MinSeedSize_ || 
- || _MineedSizeMixin || MinSeedSizeMixin_ || 
- || _ScoreMixin || ScoreMixin_ || 
- || _SimpleChain || SimpleChain_ || 
- || _Single || Single_ || 
- || _SparseChaining || SparseChaining_ || 
- || _Tikz || Tikz_ || 
- || _UnGappedXDrop || UngappedXDrop_ || 
- || _Unordered || Unordered_ || 
- || _alignBanded_fillMatrix || _alignBandedFillMatrix || 
- || _alignBanded_initGutter || _alignBandedInitGutter || 
- || _alignBanded_initGutterFromUnbanded || _alignBandedInitGutterFromUnbanded || 
- || _alignBanded_resizeMatrix || _alignBandedResizeMatrix || 
- || _alignBanded_traceBack || _alignBandedTraceback || 
- || _align_fillMatrix || _alignFillMatrix || 
- || _align_initGutter || _alignInitGutter || 
- || _align_initGutterFromBanded || _alignInitGutterFromBanded || 
- || _align_resizeMatrix || _alignResizeMatrix || 
- || _align_traceBack || _alignTraceback || 
+{| border=1 class="simple"
+! _AlignmentChain 
+! AlignmentChain_ 
+|}
+
+{| border=1 class="simple"
+! _AlignmentMatrixDimension 
+! AlignmentMatrixDimension_ 
+|}
+
+{| border=1 class="simple"
+! _Chained 
+! Chained_ 
+|}
+
+{| border=1 class="simple"
+! _Chaos 
+! Chaos_ 
+|}
+
+{| border=1 class="simple"
+! _GappedXDrop 
+! GappedXDrop_ 
+|}
+
+{| border=1 class="simple"
+! _MatchExtend 
+! MatchExtend_ 
+|}
+
+{| border=1 class="simple"
+! _Merge 
+! Merge_ 
+|}
+
+{| border=1 class="simple"
+! _MinScore 
+! MinScore_ 
+|}
+
+{| border=1 class="simple"
+! _MinScoreMixin 
+! MinScoreMixin_ 
+|}
+
+{| border=1 class="simple"
+! _MinSeedSize 
+! MinSeedSize_ 
+|}
+
+{| border=1 class="simple"
+! _MineedSizeMixin 
+! MinSeedSizeMixin_ 
+|}
+
+{| border=1 class="simple"
+! _ScoreMixin 
+! ScoreMixin_ 
+|}
+
+{| border=1 class="simple"
+! _SimpleChain 
+! SimpleChain_ 
+|}
+
+{| border=1 class="simple"
+! _Single 
+! Single_ 
+|}
+
+{| border=1 class="simple"
+! _SparseChaining 
+! SparseChaining_ 
+|}
+
+{| border=1 class="simple"
+! _Tikz 
+! Tikz_ 
+|}
+
+{| border=1 class="simple"
+! _UnGappedXDrop 
+! UngappedXDrop_ 
+|}
+
+{| border=1 class="simple"
+! _Unordered 
+! Unordered_ 
+|}
+
+{| border=1 class="simple"
+! _alignBanded_fillMatrix 
+! _alignBandedFillMatrix 
+|}
+
+{| border=1 class="simple"
+! _alignBanded_initGutter 
+! _alignBandedInitGutter 
+|}
+
+{| border=1 class="simple"
+! _alignBanded_initGutterFromUnbanded 
+! _alignBandedInitGutterFromUnbanded 
+|}
+
+{| border=1 class="simple"
+! _alignBanded_resizeMatrix 
+! _alignBandedResizeMatrix 
+|}
+
+{| border=1 class="simple"
+! _alignBanded_traceBack 
+! _alignBandedTraceback 
+|}
+
+{| border=1 class="simple"
+! _align_fillMatrix 
+! _alignFillMatrix 
+|}
+
+{| border=1 class="simple"
+! _align_initGutter 
+! _alignInitGutter 
+|}
+
+{| border=1 class="simple"
+! _align_initGutterFromBanded 
+! _alignInitGutterFromBanded 
+|}
+
+{| border=1 class="simple"
+! _align_resizeMatrix 
+! _alignResizeMatrix 
+|}
+
+{| border=1 class="simple"
+! _align_traceBack 
+! _alignTraceback 
+|}
+
 
 
  refinement module:
 
- || getAnnoScore || _getAnnoScore ||
- || getScore || _getMatchScore || 
- || cutIsOk || _cutIsValid || 
- || updateCutPosition || _updateCutPosition || 
- || createTreesForAllSequences || _createTreesForAllSequences ||
- || __writeCargo || _writeCargo ||
- || __heaviestCommonSubsequence || _heaviestCommonSubsequence || 
+{| border=1 class="simple"
+! getAnnoScore 
+! _getAnnoScore 
+|}
+
+{| border=1 class="simple"
+! getScore 
+! _getMatchScore 
+|}
+
+{| border=1 class="simple"
+! cutIsOk 
+! _cutIsValid 
+|}
+
+{| border=1 class="simple"
+! updateCutPosition 
+! _updateCutPosition 
+|}
+
+{| border=1 class="simple"
+! createTreesForAllSequences 
+! _createTreesForAllSequences 
+|}
+
+{| border=1 class="simple"
+! __writeCargo 
+! _writeCargo 
+|}
+
+{| border=1 class="simple"
+! __heaviestCommonSubsequence 
+! _heaviestCommonSubsequence 
+|}
+
 
 
 blast module:
 
- || _parse_readAlignmentString || _parseReadAlignmentString ||
- || _parse_readQueryAndDBName || _parseReadQueryAndDBName ||
- || getNextHitFilePos || _getNextHitFilePos
- || getNextHspFilePos || _getNextHspFilePos
+{| border=1 class="simple"
+! _parse_readAlignmentString 
+! _parseReadAlignmentString 
+|}
+
+{| border=1 class="simple"
+! _parse_readQueryAndDBName 
+! _parseReadQueryAndDBName 
+|}
+
+{| border=1 class="simple"
+! getNextHitFilePos 
+! _getNextHitFilePos
+|}
+
+{| border=1 class="simple"
+! getNextHspFilePos 
+! _getNextHspFilePos
+|}
+
 
 chaining module:
 
- || _ChainPoint || ChainPoint_ ||
- || _WrapperPoint || WrapperPoint_ ||
- || _MetaFragment || MetaFragment_ ||
- || _GenericChaining ||  GenericChaining_ ||
- || _RangetreeChaining || RangeTreeChaining_ ||
- || G_0_Cost || GZeroCost ||
- || G_1_Cost || GOneCost ||
- || G_Inf_Cost || GInftyCost ||
- || G_SoP_Cost || GSumOfPairCost ||
- || _ChainSpecType || ChainSpecType_ ||
- || _Chain_Generic_Entry || ChainGenericEntry_ ||
- || _Chain_Generic_SortFragsPredFunctional || ChainGenericSortFragsPredFunctional_ ||
- || _MetaFragment || MetaFragment_ ||
- || _ChainPoint || ChainPoint_ ||
- || _WrapperPoint || WrapperPoint_ ||
- || _RangeMaxCargo || RangeMaxCargo_ ||
- || _RTreeAllocators || RangeTreeAllocators ||
- || _RangeCargo || RangeCargo_ ||
- || _DeferredStruct || DeferredStruct_ ||
- || _DynamicStruct || DynamicStruct_ ||
- || _SearchPath ||  SearchPath_ ||
- || _Empty || EmptyCargo_ ||
- || _ChainSorter || ChainSorter_ ||
- || _chain_generic_Backtrace || _chainGenericTraceback ||
- || _chain_generic_chainable || _chainGenericChainable ||
- || _chain_generic_findBest || _chainGenericFindBest ||
- || _chain_generic_initFrags || _chainGenericInitFrags ||
- || compute_chain || computeChain ||
- || _compute_chain || _computeChain ||
- || _connect_actualize_max || _connectUpdateMax ||
- || _add_max || _addMax ||
- || _connect_actualize || _connectUpdate ||
- || _sort_equals || _sortEquals ||
- || _begin_default || _beginDefault ||
- || _end_default || _endDefault ||
- || _build_chain_environment || _buildChainEnvironment ||
- || _build_chain_trees || _buildChainTrees ||
- || _chain_trace || _chainTrace ||
- || _costG1 || _costGOne ||
- || _delete_chain_trees || _deleteChainTrees ||
- || _init_starting_frag || _initStartingFrag ||
+{| border=1 class="simple"
+! _ChainPoint 
+! ChainPoint_ 
+|}
+
+{| border=1 class="simple"
+! _WrapperPoint 
+! WrapperPoint_ 
+|}
+
+{| border=1 class="simple"
+! _MetaFragment 
+! MetaFragment_ 
+|}
+
+{| border=1 class="simple"
+! _GenericChaining 
+!  GenericChaining_ 
+|}
+
+{| border=1 class="simple"
+! _RangetreeChaining 
+! RangeTreeChaining_ 
+|}
+
+{| border=1 class="simple"
+! G_0_Cost 
+! GZeroCost 
+|}
+
+{| border=1 class="simple"
+! G_1_Cost 
+! GOneCost 
+|}
+
+{| border=1 class="simple"
+! G_Inf_Cost 
+! GInftyCost 
+|}
+
+{| border=1 class="simple"
+! G_SoP_Cost 
+! GSumOfPairCost 
+|}
+
+{| border=1 class="simple"
+! _ChainSpecType 
+! ChainSpecType_ 
+|}
+
+{| border=1 class="simple"
+! _Chain_Generic_Entry 
+! ChainGenericEntry_ 
+|}
+
+{| border=1 class="simple"
+! _Chain_Generic_SortFragsPredFunctional 
+! ChainGenericSortFragsPredFunctional_ 
+|}
+
+{| border=1 class="simple"
+! _MetaFragment 
+! MetaFragment_ 
+|}
+
+{| border=1 class="simple"
+! _ChainPoint 
+! ChainPoint_ 
+|}
+
+{| border=1 class="simple"
+! _WrapperPoint 
+! WrapperPoint_ 
+|}
+
+{| border=1 class="simple"
+! _RangeMaxCargo 
+! RangeMaxCargo_ 
+|}
+
+{| border=1 class="simple"
+! _RTreeAllocators 
+! RangeTreeAllocators 
+|}
+
+{| border=1 class="simple"
+! _RangeCargo 
+! RangeCargo_ 
+|}
+
+{| border=1 class="simple"
+! _DeferredStruct 
+! DeferredStruct_ 
+|}
+
+{| border=1 class="simple"
+! _DynamicStruct 
+! DynamicStruct_ 
+|}
+
+{| border=1 class="simple"
+! _SearchPath 
+!  SearchPath_ 
+|}
+
+{| border=1 class="simple"
+! _Empty 
+! EmptyCargo_ 
+|}
+
+{| border=1 class="simple"
+! _ChainSorter 
+! ChainSorter_ 
+|}
+
+{| border=1 class="simple"
+! _chain_generic_Backtrace 
+! _chainGenericTraceback 
+|}
+
+{| border=1 class="simple"
+! _chain_generic_chainable 
+! _chainGenericChainable 
+|}
+
+{| border=1 class="simple"
+! _chain_generic_findBest 
+! _chainGenericFindBest 
+|}
+
+{| border=1 class="simple"
+! _chain_generic_initFrags 
+! _chainGenericInitFrags 
+|}
+
+{| border=1 class="simple"
+! compute_chain 
+! computeChain 
+|}
+
+{| border=1 class="simple"
+! _compute_chain 
+! _computeChain 
+|}
+
+{| border=1 class="simple"
+! _connect_actualize_max 
+! _connectUpdateMax 
+|}
+
+{| border=1 class="simple"
+! _add_max 
+! _addMax 
+|}
+
+{| border=1 class="simple"
+! _connect_actualize 
+! _connectUpdate 
+|}
+
+{| border=1 class="simple"
+! _sort_equals 
+! _sortEquals 
+|}
+
+{| border=1 class="simple"
+! _begin_default 
+! _beginDefault 
+|}
+
+{| border=1 class="simple"
+! _end_default 
+! _endDefault 
+|}
+
+{| border=1 class="simple"
+! _build_chain_environment 
+! _buildChainEnvironment 
+|}
+
+{| border=1 class="simple"
+! _build_chain_trees 
+! _buildChainTrees 
+|}
+
+{| border=1 class="simple"
+! _chain_trace 
+! _chainTrace 
+|}
+
+{| border=1 class="simple"
+! _costG1 
+! _costGOne 
+|}
+
+{| border=1 class="simple"
+! _delete_chain_trees 
+! _deleteChainTrees 
+|}
+
+{| border=1 class="simple"
+! _init_starting_frag 
+! _initStartingFrag 
+|}
+
 
 file module:
 
- || _Append_ChunkCollector_2_String || AppendChunkCollectorToString_ ||
- || _Assign_Stream_2_ChunkCollector || AssignStreamToChunkCollector_ ||
- || _ChunkCollector || ChunkCollector_ ||
- || _Replace_ChunkCollector_2_String || ReplaceChunkCollectorToString_ ||
- || _IsTellSeekStream || IsTellAndSeekStream_ ||
- || aRequest || AsyncRequest ||
- || aDummyRequest || AsyncDummyRequest ||
- || _FileReader_Types || FileReaderTypes_ ||
- || _FileReaderString_construct || _constructFileReaderString ||
- || _FileReaderString_isValidBlock || _isValidBlockFileReaderString ||
- || _FileReaderString_findblock || _findBlockFileReaderString ||
- || _FileReaderString_loadblock || _loadBlockFileReaderString ||
- || _FileReaderString_loadComplete || _loadCompleteFileReaderString ||
- || _write_impl || _writeImpl ||
- || _FastaAlign || FastaAlign_ ||
- || _fasta_align_scan_line || _fastaAlignScanLine ||
- || _fasta_scan_line || _fastaScanLine ||
- || _read_n_chars_from_file || _readNCharsFromFile ||
- || _QSeq || QSeq_ ||
- || _Read_Raw || ReadRaw_ ||
- || _BAM || Bam_ ||
- || _SAM || Sam_ ||
- || TagSBAM_ || TagSBam_ ||
- || write_header_line || writeHeaderLine ||
- || _write_additional_meta || _writeAdditionalMeta ||
- || _write_alignment || _writeAlignment || 
- || _stream_appendLine || _streamAppendLine ||
- || _stream_countLine || _streamCountLine ||
- || _stream_isLetter || _streamIsLetter ||
- || _stream_readWord || _streamReadWord ||
- || _stream_skipLine || _streamSkipLine ||
- || _stream_skipWhitespace || _streamSkipWhitespace ||
- || _string_appendLine || _stringAppendLine ||
- || _string_readNumber || _stringReadNumber ||
- || _string_skipLine || _stringSkipLine ||
- || _string_skipWhitespace || _stringSkipWhitespace ||
+{| border=1 class="simple"
+! _Append_ChunkCollector_2_String 
+! AppendChunkCollectorToString_ 
+|}
+
+{| border=1 class="simple"
+! _Assign_Stream_2_ChunkCollector 
+! AssignStreamToChunkCollector_ 
+|}
+
+{| border=1 class="simple"
+! _ChunkCollector 
+! ChunkCollector_ 
+|}
+
+{| border=1 class="simple"
+! _Replace_ChunkCollector_2_String 
+! ReplaceChunkCollectorToString_ 
+|}
+
+{| border=1 class="simple"
+! _IsTellSeekStream 
+! IsTellAndSeekStream_ 
+|}
+
+{| border=1 class="simple"
+! aRequest 
+! AsyncRequest 
+|}
+
+{| border=1 class="simple"
+! aDummyRequest 
+! AsyncDummyRequest 
+|}
+
+{| border=1 class="simple"
+! _FileReader_Types 
+! FileReaderTypes_ 
+|}
+
+{| border=1 class="simple"
+! _FileReaderString_construct 
+! _constructFileReaderString 
+|}
+
+{| border=1 class="simple"
+! _FileReaderString_isValidBlock 
+! _isValidBlockFileReaderString 
+|}
+
+{| border=1 class="simple"
+! _FileReaderString_findblock 
+! _findBlockFileReaderString 
+|}
+
+{| border=1 class="simple"
+! _FileReaderString_loadblock 
+! _loadBlockFileReaderString 
+|}
+
+{| border=1 class="simple"
+! _FileReaderString_loadComplete 
+! _loadCompleteFileReaderString 
+|}
+
+{| border=1 class="simple"
+! _write_impl 
+! _writeImpl 
+|}
+
+{| border=1 class="simple"
+! _FastaAlign 
+! FastaAlign_ 
+|}
+
+{| border=1 class="simple"
+! _fasta_align_scan_line 
+! _fastaAlignScanLine 
+|}
+
+{| border=1 class="simple"
+! _fasta_scan_line 
+! _fastaScanLine 
+|}
+
+{| border=1 class="simple"
+! _read_n_chars_from_file 
+! _readNCharsFromFile 
+|}
+
+{| border=1 class="simple"
+! _QSeq 
+! QSeq_ 
+|}
+
+{| border=1 class="simple"
+! _Read_Raw 
+! ReadRaw_ 
+|}
+
+{| border=1 class="simple"
+! _BAM 
+! Bam_ 
+|}
+
+{| border=1 class="simple"
+! _SAM 
+! Sam_ 
+|}
+
+{| border=1 class="simple"
+! TagSBAM_ 
+! TagSBam_ 
+|}
+
+{| border=1 class="simple"
+! write_header_line 
+! writeHeaderLine 
+|}
+
+{| border=1 class="simple"
+! _write_additional_meta 
+! _writeAdditionalMeta 
+|}
+
+{| border=1 class="simple"
+! _write_alignment 
+! _writeAlignment 
+|}
+
+{| border=1 class="simple"
+! _stream_appendLine 
+! _streamAppendLine 
+|}
+
+{| border=1 class="simple"
+! _stream_countLine 
+! _streamCountLine 
+|}
+
+{| border=1 class="simple"
+! _stream_isLetter 
+! _streamIsLetter 
+|}
+
+{| border=1 class="simple"
+! _stream_readWord 
+! _streamReadWord 
+|}
+
+{| border=1 class="simple"
+! _stream_skipLine 
+! _streamSkipLine 
+|}
+
+{| border=1 class="simple"
+! _stream_skipWhitespace 
+! _streamSkipWhitespace 
+|}
+
+{| border=1 class="simple"
+! _string_appendLine 
+! _stringAppendLine 
+|}
+
+{| border=1 class="simple"
+! _string_readNumber 
+! _stringReadNumber 
+|}
+
+{| border=1 class="simple"
+! _string_skipLine 
+! _stringSkipLine 
+|}
+
+{| border=1 class="simple"
+! _string_skipWhitespace 
+! _stringSkipWhitespace 
+|}
+
 
 sequence module:
 
- || _Append_Sequence_2_Segment || AppendSequenceToSegment_ ||
- || _Append_Value_2_Segment || AppendValueToSegment_ ||
- || _Assign_Segment || AssignSegment_ ||
- || _Insert_Value_2_Segment || InsertValueToSegment_ ||
- || _Replace_Sequence_2_Segment || ReplaceSequenceToSegment_ ||
- || operation_2_set || operationToSet ||
- || _begin_default || _beginDefault ||
- || _end_default || _endDefault ||
- || _computeSize4Capacity  || _computeSizeForCapacity ||
- || ConcatenatorNto1 || ConcatenatorManyToOne ||
- || _Append_String || AppendString_ ||
- || _Append_Value_2_String || _AppendValueToString ||
- || _Assign_String || AssignString_ || 
- || _ClearSpace_Expand_String_Base_ || ClearSpaceExpandStringBase_ ||
- || _ClearSpace_String_Base_ || ClearSpaceStringBase_ ||
- || _Insert_Value_2_String || InsertValueToString_
- || _Replace_String || ReplaceString_ ||
- || _TempCopy || TempCopy_ ||
- || _Assign_String_2_StringArray || AssignStringToStringArray_ ||
- || _Create_ArrayString || CreateArrayString_ ||
- || _ClearSpace_String_Packed_ || ClearSpaceStringPacked_ ||
- || _PackedConsts || PackedConsts_ || 
- || _assign_copy_packed_string || _assignCopyPackedString ||
- || _assignValue_packed_string_iterator || _assignValuePackedStringIterator ||
+{| border=1 class="simple"
+! _Append_Sequence_2_Segment 
+! AppendSequenceToSegment_ 
+|}
+
+{| border=1 class="simple"
+! _Append_Value_2_Segment 
+! AppendValueToSegment_ 
+|}
+
+{| border=1 class="simple"
+! _Assign_Segment 
+! AssignSegment_ 
+|}
+
+{| border=1 class="simple"
+! _Insert_Value_2_Segment 
+! InsertValueToSegment_ 
+|}
+
+{| border=1 class="simple"
+! _Replace_Sequence_2_Segment 
+! ReplaceSequenceToSegment_ 
+|}
+
+{| border=1 class="simple"
+! operation_2_set 
+! operationToSet 
+|}
+
+{| border=1 class="simple"
+! _begin_default 
+! _beginDefault 
+|}
+
+{| border=1 class="simple"
+! _end_default 
+! _endDefault 
+|}
+
+{| border=1 class="simple"
+! _computeSize4Capacity  
+! _computeSizeForCapacity 
+|}
+
+{| border=1 class="simple"
+! ConcatenatorNto1 
+! ConcatenatorManyToOne 
+|}
+
+{| border=1 class="simple"
+! _Append_String 
+! AppendString_ 
+|}
+
+{| border=1 class="simple"
+! _Append_Value_2_String 
+! _AppendValueToString 
+|}
+
+{| border=1 class="simple"
+! _Assign_String 
+! AssignString_ 
+|}
+
+{| border=1 class="simple"
+! _ClearSpace_Expand_String_Base_ 
+! ClearSpaceExpandStringBase_ 
+|}
+
+{| border=1 class="simple"
+! _ClearSpace_String_Base_ 
+! ClearSpaceStringBase_ 
+|}
+
+{| border=1 class="simple"
+! _Insert_Value_2_String 
+! InsertValueToString_
+|}
+
+{| border=1 class="simple"
+! _Replace_String 
+! ReplaceString_ 
+|}
+
+{| border=1 class="simple"
+! _TempCopy 
+! TempCopy_ 
+|}
+
+{| border=1 class="simple"
+! _Assign_String_2_StringArray 
+! AssignStringToStringArray_ 
+|}
+
+{| border=1 class="simple"
+! _Create_ArrayString 
+! CreateArrayString_ 
+|}
+
+{| border=1 class="simple"
+! _ClearSpace_String_Packed_ 
+! ClearSpaceStringPacked_ 
+|}
+
+{| border=1 class="simple"
+! _PackedConsts 
+! PackedConsts_ 
+|}
+
+{| border=1 class="simple"
+! _assign_copy_packed_string 
+! _assignCopyPackedString 
+|}
+
+{| border=1 class="simple"
+! _assignValue_packed_string_iterator 
+! _assignValuePackedStringIterator 
+|}
+
 
 system module:
 
- || setEOF || setEof ||
- || aread || asyncRead || 
- || awrite || asyncWrite ||
- || return_value || _returnValue ||
+{| border=1 class="simple"
+! setEOF 
+! setEof 
+|}
+
+{| border=1 class="simple"
+! aread 
+! asyncRead 
+|}
+
+{| border=1 class="simple"
+! awrite 
+! asyncWrite 
+|}
+
+{| border=1 class="simple"
+! return_value 
+! _returnValue 
+|}
+
 
 store module:
 
- || _goNext_gapAnchorIterator || _goNextGapAnchorIterator ||
- || _goPrevious_gapAnchorIterator || _goPreviousGapAnchorIterator ||
- || _goTo_gapAnchorIterator || _goToGapAnchorIterator ||
- || TagGFF_ || TagGff_ ||
- || TagGTF_ || TagGtf_ ||
- || GFF || Gff ||
- || GTF || Gtf ||
- || _parse_readGffIdentifier || _parseReadGffIdentifier ||
- || _parse_skipEntryUntilWhitespace || _parseSkipEntryUntilWhitespace ||
- || _parse_readGFFKeyValue || _parseReadGffKeyValue ||
- || _IOContextGFF || _IOContextGff ||
- || _writeGFFGTF || _writeGffGtf ||
- || _parse_readCigar || _parseReadCigar ||
- || _parse_readSamIdentifier || _parseReadSamIdentifier ||
- || _parse_is_dna || _parseIsDna ||
- || _parse_readDnaSeq || _parseReadDnaSeq ||
- || _parse_is_PhredQual || _parseIsPhredQual ||
- || _parse_readSeqQual || _parseReadSeqQual ||
- || _parse_readCharsTillEndOfLine || _parseReadCharsUntilEndOfLine ||
- || UCSC_ || Ucsc_ ||
- || UCSC_KNOWN_GENE_ || UcscKnownGene_ ||
- || UCSC || Ucsc ||
- || UCSC_KNOWN_ISOFORMS_ || UcscKnownIsoforms_ ||
- || UCSC_ISOFORMS || UcscIsoforms ||
- || _parse_readUCSCIdentifier || _parseReadUcscIdentifier ||
- || _parse_skipWhiteComma || _parseSkipWhiteComma ||
- || _IOContextUCSC || _IOContextUcsc ||
- || _storeOneAnnotation_KNOWN_GENE || _storeOneAnnotationKnownGene ||
- || _storeOneAnnotation_KNOWN_ISOFORMS || _storeOneAnnotationKnownIsoforms ||
+{| border=1 class="simple"
+! _goNext_gapAnchorIterator 
+! _goNextGapAnchorIterator 
+|}
+
+{| border=1 class="simple"
+! _goPrevious_gapAnchorIterator 
+! _goPreviousGapAnchorIterator 
+|}
+
+{| border=1 class="simple"
+! _goTo_gapAnchorIterator 
+! _goToGapAnchorIterator 
+|}
+
+{| border=1 class="simple"
+! TagGFF_ 
+! TagGff_ 
+|}
+
+{| border=1 class="simple"
+! TagGTF_ 
+! TagGtf_ 
+|}
+
+{| border=1 class="simple"
+! GFF 
+! Gff 
+|}
+
+{| border=1 class="simple"
+! GTF 
+! Gtf 
+|}
+
+{| border=1 class="simple"
+! _parse_readGffIdentifier 
+! _parseReadGffIdentifier 
+|}
+
+{| border=1 class="simple"
+! _parse_skipEntryUntilWhitespace 
+! _parseSkipEntryUntilWhitespace 
+|}
+
+{| border=1 class="simple"
+! _parse_readGFFKeyValue 
+! _parseReadGffKeyValue 
+|}
+
+{| border=1 class="simple"
+! _IOContextGFF 
+! _IOContextGff 
+|}
+
+{| border=1 class="simple"
+! _writeGFFGTF 
+! _writeGffGtf 
+|}
+
+{| border=1 class="simple"
+! _parse_readCigar 
+! _parseReadCigar 
+|}
+
+{| border=1 class="simple"
+! _parse_readSamIdentifier 
+! _parseReadSamIdentifier 
+|}
+
+{| border=1 class="simple"
+! _parse_is_dna 
+! _parseIsDna 
+|}
+
+{| border=1 class="simple"
+! _parse_readDnaSeq 
+! _parseReadDnaSeq 
+|}
+
+{| border=1 class="simple"
+! _parse_is_PhredQual 
+! _parseIsPhredQual 
+|}
+
+{| border=1 class="simple"
+! _parse_readSeqQual 
+! _parseReadSeqQual 
+|}
+
+{| border=1 class="simple"
+! _parse_readCharsTillEndOfLine 
+! _parseReadCharsUntilEndOfLine 
+|}
+
+{| border=1 class="simple"
+! UCSC_ 
+! Ucsc_ 
+|}
+
+{| border=1 class="simple"
+! UCSC_KNOWN_GENE_ 
+! UcscKnownGene_ 
+|}
+
+{| border=1 class="simple"
+! UCSC 
+! Ucsc 
+|}
+
+{| border=1 class="simple"
+! UCSC_KNOWN_ISOFORMS_ 
+! UcscKnownIsoforms_ 
+|}
+
+{| border=1 class="simple"
+! UCSC_ISOFORMS 
+! UcscIsoforms 
+|}
+
+{| border=1 class="simple"
+! _parse_readUCSCIdentifier 
+! _parseReadUcscIdentifier 
+|}
+
+{| border=1 class="simple"
+! _parse_skipWhiteComma 
+! _parseSkipWhiteComma 
+|}
+
+{| border=1 class="simple"
+! _IOContextUCSC 
+! _IOContextUcsc 
+|}
+
+{| border=1 class="simple"
+! _storeOneAnnotation_KNOWN_GENE 
+! _storeOneAnnotationKnownGene 
+|}
+
+{| border=1 class="simple"
+! _storeOneAnnotation_KNOWN_ISOFORMS 
+! _storeOneAnnotationKnownIsoforms 
+|}
+
 
 misc_parsing.h
 
-|| _parse_skipWhitespace || _parseSkipWhitespace ||
-|| _parse_skipSpace || _parseSkipSpace ||
-|| _parse_skipUntilChar || _parseSkipUntilChar ||
-|| _parse_isDigit || _parseIsDigit ||
-|| _parse_isLetter || _parseIsLetter ||
-|| _parse_isAlphanumericChar || _parseIsAlphanumericChar ||
-|| _parse_readNumber || _parseReadNumber ||
-|| _parse_readDouble || _parseReadDouble ||
-|| _parse_readIdentifier || _parseReadIdentifier ||
-|| _parse_readChar || _parseReadChar ||
-|| _parse_readIdentifier || _parseReadIdentifier ||
-|| _parse_readWord || _parseReadWord ||
-|| _parse_readFilepath || _parseReadFilepath ||
-|| _parse_readWordUntilWhitespace || _parseReadWordUntilWhitespace ||
-|| _parse_readSequenceData || _parseReadSequenceData ||
-|| _parse_skipBlanks || _parseSkipBlanks ||
-|| _parse_skipLine2 || _parseSkipLine2 ||
-|| _parse_readEValue || _parseReadEValue ||
-|| _parse_readFloat || _parseReadFloat ||
-|| _parse_untilBeginLine || _parseUntilBeginLine ||
-|| _parse_untilBeginLineOneOf || _parseUntilBeginLineOneOf ||
-|| _parse_until || _parseUntil ||
-|| _parse_lineUntil || _parseLineUntil ||
+{| border=1 class="simple"
+! _parse_skipWhitespace 
+! _parseSkipWhitespace 
+|- 
+|  _parse_skipSpace 
+|  _parseSkipSpace 
+|- 
+|  _parse_skipUntilChar 
+|  _parseSkipUntilChar 
+|- 
+|  _parse_isDigit 
+|  _parseIsDigit 
+|- 
+|  _parse_isLetter 
+|  _parseIsLetter 
+|- 
+|  _parse_isAlphanumericChar 
+|  _parseIsAlphanumericChar 
+|- 
+|  _parse_readNumber 
+|  _parseReadNumber 
+|- 
+|  _parse_readDouble 
+|  _parseReadDouble 
+|- 
+|  _parse_readIdentifier 
+|  _parseReadIdentifier 
+|- 
+|  _parse_readChar 
+|  _parseReadChar 
+|- 
+|  _parse_readIdentifier 
+|  _parseReadIdentifier 
+|- 
+|  _parse_readWord 
+|  _parseReadWord 
+|- 
+|  _parse_readFilepath 
+|  _parseReadFilepath 
+|- 
+|  _parse_readWordUntilWhitespace 
+|  _parseReadWordUntilWhitespace 
+|- 
+|  _parse_readSequenceData 
+|  _parseReadSequenceData 
+|- 
+|  _parse_skipBlanks 
+|  _parseSkipBlanks 
+|- 
+|  _parse_skipLine2 
+|  _parseSkipLine2 
+|- 
+|  _parse_readEValue 
+|  _parseReadEValue 
+|- 
+|  _parse_readFloat 
+|  _parseReadFloat 
+|- 
+|  _parse_untilBeginLine 
+|  _parseUntilBeginLine 
+|- 
+|  _parse_untilBeginLineOneOf 
+|  _parseUntilBeginLineOneOf 
+|- 
+|  _parse_until 
+|  _parseUntil 
+|- 
+|  _parse_lineUntil 
+|  _parseLineUntil 
+|}
+
 
 sumlist_skip.h
 
-|| _SkipSumList || Skipsumlist_ ||
-|| _skipsumlistFindGoNext || _skipsumlistFindGoNext ||
-|| _skipsumlistFind || _skipsumlistFind ||
-|| _skiplistCreateHeight || _skiplistCreateHeight ||
-|| _SumListSkiplistElement || SumlistSkipListElement_ ||
-|| _searchSumList_Skip || _searchSumlistSkip ||
+{| border=1 class="simple"
+! _SkipSumList 
+! Skipsumlist_ 
+|- 
+|  _skipsumlistFindGoNext 
+|  _skipsumlistFindGoNext 
+|- 
+|  _skipsumlistFind 
+|  _skipsumlistFind 
+|- 
+|  _skiplistCreateHeight 
+|  _skiplistCreateHeight 
+|- 
+|  _SumListSkiplistElement 
+|  SumlistSkipListElement_ 
+|- 
+|  _searchSumList_Skip 
+|  _searchSumlistSkip 
+|}
+
 
 shape_predefined.h
 
-|| ShapeIlie_9_15_1 || ShapeIlieA1 ||
-|| ShapeIlie_9_15_2 || ShapeIlieA2 ||
-|| ShapeIlie_9_15_3 || ShapeIlieA3 ||
-|| ShapeIlie_9_1323_1 || ShapeIlieB1 ||
-|| ShapeIlie_9_1323_2 || ShapeIlieB2 ||
-|| ShapeIlie_9_1323_3 || ShapeIlieB3 ||
+{| border=1 class="simple"
+! ShapeIlie_9_15_1 
+! ShapeIlieA1 
+|- 
+|  ShapeIlie_9_15_2 
+|  ShapeIlieA2 
+|- 
+|  ShapeIlie_9_15_3 
+|  ShapeIlieA3 
+|- 
+|  ShapeIlie_9_1323_1 
+|  ShapeIlieB1 
+|- 
+|  ShapeIlie_9_1323_2 
+|  ShapeIlieB2 
+|- 
+|  ShapeIlie_9_1323_3 
+|  ShapeIlieB3 
+|}
+
 
 pizzachili_api.h
 
-|| _PizzaChiliAF || PizzaChiliAF_ ||
-|| _PizzaChiliCCSA || PizzaChiliCcsa_ ||
-|| _PizzaChiliLZ || PizzaChiliLZ_ ||
-|| _PizzaChiliRSA || PizzaChiliRsa_ ||
-|| _PizzaChiliLZ || PizzaChiliLZ_ ||
-|| _PizzaChiliRLFM || PizzaChiliRlfm_ ||
-|| _PizzaChiliSA || PizzaChiliSA_ ||
-|| _PizzaChiliSADA || PizzaChiliSada_ ||
-|| _PizzaChiliSSA || PizzaChiliSsa_ ||
-|| _PizzaChiliTest || PizzaChiliTest_ ||
+{| border=1 class="simple"
+! _PizzaChiliAF 
+! PizzaChiliAF_ 
+|- 
+|  _PizzaChiliCCSA 
+|  PizzaChiliCcsa_ 
+|- 
+|  _PizzaChiliLZ 
+|  PizzaChiliLZ_ 
+|- 
+|  _PizzaChiliRSA 
+|  PizzaChiliRsa_ 
+|- 
+|  _PizzaChiliLZ 
+|  PizzaChiliLZ_ 
+|- 
+|  _PizzaChiliRLFM 
+|  PizzaChiliRlfm_ 
+|- 
+|  _PizzaChiliSA 
+|  PizzaChiliSA_ 
+|- 
+|  _PizzaChiliSADA 
+|  PizzaChiliSada_ 
+|- 
+|  _PizzaChiliSSA 
+|  PizzaChiliSsa_ 
+|- 
+|  _PizzaChiliTest 
+|  PizzaChiliTest_ 
+|}
+
 
 basic_profile.h
 
-|| _proFile || ProfileFile_ ||
-|| _proData || ProfileData_ ||
-|| _proTStates || ProfileTStates_ ||
-|| _proTTimes || ProfileTTimes ||
-|| _proInt || ProfileInt_ ||
-|| _proTValue || ProfileTimeValue_ ||
-|| _proConsts || ProfileConstants_ ||
-|| _proValueIndex || ProfileValueIndex_ ||
-|| _proValueType || ProfileValueType_ ||
-|| _proSignalDumpTest || _profileSignalDumpTest ||
-|| _proSignalNewMax || _profileSignalNewMax ||
-|| _proMark || _profileMark ||
-|| _proEndMark || _profileEndMark ||
-|| _proReset || _profileReset ||
-|| _proSet || _profileSet ||
-|| _proAdd || _profileAdd ||
-|| _proSub || _profileSub ||
-|| _proMalloc || _profileMalloc ||
-|| _proFree || _profileFree ||
-|| _proUpdate || _profileUpdate ||
+{| border=1 class="simple"
+! _proFile 
+! ProfileFile_ 
+|- 
+|  _proData 
+|  ProfileData_ 
+|- 
+|  _proTStates 
+|  ProfileTStates_ 
+|- 
+|  _proTTimes 
+|  ProfileTTimes 
+|- 
+|  _proInt 
+|  ProfileInt_ 
+|- 
+|  _proTValue 
+|  ProfileTimeValue_ 
+|- 
+|  _proConsts 
+|  ProfileConstants_ 
+|- 
+|  _proValueIndex 
+|  ProfileValueIndex_ 
+|- 
+|  _proValueType 
+|  ProfileValueType_ 
+|- 
+|  _proSignalDumpTest 
+|  _profileSignalDumpTest 
+|- 
+|  _proSignalNewMax 
+|  _profileSignalNewMax 
+|- 
+|  _proMark 
+|  _profileMark 
+|- 
+|  _proEndMark 
+|  _profileEndMark 
+|- 
+|  _proReset 
+|  _profileReset 
+|- 
+|  _proSet 
+|  _profileSet 
+|- 
+|  _proAdd 
+|  _profileAdd 
+|- 
+|  _proSub 
+|  _profileSub 
+|- 
+|  _proMalloc 
+|  _profileMalloc 
+|- 
+|  _proFree 
+|  _profileFree 
+|- 
+|  _proUpdate 
+|  _profileUpdate 
+|}
+
 
 index module
 
-|| ESA_BWT || EsaBwt ||
-|| ESA_ChildTab || EsaChildtab ||
-|| ESA_FIND_LCPE || EsaFindLcpe ||
-|| ESA_FIND_MLR || EsaFindMlr ||
-|| ESA_LCP || EsaLcp ||
-|| ESA_LCPE || EsaLcpe ||
-|| ESA_RawSA || EsaRawSA ||
-|| ESA_RawText || EsaRawText ||
-|| ESA_SA || EsaSA ||
-|| ESA_SAE || EsaSae ||
-|| ESA_Text || EsaText ||
-|| Fibre_BWT || FibreBwt ||
-|| Fibre_BucketMap || FibreBucketMap ||
-|| Fibre_ChildTab || FibreChildtab ||
-|| Fibre_Counts || FibreCounts ||
-|| Fibre_CountsDir || FibreCountsDir ||
-|| Fibre_Dir || FibreDir ||
-|| Fibre_LCP || FibreLcp ||
-|| Fibre_LCPE || FibreLcpe ||
-|| Fibre_PizzaChili_Compressed || FibrePizzaChiliCompressed ||
-|| Fibre_PizzaChili_Text || FibrePizzaChiliText ||
-|| Fibre_RawSA || FibreRawSA ||
-|| Fibre_RawText || FibreRawText ||
-|| Fibre_SA || FibreSA ||
-|| Fibre_SADir || FibreSADir ||
-|| Fibre_SAE || FibreSae ||
-|| Fibre_Shape || FibreShape ||
-|| Fibre_Text || FibreText ||
-|| Index_ESA || IndexEsa ||
-|| Index_QGram || IndexQGram || 
-|| Index_Wotd || IndexWotd || 
-|| PizzaChili_AF || PizzaChiliAF ||
-|| PizzaChili_CCSA || PizzaChiliCcsa ||
-|| PizzaChili_Compressed || PizzaChiliCompressed ||
-|| PizzaChili_FM || PizzaChiliFM ||
-|| PizzaChili_LZ || PizzaChiliLZ ||
-|| PizzaChili_RLFM || PizzaChiliRlfm ||
-|| PizzaChili_RSA || PizzaChiliRsa ||
-|| PizzaChili_SA || PizzaChiliSA  ||
-|| PizzaChili_SADA || PizzaChiliSada ||
-|| PizzaChili_SSA || PizzaChiliSsa ||
-|| PizzaChili_Test || PizzaChiliTest ||
-|| PizzaChili_Text || PizzaChiliText ||
-|| QGram_BucketMap || QGramBucketMap ||
-|| QGram_Counts || QGramCounts ||
-|| QGram_CountsDir || QGramCountsDir ||
-|| QGram_Dir || QGramDir ||
-|| QGram_FIND_Lookup || QGramFindLookup ||
-|| QGram_RawSA || QGramRawSA ||
-|| QGram_SADir || QGramSADir ||
-|| QGram_Shape || QGramShape ||
-|| QGram_Text || QGramText ||
-|| Wotd_Dir || WotdDir ||
-|| Wotd_RawSA || WotdRawSA ||
-|| Wotd_RawText || WotdRawText ||
-|| Wotd_SA || WotdSA ||
-|| Wotd_Text || WotdText ||
-|| _AllocHelper || AllocHelper_ ||
-|| _Context_LSS || ContextLss_ ||
-|| _DFIEntry || DfiEntry_ ||
-|| _DFIPredDefault || DfiPredDefault_ ||
-|| _Fibre_BWT || FibreBwt_ ||
-|| _Fibre_BucketMap || FibreBucketMap_ ||
-|| _Fibre_ChildTab || FibreChildtab_ ||
-|| _Fibre_Counts || FibreCounts_ ||
-|| _Fibre_CountsDir || FibreCountsDir_ ||
-|| _Fibre_Dir || FibreDir_ || 
-|| _Fibre_LCP || FibreLcp_ || 
-|| _Fibre_LCPE || FibreLcpe_ || 
-|| _Fibre_PizzaChili_Compressed || FibrePizzaChiliCompressed_ ||
-|| _Fibre_RawSA || FibreRawSA_ || 
-|| _Fibre_RawText || FibreRawText_ || 
-|| _Fibre_SA || FibreSA_ ||
-|| _Fibre_SADir || FibreSADir_ || 
-|| _Fibre_SAE || FibreSae_ ||
-|| _Fibre_Shape || Fibre_Shape_ ||
-|| _Fibre_Text || FibreText_ ||
-|| _Finder_MLR || FinderMlr_ ||
-|| _Finder_QGramLookup || FinderQGramLookup_ ||
-|| _FractionCompound || FractionCompound_ ||
-|| _FractionHeader || FractionHeader_ ||
-|| _FractionMultiCompound || FractionMultiCompound_ ||
-|| _Hamming || Hamming_ ||
-|| _HistoryStackESA || HistoryStackEsa_ ||
-|| _HistoryStackEntry || HistoryStackEntry_ ||
-|| _HistoryStackWotdModified || HistoryStackWotdModified_ ||
-|| _HistoryStackWotdOriginal || HistoryStackWotdOriginal_ ||
-|| _MaxRepeats || MaxRepeats_ ||
-|| _MultiMEMs || MultiMems_ ||
-|| _OpenAddressing || OpenAddressing_ ||
-|| _PizzaChiliFinder || PizzaChiliFinder_ ||
-|| _Postorder || Postorder_ ||
-|| _Preorder || Preorder_ ||
-|| _QGramLess || QGramLess_ ||
-|| _QGramLessNoCheck || QGramLessNoCheck_ ||
-|| _QGramLessNoCheckOffset || QGramLessNoCheckOffset_ ||
-|| _QGramLessOffset || QGramLessOffset_ ||
-|| _Quasar || Quasar_ ||
-|| _RepeatLess || RepeatLess_ ||
-|| _SAValueLess || SAValueLess_ ||
-|| _Skew7_StringSpec || Skew7StringSpec_ ||
-|| _SkewNIndx || SkewNIndex_ ||
-|| _SkewShift || SkewShift_ ||
-|| _SuffixLess || SuffixLess_ ||
-|| _SuffixLessOffset || SuffixLessOffset_ ||
-|| _SwiftBucket || SwiftBucket_ ||
-|| _SwiftBucketParams || SwiftBucketParams_ ||
-|| _SwiftHit || SwiftHit_ ||
-|| _SwiftLocal || SwiftLocal_ ||
-|| _SwiftSemiGlobal || SwiftSemiGlobal_ ||
-|| _Translate_Table_Error_2_Ascii || TranslateTableErrorToAscii_ ||
-|| _VertexWotdModified || VertexWotdModified_ ||
-|| _VertexWotdOriginal || VertexWotdOriginal_ ||
-|| _bucketLCP || _bucketLcp ||
-|| _dfsLCP || _dfsLcp ||
-|| _equalRangeLCPE || _equalRangeLcpe ||
-|| _lowerBoundLCPE || _lowerBoundLcpe ||
-|| _qgram_comp || _qgramComp ||
-|| _qgram_hash || _qgramHash ||
-|| _upperBoundLCPE || _upperBoundLcpe ||
-|| childtab_process || _childtabProcess ||
-|| createLCPBinTree || createLcpBinTree ||
-|| createLCPETable || createLcpeTable ||
-|| createLCPETableExt || createLcpeTableExt ||
-|| createLCPTable || createLcpTable ||
-|| createLCPTableExt || createLcpTableExt ||
-|| createSABTree || createSABTree ||
-|| equalRangeLCPE || equalRangeLcpe ||
-|| equalRangeLCPEIterator || equalRangeLcpeIterator ||
-|| filter_globalizer || _filterGlobalizer ||
-|| getOccurrencesBWT || getOccurrencesBwt ||
-|| indexBWT || indexBwt ||
-|| indexLCP || indexLcp ||
-|| indexLCPE || indexLcpe ||
-|| lcp_process || _lcpProcess ||
-|| lcp_process_multi || _lcpProcessMulti ||
-|| lowerBoundLCPE || lowerBoundLcpe ||
-|| lowerBoundLCPEIterator || lowerBoundLcpeIterator ||
-|| map_inverse || _mapInverse ||
-|| map_inverse_multi || _mapInverseMulti ||
-|| sizeofLCPE || sizeofLcpe ||
-|| sizeofLCPH || sizeofLcph ||
-|| sizeofSAB || sizeofSABTree ||
-|| skew3_extend || _skew3Extend ||
-|| skew3_extend_comp || _skew3ExtendComp ||
-|| skew3_ncomp || _skew3NComp ||
-|| skew3_nmap_extended || _skew3NMapExtended ||
-|| skew3_nmap_linear || _skew3NMapLinear ||
-|| skew3_nmap_sliced || _skew3NMapSliced ||
-|| skew3_unslicer_func || _skew3UnslicerFunc ||
-|| skew7_extend || _skew7Extend ||
-|| skew7_extend_comp || _skew7ExtendComp ||
-|| skew7_extend_multi || _skew7ExtendMulti ||
-|| skew7_global_sliced_multi || _skew7GlobalSlicedMulti ||
-|| skew7_ncomp || _skew7NComp ||
-|| skew7_ncomp_multi || _skew7NCompMulti  ||
-|| skew7_nmap_extended || _skew7NMapExtended ||
-|| skew7_nmap_linear || _skew7NMapLinear ||
-|| skew7_nmap_sliced || _skew7NMapSliced  ||
-|| skew7_separate_slices || _skew7SeparateSlices ||
-|| skew7_unslicer_func || _skew7UnslicerFunc ||
-|| upperBoundLCPE || upperBoundLcpe ||
-|| upperBoundLCPEIterator || upperBoundLcpeIterator ||
+{| border=1 class="simple"
+! ESA_BWT 
+! EsaBwt 
+|- 
+|  ESA_ChildTab 
+|  EsaChildtab 
+|- 
+|  ESA_FIND_LCPE 
+|  EsaFindLcpe 
+|- 
+|  ESA_FIND_MLR 
+|  EsaFindMlr 
+|- 
+|  ESA_LCP 
+|  EsaLcp 
+|- 
+|  ESA_LCPE 
+|  EsaLcpe 
+|- 
+|  ESA_RawSA 
+|  EsaRawSA 
+|- 
+|  ESA_RawText 
+|  EsaRawText 
+|- 
+|  ESA_SA 
+|  EsaSA 
+|- 
+|  ESA_SAE 
+|  EsaSae 
+|- 
+|  ESA_Text 
+|  EsaText 
+|- 
+|  Fibre_BWT 
+|  FibreBwt 
+|- 
+|  Fibre_BucketMap 
+|  FibreBucketMap 
+|- 
+|  Fibre_ChildTab 
+|  FibreChildtab 
+|- 
+|  Fibre_Counts 
+|  FibreCounts 
+|- 
+|  Fibre_CountsDir 
+|  FibreCountsDir 
+|- 
+|  Fibre_Dir 
+|  FibreDir 
+|- 
+|  Fibre_LCP 
+|  FibreLcp 
+|- 
+|  Fibre_LCPE 
+|  FibreLcpe 
+|- 
+|  Fibre_PizzaChili_Compressed 
+|  FibrePizzaChiliCompressed 
+|- 
+|  Fibre_PizzaChili_Text 
+|  FibrePizzaChiliText 
+|- 
+|  Fibre_RawSA 
+|  FibreRawSA 
+|- 
+|  Fibre_RawText 
+|  FibreRawText 
+|- 
+|  Fibre_SA 
+|  FibreSA 
+|- 
+|  Fibre_SADir 
+|  FibreSADir 
+|- 
+|  Fibre_SAE 
+|  FibreSae 
+|- 
+|  Fibre_Shape 
+|  FibreShape 
+|- 
+|  Fibre_Text 
+|  FibreText 
+|- 
+|  Index_ESA 
+|  IndexEsa 
+|- 
+|  Index_QGram 
+|  IndexQGram 
+|- 
+|  Index_Wotd 
+|  IndexWotd 
+|- 
+|  PizzaChili_AF 
+|  PizzaChiliAF 
+|- 
+|  PizzaChili_CCSA 
+|  PizzaChiliCcsa 
+|- 
+|  PizzaChili_Compressed 
+|  PizzaChiliCompressed 
+|- 
+|  PizzaChili_FM 
+|  PizzaChiliFM 
+|- 
+|  PizzaChili_LZ 
+|  PizzaChiliLZ 
+|- 
+|  PizzaChili_RLFM 
+|  PizzaChiliRlfm 
+|- 
+|  PizzaChili_RSA 
+|  PizzaChiliRsa 
+|- 
+|  PizzaChili_SA 
+|  PizzaChiliSA  
+|- 
+|  PizzaChili_SADA 
+|  PizzaChiliSada 
+|- 
+|  PizzaChili_SSA 
+|  PizzaChiliSsa 
+|- 
+|  PizzaChili_Test 
+|  PizzaChiliTest 
+|- 
+|  PizzaChili_Text 
+|  PizzaChiliText 
+|- 
+|  QGram_BucketMap 
+|  QGramBucketMap 
+|- 
+|  QGram_Counts 
+|  QGramCounts 
+|- 
+|  QGram_CountsDir 
+|  QGramCountsDir 
+|- 
+|  QGram_Dir 
+|  QGramDir 
+|- 
+|  QGram_FIND_Lookup 
+|  QGramFindLookup 
+|- 
+|  QGram_RawSA 
+|  QGramRawSA 
+|- 
+|  QGram_SADir 
+|  QGramSADir 
+|- 
+|  QGram_Shape 
+|  QGramShape 
+|- 
+|  QGram_Text 
+|  QGramText 
+|- 
+|  Wotd_Dir 
+|  WotdDir 
+|- 
+|  Wotd_RawSA 
+|  WotdRawSA 
+|- 
+|  Wotd_RawText 
+|  WotdRawText 
+|- 
+|  Wotd_SA 
+|  WotdSA 
+|- 
+|  Wotd_Text 
+|  WotdText 
+|- 
+|  _AllocHelper 
+|  AllocHelper_ 
+|- 
+|  _Context_LSS 
+|  ContextLss_ 
+|- 
+|  _DFIEntry 
+|  DfiEntry_ 
+|- 
+|  _DFIPredDefault 
+|  DfiPredDefault_ 
+|- 
+|  _Fibre_BWT 
+|  FibreBwt_ 
+|- 
+|  _Fibre_BucketMap 
+|  FibreBucketMap_ 
+|- 
+|  _Fibre_ChildTab 
+|  FibreChildtab_ 
+|- 
+|  _Fibre_Counts 
+|  FibreCounts_ 
+|- 
+|  _Fibre_CountsDir 
+|  FibreCountsDir_ 
+|- 
+|  _Fibre_Dir 
+|  FibreDir_ 
+|- 
+|  _Fibre_LCP 
+|  FibreLcp_ 
+|- 
+|  _Fibre_LCPE 
+|  FibreLcpe_ 
+|- 
+|  _Fibre_PizzaChili_Compressed 
+|  FibrePizzaChiliCompressed_ 
+|- 
+|  _Fibre_RawSA 
+|  FibreRawSA_ 
+|- 
+|  _Fibre_RawText 
+|  FibreRawText_ 
+|- 
+|  _Fibre_SA 
+|  FibreSA_ 
+|- 
+|  _Fibre_SADir 
+|  FibreSADir_ 
+|- 
+|  _Fibre_SAE 
+|  FibreSae_ 
+|- 
+|  _Fibre_Shape 
+|  Fibre_Shape_ 
+|- 
+|  _Fibre_Text 
+|  FibreText_ 
+|- 
+|  _Finder_MLR 
+|  FinderMlr_ 
+|- 
+|  _Finder_QGramLookup 
+|  FinderQGramLookup_ 
+|- 
+|  _FractionCompound 
+|  FractionCompound_ 
+|- 
+|  _FractionHeader 
+|  FractionHeader_ 
+|- 
+|  _FractionMultiCompound 
+|  FractionMultiCompound_ 
+|- 
+|  _Hamming 
+|  Hamming_ 
+|- 
+|  _HistoryStackESA 
+|  HistoryStackEsa_ 
+|- 
+|  _HistoryStackEntry 
+|  HistoryStackEntry_ 
+|- 
+|  _HistoryStackWotdModified 
+|  HistoryStackWotdModified_ 
+|- 
+|  _HistoryStackWotdOriginal 
+|  HistoryStackWotdOriginal_ 
+|- 
+|  _MaxRepeats 
+|  MaxRepeats_ 
+|- 
+|  _MultiMEMs 
+|  MultiMems_ 
+|- 
+|  _OpenAddressing 
+|  OpenAddressing_ 
+|- 
+|  _PizzaChiliFinder 
+|  PizzaChiliFinder_ 
+|- 
+|  _Postorder 
+|  Postorder_ 
+|- 
+|  _Preorder 
+|  Preorder_ 
+|- 
+|  _QGramLess 
+|  QGramLess_ 
+|- 
+|  _QGramLessNoCheck 
+|  QGramLessNoCheck_ 
+|- 
+|  _QGramLessNoCheckOffset 
+|  QGramLessNoCheckOffset_ 
+|- 
+|  _QGramLessOffset 
+|  QGramLessOffset_ 
+|- 
+|  _Quasar 
+|  Quasar_ 
+|- 
+|  _RepeatLess 
+|  RepeatLess_ 
+|- 
+|  _SAValueLess 
+|  SAValueLess_ 
+|- 
+|  _Skew7_StringSpec 
+|  Skew7StringSpec_ 
+|- 
+|  _SkewNIndx 
+|  SkewNIndex_ 
+|- 
+|  _SkewShift 
+|  SkewShift_ 
+|- 
+|  _SuffixLess 
+|  SuffixLess_ 
+|- 
+|  _SuffixLessOffset 
+|  SuffixLessOffset_ 
+|- 
+|  _SwiftBucket 
+|  SwiftBucket_ 
+|- 
+|  _SwiftBucketParams 
+|  SwiftBucketParams_ 
+|- 
+|  _SwiftHit 
+|  SwiftHit_ 
+|- 
+|  _SwiftLocal 
+|  SwiftLocal_ 
+|- 
+|  _SwiftSemiGlobal 
+|  SwiftSemiGlobal_ 
+|- 
+|  _Translate_Table_Error_2_Ascii 
+|  TranslateTableErrorToAscii_ 
+|- 
+|  _VertexWotdModified 
+|  VertexWotdModified_ 
+|- 
+|  _VertexWotdOriginal 
+|  VertexWotdOriginal_ 
+|- 
+|  _bucketLCP 
+|  _bucketLcp 
+|- 
+|  _dfsLCP 
+|  _dfsLcp 
+|- 
+|  _equalRangeLCPE 
+|  _equalRangeLcpe 
+|- 
+|  _lowerBoundLCPE 
+|  _lowerBoundLcpe 
+|- 
+|  _qgram_comp 
+|  _qgramComp 
+|- 
+|  _qgram_hash 
+|  _qgramHash 
+|- 
+|  _upperBoundLCPE 
+|  _upperBoundLcpe 
+|- 
+|  childtab_process 
+|  _childtabProcess 
+|- 
+|  createLCPBinTree 
+|  createLcpBinTree 
+|- 
+|  createLCPETable 
+|  createLcpeTable 
+|- 
+|  createLCPETableExt 
+|  createLcpeTableExt 
+|- 
+|  createLCPTable 
+|  createLcpTable 
+|- 
+|  createLCPTableExt 
+|  createLcpTableExt 
+|- 
+|  createSABTree 
+|  createSABTree 
+|- 
+|  equalRangeLCPE 
+|  equalRangeLcpe 
+|- 
+|  equalRangeLCPEIterator 
+|  equalRangeLcpeIterator 
+|- 
+|  filter_globalizer 
+|  _filterGlobalizer 
+|- 
+|  getOccurrencesBWT 
+|  getOccurrencesBwt 
+|- 
+|  indexBWT 
+|  indexBwt 
+|- 
+|  indexLCP 
+|  indexLcp 
+|- 
+|  indexLCPE 
+|  indexLcpe 
+|- 
+|  lcp_process 
+|  _lcpProcess 
+|- 
+|  lcp_process_multi 
+|  _lcpProcessMulti 
+|- 
+|  lowerBoundLCPE 
+|  lowerBoundLcpe 
+|- 
+|  lowerBoundLCPEIterator 
+|  lowerBoundLcpeIterator 
+|- 
+|  map_inverse 
+|  _mapInverse 
+|- 
+|  map_inverse_multi 
+|  _mapInverseMulti 
+|- 
+|  sizeofLCPE 
+|  sizeofLcpe 
+|- 
+|  sizeofLCPH 
+|  sizeofLcph 
+|- 
+|  sizeofSAB 
+|  sizeofSABTree 
+|- 
+|  skew3_extend 
+|  _skew3Extend 
+|- 
+|  skew3_extend_comp 
+|  _skew3ExtendComp 
+|- 
+|  skew3_ncomp 
+|  _skew3NComp 
+|- 
+|  skew3_nmap_extended 
+|  _skew3NMapExtended 
+|- 
+|  skew3_nmap_linear 
+|  _skew3NMapLinear 
+|- 
+|  skew3_nmap_sliced 
+|  _skew3NMapSliced 
+|- 
+|  skew3_unslicer_func 
+|  _skew3UnslicerFunc 
+|- 
+|  skew7_extend 
+|  _skew7Extend 
+|- 
+|  skew7_extend_comp 
+|  _skew7ExtendComp 
+|- 
+|  skew7_extend_multi 
+|  _skew7ExtendMulti 
+|- 
+|  skew7_global_sliced_multi 
+|  _skew7GlobalSlicedMulti 
+|- 
+|  skew7_ncomp 
+|  _skew7NComp 
+|- 
+|  skew7_ncomp_multi 
+|  _skew7NCompMulti  
+|- 
+|  skew7_nmap_extended 
+|  _skew7NMapExtended 
+|- 
+|  skew7_nmap_linear 
+|  _skew7NMapLinear 
+|- 
+|  skew7_nmap_sliced 
+|  _skew7NMapSliced  
+|- 
+|  skew7_separate_slices 
+|  _skew7SeparateSlices 
+|- 
+|  skew7_unslicer_func 
+|  _skew7UnslicerFunc 
+|- 
+|  upperBoundLCPE 
+|  upperBoundLcpe 
+|- 
+|  upperBoundLCPEIterator 
+|  upperBoundLcpeIterator 
+|}
+
 
 module pipe
 
-|| _ControlBeginRead || ControlBeginRead_ ||
-|| _ControlClear || ControlClear_ ||
-|| _ControlEndRead || ControlEndRead_ ||
-|| _ControlEof || ControlEof_ ||
-|| _ControlEos || ControlEos_ ||
-|| _EchoerClearWorker || EchoerClearWorker_ ||
-|| _EchoerFillWorker || EchoerFillWorker_ ||
-|| _EchoerShiftWorker || EchoerShiftWorker_ ||
-|| _ExtStringSourceCachingSpec || ExtStringSourceCachingSpec_ ||
-|| _MemorySpec || MemorySpec_ ||
-|| _MultiplexSpec || MultiplexSpec_ ||
-|| _PairDecrementer || PairDecrementer_ ||
-|| _PairIncrementer || PairIncrementer_ ||
-|| _ReadFileSpec || ReadFileSpec_ ||
-|| _ReadMapperSpec || ReadMapperSpec_ ||
-|| _ReadSorterSpec || ReadSorterSpec_ ||
-|| _ShiftLeftWorker || ShiftLeftWorker_ ||
-|| _SkewDC || SkewDC_ ||
-|| _SourceCachingSpec || SourceCachingSpec_ ||
-|| _SourceNonCachingSpec || SourceNonCachingSpec_ ||
-|| _TuplerLastTuples || TuplerLastTuples_ ||
-|| _WriteFileSpec || WriteFileSpec_ ||
+{| border=1 class="simple"
+! _ControlBeginRead 
+! ControlBeginRead_ 
+|- 
+|  _ControlClear 
+|  ControlClear_ 
+|- 
+|  _ControlEndRead 
+|  ControlEndRead_ 
+|- 
+|  _ControlEof 
+|  ControlEof_ 
+|- 
+|  _ControlEos 
+|  ControlEos_ 
+|- 
+|  _EchoerClearWorker 
+|  EchoerClearWorker_ 
+|- 
+|  _EchoerFillWorker 
+|  EchoerFillWorker_ 
+|- 
+|  _EchoerShiftWorker 
+|  EchoerShiftWorker_ 
+|- 
+|  _ExtStringSourceCachingSpec 
+|  ExtStringSourceCachingSpec_ 
+|- 
+|  _MemorySpec 
+|  MemorySpec_ 
+|- 
+|  _MultiplexSpec 
+|  MultiplexSpec_ 
+|- 
+|  _PairDecrementer 
+|  PairDecrementer_ 
+|- 
+|  _PairIncrementer 
+|  PairIncrementer_ 
+|- 
+|  _ReadFileSpec 
+|  ReadFileSpec_ 
+|- 
+|  _ReadMapperSpec 
+|  ReadMapperSpec_ 
+|- 
+|  _ReadSorterSpec 
+|  ReadSorterSpec_ 
+|- 
+|  _ShiftLeftWorker 
+|  ShiftLeftWorker_ 
+|- 
+|  _SkewDC 
+|  SkewDC_ 
+|- 
+|  _SourceCachingSpec 
+|  SourceCachingSpec_ 
+|- 
+|  _SourceNonCachingSpec 
+|  SourceNonCachingSpec_ 
+|- 
+|  _TuplerLastTuples 
+|  TuplerLastTuples_ 
+|- 
+|  _WriteFileSpec 
+|  WriteFileSpec_ 
+|}
+
 
 module modifier
 
-|| _ConvertImpl_ModExpand || ConvertImplModExpand_ ||
-|| _Translate_Table_Dna5_2_Dna5Complement || TranslateTableDna5ToDna5Complement_ ||
-|| _Translate_Table_Rna5_2_Rna5Complement || TranslateTableRna5ToRna5Complement_ ||
-|| _AlphabetConversionTable || AlphabetConversionTable_ ||
-|| _AlphabetOrdTable || AlphabetOrdTable_ ||
-|| reverseComplementInPlace || reverseComplement ||
-|| reverseInPlace || reverse ||
-|| complementInPlace || complement ||
+{| border=1 class="simple"
+! _ConvertImpl_ModExpand 
+! ConvertImplModExpand_ 
+|- 
+|  _Translate_Table_Dna5_2_Dna5Complement 
+|  TranslateTableDna5ToDna5Complement_ 
+|- 
+|  _Translate_Table_Rna5_2_Rna5Complement 
+|  TranslateTableRna5ToRna5Complement_ 
+|- 
+|  _AlphabetConversionTable 
+|  AlphabetConversionTable_ 
+|- 
+|  _AlphabetOrdTable 
+|  AlphabetOrdTable_ 
+|- 
+|  reverseComplementInPlace 
+|  reverseComplement 
+|- 
+|  reverseInPlace 
+|  reverse 
+|- 
+|  complementInPlace 
+|  complement 
+|}
+
 
 module basic
 
-|| TagAllocateStorage_ || AllocateStorage_ ||
-|| TagAllocateTemp_ || AllocateTemp_ ||
-|| TagAllocateUnspecified_ || AllocateUnspecified_ ||
-|| TagBlat_ || Blat_ ||
-|| TagRooted_ || Rooted_ ||
-|| TagStandard_ || Standard_ ||
-|| _AminoAcid || AminoAcid_ ||
-|| _BandedGotoh || BandedGotoh_ ||
-|| _BandedNeedlemanWunsch || BandedNeedlemanWunsch_ ||
-|| _BandedSmithWaterman || BandedSmithWaterman_ ||
-|| _BandedWatermanEggert || BandedWatermanEggert_ ||
-|| _BitVector || BitVector_ ||
-|| _ClassIdentifier || ClassIdentifier_ ||
-|| _Compressed || Compressed_ ||
-|| _ConstParameter || ConstParameter_ ||
-|| _CopyConst || CopyConst_ ||
-|| _Dna || Dna_ ||
-|| _Dna5 || Dna5_ ||
-|| _Dna5Q || Dna5Q_ ||
-|| _DnaQ || DnaQ_ ||
-|| _Gotoh || Gotoh_ ||
-|| _HammingDistance || HammingDistance_ ||
-|| _InfimumValueDouble || MinimumValueDouble_ ||
-|| _InfimumValueFloat || MinimumValueFloat_ ||
-|| _InfimumValueSigned || MinimumValueSigned_ ||
-|| _InfimumValueUnsigned || MinimumValueUnsigned_ ||
-|| _IntegralForValue_Impl || IntegralForValueImpl_ ||
-|| _InternalValueSize || InternalValueSize_ ||
-|| _IsSimple || IsSimple_ ||
-|| _Iupac || Iupac_ ||
-|| _Log2_Impl || Log2Impl_ ||
-|| _LevenshteinDistance || LevenshteinDistance_ ||
-|| _MakeSigned || MakeSigned_ ||
-|| _MakeUnsigned || MakeUnsigned_ ||
-|| _NeedlemanWunsch || NeedlemanWunsch_ ||
-|| _NonConstPointer || NonConstPointer_ ||
-|| _Parameter || Parameter_ ||
-|| _Pointer || Pointer_ ||
-|| _RemoveConst || RemoveConst_ ||
-|| _Rna || Rna_ ||
-|| _Rna5 || Rna5_ ||
-|| _SmithWaterman || SmithWaterman_ ||
-|| _SmithWatermanClump || SmithWatermanClump_ ||
-|| _SupremumValueDouble || MaximumValueDouble_ ||
-|| _SupremumValueFloat || MaximumValueFloat_ ||
-|| _SupremumValueSigned || MaximumValueSigned_ ||
-|| _SupremumValueUnsigned || MaximumValueUnsigned_ ||
-|| _Translate_Table_AA_2_Ascii || TranslateTableAAToAscii_ ||
-|| _Translate_Table_Ascii_2_AA || TranslateTableAsciiToAA_ ||
-|| _Translate_Table_Ascii_2_Dna || TranslateTableAsciiToDna_ ||
-|| _Translate_Table_Ascii_2_Dna5 || TranslateTableAsciiToDna5_ ||
-|| _Translate_Table_Ascii_2_Iupac || TranslateTableAsciiToIupac_ ||
-|| _Translate_Table_Ascii_2_Rna || TranslateTableAsciiToRna_ ||
-|| _Translate_Table_Ascii_2_Rna5 || TranslateTableAsciiToRna5_ ||
-|| _Translate_Table_Byte_2_AA || TranslateTableByteToAA_ ||
-|| _Translate_Table_Byte_2_Dna || TranslateTableByteToDna_ ||
-|| _Translate_Table_Byte_2_Dna5 || TranslateTableByteToDna5_ ||
-|| _Translate_Table_Byte_2_Iupac || TranslateTableByteToIupac_ ||
-|| _Translate_Table_Byte_2_Rna || TranslateTableByteToRna_ ||
-|| _Translate_Table_Byte_2_Rna5 || TranslateTableByteToRna5_ ||
-|| _Translate_Table_Dna5_2_Ascii || TranslateTableDna5ToAscii_ ||
-|| _Translate_Table_Dna5_2_Iupac || TranslateTableDna5ToIupac_ ||
-|| _Translate_Table_Iupac_2_Ascii || TranslateTableIupacToAscii_ ||
-|| _Translate_Table_Iupac_2_Dna || TranslateTableIupacToDna_ ||
-|| _Translate_Table_Iupac_2_Dna5 || TranslateTableIupacToDna5_ ||
-|| _Translate_Table_Rna5_2_Ascii || TranslateTableRna5ToAscii_ ||
-|| _TupleShiftLeftWorker || TupleShiftLeftWorker_ ||
-|| _TupleShiftRightWorker || TupleShiftRightWorker_ ||
-|| _ValueConstructor || ValueConstructor_ ||
-|| _ValueConstructorProxy || ValueConstructorProxy_ ||
-|| _ValueDestructor || ValueDestructor_ ||
-|| _ValueDestructorProxy || ValueDestructorProxy_ ||
-|| _arrayClearSpace_Default || _arrayClearSpaceDefault ||
-|| _arrayClearSpace_Pointer || _arrayClearSpacePointer ||
-|| _arrayConstructCopy_Default || _arrayConstructCopyDefault ||
-|| _arrayConstructCopy_Pointer || _arrayConstructCopyPointer ||
-|| _arrayConstructMove_Default || _arrayConstructMoveDefault ||
-|| _arrayConstructMove_Pointer || _arrayConstructMovePointer ||
-|| _arrayConstruct_Default || _arrayConstructDefault ||
-|| _arrayConstruct_Pointer || _arrayConstructPointer ||
-|| _arrayCopyBackward_Default || _arrayCopyBackwardDefault ||
-|| _arrayCopyBackward_Pointer || _arrayCopyBackwardPointer ||
-|| _arrayCopyForward_Default || _arrayCopyForwardDefault ||
-|| _arrayCopyForward_Pointer || _arrayCopyForwardPointer ||
-|| _arrayDestruct_Default || _arrayDestructDefault ||
-|| _arrayDestruct_Pointer || _arrayDestructPointer ||
-|| _arrayMoveBackward_Default || _arrayMoveBackwardDefault ||
-|| _arrayMoveBackward_Pointer || _arrayMoveBackwardPointer ||
-|| _arrayMoveForward_Default || _arrayMoveForwardDefault ||
-|| _arrayMoveForward_Pointer || _arrayMoveForwardPointer ||
-|| _compareTextFiles_readChar || _compareTextFilesReadChar ||
-|| TYPECMP || IsSameType ||
-|| _IsSameType || IsSameType ||
-|| SWITCH || Switch ||
-|| CASE || Case ||
-|| OR || Or ||
-|| AND || And ||
-|| IF || If ||
-|| LOOP || Loop ||
-|| LOOP_REVERSE || LoopReverse ||
+{| border=1 class="simple"
+! TagAllocateStorage_ 
+! AllocateStorage_ 
+|- 
+|  TagAllocateTemp_ 
+|  AllocateTemp_ 
+|- 
+|  TagAllocateUnspecified_ 
+|  AllocateUnspecified_ 
+|- 
+|  TagBlat_ 
+|  Blat_ 
+|- 
+|  TagRooted_ 
+|  Rooted_ 
+|- 
+|  TagStandard_ 
+|  Standard_ 
+|- 
+|  _AminoAcid 
+|  AminoAcid_ 
+|- 
+|  _BandedGotoh 
+|  BandedGotoh_ 
+|- 
+|  _BandedNeedlemanWunsch 
+|  BandedNeedlemanWunsch_ 
+|- 
+|  _BandedSmithWaterman 
+|  BandedSmithWaterman_ 
+|- 
+|  _BandedWatermanEggert 
+|  BandedWatermanEggert_ 
+|- 
+|  _BitVector 
+|  BitVector_ 
+|- 
+|  _ClassIdentifier 
+|  ClassIdentifier_ 
+|- 
+|  _Compressed 
+|  Compressed_ 
+|- 
+|  _ConstParameter 
+|  ConstParameter_ 
+|- 
+|  _CopyConst 
+|  CopyConst_ 
+|- 
+|  _Dna 
+|  Dna_ 
+|- 
+|  _Dna5 
+|  Dna5_ 
+|- 
+|  _Dna5Q 
+|  Dna5Q_ 
+|- 
+|  _DnaQ 
+|  DnaQ_ 
+|- 
+|  _Gotoh 
+|  Gotoh_ 
+|- 
+|  _HammingDistance 
+|  HammingDistance_ 
+|- 
+|  _InfimumValueDouble 
+|  MinimumValueDouble_ 
+|- 
+|  _InfimumValueFloat 
+|  MinimumValueFloat_ 
+|- 
+|  _InfimumValueSigned 
+|  MinimumValueSigned_ 
+|- 
+|  _InfimumValueUnsigned 
+|  MinimumValueUnsigned_ 
+|- 
+|  _IntegralForValue_Impl 
+|  IntegralForValueImpl_ 
+|- 
+|  _InternalValueSize 
+|  InternalValueSize_ 
+|- 
+|  _IsSimple 
+|  IsSimple_ 
+|- 
+|  _Iupac 
+|  Iupac_ 
+|- 
+|  _Log2_Impl 
+|  Log2Impl_ 
+|- 
+|  _LevenshteinDistance 
+|  LevenshteinDistance_ 
+|- 
+|  _MakeSigned 
+|  MakeSigned_ 
+|- 
+|  _MakeUnsigned 
+|  MakeUnsigned_ 
+|- 
+|  _NeedlemanWunsch 
+|  NeedlemanWunsch_ 
+|- 
+|  _NonConstPointer 
+|  NonConstPointer_ 
+|- 
+|  _Parameter 
+|  Parameter_ 
+|- 
+|  _Pointer 
+|  Pointer_ 
+|- 
+|  _RemoveConst 
+|  RemoveConst_ 
+|- 
+|  _Rna 
+|  Rna_ 
+|- 
+|  _Rna5 
+|  Rna5_ 
+|- 
+|  _SmithWaterman 
+|  SmithWaterman_ 
+|- 
+|  _SmithWatermanClump 
+|  SmithWatermanClump_ 
+|- 
+|  _SupremumValueDouble 
+|  MaximumValueDouble_ 
+|- 
+|  _SupremumValueFloat 
+|  MaximumValueFloat_ 
+|- 
+|  _SupremumValueSigned 
+|  MaximumValueSigned_ 
+|- 
+|  _SupremumValueUnsigned 
+|  MaximumValueUnsigned_ 
+|- 
+|  _Translate_Table_AA_2_Ascii 
+|  TranslateTableAAToAscii_ 
+|- 
+|  _Translate_Table_Ascii_2_AA 
+|  TranslateTableAsciiToAA_ 
+|- 
+|  _Translate_Table_Ascii_2_Dna 
+|  TranslateTableAsciiToDna_ 
+|- 
+|  _Translate_Table_Ascii_2_Dna5 
+|  TranslateTableAsciiToDna5_ 
+|- 
+|  _Translate_Table_Ascii_2_Iupac 
+|  TranslateTableAsciiToIupac_ 
+|- 
+|  _Translate_Table_Ascii_2_Rna 
+|  TranslateTableAsciiToRna_ 
+|- 
+|  _Translate_Table_Ascii_2_Rna5 
+|  TranslateTableAsciiToRna5_ 
+|- 
+|  _Translate_Table_Byte_2_AA 
+|  TranslateTableByteToAA_ 
+|- 
+|  _Translate_Table_Byte_2_Dna 
+|  TranslateTableByteToDna_ 
+|- 
+|  _Translate_Table_Byte_2_Dna5 
+|  TranslateTableByteToDna5_ 
+|- 
+|  _Translate_Table_Byte_2_Iupac 
+|  TranslateTableByteToIupac_ 
+|- 
+|  _Translate_Table_Byte_2_Rna 
+|  TranslateTableByteToRna_ 
+|- 
+|  _Translate_Table_Byte_2_Rna5 
+|  TranslateTableByteToRna5_ 
+|- 
+|  _Translate_Table_Dna5_2_Ascii 
+|  TranslateTableDna5ToAscii_ 
+|- 
+|  _Translate_Table_Dna5_2_Iupac 
+|  TranslateTableDna5ToIupac_ 
+|- 
+|  _Translate_Table_Iupac_2_Ascii 
+|  TranslateTableIupacToAscii_ 
+|- 
+|  _Translate_Table_Iupac_2_Dna 
+|  TranslateTableIupacToDna_ 
+|- 
+|  _Translate_Table_Iupac_2_Dna5 
+|  TranslateTableIupacToDna5_ 
+|- 
+|  _Translate_Table_Rna5_2_Ascii 
+|  TranslateTableRna5ToAscii_ 
+|- 
+|  _TupleShiftLeftWorker 
+|  TupleShiftLeftWorker_ 
+|- 
+|  _TupleShiftRightWorker 
+|  TupleShiftRightWorker_ 
+|- 
+|  _ValueConstructor 
+|  ValueConstructor_ 
+|- 
+|  _ValueConstructorProxy 
+|  ValueConstructorProxy_ 
+|- 
+|  _ValueDestructor 
+|  ValueDestructor_ 
+|- 
+|  _ValueDestructorProxy 
+|  ValueDestructorProxy_ 
+|- 
+|  _arrayClearSpace_Default 
+|  _arrayClearSpaceDefault 
+|- 
+|  _arrayClearSpace_Pointer 
+|  _arrayClearSpacePointer 
+|- 
+|  _arrayConstructCopy_Default 
+|  _arrayConstructCopyDefault 
+|- 
+|  _arrayConstructCopy_Pointer 
+|  _arrayConstructCopyPointer 
+|- 
+|  _arrayConstructMove_Default 
+|  _arrayConstructMoveDefault 
+|- 
+|  _arrayConstructMove_Pointer 
+|  _arrayConstructMovePointer 
+|- 
+|  _arrayConstruct_Default 
+|  _arrayConstructDefault 
+|- 
+|  _arrayConstruct_Pointer 
+|  _arrayConstructPointer 
+|- 
+|  _arrayCopyBackward_Default 
+|  _arrayCopyBackwardDefault 
+|- 
+|  _arrayCopyBackward_Pointer 
+|  _arrayCopyBackwardPointer 
+|- 
+|  _arrayCopyForward_Default 
+|  _arrayCopyForwardDefault 
+|- 
+|  _arrayCopyForward_Pointer 
+|  _arrayCopyForwardPointer 
+|- 
+|  _arrayDestruct_Default 
+|  _arrayDestructDefault 
+|- 
+|  _arrayDestruct_Pointer 
+|  _arrayDestructPointer 
+|- 
+|  _arrayMoveBackward_Default 
+|  _arrayMoveBackwardDefault 
+|- 
+|  _arrayMoveBackward_Pointer 
+|  _arrayMoveBackwardPointer 
+|- 
+|  _arrayMoveForward_Default 
+|  _arrayMoveForwardDefault 
+|- 
+|  _arrayMoveForward_Pointer 
+|  _arrayMoveForwardPointer 
+|- 
+|  _compareTextFiles_readChar 
+|  _compareTextFilesReadChar 
+|- 
+|  TYPECMP 
+|  IsSameType 
+|- 
+|  _IsSameType 
+|  IsSameType 
+|- 
+|  SWITCH 
+|  Switch 
+|- 
+|  CASE 
+|  Case 
+|- 
+|  OR 
+|  Or 
+|- 
+|  AND 
+|  And 
+|- 
+|  IF 
+|  If 
+|- 
+|  LOOP 
+|  Loop 
+|- 
+|  LOOP_REVERSE 
+|  LoopReverse 
+|}
+
 
 
 Automatic identifier search
 
- || _AccessorConverter ||  AccessorConverter_ ||
- || _AlignmentScores ||  AlignmentScores_ ||
- || _AppendValueToString ||  AppendValueToString_ ||
- || _ApproxFindBegin ||  ApproxFindBegin_ ||
- || _Assign_ChunkCollector_2_String ||  AssignChunkCollectorToString_ ||
- || _AsyncIOHandler ||  AsyncIOHandler_ ||
- || _AsyncIOHandlerRefCount ||  AsyncIOHandlerRefCount_ ||
- || _AsyncIOOldSig ||  AsyncIOOldSig_ ||
- || _AsyncIOSignal ||  AsyncIOSignal_ ||
- || _AverLink ||  AverLink_ ||
- || _BLOCK_SIZE_1 ||  BLOCK_SIZE_1_ ||
- || _BLOCK_SIZE_2 ||  BLOCK_SIZE_2_ ||
- || _BN ||  BN_ ||
- || _BndmAlgo ||  BndmAlgo_ ||
- || _BwtWalkFast ||  BwtWalkFast_ ||
- || _BwtWalkInPlace ||  BwtWalkInPlace_ ||
- || _CMode ||  CMode_ ||
- || _CategoryAll ||  CategoryAll_ ||
- || _CategoryAllBest ||  CategoryAllBest_ ||
- || _CategoryAnyBest ||  CategoryAnyBest_ ||
- || _Chain_Blat ||  ChainBlat_ ||
- || _Chain_Chaos ||  ChainChaos_ ||
- || _Chain_Simple ||  ChainSimple_ ||
- || _ChooseMap2 ||  ChooseMap2_ ||
- || _ClassicDP ||  ClassicDP_ ||
- || _CompareMaps ||  CompareMaps_ ||
- || _CompareType_ModExpand_Impl ||  CompareTypeModExpandImpl_ ||
- || _CompleteLink ||  CompleteLink_ ||
- || _Confidence_ ||  Confidence__ ||
- || _Confidence_99 ||  Confidence99_ ||
- || _Consensus ||  Consensus_ ||
- || _Count ||  Count_ ||
- || _Count2 ||  Count2_ ||
- || _Create_ArrayString_Expand ||  CreateArrayStringExpand_ ||
- || _DELETE ||  DELETE_ ||
- || _DIM ||  DIM_ ||
- || _DISABLED ||  DISABLED_ ||
- || _DONT_DUMP_RESULTS ||  DONT_DUMP_RESULTS_ ||
- || _DONT_VERIFY ||  DONT_VERIFY_ ||
- || _Dest ||  Dest_ ||
- || _Dna5QValueN ||  Dna5QValueN_ ||
- || _Dummy ||  Dummy_ ||
- || _DummySumListIterator ||  DummySumListIterator_ ||
- || _DynamicWidth ||  DynamicWidth_ ||
- || _EOF ||  Eof_ ||
- || _EPatternBranching ||  EPatternBranching_ ||
- || _EmptyBase ||  EmptyBase_ ||
- || _EmptyFindBegin ||  EmptyFindBegin_ ||
- || _EnumeratorHammingModifier ||  EnumeratorHammingModifier_ ||
- || _EnumeratorLevenshteinModifier ||  EnumeratorLevenshteinModifier_ ||
- || _Equal ||  Equal_ ||
- || _Evaluate ||  Evaluate_ ||
- || _F ||  F_ ||
- || _FRAMES ||  FRAMES_ ||
- || _FileCount ||  FileCount_ ||
- || _FileSize ||  FileSize_ ||
- || _FindState ||  FindState_ ||
- || _Find_WildShiftAnd_ParserStates ||  FindWildShiftAndParserStates_ ||
- || _Finder_LCPE ||  FinderLcpe_ ||
- || _First ||  First_ ||
- || _Func ||  Func_ ||
- || _Gap_Cost_DatabaseDistance ||  GapCostDatabaseDistance_ ||
- || _Gap_Cost_Manhatten ||  GapCostManhatten_ ||
- || _Gap_Cost_NoGapCost ||  GapCostNoGapCost_ ||
- || _Gap_Cost_QueryDistance ||  GapCostQueryDistance_ ||
- || _Global ||  Global_ ||
- || _Good_Seed ||  GoodSeed_ ||
- || _Good_Seed2 ||  GoodSeed2_ ||
- || _INSERT ||  INSERT_ ||
- || _INSERT_EOS ||  INSERT_EOS_ ||
- || _INSERT_LAST ||  INSERT_LAST_ ||
- || _IOContextGff ||  IOContextGff_ ||
- || _IOContextUcsc ||  IOContextUcsc_ ||
- || _IlluminaReads ||  IlluminaReads_ ||
- || _MatchMateInfo ||  MatchMateInfo_ ||
- || _MatchMateInfoLess ||  MatchMateInfoLess_ ||
- || _MersenneBuffer ||  MersenneBuffer_ ||
- || _Mid ||  Mid_ ||
- || _MinSeedSizeMixin ||  MinSeedSizeMixin_ ||
- || _MiniListEntry ||  MiniListEntry_ ||
- || _MiniSumListValueIterator ||  MiniSumListValueIterator_ ||
- || _MyersSmallAlphabet ||  MyersSmallAlphabet_ ||
- || _MyersUkkonenReads ||  MyersUkkonenReads_ ||
- || _PAGE_SIZE ||  PAGE_SIZE_ ||
- || _PMS1 ||  Pms1_ ||
- || _PMSP ||  Pmsp_ ||
- || _PMode ||  PMode_ ||
- || _PageSize ||  PageSize_ ||
- || _PairwiseAlignment ||  PairwiseAlignment_ ||
- || _PexRange ||  PexRange_ ||
- || _PizzaChili_AF ||  PizzaChiliAF_ ||
- || _PizzaChili_CCSA ||  PizzaChiliCcsa_ ||
- || _PizzaChili_FM ||  PizzaChiliFM_ ||
- || _PizzaChili_LZ ||  PizzaChiliLZ_ ||
- || _PizzaChili_RLFM ||  PizzaChiliRlfm_ ||
- || _PizzaChili_RSA ||  PizzaChiliRsa_ ||
- || _PizzaChili_SA ||  PizzaChiliSA_ ||
- || _PizzaChili_SADA ||  PizzaChiliSada_ ||
- || _PizzaChili_SSA ||  PizzaChiliSsa_ ||
- || _PizzaChili_Test ||  PizzaChiliTest_ ||
- || _Pragma ||  Pragma_ ||
- || _Projection ||  Projection_ ||
- || _RANGE_TREE_H ||  RANGE_TREE_H_ ||
- || _RBorderObj ||  RBorderObj_ ||
- || _RT_MAX_SKIP_BASE_ELEMENT_H ||  RT_MAX_SKIP_BASE_ELEMENT_H_ ||
- || _RT_SKIP_BASE_ELEMENT_H ||  RT_SKIP_BASE_ELEMENT_H_ ||
- || _RT_SKIP_ELEMENT_H ||  RT_SKIP_ELEMENT_H_ ||
- || _Ref ||  Ref_ ||
- || _Resizable ||  Resizable_ ||
- || _Right ||  Right_ ||
- || _SEQAN_CHAIN_DEBUG ||  SEQAN_CHAIN_DEBUG_ ||
- || _SEQAN_CXX_FLAGS_ ||  SEQAN_CXX_FLAGS__ ||
- || _SEQ_H ||  SEQ_H_ ||
- || _SKIP_BASE_ELEMENT_H ||  SKIP_BASE_ELEMENT_H_ ||
- || _SKIP_LIST_BASE_H ||  SKIP_LIST_BASE_H_ ||
- || _SKIP_LIST_DYNAMIC_H ||  SKIP_LIST_DYNAMIC_H_ ||
- || _SKIP_LIST_STATIC_H ||  SKIP_LIST_STATIC_H_ ||
- || _STLComparator ||  StlComparator_ ||
- || _SUBST ||  SUBST_ ||
- || _SangerReads ||  SangerReads_ ||
- || _ScoringMatrix ||  ScoringMatrix_ ||
- || _Self ||  Self_ ||
- || _SelfPtr ||  SelfPtr_ ||
- || _SelfRef ||  SelfRef_ ||
- || _SemiGlobalEdit ||  SemiGlobalEdit_ ||
- || _SemiGlobalHamming ||  SemiGlobalHamming_ ||
- || _SetLess ||  SetLess_ ||
- || _SetObjVector ||  SetObjVector_ ||
- || _SetSetVector ||  SetSetVector_ ||
- || _Simple ||  Simple_ ||
- || _SingleLink ||  SingleLink_ ||
- || _Size ||  Size_ ||
- || _SizeArr ||  SizeArr_ ||
- || _SizeType ||  SizeType_ ||
- || _SkiplistElement ||  SkiplistElement_ ||
- || _SortBeginPos ||  SortBeginPos_ ||
- || _SortContigId ||  SortContigId_ ||
- || _SortDistance ||  SortDistance_ ||
- || _SortEndPos ||  SortEndPos_ ||
- || _SortFirstPos ||  SortFirstPos_ ||
- || _SortGapPos ||  SortGapPos_ ||
- || _SortId ||  SortId_ ||
- || _SortLastPos ||  SortLastPos_ ||
- || _SortPairMatchId ||  SortPairMatchId_ ||
- || _SortReadId ||  SortReadId_ ||
- || _SortSeqPos ||  SortSeqPos_ ||
- || _Spec ||  Spec_ ||
- || _StreamChunkCollector ||  StreamChunkCollector_ ||
- || _StringLess ||  StringLess_ ||
- || _SumListSkiplistMinilist ||  SumListSkiplistMinilist_ ||
- || _SwiftSemiGlobalHamming ||  SwiftSemiGlobalHamming_ ||
- || _T ||  T_ ||
- || _T1 ||  T1_ ||
- || _T2 ||  T2_ ||
- || _T3 ||  T3_ ||
- || _TAlignMode ||  TAlignMode_ ||
- || _TAlphabet ||  TAlphabet_ ||
- || _TBufferSpec ||  TBufferSpec_ ||
- || _TCargo ||  TCargo_ ||
- || _TContigSeq ||  TContigSeq_ ||
- || _TCount ||  TCount_ ||
- || _TCounts ||  TCounts_ ||
- || _TElement ||  TElement_ ||
- || _TFile ||  TFile_ ||
- || _TFragmentStore ||  TFragmentStore_ ||
- || _TGPos ||  TGPos_ ||
- || _TGapAnchor ||  TGapAnchor_ ||
- || _TGapMode ||  TGapMode_ ||
- || _THaystack ||  THaystack_ ||
- || _THostSpec ||  THostSpec_ ||
- || _TId ||  TId_ ||
- || _TInput ||  TInput_ ||
- || _TIterator ||  TIterator_ ||
- || _TJournalSpec ||  TJournalSpec_ ||
- || _TKey ||  TKey_ ||
- || _TLCPInput ||  TLcpInput_ ||
- || _TMT ||  TMT_ ||
- || _TMatch ||  TMatch_ ||
- || _TMatchNPolicy ||  TMatchNPolicy_ ||
- || _TMyersUkkonen ||  TMyersUkkonen_ ||
- || _TNeedle ||  TNeedle_ ||
- || _TObject ||  TObject_ ||
- || _TOperation ||  TOperation_ ||
- || _TPos ||  TPos_ ||
- || _TPreprocessing ||  TPreprocessing_ ||
- || _TQualityThresholdMixin ||  TQualityThresholdMixin_ ||
- || _TRPos ||  TRPos_ ||
- || _TRazerSMode ||  TRazerSMode_ ||
- || _TRazerSOptions ||  TRazerSOptions_ ||
- || _TScoreMode ||  TScoreMode_ ||
- || _TSeed ||  TSeed_ ||
- || _TSeedConfig ||  TSeedConfig_ ||
- || _TSeedSet ||  TSeedSet_ ||
- || _TSeedString ||  TSeedString_ ||
- || _TSequence ||  TSequence_ ||
- || _TSet ||  TSet_ ||
- || _TShape ||  TShape_ ||
- || _TShortSize ||  TShortSize_ ||
- || _TSize ||  TSize_ ||
- || _TSizeOf ||  TSizeOf_ ||
- || _TSpec ||  TSpec_ ||
- || _TString ||  TString_ ||
- || _TSuffixArrayInput ||  TSuffixArrayInput_ ||
- || _TSwiftPattern ||  TSwiftPattern_ ||
- || _TText ||  TText_ ||
- || _TTextInput ||  TTextInput_ ||
- || _TTextRandom ||  TTextRandom_ ||
- || _TValue ||  TValue_ ||
- || _TagComputeCenter ||  TagComputeCenter_ ||
- || _TagRandomCenter ||  TagRandomCenter_ ||
- || _TestAlign ||  TestAlign_ ||
- || _Test_GotohVSBandedGotoh ||  TestGotohVSBandedGotoh_ ||
- || _TraceBack ||  TraceBack_ ||
- || _Transcript_ ||  Transcript__ ||
- || _Tx ||  Tx_ ||
- || _Ty ||  Ty_ ||
- || _TypeOf ||  TypeOf_ ||
- || _UTIL_H ||  UTIL_H_ ||
- || _Val ||  Val_ ||
- || _VectorSet ||  VectorSet_ ||
- || _VectorSetElement ||  VectorSetElement_ ||
- || _VectorSetElements ||  VectorSetElements_ ||
- || _VectorSetIterator ||  VectorSetIterator_ ||
- || _VectorSetIterator_ ||  VectorSetIterator__ ||
- || _VectorSetKeySize ||  VectorSetKeySize_ ||
- || _VerifyAllLocal ||  VerifyAllLocal_ ||
- || _VerifyBandedGlobal ||  VerifyBandedGlobal_ ||
- || _VerifyBandedGlobalExtend ||  VerifyBandedGlobalExtend_ ||
- || _VerifyBestLocal ||  VerifyBestLocal_ ||
- || _Vtml200 ||  Vtml200_ ||
- || __AllAgainstAll ||  AllAgainstAll__ ||
- || __T1 ||  T1__ ||
- || __T2 ||  T2__ ||
- || __T3 ||  T3__ ||
- || __TSpec ||  TSpec__ ||
- || __UseQualityValues ||  UseQualityValues__ ||
- || __cp_ ||  cp___ ||
- || __index ||  index__ ||
- || __pageNo ||  pageNo__ ||
- || __pageSize ||  pageSize__ ||
- || __size ||  size__ ||
- || __sleq ||  sleq__ ||
- || __sleqLCP ||  sleqLcp__ ||
- || __testquickAlign ||  testquickAlign__ ||
+{| border=1 class="simple"
+! _AccessorConverter 
+!  AccessorConverter_ 
+|}
+
+{| border=1 class="simple"
+! _AlignmentScores 
+!  AlignmentScores_ 
+|}
+
+{| border=1 class="simple"
+! _AppendValueToString 
+!  AppendValueToString_ 
+|}
+
+{| border=1 class="simple"
+! _ApproxFindBegin 
+!  ApproxFindBegin_ 
+|}
+
+{| border=1 class="simple"
+! _Assign_ChunkCollector_2_String 
+!  AssignChunkCollectorToString_ 
+|}
+
+{| border=1 class="simple"
+! _AsyncIOHandler 
+!  AsyncIOHandler_ 
+|}
+
+{| border=1 class="simple"
+! _AsyncIOHandlerRefCount 
+!  AsyncIOHandlerRefCount_ 
+|}
+
+{| border=1 class="simple"
+! _AsyncIOOldSig 
+!  AsyncIOOldSig_ 
+|}
+
+{| border=1 class="simple"
+! _AsyncIOSignal 
+!  AsyncIOSignal_ 
+|}
+
+{| border=1 class="simple"
+! _AverLink 
+!  AverLink_ 
+|}
+
+{| border=1 class="simple"
+! _BLOCK_SIZE_1 
+!  BLOCK_SIZE_1_ 
+|}
+
+{| border=1 class="simple"
+! _BLOCK_SIZE_2 
+!  BLOCK_SIZE_2_ 
+|}
+
+{| border=1 class="simple"
+! _BN 
+!  BN_ 
+|}
+
+{| border=1 class="simple"
+! _BndmAlgo 
+!  BndmAlgo_ 
+|}
+
+{| border=1 class="simple"
+! _BwtWalkFast 
+!  BwtWalkFast_ 
+|}
+
+{| border=1 class="simple"
+! _BwtWalkInPlace 
+!  BwtWalkInPlace_ 
+|}
+
+{| border=1 class="simple"
+! _CMode 
+!  CMode_ 
+|}
+
+{| border=1 class="simple"
+! _CategoryAll 
+!  CategoryAll_ 
+|}
+
+{| border=1 class="simple"
+! _CategoryAllBest 
+!  CategoryAllBest_ 
+|}
+
+{| border=1 class="simple"
+! _CategoryAnyBest 
+!  CategoryAnyBest_ 
+|}
+
+{| border=1 class="simple"
+! _Chain_Blat 
+!  ChainBlat_ 
+|}
+
+{| border=1 class="simple"
+! _Chain_Chaos 
+!  ChainChaos_ 
+|}
+
+{| border=1 class="simple"
+! _Chain_Simple 
+!  ChainSimple_ 
+|}
+
+{| border=1 class="simple"
+! _ChooseMap2 
+!  ChooseMap2_ 
+|}
+
+{| border=1 class="simple"
+! _ClassicDP 
+!  ClassicDP_ 
+|}
+
+{| border=1 class="simple"
+! _CompareMaps 
+!  CompareMaps_ 
+|}
+
+{| border=1 class="simple"
+! _CompareType_ModExpand_Impl 
+!  CompareTypeModExpandImpl_ 
+|}
+
+{| border=1 class="simple"
+! _CompleteLink 
+!  CompleteLink_ 
+|}
+
+{| border=1 class="simple"
+! _Confidence_ 
+!  Confidence__ 
+|}
+
+{| border=1 class="simple"
+! _Confidence_99 
+!  Confidence99_ 
+|}
+
+{| border=1 class="simple"
+! _Consensus 
+!  Consensus_ 
+|}
+
+{| border=1 class="simple"
+! _Count 
+!  Count_ 
+|}
+
+{| border=1 class="simple"
+! _Count2 
+!  Count2_ 
+|}
+
+{| border=1 class="simple"
+! _Create_ArrayString_Expand 
+!  CreateArrayStringExpand_ 
+|}
+
+{| border=1 class="simple"
+! _DELETE 
+!  DELETE_ 
+|}
+
+{| border=1 class="simple"
+! _DIM 
+!  DIM_ 
+|}
+
+{| border=1 class="simple"
+! _DISABLED 
+!  DISABLED_ 
+|}
+
+{| border=1 class="simple"
+! _DONT_DUMP_RESULTS 
+!  DONT_DUMP_RESULTS_ 
+|}
+
+{| border=1 class="simple"
+! _DONT_VERIFY 
+!  DONT_VERIFY_ 
+|}
+
+{| border=1 class="simple"
+! _Dest 
+!  Dest_ 
+|}
+
+{| border=1 class="simple"
+! _Dna5QValueN 
+!  Dna5QValueN_ 
+|}
+
+{| border=1 class="simple"
+! _Dummy 
+!  Dummy_ 
+|}
+
+{| border=1 class="simple"
+! _DummySumListIterator 
+!  DummySumListIterator_ 
+|}
+
+{| border=1 class="simple"
+! _DynamicWidth 
+!  DynamicWidth_ 
+|}
+
+{| border=1 class="simple"
+! _EOF 
+!  Eof_ 
+|}
+
+{| border=1 class="simple"
+! _EPatternBranching 
+!  EPatternBranching_ 
+|}
+
+{| border=1 class="simple"
+! _EmptyBase 
+!  EmptyBase_ 
+|}
+
+{| border=1 class="simple"
+! _EmptyFindBegin 
+!  EmptyFindBegin_ 
+|}
+
+{| border=1 class="simple"
+! _EnumeratorHammingModifier 
+!  EnumeratorHammingModifier_ 
+|}
+
+{| border=1 class="simple"
+! _EnumeratorLevenshteinModifier 
+!  EnumeratorLevenshteinModifier_ 
+|}
+
+{| border=1 class="simple"
+! _Equal 
+!  Equal_ 
+|}
+
+{| border=1 class="simple"
+! _Evaluate 
+!  Evaluate_ 
+|}
+
+{| border=1 class="simple"
+! _F 
+!  F_ 
+|}
+
+{| border=1 class="simple"
+! _FRAMES 
+!  FRAMES_ 
+|}
+
+{| border=1 class="simple"
+! _FileCount 
+!  FileCount_ 
+|}
+
+{| border=1 class="simple"
+! _FileSize 
+!  FileSize_ 
+|}
+
+{| border=1 class="simple"
+! _FindState 
+!  FindState_ 
+|}
+
+{| border=1 class="simple"
+! _Find_WildShiftAnd_ParserStates 
+!  FindWildShiftAndParserStates_ 
+|}
+
+{| border=1 class="simple"
+! _Finder_LCPE 
+!  FinderLcpe_ 
+|}
+
+{| border=1 class="simple"
+! _First 
+!  First_ 
+|}
+
+{| border=1 class="simple"
+! _Func 
+!  Func_ 
+|}
+
+{| border=1 class="simple"
+! _Gap_Cost_DatabaseDistance 
+!  GapCostDatabaseDistance_ 
+|}
+
+{| border=1 class="simple"
+! _Gap_Cost_Manhatten 
+!  GapCostManhatten_ 
+|}
+
+{| border=1 class="simple"
+! _Gap_Cost_NoGapCost 
+!  GapCostNoGapCost_ 
+|}
+
+{| border=1 class="simple"
+! _Gap_Cost_QueryDistance 
+!  GapCostQueryDistance_ 
+|}
+
+{| border=1 class="simple"
+! _Global 
+!  Global_ 
+|}
+
+{| border=1 class="simple"
+! _Good_Seed 
+!  GoodSeed_ 
+|}
+
+{| border=1 class="simple"
+! _Good_Seed2 
+!  GoodSeed2_ 
+|}
+
+{| border=1 class="simple"
+! _INSERT 
+!  INSERT_ 
+|}
+
+{| border=1 class="simple"
+! _INSERT_EOS 
+!  INSERT_EOS_ 
+|}
+
+{| border=1 class="simple"
+! _INSERT_LAST 
+!  INSERT_LAST_ 
+|}
+
+{| border=1 class="simple"
+! _IOContextGff 
+!  IOContextGff_ 
+|}
+
+{| border=1 class="simple"
+! _IOContextUcsc 
+!  IOContextUcsc_ 
+|}
+
+{| border=1 class="simple"
+! _IlluminaReads 
+!  IlluminaReads_ 
+|}
+
+{| border=1 class="simple"
+! _MatchMateInfo 
+!  MatchMateInfo_ 
+|}
+
+{| border=1 class="simple"
+! _MatchMateInfoLess 
+!  MatchMateInfoLess_ 
+|}
+
+{| border=1 class="simple"
+! _MersenneBuffer 
+!  MersenneBuffer_ 
+|}
+
+{| border=1 class="simple"
+! _Mid 
+!  Mid_ 
+|}
+
+{| border=1 class="simple"
+! _MinSeedSizeMixin 
+!  MinSeedSizeMixin_ 
+|}
+
+{| border=1 class="simple"
+! _MiniListEntry 
+!  MiniListEntry_ 
+|}
+
+{| border=1 class="simple"
+! _MiniSumListValueIterator 
+!  MiniSumListValueIterator_ 
+|}
+
+{| border=1 class="simple"
+! _MyersSmallAlphabet 
+!  MyersSmallAlphabet_ 
+|}
+
+{| border=1 class="simple"
+! _MyersUkkonenReads 
+!  MyersUkkonenReads_ 
+|}
+
+{| border=1 class="simple"
+! _PAGE_SIZE 
+!  PAGE_SIZE_ 
+|}
+
+{| border=1 class="simple"
+! _PMS1 
+!  Pms1_ 
+|}
+
+{| border=1 class="simple"
+! _PMSP 
+!  Pmsp_ 
+|}
+
+{| border=1 class="simple"
+! _PMode 
+!  PMode_ 
+|}
+
+{| border=1 class="simple"
+! _PageSize 
+!  PageSize_ 
+|}
+
+{| border=1 class="simple"
+! _PairwiseAlignment 
+!  PairwiseAlignment_ 
+|}
+
+{| border=1 class="simple"
+! _PexRange 
+!  PexRange_ 
+|}
+
+{| border=1 class="simple"
+! _PizzaChili_AF 
+!  PizzaChiliAF_ 
+|}
+
+{| border=1 class="simple"
+! _PizzaChili_CCSA 
+!  PizzaChiliCcsa_ 
+|}
+
+{| border=1 class="simple"
+! _PizzaChili_FM 
+!  PizzaChiliFM_ 
+|}
+
+{| border=1 class="simple"
+! _PizzaChili_LZ 
+!  PizzaChiliLZ_ 
+|}
+
+{| border=1 class="simple"
+! _PizzaChili_RLFM 
+!  PizzaChiliRlfm_ 
+|}
+
+{| border=1 class="simple"
+! _PizzaChili_RSA 
+!  PizzaChiliRsa_ 
+|}
+
+{| border=1 class="simple"
+! _PizzaChili_SA 
+!  PizzaChiliSA_ 
+|}
+
+{| border=1 class="simple"
+! _PizzaChili_SADA 
+!  PizzaChiliSada_ 
+|}
+
+{| border=1 class="simple"
+! _PizzaChili_SSA 
+!  PizzaChiliSsa_ 
+|}
+
+{| border=1 class="simple"
+! _PizzaChili_Test 
+!  PizzaChiliTest_ 
+|}
+
+{| border=1 class="simple"
+! _Pragma 
+!  Pragma_ 
+|}
+
+{| border=1 class="simple"
+! _Projection 
+!  Projection_ 
+|}
+
+{| border=1 class="simple"
+! _RANGE_TREE_H 
+!  RANGE_TREE_H_ 
+|}
+
+{| border=1 class="simple"
+! _RBorderObj 
+!  RBorderObj_ 
+|}
+
+{| border=1 class="simple"
+! _RT_MAX_SKIP_BASE_ELEMENT_H 
+!  RT_MAX_SKIP_BASE_ELEMENT_H_ 
+|}
+
+{| border=1 class="simple"
+! _RT_SKIP_BASE_ELEMENT_H 
+!  RT_SKIP_BASE_ELEMENT_H_ 
+|}
+
+{| border=1 class="simple"
+! _RT_SKIP_ELEMENT_H 
+!  RT_SKIP_ELEMENT_H_ 
+|}
+
+{| border=1 class="simple"
+! _Ref 
+!  Ref_ 
+|}
+
+{| border=1 class="simple"
+! _Resizable 
+!  Resizable_ 
+|}
+
+{| border=1 class="simple"
+! _Right 
+!  Right_ 
+|}
+
+{| border=1 class="simple"
+! _SEQAN_CHAIN_DEBUG 
+!  SEQAN_CHAIN_DEBUG_ 
+|}
+
+{| border=1 class="simple"
+! _SEQAN_CXX_FLAGS_ 
+!  SEQAN_CXX_FLAGS__ 
+|}
+
+{| border=1 class="simple"
+! _SEQ_H 
+!  SEQ_H_ 
+|}
+
+{| border=1 class="simple"
+! _SKIP_BASE_ELEMENT_H 
+!  SKIP_BASE_ELEMENT_H_ 
+|}
+
+{| border=1 class="simple"
+! _SKIP_LIST_BASE_H 
+!  SKIP_LIST_BASE_H_ 
+|}
+
+{| border=1 class="simple"
+! _SKIP_LIST_DYNAMIC_H 
+!  SKIP_LIST_DYNAMIC_H_ 
+|}
+
+{| border=1 class="simple"
+! _SKIP_LIST_STATIC_H 
+!  SKIP_LIST_STATIC_H_ 
+|}
+
+{| border=1 class="simple"
+! _STLComparator 
+!  StlComparator_ 
+|}
+
+{| border=1 class="simple"
+! _SUBST 
+!  SUBST_ 
+|}
+
+{| border=1 class="simple"
+! _SangerReads 
+!  SangerReads_ 
+|}
+
+{| border=1 class="simple"
+! _ScoringMatrix 
+!  ScoringMatrix_ 
+|}
+
+{| border=1 class="simple"
+! _Self 
+!  Self_ 
+|}
+
+{| border=1 class="simple"
+! _SelfPtr 
+!  SelfPtr_ 
+|}
+
+{| border=1 class="simple"
+! _SelfRef 
+!  SelfRef_ 
+|}
+
+{| border=1 class="simple"
+! _SemiGlobalEdit 
+!  SemiGlobalEdit_ 
+|}
+
+{| border=1 class="simple"
+! _SemiGlobalHamming 
+!  SemiGlobalHamming_ 
+|}
+
+{| border=1 class="simple"
+! _SetLess 
+!  SetLess_ 
+|}
+
+{| border=1 class="simple"
+! _SetObjVector 
+!  SetObjVector_ 
+|}
+
+{| border=1 class="simple"
+! _SetSetVector 
+!  SetSetVector_ 
+|}
+
+{| border=1 class="simple"
+! _Simple 
+!  Simple_ 
+|}
+
+{| border=1 class="simple"
+! _SingleLink 
+!  SingleLink_ 
+|}
+
+{| border=1 class="simple"
+! _Size 
+!  Size_ 
+|}
+
+{| border=1 class="simple"
+! _SizeArr 
+!  SizeArr_ 
+|}
+
+{| border=1 class="simple"
+! _SizeType 
+!  SizeType_ 
+|}
+
+{| border=1 class="simple"
+! _SkiplistElement 
+!  SkiplistElement_ 
+|}
+
+{| border=1 class="simple"
+! _SortBeginPos 
+!  SortBeginPos_ 
+|}
+
+{| border=1 class="simple"
+! _SortContigId 
+!  SortContigId_ 
+|}
+
+{| border=1 class="simple"
+! _SortDistance 
+!  SortDistance_ 
+|}
+
+{| border=1 class="simple"
+! _SortEndPos 
+!  SortEndPos_ 
+|}
+
+{| border=1 class="simple"
+! _SortFirstPos 
+!  SortFirstPos_ 
+|}
+
+{| border=1 class="simple"
+! _SortGapPos 
+!  SortGapPos_ 
+|}
+
+{| border=1 class="simple"
+! _SortId 
+!  SortId_ 
+|}
+
+{| border=1 class="simple"
+! _SortLastPos 
+!  SortLastPos_ 
+|}
+
+{| border=1 class="simple"
+! _SortPairMatchId 
+!  SortPairMatchId_ 
+|}
+
+{| border=1 class="simple"
+! _SortReadId 
+!  SortReadId_ 
+|}
+
+{| border=1 class="simple"
+! _SortSeqPos 
+!  SortSeqPos_ 
+|}
+
+{| border=1 class="simple"
+! _Spec 
+!  Spec_ 
+|}
+
+{| border=1 class="simple"
+! _StreamChunkCollector 
+!  StreamChunkCollector_ 
+|}
+
+{| border=1 class="simple"
+! _StringLess 
+!  StringLess_ 
+|}
+
+{| border=1 class="simple"
+! _SumListSkiplistMinilist 
+!  SumListSkiplistMinilist_ 
+|}
+
+{| border=1 class="simple"
+! _SwiftSemiGlobalHamming 
+!  SwiftSemiGlobalHamming_ 
+|}
+
+{| border=1 class="simple"
+! _T 
+!  T_ 
+|}
+
+{| border=1 class="simple"
+! _T1 
+!  T1_ 
+|}
+
+{| border=1 class="simple"
+! _T2 
+!  T2_ 
+|}
+
+{| border=1 class="simple"
+! _T3 
+!  T3_ 
+|}
+
+{| border=1 class="simple"
+! _TAlignMode 
+!  TAlignMode_ 
+|}
+
+{| border=1 class="simple"
+! _TAlphabet 
+!  TAlphabet_ 
+|}
+
+{| border=1 class="simple"
+! _TBufferSpec 
+!  TBufferSpec_ 
+|}
+
+{| border=1 class="simple"
+! _TCargo 
+!  TCargo_ 
+|}
+
+{| border=1 class="simple"
+! _TContigSeq 
+!  TContigSeq_ 
+|}
+
+{| border=1 class="simple"
+! _TCount 
+!  TCount_ 
+|}
+
+{| border=1 class="simple"
+! _TCounts 
+!  TCounts_ 
+|}
+
+{| border=1 class="simple"
+! _TElement 
+!  TElement_ 
+|}
+
+{| border=1 class="simple"
+! _TFile 
+!  TFile_ 
+|}
+
+{| border=1 class="simple"
+! _TFragmentStore 
+!  TFragmentStore_ 
+|}
+
+{| border=1 class="simple"
+! _TGPos 
+!  TGPos_ 
+|}
+
+{| border=1 class="simple"
+! _TGapAnchor 
+!  TGapAnchor_ 
+|}
+
+{| border=1 class="simple"
+! _TGapMode 
+!  TGapMode_ 
+|}
+
+{| border=1 class="simple"
+! _THaystack 
+!  THaystack_ 
+|}
+
+{| border=1 class="simple"
+! _THostSpec 
+!  THostSpec_ 
+|}
+
+{| border=1 class="simple"
+! _TId 
+!  TId_ 
+|}
+
+{| border=1 class="simple"
+! _TInput 
+!  TInput_ 
+|}
+
+{| border=1 class="simple"
+! _TIterator 
+!  TIterator_ 
+|}
+
+{| border=1 class="simple"
+! _TJournalSpec 
+!  TJournalSpec_ 
+|}
+
+{| border=1 class="simple"
+! _TKey 
+!  TKey_ 
+|}
+
+{| border=1 class="simple"
+! _TLCPInput 
+!  TLcpInput_ 
+|}
+
+{| border=1 class="simple"
+! _TMT 
+!  TMT_ 
+|}
+
+{| border=1 class="simple"
+! _TMatch 
+!  TMatch_ 
+|}
+
+{| border=1 class="simple"
+! _TMatchNPolicy 
+!  TMatchNPolicy_ 
+|}
+
+{| border=1 class="simple"
+! _TMyersUkkonen 
+!  TMyersUkkonen_ 
+|}
+
+{| border=1 class="simple"
+! _TNeedle 
+!  TNeedle_ 
+|}
+
+{| border=1 class="simple"
+! _TObject 
+!  TObject_ 
+|}
+
+{| border=1 class="simple"
+! _TOperation 
+!  TOperation_ 
+|}
+
+{| border=1 class="simple"
+! _TPos 
+!  TPos_ 
+|}
+
+{| border=1 class="simple"
+! _TPreprocessing 
+!  TPreprocessing_ 
+|}
+
+{| border=1 class="simple"
+! _TQualityThresholdMixin 
+!  TQualityThresholdMixin_ 
+|}
+
+{| border=1 class="simple"
+! _TRPos 
+!  TRPos_ 
+|}
+
+{| border=1 class="simple"
+! _TRazerSMode 
+!  TRazerSMode_ 
+|}
+
+{| border=1 class="simple"
+! _TRazerSOptions 
+!  TRazerSOptions_ 
+|}
+
+{| border=1 class="simple"
+! _TScoreMode 
+!  TScoreMode_ 
+|}
+
+{| border=1 class="simple"
+! _TSeed 
+!  TSeed_ 
+|}
+
+{| border=1 class="simple"
+! _TSeedConfig 
+!  TSeedConfig_ 
+|}
+
+{| border=1 class="simple"
+! _TSeedSet 
+!  TSeedSet_ 
+|}
+
+{| border=1 class="simple"
+! _TSeedString 
+!  TSeedString_ 
+|}
+
+{| border=1 class="simple"
+! _TSequence 
+!  TSequence_ 
+|}
+
+{| border=1 class="simple"
+! _TSet 
+!  TSet_ 
+|}
+
+{| border=1 class="simple"
+! _TShape 
+!  TShape_ 
+|}
+
+{| border=1 class="simple"
+! _TShortSize 
+!  TShortSize_ 
+|}
+
+{| border=1 class="simple"
+! _TSize 
+!  TSize_ 
+|}
+
+{| border=1 class="simple"
+! _TSizeOf 
+!  TSizeOf_ 
+|}
+
+{| border=1 class="simple"
+! _TSpec 
+!  TSpec_ 
+|}
+
+{| border=1 class="simple"
+! _TString 
+!  TString_ 
+|}
+
+{| border=1 class="simple"
+! _TSuffixArrayInput 
+!  TSuffixArrayInput_ 
+|}
+
+{| border=1 class="simple"
+! _TSwiftPattern 
+!  TSwiftPattern_ 
+|}
+
+{| border=1 class="simple"
+! _TText 
+!  TText_ 
+|}
+
+{| border=1 class="simple"
+! _TTextInput 
+!  TTextInput_ 
+|}
+
+{| border=1 class="simple"
+! _TTextRandom 
+!  TTextRandom_ 
+|}
+
+{| border=1 class="simple"
+! _TValue 
+!  TValue_ 
+|}
+
+{| border=1 class="simple"
+! _TagComputeCenter 
+!  TagComputeCenter_ 
+|}
+
+{| border=1 class="simple"
+! _TagRandomCenter 
+!  TagRandomCenter_ 
+|}
+
+{| border=1 class="simple"
+! _TestAlign 
+!  TestAlign_ 
+|}
+
+{| border=1 class="simple"
+! _Test_GotohVSBandedGotoh 
+!  TestGotohVSBandedGotoh_ 
+|}
+
+{| border=1 class="simple"
+! _TraceBack 
+!  TraceBack_ 
+|}
+
+{| border=1 class="simple"
+! _Transcript_ 
+!  Transcript__ 
+|}
+
+{| border=1 class="simple"
+! _Tx 
+!  Tx_ 
+|}
+
+{| border=1 class="simple"
+! _Ty 
+!  Ty_ 
+|}
+
+{| border=1 class="simple"
+! _TypeOf 
+!  TypeOf_ 
+|}
+
+{| border=1 class="simple"
+! _UTIL_H 
+!  UTIL_H_ 
+|}
+
+{| border=1 class="simple"
+! _Val 
+!  Val_ 
+|}
+
+{| border=1 class="simple"
+! _VectorSet 
+!  VectorSet_ 
+|}
+
+{| border=1 class="simple"
+! _VectorSetElement 
+!  VectorSetElement_ 
+|}
+
+{| border=1 class="simple"
+! _VectorSetElements 
+!  VectorSetElements_ 
+|}
+
+{| border=1 class="simple"
+! _VectorSetIterator 
+!  VectorSetIterator_ 
+|}
+
+{| border=1 class="simple"
+! _VectorSetIterator_ 
+!  VectorSetIterator__ 
+|}
+
+{| border=1 class="simple"
+! _VectorSetKeySize 
+!  VectorSetKeySize_ 
+|}
+
+{| border=1 class="simple"
+! _VerifyAllLocal 
+!  VerifyAllLocal_ 
+|}
+
+{| border=1 class="simple"
+! _VerifyBandedGlobal 
+!  VerifyBandedGlobal_ 
+|}
+
+{| border=1 class="simple"
+! _VerifyBandedGlobalExtend 
+!  VerifyBandedGlobalExtend_ 
+|}
+
+{| border=1 class="simple"
+! _VerifyBestLocal 
+!  VerifyBestLocal_ 
+|}
+
+{| border=1 class="simple"
+! _Vtml200 
+!  Vtml200_ 
+|}
+
+{| border=1 class="simple"
+! <u>AllAgainstAll 
+!  AllAgainstAll</u> 
+|}
+
+{| border=1 class="simple"
+! <u>T1 
+!  T1</u> 
+|}
+
+{| border=1 class="simple"
+! <u>T2 
+!  T2</u> 
+|}
+
+{| border=1 class="simple"
+! <u>T3 
+!  T3</u> 
+|}
+
+{| border=1 class="simple"
+! <u>TSpec 
+!  TSpec</u> 
+|}
+
+{| border=1 class="simple"
+! <u>UseQualityValues 
+!  UseQualityValues</u> 
+|}
+
+{| border=1 class="simple"
+! <u>cp_ 
+!  cp</u>_ 
+|}
+
+{| border=1 class="simple"
+! <u>index 
+!  index</u> 
+|}
+
+{| border=1 class="simple"
+! <u>pageNo 
+!  pageNo</u> 
+|}
+
+{| border=1 class="simple"
+! <u>pageSize 
+!  pageSize</u> 
+|}
+
+{| border=1 class="simple"
+! <u>size 
+!  size</u> 
+|}
+
+{| border=1 class="simple"
+! <u>sleq 
+!  sleq</u> 
+|}
+
+{| border=1 class="simple"
+! <u>sleqLCP 
+!  sleqLcp</u> 
+|}
+
+{| border=1 class="simple"
+! <u>testquickAlign 
+!  testquickAlign</u> 
+|}
+
 
 Runde 3 incl. find_motif module:
 
- || OOPS || Oops ||
- || OMOPS || Omops ||
- || TCM || Tcm ||
- || ZOOPS || Zoops ||
- || PMS1 || Pms1 ||
- || PMSP || Pmsp ||
- || SAM || Sam ||
- || BAM || Bam ||
- || _getScore || getScore ||
- || DFI || Dfi ||
- || BWT || Bwt ||
- || Index_DFI || IndexDfi ||
- || indexLCP || indexLcp ||
- || indexChildTab || indexChildtab ||
- || indexChildTab || indexChildtab ||
- || createChildTable || createChildtab ||
- || createChildTableExt || createChildtabExt ||
- || VertexESA || VertexEsa ||
- || areadAt || asyncReadAt ||
- || awriteAt || asyncWriteAt ||
- || QGram_Alg || QGramAlg ||
- || ChildTab || Childtab ||
- || LCPCreatorRandomAccess_ || LcpCreatorRandomAccess_ ||
- || TDFSOrder || TDfsOrder ||
- || DFSOrder || DfsOrder ||
- || QGram_SA || QGramSA ||
- || convertInPlace || convert ||
- || toUpperInPlace || toUpper ||
+{| border=1 class="simple"
+! OOPS 
+! Oops 
+|}
+
+{| border=1 class="simple"
+! OMOPS 
+! Omops 
+|}
+
+{| border=1 class="simple"
+! TCM 
+! Tcm 
+|}
+
+{| border=1 class="simple"
+! ZOOPS 
+! Zoops 
+|}
+
+{| border=1 class="simple"
+! PMS1 
+! Pms1 
+|}
+
+{| border=1 class="simple"
+! PMSP 
+! Pmsp 
+|}
+
+{| border=1 class="simple"
+! SAM 
+! Sam 
+|}
+
+{| border=1 class="simple"
+! BAM 
+! Bam 
+|}
+
+{| border=1 class="simple"
+! _getScore 
+! getScore 
+|}
+
+{| border=1 class="simple"
+! DFI 
+! Dfi 
+|}
+
+{| border=1 class="simple"
+! BWT 
+! Bwt 
+|}
+
+{| border=1 class="simple"
+! Index_DFI 
+! IndexDfi 
+|}
+
+{| border=1 class="simple"
+! indexLCP 
+! indexLcp 
+|}
+
+{| border=1 class="simple"
+! indexChildTab 
+! indexChildtab 
+|}
+
+{| border=1 class="simple"
+! indexChildTab 
+! indexChildtab 
+|}
+
+{| border=1 class="simple"
+! createChildTable 
+! createChildtab 
+|}
+
+{| border=1 class="simple"
+! createChildTableExt 
+! createChildtabExt 
+|}
+
+{| border=1 class="simple"
+! VertexESA 
+! VertexEsa 
+|}
+
+{| border=1 class="simple"
+! areadAt 
+! asyncReadAt 
+|}
+
+{| border=1 class="simple"
+! awriteAt 
+! asyncWriteAt 
+|}
+
+{| border=1 class="simple"
+! QGram_Alg 
+! QGramAlg 
+|}
+
+{| border=1 class="simple"
+! ChildTab 
+! Childtab 
+|}
+
+{| border=1 class="simple"
+! LCPCreatorRandomAccess_ 
+! LcpCreatorRandomAccess_ 
+|}
+
+{| border=1 class="simple"
+! TDFSOrder 
+! TDfsOrder 
+|}
+
+{| border=1 class="simple"
+! DFSOrder 
+! DfsOrder 
+|}
+
+{| border=1 class="simple"
+! QGram_SA 
+! QGramSA 
+|}
+
+{| border=1 class="simple"
+! convertInPlace 
+! convert 
+|}
+
+{| border=1 class="simple"
+! toUpperInPlace 
+! toUpper 
+|}
+
  || toLowerInPlace || toLower ||
+
+
+
+{{TracNotice|{{PAGENAME}}}}

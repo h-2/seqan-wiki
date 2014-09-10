@@ -1,52 +1,83 @@
-=  Sequences In-Depth =
+
+==  Sequences In-Depth ==
 
 [[TOC()]]
 
  Learning Objective :: You will learn in detail how to optimize the usage of sequences dependent on your needs.
  Difficulty :: Advanced
  Duration :: 20min
- Prerequisites :: [wiki:Tutorial/Sequences]
+ Prerequisites :: [[Tutorial/Sequences]]
 
 Sequences, particularly [dox:String Strings], are fundamental in SeqAn. 
 You learned already how to use the default implementation of strings and how to easily work with them. 
 In the most cases the default string specialization is well suited as well as the default behavior for capicity changes. 
 Nevertheless, sometimes you might want to change the default behavior for efficiency reasons and adjust it to your specific needs.
 
-== String Specializations ==
+=== String Specializations ===
 
 In this section you will learn about the different string specializations and when to use them.
 
 The user can specify the kind of string that should be used in an optional second template argument of [dox:String String].
 
-{{{#!cpp
+<pre>#cpp
 String<Dna>           dnaSeq1; // The default string implementation: Alloc
 String<Dna, Alloc<> > dnaSeq2; // The same as above 
-}}}
+</pre>
 
-In most cases, the implementation [dox:AllocString Alloc String] (the default when using a {{{String<T>}}}) is the best choice.
+In most cases, the implementation [dox:AllocString Alloc String] (the default when using a <tt>String<T></tt>) is the best choice.
 Exceptions are when you want to process extremely large strings that are a bit larger than the available memory (consider [dox:AllocString Alloc String]) or much larger so most of them are stored on the hard disk and only parts of them are loaded in main memory (consider [dox:ExternalString Exteranl String]).
 
 The following table decribes in detail the different specializations:
 
-||'''Specialization'''||'''Description'''||'''Applications'''||'''Limitations'''||
-||[dox:AllocString Alloc String]||Expandable string that is stored on the heap.||The default string implementation that can be used for general purposes.||Changing the [dox:String#capacity capacity] can be very costly since all values must be copied.||
-||[dox:ArrayString Array String]"||Fast but non-expandable string.||Fast storing of fixed-size sequences.||[dox:SequenceConcept#capacity Capacity] must already be known at compile time. Not suitable for storing large sequences.||
-||[dox:BlockString Block String]||String that stores its sequence characters in blocks||The [dox:SequenceConcept#capacity capacity] of the string can quickly be increased. Good choice for growing strings or stacks.||Iteration and random access to values is slightly slower than for [dox:AllocString Alloc String].||
-||[dox:PackedString Packed String]||A string that stores as many values in one machine word as possible.||Suitable for storing large strings in memory.||Slower than other in-memory strings.||
-||[dox:ExternalString External String]||String that is stored in secondary memory.||Suitable for storing very large strings (>2GB). Parts of the string are automatically loaded from secondary memory on demand.||Slower than other string classes.||
-||[dox:CStyleString CStyle String]||Allows adaption of strings to C-style strings.||Used for transforming other String classes into C-style strings (i.e. null terminated char arrays). Useful for calling functions of C-libraries.||Only reasonable if value type is char or wchar_t.||
+{| border=1 class="simple"
+!'''Specialization'''
+!'''Description'''
+!'''Applications'''
+!'''Limitations'''
+|- 
+| [dox:AllocString Alloc String]
+| Expandable string that is stored on the heap.
+| The default string implementation that can be used for general purposes.
+| Changing the [dox:String#capacity capacity] can be very costly since all values must be copied.
+|- 
+| [dox:ArrayString Array String]"
+| Fast but non-expandable string.
+| Fast storing of fixed-size sequences.
+| [dox:SequenceConcept#capacity Capacity] must already be known at compile time. Not suitable for storing large sequences.
+|- 
+| [dox:BlockString Block String]
+| String that stores its sequence characters in blocks
+| The [dox:SequenceConcept#capacity capacity] of the string can quickly be increased. Good choice for growing strings or stacks.
+| Iteration and random access to values is slightly slower than for [dox:AllocString Alloc String].
+|- 
+| [dox:PackedString Packed String]
+| A string that stores as many values in one machine word as possible.
+| Suitable for storing large strings in memory.
+| Slower than other in-memory strings.
+|- 
+| [dox:ExternalString External String]
+| String that is stored in secondary memory.
+| Suitable for storing very large strings (>2GB). Parts of the string are automatically loaded from secondary memory on demand.
+| Slower than other string classes.
+|- 
+| [dox:CStyleString CStyle String]
+| Allows adaption of strings to C-style strings.
+| Used for transforming other String classes into C-style strings (i.e. null terminated char arrays). Useful for calling functions of C-libraries.
+| Only reasonable if value type is char or wchar_t.
+|}
+
 
 Examples:
 
-{{{
-#!cpp
+<pre>
+#cpp
 // String with maximum length 100.
 String<char, Array<100> > myArrayString;
 // String that takes only 2 bits per nucleotide.
 String<Dna, Packed<> > myPackedString;
-}}}
+</pre>
 
-== Overflow Strategies ==
+=== Overflow Strategies ===
 
 The following section will describe how you can improve capacity changes for your sequences.
 
@@ -61,15 +92,27 @@ If no overflow strategy is specified, a default overflow strategy is selected de
 
 The following overflow strategies exist:
 
-|| '''Tag''' || '''Description''' ||
-|| [dox:OverflowStrategyTags#Exact Exact] || Expand the sequence exactly as far as needed.  The capacity is only changed if the current capacity is not large enough. ||
-|| [dox:OverflowStrategyTags#Generous Generous] || Whenever the capacity is exceeded, the new capacity is chosen somewhat larger than currently needed.  This way, the number of capacity changes islimited in a way that resizing the sequence only takes amortized constant time. ||
-|| [dox:OverflowStrategyTags#Limit Limit] || Instead of changing the capacity, the contents are limited to current capacity.  All values that exceed the capacity are lost. ||
-|| [dox:OverflowStrategyTags#Insist Insist] || No capacity check is performed, so the user has to ensure that the container's capacity is large enough. ||
+{| border=1 class="simple"
+! '''Tag''' 
+! '''Description''' 
+|- 
+|  [dox:OverflowStrategyTags#Exact Exact] 
+|  Expand the sequence exactly as far as needed.  The capacity is only changed if the current capacity is not large enough. 
+|- 
+|  [dox:OverflowStrategyTags#Generous Generous] 
+|  Whenever the capacity is exceeded, the new capacity is chosen somewhat larger than currently needed.  This way, the number of capacity changes islimited in a way that resizing the sequence only takes amortized constant time. 
+|- 
+|  [dox:OverflowStrategyTags#Limit Limit] 
+|  Instead of changing the capacity, the contents are limited to current capacity.  All values that exceed the capacity are lost. 
+|- 
+|  [dox:OverflowStrategyTags#Insist Insist] 
+|  No capacity check is performed, so the user has to ensure that the container's capacity is large enough. 
+|}
+
 
 The next example illustrates how the different strategies could be used:
 
-{{{#!cpp
+<pre>#cpp
 String<Dna> dnaSeq;
 // Sets the capacity of dnaSeq to 5.
 resize(dnaSeq, 4, Exact());
@@ -79,28 +122,32 @@ std::cout << dnaSeq << std::endl;
 // Use the default expansion strategy.
 append(str, "GCGCGC");
 std::cout << dnaSeq << std::endl;
-}}}
+</pre>
 
-{{{#!ShellBox
+<pre>#ShellBox
 TATA
 TATAGCGCGC
-}}}
+</pre>
 
-{{{#!AssignmentBox
-=== Workshop Assignment 1 ===
+<pre>#AssignmentBox
+==== Workshop Assignment 1 ====
  Type ::
   Review
  Objective :: 
-  Build a string of Dna (default specialization) and use the function ```appendValue``` to append a million times the nucleotide 'A'. Do it both using the overflow strategy ```Exact``` and ```Generous```. Messure the time for the two different strategies.
+  Build a string of Dna (default specialization) and use the function <tt><tt><tt>appendValue</tt></tt><tt> to append a million times the nucleotide 'A'. Do it both using the overflow strategy </tt><tt><tt>Exact</tt></tt><tt> and </tt><tt><tt>Generous</tt></tt></tt>. Messure the time for the two different strategies.
  Solution :: 
   Click ''more...'' to see the solution.
-{{{#!FoldOut
+<pre>#FoldOut
 ----
 [[Include(source:trunk/core/demos/tutorial/sequences_in_depth/assignment_exact_generous_solution.cpp)]]
-}}}
+</pre>
 
-}}}
+</pre>
 
-== Submit a  comment ==
+=== Submit a  comment ===
 If you found a mistake, or have suggestions about an improvement of this page press:
 [/newticket?component=Documentation&description=Tutorial+Enhancement+for+page+http://trac.seqan.de/wiki/Tutorial/Sequences&type=enhancement submit your comment]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

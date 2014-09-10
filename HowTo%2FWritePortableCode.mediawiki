@@ -1,6 +1,11 @@
-= How To: Write Portable Code =
 
- * sort comparators have to be strong enough
- * floating point arithmetics
-  * comparison of equality `fabs(a - b) < epsilon`
-  * comparison of `<` with `+ DELTA`.
+== How To: Write Portable Code ==
+
+*sort comparators have to be strong enough
+*floating point arithmetics
+**comparison of equality <tt>fabs(a - b) < epsilon</tt>
+**comparison of <tt><</tt> with <tt>+ DELTA</tt>.
+
+
+
+{{TracNotice|{{PAGENAME}}}}

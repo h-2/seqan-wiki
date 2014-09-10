@@ -1,32 +1,33 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
-= Generic Programming =
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[Tutorial]] if you need the documentation for the trunk version.'''
+== Generic Programming ==
 [[TOC]]
 
-A generic algorithm that is applicable to a type {{{T}}} needs not to be optimal for that type. The algorithm find in the standard library (ISO/IEC 1998, section 25.3.1.1) 
+A generic algorithm that is applicable to a type <tt>T</tt> needs not to be optimal for that type. The algorithm find in the standard library (ISO/IEC 1998, section 25.3.1.1) 
 for example performs a sequential linear time search and is therefore capable of finding a given value in any standard compliant container. 
 However, the container map was designed to support a faster logarithmic time search, so the algorithm find – though applicable – is not optimal for searching in map. 
 This shows that sometimes a special algorithm could be faster than a generic algorithm. 
 Hence, in order to achieve better performance, SeqAn supports refinements of algorithms. A special version is only useful if it really allows a speedup in some cases, and only in this case it will actually be implemented. Therefore we assume that for a given case always the most special applicable variant is the best, where we have to assure that there is always a definite most special candidate according to the C++ function overload resolution rules (ISO/IEC 1998, sections 13.3 and 14.5.8).
-We can write {{{find(obj)}}} for any container type {{{obj}}}, and this invokes the most suitable implementation of {{{find}}} depending on the type of {{{obj}}}.  
+We can write <tt>find(obj)</tt> for any container type <tt>obj</tt>, and this invokes the most suitable implementation of <tt>find</tt> depending on the type of <tt>obj</tt>.  
 We call this approach '''template subclassing'''.
 
 The technique of template subclassing may be summarized as follows:
-   * The data types are realized as default implementation or specialization of class templates, e.g., {{{Class}}}, which have at least one template parameter {{{TSpec}}}.
-   * Refinements of {{{Class}}} are specified by using in {{{TSpec}}} a tag class, e.g., {{{Subclass}}}, that means they are implemented as class template specializations {{{Class<Subclass>}}}.
-   * Whenever further refinements may be possible, we declare the tag classes as class templates with at least one template parameter {{{TSpec}}}, in which more tag classes can be used. For example we may implement a class template specialization {{{Class<Subclass<Subsubclass<...> > >}}}. This way, we can reach arbitrary levels of specialization.
-   * Algorithms can be implemented for each level of specialization. If multiple implementations for different levels of specialization exist, then the C++ function overload resolution selects the most special from all applicable variants.
+**The data types are realized as default implementation or specialization of class templates, e.g., <tt>Class</tt>, which have at least one template parameter <tt>TSpec</tt>.
+**Refinements of <tt>Class</tt> are specified by using in <tt>TSpec</tt> a tag class, e.g., <tt>Subclass</tt>, that means they are implemented as class template specializations <tt>Class<Subclass></tt>.
+**Whenever further refinements may be possible, we declare the tag classes as class templates with at least one template parameter <tt>TSpec</tt>, in which more tag classes can be used. For example we may implement a class template specialization <tt>Class<Subclass<Subsubclass<...> > ></tt>. This way, we can reach arbitrary levels of specialization.
+**Algorithms can be implemented for each level of specialization. If multiple implementations for different levels of specialization exist, then the C++ function overload resolution selects the most special from all applicable variants.
 
-=== Example: Generic q-gram hashing ===
+==== Example: Generic q-gram hashing ====
 In many applications in Bioinformatics so called q-grams are used. A short string of length q can be interpreted as a number to the base
-of the cardinality of the alphabet. So for example for the Dna alphabet  {{{cgta=0*1+3*4+2*16+1*64=108}}}. q-grams can be gapped or ungapped.
-In the gapped case they are often called [seqan:"Class.Shape" shapes] and are simply an ordered list of integers. The number of integers in the list is called the {{{size}}}
-of a shape whereas the largest element -1 is called the {{{span}}}.
+of the cardinality of the alphabet. So for example for the Dna alphabet  <tt>cgta=0*1+3*4+2*16+1*64=108</tt>. q-grams can be gapped or ungapped.
+In the gapped case they are often called [seqan:"Class.Shape" shapes] and are simply an ordered list of integers. The number of integers in the list is called the <tt>size</tt>
+of a shape whereas the largest element -1 is called the <tt>span</tt>.
 
 The following code sniplet shows a generic algorithm for computing all  hash values for a shape.
-The function {{{span}}} applied to the shape s = ⟨s1, . . . , sq⟩ returns sq − 1.
+The function <tt>span</tt> applied to the shape s = ⟨s1, . . . , sq⟩ returns sq − 1.
 
-{{{
-#!cpp
+<pre>
+#cpp
 template <typename TShape, typename TString> void hashAll(TShape & shape, TString & str) 
    typedef typename Iterator<TString>::Type TIterator;
    TIterator it = begin(str); 
@@ -35,25 +36,25 @@ template <typename TShape, typename TString> void hashAll(TShape & shape, TStrin
       unsigned int hash_value = hash(shape, it); 
      /* do some things with the hash value */ ++it;
    }
-}}}
-Each shape has to know the alphabet Σ, so we specify this value type in the first template parameter of {{{Shape}}}. The actual
-specialization is selected in the second template parameter {{{TSpec}}}.
-{{{
-#!cpp
+</pre>
+Each shape has to know the alphabet Σ, so we specify this value type in the first template parameter of <tt>Shape</tt>. The actual
+specialization is selected in the second template parameter <tt>TSpec</tt>.
+<pre>
+#cpp
 template <typename TValue, typename TSpec = SimpleShape> class Shape;
-}}}
+</pre>
 the default is [seqan:"Spec.SimpleShape" SimpleShape]  which is simply an ungapped shape storing merely the length of the shape from which it can deduce its span and size.
-{{{
-#!cpp
+<pre>
+#cpp
 template <typename TValue> class Shape< TValue, SimpleShape > 
 { 
    public:
       unsigned int span;
 };
-}}}
+</pre>
 If we know q at compile time, then we can specify it in a template parameter and define span as a static member:
-{{{
-#!cpp
+<pre>
+#cpp
 template <unsigned int q = 0> struct UngappedShape<q>;
 
 template <typename TValue, unsigned int q> class Shape< TValue, UngappedShape<q> > 
@@ -61,15 +62,15 @@ template <typename TValue, unsigned int q> class Shape< TValue, UngappedShape<q>
    public:
       static unsigned int const span = q;
 };
-}}}
+</pre>
 
-The question is now, whether we can speed up the above {{{hashAll}}} functions for specializations of the class {{{shape}}} like ungapped shapes. A little thinking
+The question is now, whether we can speed up the above <tt>hashAll</tt> functions for specializations of the class <tt>shape</tt> like ungapped shapes. A little thinking
 yields a positive answer to that question. Indeed, for ungapped shapes, we can incrementally compute the next hash value form a given hashvalue 
-in constant time using the formula {{{hash(a_{i+1}...a{_i+q})=hash(a_{i}...a_{i+q−1})|Σ|−a_{i}|Σ|^q +a_{i+q}}}}, that means when shifting the shape along the sequence, we have to subtract the effect of the leftmost letter and add the effect of the rightmost letter, all scaled with the corresponding factor. All digits in between are ''shifted'' by multiplying them with the alphabet size. Obviously this allows for a much more efficient implementation of the {{{hashAll}}} function.
+in constant time using the formula <tt>hash(a_{i+1}...a{_i+q})=hash(a_{i}...a_{i+q−1})|Σ|−a_{i}|Σ|^q +a_{i+q</tt>}, that means when shifting the shape along the sequence, we have to subtract the effect of the leftmost letter and add the effect of the rightmost letter, all scaled with the corresponding factor. All digits in between are ''shifted'' by multiplying them with the alphabet size. Obviously this allows for a much more efficient implementation of the <tt>hashAll</tt> function.
 This functionality can be encoded in the following function   [seqan:"Function.hashNext" hashNext].
 
-{{{
-#!cpp
+<pre>
+#cpp
 template <typename TValue, unsigned int q, typename TIterator> 
 inline unsigned int 
 hashNext(Shape< TValue, UngappedShape<q> > const & shape, TIterator it, unsigned int prev)
@@ -79,13 +80,13 @@ hashNext(Shape< TValue, UngappedShape<q> > const & shape, TIterator it, unsigned
    return val;
  // shape.fac stores |Σ|^q
 }
-}}}
+</pre>
 
-SeqAn aims at not using virtual functions for introducing polymorphism. Instead the concept is called {{{template subclassing}}}.
-Hence we can now define a specialized {{{hashAll}}} function for all ungapped shapes as follows:
+SeqAn aims at not using virtual functions for introducing polymorphism. Instead the concept is called <tt>template subclassing</tt>.
+Hence we can now define a specialized <tt>hashAll</tt> function for all ungapped shapes as follows:
 
-{{{
-#!cpp
+<pre>
+#cpp
 template <typename TValue, unsigned int q, typename TString> 
 void hashAll(Shape< TValue, UngappedShape<q> > & shape, TString & str) 
    typedef typename Iterator<TString>::Type TIterator;
@@ -98,21 +99,25 @@ void hashAll(Shape< TValue, UngappedShape<q> > & shape, TString & str)
       /* do some things with the hash value */
    }
 }
-}}}
+</pre>
 
-Thats pretty much it. The C++ resolution mechanisms will ensure that whenever you use an ungapped shape in your code, the more efficient {{{hashAll}}} function above will
+Thats pretty much it. The C++ resolution mechanisms will ensure that whenever you use an ungapped shape in your code, the more efficient <tt>hashAll</tt> function above will
 be compiled. Note that this decision is made at ''compile time'' as opposed to the virtual function mechanism which is invoked at ''run time''.
 
 
-=== Further reading ===
+==== Further reading ====
 For more information about generic programming and the STL we recommend reading:
-   * Vandervoorde, Josuttis: C++ Templates - The complete guide, Addison-Wesley
+**Vandervoorde, Josuttis: C++ Templates - The complete guide, Addison-Wesley
 
-=== Template Subclassing Demo ===
+==== Template Subclassing Demo ====
 The C++ file [source:tags/seqan-1.4.0/core/demos/template_subclassing.cpp template_subclassing.cpp] in the ''demos'' folder gives an example of template subclassing.
 
-=== Assignments ===
+==== Assignments ====
 
-=== Submit a  comment ===
+==== Submit a  comment ====
 If you found a mistake, or have suggestions about an improvement of this page press:
 [/newticket?component=Documentation&description=Tutorial+Enhancement+for+page+http://trac.seqan.de/wiki/Tutorial/TemplateSubclassing&type=enhancement submit your comment]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

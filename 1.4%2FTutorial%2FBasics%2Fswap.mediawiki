@@ -1,15 +1,16 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
-We want to have a generic version, similar to the function `ExchangeFirstValues` on the previous page. 
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[Tutorial]] if you need the documentation for the trunk version.'''
+We want to have a generic version, similar to the function <tt>ExchangeFirstValues</tt> on the previous page. 
 Hence we could define the function as follows:
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/basics/swap.cpp, fragment=swap-declaration)]]
-The function is now quite generic allowing any container of type `T`. 
+The function is now quite generic allowing any container of type <tt>T</tt>. 
 In addition we specify two positions that should be swapped (as integers which is not really generic, but it suffices for the demo) an the length of the swapped region. 
-Now we can define a helper variable `help`, which can be of type `T`.
+Now we can define a helper variable <tt>help</tt>, which can be of type <tt>T</tt>.
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/basics/swap.cpp, fragment=swap-metafunction)]]
 and do the swapping
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/basics/swap.cpp, fragment=swap-work)]]
 Thats it. 
-We can now test our generic swap function using for example a `String` of characters or a `String` of integers.
+We can now test our generic swap function using for example a <tt>String</tt> of characters or a <tt>String</tt> of integers.
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/basics/swap.cpp, fragment=swap-apply)]]
 
 The whole program taken together looks as follows:
@@ -21,10 +22,14 @@ The whole program taken together looks as follows:
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/basics/swap.cpp, fragment=swap-apply)]]
 
 The output of the program is:
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
  darwin10.0 : ./demos/tutorial_swap 
 ATTAAATT
 133111311333
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

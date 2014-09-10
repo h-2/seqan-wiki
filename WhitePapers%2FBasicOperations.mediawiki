@@ -1,36 +1,41 @@
-= Basic Operations =
+
+== Basic Operations ==
 
 '''This page is work in progress! '''
 
 This page lists and describes functions that large classes of types have to implement and how they are implemented.
 
-== All Types ==
+=== All Types ===
 
  assign::
    Non-destructive assignment, with optional automatic type conversion.
-   `assign(target, source)` is semantically equivalent to `target = source`.
+   <tt>assign(target, source)</tt> is semantically equivalent to <tt>target = source</tt>.
  move::
    Destructive assignment, with optional automatic type conversion.
  set::
-   `set(target, source)` is semantically equivalent to `target = source`.
+   <tt>set(target, source)</tt> is semantically equivalent to <tt>target = source</tt>.
     If possible, set copies content references instead of the content itself.
 
-== Simple Types / Alphabets ==
+=== Simple Types / Alphabets ===
 
  convert::
-   Explicit type conversion of simple types, i.e. !SimpleType specializations, POD types etc.
+   Explicit type conversion of simple types, i.e. SimpleType specializations, POD types etc.
  gapValue::
    Returns the gap value of an alphabet.
  infimumValue::
-   Returns a value that is `<=` all characters in the alphabet.
+   Returns a value that is <tt><=</tt> all characters in the alphabet.
  ordValue::
-   Returns the numeric identifier of the given alphabet character, within `[infimumValue, supremumValue]`.
+   Returns the numeric identifier of the given alphabet character, within <tt>[infimumValue, supremumValue]</tt>.
  supremumValue::
-   Returns a value that is `>=` all characters in the alphabet.
+   Returns a value that is <tt>>=</tt> all characters in the alphabet.
 
-== Containers ==
+=== Containers ===
 
  append::
    Appending two containers.
  appendValue::
    Appending an entry to a container.
+
+
+
+{{TracNotice|{{PAGENAME}}}}

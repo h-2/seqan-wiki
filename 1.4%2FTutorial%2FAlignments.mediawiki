@@ -1,14 +1,15 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
-{{{#!FoldOut
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[Tutorial]] if you need the documentation for the trunk version.'''
+<pre>#FoldOut
 
 Deprecated.
-See the three new Alignments tutorials on [wiki:Tutorial the Tutorials Table of Contents] for an updated version.
+See the three new Alignments tutorials on [[Tutorial| the Tutorials Table of Contents]] for an updated version.
 ----
-= Alignments =
+== Alignments ==
 
-{{{#!WarningBox
+<pre>#WarningBox
 '''Under Construction'''
-}}} 
+</pre> 
 
 [[TOC]]
 
@@ -19,25 +20,25 @@ See the three new Alignments tutorials on [wiki:Tutorial the Tutorials Table of 
  Duration ::
   1h
  Prerequisites ::
-  [wiki:Tutorial/Basics], [wiki:Tutorial/MotifFinding], English language skills
+  [[Tutorial/Basics]], [[Tutorial/MotifFinding]], English language skills
 
 Alignments are one of the most basic and important ways to measure similarity between two or more sequences. They are involved in almost any application dealing with read mapping, sequence assembly or many other sequencing issues. Often these applications follow different strategies and use different variations of alignments. That's why we put many thoughts into our alignment algorithms to make them most flexible and extendable by a feature-driven implementation while sustaining a high performance level. In the following sections we describe how alignments can be represented, how they can be edited and most importantly how they can be computed in SeqAn. 
 
-== Representation of Alignments ==
+=== Representation of Alignments ===
 
 First we put our focus on the possible representations of alignments and the ways to access and edit different information of an alignment. The two main objects for this purpose are the seqan:Class.Align and the seqan:"Spec.Alignment Graph" data structure.
 
-=== Align Data Structure ===
+==== Align Data Structure ====
 
 The seqan:Class.Align data structure is simply a set of multiple seqan:Class.Gaps data structures. A seqan:Class.Gaps data structure is container storing gap information for a given source sequence. The gap information are put on top of the source sequence (coordinates of the gapped sequence refer to the '''gap space''') without directly applying them to the source (coordinates of the ungapped sequence refer to the '''source space'''). This way operating with gaps sustains very flexible. 
 
 There are two specializations available for the seqan:Class.Gaps data structures: seqan:Spec.ArrayGaps and seqan:Spec.AnchorGaps. They differ in the way they implement the gap space.  
-{{{#!InfoBox
+<pre>#InfoBox
 In general using seqan:Spec.ArrayGaps is sufficient for the most applications. This specialization is also the default one used if no further specialization is given. It simply uses an array which stores the counts of gaps and characters in an alternating order. Thus it is quite efficient to extend existing gaps while it is more expensive to search within the gapped sequence or insert new gaps. 
 Alternatively, one should prefer seqan:Spec.AnchorGaps if many conversions between coordinates of the gap and the source space are needed as binary search can be conducted to search for specific positions.
-}}}
+</pre>
 
-Now, let's start by constructing our first alignment. Before we can make use of any of the mentioned data structures we need to tell the program where to find the definitions. This can be achieved by including the header file `seqan/align.h` which contains the necessary data structures and functions associated with the alignments.
+Now, let's start by constructing our first alignment. Before we can make use of any of the mentioned data structures we need to tell the program where to find the definitions. This can be achieved by including the header file <tt>seqan/align.h</tt> which contains the necessary data structures and functions associated with the alignments.
 
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/alignments/alignment2_align.cpp, fragment=include)]]
 
@@ -45,13 +46,13 @@ The next steps would be to implement the main function of our program and to def
 
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/alignments/alignment2_align.cpp, fragment=main)]]
 
-We first define the type of the input sequences (`TSequence`). Then we can define the type of our actual seqan:Class.Align  object we want to use. In a seqan:Class.Align object the gapped sequences are arranged in rows. You can use the Metafunction seqan:Metafunction.Row to get the correct type of the used seqan:Class.Gaps objects. 
+We first define the type of the input sequences (<tt>TSequence</tt>). Then we can define the type of our actual seqan:Class.Align  object we want to use. In a seqan:Class.Align object the gapped sequences are arranged in rows. You can use the Metafunction seqan:Metafunction.Row to get the correct type of the used seqan:Class.Gaps objects. 
 
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/alignments/alignment2_align.cpp, fragment=typedefs)]]
 
-{{{#!InfoBox
+<pre>#InfoBox
 We put the type definitions always at the beginning of a function because it gives the code a better structure and simply is a good programming practice.
-}}}
+</pre>
 
 After defining the types we can continue to actually construct our own seqan:Class.Align object. Therefor we need to resize the alignment object in order to reserve space for the sequences we want to add. In our case we assume a pairwise alignment, hence we reserve space for 2 sequences. With the function seqan:Function.row we get access to the gapped sequence at a specific row in the alignment object. Now, we can assign the source to the corresponding gapped sequence.
 
@@ -61,7 +62,7 @@ After assigning the sources to the gapped sequences we need to add some gaps to 
 
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/alignments/alignment2_align.cpp, fragment=manipulation)]]
 
-Congratulations! You have created your first alignment. Note, that we used a reference declaration `TRow &` for the variables `row1` and `row2`. Without the reference we would only modify copies of the gapped sequences and the changes would not effect our `align` object.
+Congratulations! You have created your first alignment. Note, that we used a reference declaration <tt>TRow &</tt> for the variables <tt>row1</tt> and <tt>row2</tt>. Without the reference we would only modify copies of the gapped sequences and the changes would not effect our <tt>align</tt> object.
 
 In the next steps we want to dig a little deeper to get a feeling for the gap space and the source space. 
 As mentioned above the gaps are not inserted into the source but put on top of them in a separate space, the gap space. When inserting gaps the gap space is modified and all coordinates right of the inserted gap are shifted to the right by the size of the gap. At the same time the coordinates of the source remain unchanged. Using the function seqan:Function.toSourcePosition we can determine to which position in the source space our current position in the gapped sequence (gap space) maps.
@@ -73,18 +74,24 @@ If the position in the gap space is actually a gap, then seqan:Function.toSource
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/alignments/alignment2_align.cpp, fragment=printingViewPos)]]
 
 And here is the output of this short example program so far:
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
       0     .    
         CDFGDC
-        ||      
+{| border=1 class="simple"
+|}
+
         CDEFGA
  
   
       0     .    
         CD-FG--DC
-        || ||   |
+{| border=1 class="simple"
+! 
+!   /
+|}
+
         CDEFGAHGC
  
   
@@ -93,7 +100,7 @@ ViewToSource2: 0,1,2,3,4,5,6,7,8,
  
 SourceToView1: 0,1,3,4,7,8,
 SourceToView2: 0,1,2,3,4,5,6,7,8,
-}}}
+</pre>
 
 In the first alignment it seems that the end of the second row is cropped of to match the size of the first one. These effect takes place only in the visualization but is not explicitly applied to the gapped sequence. The second alignment is the one we manually constructed. Here you can see that the second row is expanded to its full size while it matches the size of the first row. 
 However, it is possible to explicitly crop off the ends of a row by using the functions seqan:Function.setClippedBeginPosition and seqan:Function.setClippedEndPosition. These functions shrink the gap space and can be understood as defining an infix of the gapped sequence. After the clipping the relative view position changes according to the clipping and so does the mapping of the source positions to the gap space. The mapping of the view positions to the source space does not change.
@@ -101,20 +108,27 @@ However, it is possible to explicitly crop off the ends of a row by using the fu
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/alignments/alignment2_align.cpp, fragment=clipping)]]
 
 Here the output of the clipping procedure.
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 Before clipping:
       0     .    
         CD-FG--DC
-        || ||   |
+{| border=1 class="simple"
+! 
+!   /
+|}
+
         CDEFGAHGC
  
 
  After clipping:
       0     .    
         D-FG--
-        | ||  
+{| border=1 class="simple"
+!
+|}
+
         DEFGAH
  
   
@@ -123,37 +137,37 @@ ViewToSource2: 1,2,3,4,5,6,
  
 SourceToView1: -1,0,2,3,6,7,
 SourceToView2: -1,0,1,2,3,4,5,6,7,
-}}}
+</pre>
 
-{{{#!ImportantBox
+<pre>#ImportantBox
 It is important to understand the nature of the clipping information. It virtually shrinks the gap space not physically. That means the information before/after the begin/end of the clipping still exists and the physical gap space remains unchanged. To the outer world it seems the alignment is cropped off irrepealable. But you can expand the alignment again by resetting the clipping information.
-}}}
+</pre>
 
 In the last part of this section we are going to iterate over a seqan:Class.Gaps object. This can be quite useful if one needs to parse the alignment rows to access position specific informations. 
-First we have to define the type of the `iterator`, which can be easily done by using the metafunction seqan:Metafunction.Iterator. Remember, that we iterate over an `TRow` object. Then we have to construct the iterators `it` which points to the begin of `row1` using the seqan:Function.begin function and `itEnd` which points behind the last value of `row1` using the seqan:Function.end function. If you need to refresh the '''Iterator Concept''' you can read the wiki page [wiki:Tutorial/Basics Basics].
-While we iterate over the gapped sequence we can ask if the current value at which the iterator `it` points to is a gap or not by using the function seqan:Function.isGap. Use seqan:Function.gapValue to print the correct gap symbol.
+First we have to define the type of the <tt>iterator</tt>, which can be easily done by using the metafunction seqan:Metafunction.Iterator. Remember, that we iterate over an <tt>TRow</tt> object. Then we have to construct the iterators <tt>it</tt> which points to the begin of <tt>row1</tt> using the seqan:Function.begin function and <tt>itEnd</tt> which points behind the last value of <tt>row1</tt> using the seqan:Function.end function. If you need to refresh the '''Iterator Concept''' you can read the wiki page [[Tutorial/Basics| Basics]].
+While we iterate over the gapped sequence we can ask if the current value at which the iterator <tt>it</tt> points to is a gap or not by using the function seqan:Function.isGap. Use seqan:Function.gapValue to print the correct gap symbol.
 
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/alignments/alignment2_align.cpp, fragment=iteratingRowClipped)]]
 
-We will now reset the clipping of `row1` using seqan.Function.clearClipping and iterate again over it to see its effect.
+We will now reset the clipping of <tt>row1</tt> using seqan.Function.clearClipping and iterate again over it to see its effect.
 
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/alignments/alignment2_align.cpp, fragment=iteratingRowClipped2)]]
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 D-FG--
 CD-FG--DC
-}}}
+</pre>
 
 Here you can see how resetting the clipping positions brings back our complete row.
 
 ==== Assignment 1 ====
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 
  Type :: Application
  Objective :: Extend the following program such that it prints the total count of gaps that exist in the alignment.
-{{{#!cpp
+<pre>#cpp
 #include <iostream>
 #include <seqan/align.h>
 
@@ -182,41 +196,41 @@ int main()
 
 }
 
-}}}
+</pre>
  Hints ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 You can use the function seqan:Function.countGaps to count the number of consecutive gaps starting from the current position of the iterator.
-}}}
+</pre>
  Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/alignments/alignment_align_assignment1.cpp, fragment=solution)]]
 
-}}}
+</pre>
 
-}}}
+</pre>
 
 
-=== AlignmentGraph Data Structure ===
+==== AlignmentGraph Data Structure ====
 
 Another very useful representation of alignments is given by the seqan:"Spec.Alignment Graph". It is a graph in which each vertex corresponds to a sequence segment, and each edge indicates an ungapped alignment between the connected vertices, or more precisely between the sequences stored in those vertices. Here is an example of such a graph:
 
 [[Image(source:tags/seqan-1.4.0/core/demos/tutorial/alignments/alignment_example.png, 500px)]]
 
-Now lets focus on the definition of the type for the AlignmentGraph. The AlignmentGraph is an specialisation of the seqan:Class.Graph class and is defined as `Graph<Alignment<TDepStringSet> >`. We see here one of the key design concepts of SeqAn, namely template deduction, which is explained in the miscellaneous tutorial '''REF'''. We won't go deeper into this topic in this tutorial. Just that much that.
+Now lets focus on the definition of the type for the AlignmentGraph. The AlignmentGraph is an specialisation of the seqan:Class.Graph class and is defined as <tt>Graph<Alignment<TDepStringSet> ></tt>. We see here one of the key design concepts of SeqAn, namely template deduction, which is explained in the miscellaneous tutorial '''REF'''. We won't go deeper into this topic in this tutorial. Just that much that.
 
-The general usage of graphs is explained in the [wiki:Tutorial/Graphs Graphs] section of this tutorial. How to use alignment graphs will be demonstrated in the following subsection, while also introducing the pairwise alignment functions offered by seqan. 
+The general usage of graphs is explained in the [[Tutorial/Graphs| Graphs]] section of this tutorial. How to use alignment graphs will be demonstrated in the following subsection, while also introducing the pairwise alignment functions offered by seqan. 
 
 
-== Pairwise Sequence Alignments ==
+=== Pairwise Sequence Alignments ===
 
-In general a pairwise sequence alignment is an algorithmic way to solve an optimization problem to determine the best transcript of how one sequence could has been transformed into the other. In order to give an optimal solution to this problem they have to evaluate all possible alignments between two sequences and pick the best one. Such a problem has a quadratic runtime as there are `n*m` possible alignments between two sequences of length `n` and `m`. For each cell of this `n*m` matrix the alignment algorithms compute a maximal score using a predefined score scheme.  There have been published many different versions of alignment algorithms. But they all have in common that they compute an optimal score by evaluating a defined subset of cells within the alignment matrix. 
+In general a pairwise sequence alignment is an algorithmic way to solve an optimization problem to determine the best transcript of how one sequence could has been transformed into the other. In order to give an optimal solution to this problem they have to evaluate all possible alignments between two sequences and pick the best one. Such a problem has a quadratic runtime as there are <tt>n*m</tt> possible alignments between two sequences of length <tt>n</tt> and <tt>m</tt>. For each cell of this <tt>n*m</tt> matrix the alignment algorithms compute a maximal score using a predefined score scheme.  There have been published many different versions of alignment algorithms. But they all have in common that they compute an optimal score by evaluating a defined subset of cells within the alignment matrix. 
 In the following we will describe the different score schemes, go over the different alignment versions and show how they can be used to compute pairwise sequence alignments in SeqAn step by step.
 
-=== Scoring Schemes ===
+==== Scoring Schemes ====
 
 Scoring schemes define the score for aligning two characters of a given alphabet and the score for gaps within alignments.
 Given an alignment between two sequences and a scoring scheme, the score of the alignment can be computed as the sum of the scores for aligned character pairs plus the sum of the scores for all gaps.
@@ -227,22 +241,26 @@ Translated into scores instead of costs, misalignments get a score of -1 and gap
 This scoring scheme is the default for seqan:"Spec.Simple Score".
 
 SeqAn offers two kinds of scoring scheme:
-||= seqan:"Spec.Simple Score" =||= Scoring matrices =|| 
-{{{#!td valign=top width=350
-This scoring scheme differentiates between "match" (the two aligned characters are the same), "mismatch" (the two aligned characters are different), and gaps. The score for a gap of length `k` is `gap open + (k - 1) * gap extend`. If `gap open` equals `gap extend` the score scheme uses linear gap costs, otherwise it uses affine gap costs.
+{| border=1 class="simple"
+!= seqan:"Spec.Simple Score" =
+!= Scoring matrices =
+|}
+
+<pre>#td valign=top width=350
+This scoring scheme differentiates between "match" (the two aligned characters are the same), "mismatch" (the two aligned characters are different), and gaps. The score for a gap of length <tt>k</tt> is <tt>gap open + (k - 1) * gap extend</tt>. If <tt>gap open</tt> equals <tt>gap extend</tt> the score scheme uses linear gap costs, otherwise it uses affine gap costs.
 The functions seqan:Function.scoreMatch and seqan:Function.scoreMismatch access values for match and mismatch. The function seqan:Function.scoreGap, or seqan:Function.scoreGapExtend and seqan:Function.scoreGapOpen access values for gaps. 
-}}}
-{{{#!td valign=top width=350
-These scoring schemes store a score value for each pair of characters. This value can be accessed using seqan:Function.score. Examples for this kind of scoring scheme are seqan:Shortcut.Pam120 and seqan:Shortcut.Blosum62. The class seqan:"Spec.Score Matrix" can be used to store arbitrary scoring matrices. Also see the [wiki:HowTo/WorkWithCustomScoreMatrices HowTo on custom scoring matrices].
-}}}
+</pre>
+<pre>#td valign=top width=350
+These scoring schemes store a score value for each pair of characters. This value can be accessed using seqan:Function.score. Examples for this kind of scoring scheme are seqan:Shortcut.Pam120 and seqan:Shortcut.Blosum62. The class seqan:"Spec.Score Matrix" can be used to store arbitrary scoring matrices. Also see the [[HowTo/WorkWithCustomScoreMatrices| HowTo on custom scoring matrices]].
+</pre>
 
-{{{#!InfoBox
-The order of the different costs in the scoring scheme is `match`, `mismatch`, `gap extend` and `gap open`. If you want to use linear gap costs you could also omit the last parameter `gap open` and the scoring scheme would automatically choose the linear gap cost function.
-}}}
+<pre>#InfoBox
+The order of the different costs in the scoring scheme is <tt>match</tt>, <tt>mismatch</tt>, <tt>gap extend</tt> and <tt>gap open</tt>. If you want to use linear gap costs you could also omit the last parameter <tt>gap open</tt> and the scoring scheme would automatically choose the linear gap cost function.
+</pre>
 
-=== Global Alignments===
+==== Global Alignments====
 
-Let's first have a look at global alignments. Afterwards, we continue with computing local alignments and show how we can find the `x` best local alignments. Finally, we demonstrate how the search space can be reduced by using a band.
+Let's first have a look at global alignments. Afterwards, we continue with computing local alignments and show how we can find the <tt>x</tt> best local alignments. Finally, we demonstrate how the search space can be reduced by using a band.
 
 ==== Standard Alignments ====
 
@@ -255,86 +273,95 @@ Before we initialize our objects we define the types that we need for computing 
 
 [[Include(source:tags/seqan-1.4.0/sandbox/rmaerker/demos/tutorials/alignments/tutorial_alignment_global_standard.cpp, fragment=init)]]
 
-We have everything we need to compute our first alignment. To do so, we simply call the function seqan:Function.globalAlignment and give as input parameters the `align` object and the scoring scheme covering the levenshtein distance. The function seqan:Function.globalAlignment returns a score which we store in the `score` variable. Afterwards, we print the computed score and the actual alignment.
+We have everything we need to compute our first alignment. To do so, we simply call the function seqan:Function.globalAlignment and give as input parameters the <tt>align</tt> object and the scoring scheme covering the levenshtein distance. The function seqan:Function.globalAlignment returns a score which we store in the <tt>score</tt> variable. Afterwards, we print the computed score and the actual alignment.
 
 [[Include(source:tags/seqan-1.4.0/sandbox/rmaerker/demos/tutorials/alignments/tutorial_alignment_global_standard.cpp, fragment=alignment)]]
 
 Here the output.
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 Score: 1
       0     .    :    .   
         AAATGACGGA--T--TG
-          | | ||||  |  ||
+{| border=1 class="simple"
+!
+!  /  
+!
+|}
+
         --A-GTCGGATCTACTG
-}}}
+</pre>
 
 ==== Assignment 1 ====
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 
  Type :: Application
- Objective :: Take the above example and compute the same alignment using the Gotoh algorithm. Use the following scoring parameters: `match = 4`, `mismatch = -2`, `gap open = -4` and `gap extend = -2`. 
+ Objective :: Take the above example and compute the same alignment using the Gotoh algorithm. Use the following scoring parameters: <tt>match = 4</tt>, <tt>mismatch = -2</tt>, <tt>gap open = -4</tt> and <tt>gap extend = -2</tt>. 
 
  Hints ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 The Gotoh algorithm uses an affine gap function. In SeqAn you can switch between linear and affine gap functions using the scoring scheme.
-}}}
+</pre>
  Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:tags/seqan-1.4.0/sandbox/rmaerker/demos/tutorials/alignments/tutorial_alignment_global_assignment1.cpp, fragment=completeSolution)]]
-}}}
+</pre>
 
-}}}
+</pre>
 
 ==== Overlap Alignments ====
 
-An overlap alignment does not penalise gaps at the beginning and at the end of the sequences (free initial and end gaps). We use the seqan:Class.AlignConfig object to tell the algorithm which gaps are free. The AlignConfig object takes four explicitly defined bool arguments. The first argument stands for initial gaps in the vertical sequence of the alignment matrix (first row) and the second argument stands for initial gaps in the horizontal sequence (first column). The third parameter stands for end gaps in the horizontal sequence (last column) and the fourth parameter stands for end gaps in the vertical sequence (last row). Per default the arguments of AlignConfig are set to `false` indicating a standard global alignment as you have seen above. In an overlap alignment all arguments are set to `true`. That basically means, that an alignment can start from everywhere in the horizontal or vertical sequence and also can end everywhere in the horizontal or vertical sequence of the alignment matrix. In the standard global alignment we required the alignment to begin in the upper left corner of the matrix and end in the lower right corner. 
+An overlap alignment does not penalise gaps at the beginning and at the end of the sequences (free initial and end gaps). We use the seqan:Class.AlignConfig object to tell the algorithm which gaps are free. The AlignConfig object takes four explicitly defined bool arguments. The first argument stands for initial gaps in the vertical sequence of the alignment matrix (first row) and the second argument stands for initial gaps in the horizontal sequence (first column). The third parameter stands for end gaps in the horizontal sequence (last column) and the fourth parameter stands for end gaps in the vertical sequence (last row). Per default the arguments of AlignConfig are set to <tt>false</tt> indicating a standard global alignment as you have seen above. In an overlap alignment all arguments are set to <tt>true</tt>. That basically means, that an alignment can start from everywhere in the horizontal or vertical sequence and also can end everywhere in the horizontal or vertical sequence of the alignment matrix. In the standard global alignment we required the alignment to begin in the upper left corner of the matrix and end in the lower right corner. 
 
 Just let us compute an overlap alignment to see how it works. We will also make use of the seqan:"Spec.Alignment Graph" to store the alignment. We start again with including the necessary headers and defining all types that we need. Note, that we have to define two seqan:"Class.StringSet" types. The first one is the StringSet in which we actually put our two input sequences. The second one is a StringSet internally used by the AlignmentGraph and it has to be a seqan:Spec.Dependent StringSet.
 
 [[Include(source:tags/seqan-1.4.0/sandbox/rmaerker/demos/tutorials/alignments/tutorial_alignment_global_overlap.cpp, fragment=main)]]
 
-Before we can initialise the AlignmentGraph we append the input sequences to the StringSet `strings`. Then we simply pass `strings` as an argument to the constructor of the AlignmentGraph `alignG`. 
+Before we can initialise the AlignmentGraph we append the input sequences to the StringSet <tt>strings</tt>. Then we simply pass <tt>strings</tt> as an argument to the constructor of the AlignmentGraph <tt>alignG</tt>. 
 
 [[Include(source:tags/seqan-1.4.0/sandbox/rmaerker/demos/tutorials/alignments/tutorial_alignment_global_overlap.cpp, fragment=init)]]
 
-Now we are ready to compute the alignment. This time we change two things when calling the `globalAlignment` function. First, we use an AlignmentGraph to store the computed alignment and second we use the AlignConfig object to compute the overlap alignment.
+Now we are ready to compute the alignment. This time we change two things when calling the <tt>globalAlignment</tt> function. First, we use an AlignmentGraph to store the computed alignment and second we use the AlignConfig object to compute the overlap alignment.
 
 [[Include(source:tags/seqan-1.4.0/sandbox/rmaerker/demos/tutorials/alignments/tutorial_alignment_global_overlap.cpp, fragment=alignment)]]
 
 Here the output.
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 Score: 4
 Alignment matrix:
       0     .    :    .    
         AAATGACGGAT-TG----
-          | | ||||| |     
+{| border=1 class="simple"
+!
+!/ |
+|}
+
         --A-GTCGGATCT-ACTG
-}}}
+</pre>
 
 ==== Assignment 2 ====
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 
  Type :: Application
  Objective :: Take the example from above and modify it such that it computes a semi-global alignment between the two sequences. 
 
  Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:tags/seqan-1.4.0/sandbox/rmaerker/demos/tutorials/alignments/tutorial_alignment_global_assignment2.cpp, fragment=completeSolution)]]
-}}}
+</pre>
 
-}}}
+</pre>
 
 ==== Specialised Alignments ====
 
@@ -346,29 +373,33 @@ First the necessary includes and typedefs:
 
 [[Include(source:tags/seqan-1.4.0/sandbox/rmaerker/demos/tutorials/alignments/tutorial_alignment_global_specialised.cpp, fragment=main)]]
 
-Now a global alignment is computed using the function seqan:Function.globalAlignment. The scoring parameters are handed to this function via a seqan:Class.Score object. The tag `Hirschberg` makes sure the desired algorithm is used (for an overview of available alignment algorithms see seqan:"Tag.Global Alignment Algorithms"). The resulting alignment and score are then printed.
+Now a global alignment is computed using the function seqan:Function.globalAlignment. The scoring parameters are handed to this function via a seqan:Class.Score object. The tag <tt>Hirschberg</tt> makes sure the desired algorithm is used (for an overview of available alignment algorithms see seqan:"Tag.Global Alignment Algorithms"). The resulting alignment and score are then printed.
 
 [[Include(source:tags/seqan-1.4.0/sandbox/rmaerker/demos/tutorials/alignments/tutorial_alignment_global_specialised.cpp, fragment=alignment)]]
 
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/alignments/alignment_pairwise_global2.cpp, fragment=init2)]]
 
-Now let's make use of the seqan:"Spec.Alignment Graph" for the first time. The alignment graph needs to be initialized on a seqan:Class.StringSet, so we first create the object `sequences` and append our sequences of type `TSequence`. The first template argument of the AlignmentGraph is {{{StringSet<TSequence, Dependent<> >}}}. We use the tag seqan:Spec.Dependent so that the sequences are not copied to the graph but only a reference to the original {{{StringSet}}} is held.
+Now let's make use of the seqan:"Spec.Alignment Graph" for the first time. The alignment graph needs to be initialized on a seqan:Class.StringSet, so we first create the object <tt>sequences</tt> and append our sequences of type <tt>TSequence</tt>. The first template argument of the AlignmentGraph is <tt>StringSet<TSequence, Dependent<> ></tt>. We use the tag seqan:Spec.Dependent so that the sequences are not copied to the graph but only a reference to the original <tt>StringSet</tt> is held.
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/alignments/alignment_pairwise_global2.cpp, fragment=typedef2)]]
 
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/alignments/alignment_pairwise_global2.cpp, fragment=init2)]]
 
-The function seqan:Function.globalAlignment computes the global alignment, this time with the Needleman-Wunsch algorithm as specified by the tag `NeedlemanWunsch`.
+The function seqan:Function.globalAlignment computes the global alignment, this time with the Needleman-Wunsch algorithm as specified by the tag <tt>NeedlemanWunsch</tt>.
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/alignments/alignment_pairwise_global2.cpp, fragment=alignment2)]]
 
 
 And here is the output of our three alignments:
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 Score = 4
       0     .
         CD-FG-HC
-        || || ||
+{| border=1 class="simple"
+! 
+! 
+|}
+
         CDEFGAHC
 
 
@@ -376,22 +407,26 @@ Score = 4
 Alignment matrix:
       0     .
         CD-FG-HC
-        || || ||
+{| border=1 class="simple"
+! 
+! 
+|}
+
         CDEFGAHC
-}}}
+</pre>
 
   
 ==== Assignments ====
  ''Task 1'' :: Write a program that computes a global alignment of the DNA sequences "acgtacgtact" and "actactacgt" using the Align data structure. Iterate through the rows of the aligment and for each row output the view positions of the gaps.
  ''Hint'' :: Use the function seqan:Function.isGap.
- ''Solution'' :: [wiki:Tutorial/Alignments/AssignmentPairwiseGlobalAlignment1 can be found here]
+ ''Solution'' :: [[Tutorial/Alignments/AssignmentPairwiseGlobalAlignment1| can be found here]]
   ''Task 2'' :: Compute a semi-global alignment of the sequences "blablablu" and "abab" using edit distance and an alignment algorithm of your choice. Print distance and alignment.  
   ''Hint'' :: When using the seqan:"Spec.Alignment Graph" data structure, one can compute more sophisticated alignments, so called end-space free alignments. These alignments can be computed by using the regular global alignment algorithms, but initializing the DP matrix with zeros in the first row and/or column, and/or by searching for the best score in the last row and/or column. This can be achieved by using an seqan:Class.AlignConfig object that specifies which end spaces are free from penalty. 
- ''Solution'' :: [wiki:Tutorial/Alignments/AssignmentPairwiseGlobalAlignment2 can be found here]
+ ''Solution'' :: [[Tutorial/Alignments/AssignmentPairwiseGlobalAlignment2| can be found here]]
 
 
 
-=== Local Alignments ===
+==== Local Alignments ====
 
 Now let's look at local pairwise alignments.
 
@@ -412,31 +447,39 @@ Next, several local alignments of the two given DNA sequences are going to be co
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/alignments/alignment_pairwise_local.cpp, fragment=init2)]]
 
 
-A seqan:Class.LocalAlignmentFinder object needs to be initialized on the seqan:Class.Align object. In addition to the Align object and the scoring scheme, we now also pass the `finder` and a minimal score value, 4 in this case, to the localAlignment function. The `WatermanEggert` tag specifies the desired Waterman-Eggert algorithm. While the score of the local alignment satisfies the minimal score cutoff, the alignments are printed with their scores and the subsequence begin and end positions.
+A seqan:Class.LocalAlignmentFinder object needs to be initialized on the seqan:Class.Align object. In addition to the Align object and the scoring scheme, we now also pass the <tt>finder</tt> and a minimal score value, 4 in this case, to the localAlignment function. The <tt>WatermanEggert</tt> tag specifies the desired Waterman-Eggert algorithm. While the score of the local alignment satisfies the minimal score cutoff, the alignments are printed with their scores and the subsequence begin and end positions.
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/alignments/alignment_pairwise_local.cpp, fragment=ali2)]]
 
 Here is the output of the first part of our example program:
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 Score = 19
       0     .    :
         a-philolog
-        | ||| ||||
+{| border=1 class="simple"
+!/ 
+!
+!
+|}
+
         amphibolog
 
 
 Aligns Seq1[0:8] and Seq2[7:16]
-}}}
+</pre>
 
 The second part outputs two alignments:
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 Score = 9
       0     .
         ATAAGCGT
-        ||| | ||
+{| border=1 class="simple"
+!/ | 
+|}
+
         ATA-GAGT
 
 
@@ -445,63 +488,86 @@ Aligns Seq1[0:7] and Seq2[2:8]
 Score = 5
       0     .
         TC-TCG
-        || | |
+{| border=1 class="simple"
+! / |
+|}
+
         TCATAG
 
 
 Aligns Seq1[7:11] and Seq2[0:5]
-}}}
+</pre>
 
 ==== Assignments ====
   ''Task 3'' ::  Write a program which computes the 3 best local alignments of the two seqan:Spec.AminoAcid sequences "PNCFDAKQRTASRPL" and "CFDKQKNNRTATRDTA" using the following scoring parameters: match = 3, mismatch = -2, gapopen = -5, gapextension = -1. 
- ''Solution'':: [wiki:Tutorial/Alignments/AssignmentPairwiseLocalAlignment1 can be found here]
+ ''Solution'':: [[Tutorial/Alignments/AssignmentPairwiseLocalAlignment1| can be found here]]
 
-=== Banded Alignments ===
+==== Banded Alignments ====
 
-== Multiple Sequence Alignments ==
+=== Multiple Sequence Alignments ===
 
-Apart from pairwise alignments, also multiple sequence alignments can be computed in SeqAn. The easiest way to do this is by using the function seqan:Function.globalMsaAlignment. This function computes a heuristic alignment based on a consistency-based progressive alignment strategy as described in [http://bioinformatics.oxfordjournals.org/cgi/content/abstract/24/16/i187  Seqan::TCoffee] paper. 
+Apart from pairwise alignments, also multiple sequence alignments can be computed in SeqAn. The easiest way to do this is by using the function seqan:Function.globalMsaAlignment. This function computes a heuristic alignment based on a consistency-based progressive alignment strategy as described in [http://bioinformatics.oxfordjournals.org/cgi/content/abstract/24/16/i187 Seqan::TCoffee] paper. 
 
 In the following example, we align four amino acid sequences using the seqan:"Spec.Alignment Graph" data structure and the [seqan:"Spec.Score Matrix" Blosum62] scoring matrix with gap extension penalty -11 and gap open penalty -1.
-The required header for multiple sequence alignments is {{{seqan/graph_msa.h}}}.
+The required header for multiple sequence alignments is <tt>seqan/graph_msa.h</tt>.
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/alignments/alignment_msa.cpp, fragment=main)]]
 
-First, the sequence type {{{TSequence}}} is defined and a seqan:Class.StringSet is declared. The four sequences to be aligned are appended to the StringSet {{{seq}}}.
+First, the sequence type <tt>TSequence</tt> is defined and a seqan:Class.StringSet is declared. The four sequences to be aligned are appended to the StringSet <tt>seq</tt>.
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/alignments/alignment_msa.cpp, fragment=init)]]
 
 Now we initialize our seqan:"Spec.Alignment Graph" with the sequences. The graph and the [seqan:"Spec.Score Matrix" Blosum62] scoring matrix are handed to the function seqan:Function.globalMsaAlignment which computes the desired alignment.
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/alignments/alignment_msa.cpp, fragment=alignment)]]
 
 And here is the output of this example program:
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 Alignment matrix:
       0     .    :    .    :    .    :    .    :    .    :
         DPKKPRGKMSSYAFFVQTSREEHKKKHPDASVNFSEFSKKCSERWKTMSA
-          | |   |          |       |      || ||     ||
+{| border=1 class="simple"
+! 
+!     
+!
+|}
+
         RVKRP---MNAFIVWSRDQRRKMALENP--RMRNSEISKQLGYQWKMLTE
           | |              | | |   |   | |    | |    | | |
         FPKKP---LTPYFRFFMEKRAKYAKLHP--EMSNLDLTKILSKKYKELPE
-          |||   |        | ||                  ||      |
+{| border=1 class="simple"
+!/   |        | 
+!                  
+!      /
+|}
+
         HIKKP---LNAFMLYMKEMRANVVAEST--LKESAAINQILGRRWHALSR
 
      50     .    :    .    :    .    :    .    :
         KEKGKFEDMAKADKARYEREMKTY----------IPPKGE
-         ||  |   |    |        |
+{| border=1 class="simple"
+!  /   |    |        |
+|}
+
         AEKWPFFQEAQKLQAMHREKYPNYKYRP---RRKAKMLPK
           |    |  |                            |
         KKKMKYIQDFQREKQEFERNLARFREDH---PDLIQNAKK
-            ||      | |                        |
+{| border=1 class="simple"
+!      / |                        |
+|}
+
         EEQAKYYELARKERQLHMQLYPGWSARDNYGKKKKRKREK
-}}}
+</pre>
 
 ==== Assignments ====
   ''Task 4'' ::  Repeat the above example using the Align data structure and the Blosum80 scoring matrix.  
-  ''Solution'' :: [wiki:Tutorial/Alignments/AssignmentMultipleAlignment1 can be found here]
+  ''Solution'' :: [[Tutorial/Alignments/AssignmentMultipleAlignment1| can be found here]]
 
-=== Submit a  comment ===
+==== Submit a  comment ====
 If you found a mistake, or have suggestions about an improvement of this page press:
 [/newticket?component=Documentation&description=Tutorial+Enhancement+for+page+http://trac.seqan.de/wiki/Tutorial/Alignments&type=enhancement submit your comment]
 
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

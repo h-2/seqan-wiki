@@ -1,5 +1,6 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
-= SAM and BAM I/O =
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[Tutorial]] if you need the documentation for the trunk version.'''
+== SAM and BAM I/O ==
 [[TOC()]]
 
  Learning Objective ::
@@ -9,11 +10,11 @@
  Duration ::
   20 min
  Prerequisites ::
-  Tutorial [wiki:Tutorial/BasicSamBamIO Basic SAM and BAM I/O],
-  Tutorial [wiki:Tutorial/InputOutputOverview Input / Output Overview],
+  Tutorial [[Tutorial/BasicSamBamIO| Basic SAM and BAM I/O]],
+  Tutorial [[Tutorial/InputOutputOverview| Input / Output Overview]],
   Exposure to the SAM/BAM Format.
 
-After reading the [wiki:Tutorial/BasicSamBamIO Basic SAM and BAM I/O] tutorial, you should have a good understanding of the representation of SAM/BAM records in SeqAn library.
+After reading the [[Tutorial/BasicSamBamIO| Basic SAM and BAM I/O]] tutorial, you should have a good understanding of the representation of SAM/BAM records in SeqAn library.
 This tutorial will explain how the lower-level implementation of SAM and BAM I/O works and which design decisions lead to this.
 You will also learn about the classes seqan:Class.BamIOContext and seqan:Class.NameStoreCache.
 This article also explains how to write template-based code that can read both SAM files from [seqan:Class.RecordReader RecordReaders] and BAM files from compressed streams.
@@ -22,16 +23,16 @@ Furthermore, you will learn how to use BAI indices for jumping in BAM files.
 This tutorial will mostly work by showing full source code examples and explaining them.
 Do not feel intimidated by its length, it is inflated by the amount of embedded source code.
 
-The usage of SAM and BAM tags is explained in the [wiki:Tutorial/BasicSamBamIO Basic SAM and BAM I/O] tutorial and will not be discussed here further.
+The usage of SAM and BAM tags is explained in the [[Tutorial/BasicSamBamIO| Basic SAM and BAM I/O]] tutorial and will not be discussed here further.
 
-{{{#!ImportantBox
+<pre>#ImportantBox
 Note that this tutorial is targeted at readers that already know about the SAM format.
 If you do not know about the SAM format yet then this tutorial will be harder for your to understand.
 Teaching the ins and outs of SAM is out of the scope of such a tutorial.
-}}}
+</pre>
 
-{{{#!comment
-{{{#!WarningBox
+<pre>#comment
+<pre>#WarningBox
 '''Caution''':
 This tutorial and the described library contents are currently in '''beta state'''.
 They might change in the future.
@@ -39,23 +40,23 @@ In this case, notice will be given.
 
 TODO
 
- * Better name than lower-level interface?
-}}}
-}}}
+*Better name than lower-level interface?
+</pre>
+</pre>
 
-== `BamAlignmentRecord` Design Overview ==
+=== <tt>BamAlignmentRecord</tt> Design Overview ===
 
 Besides the fact that BAM is a compressed, binary format, the main difference to the plain-text format SAM is that BAM has additional header information:
 The binary header of BAM files contains a plain-text SAM header with the same information as a SAM file.
 However, BAM files contain an additional binary header section that stores all reference sequence names and their length.
 
-This is equivalent to the `@SQ` entries in a SAM header but the `@SQ` entries are optional in both SAM and the SAM header in a BAM file.
-Also, the `@SQ` entries in the SAM header of a BAM file can be out of sync with the binary reference information entries.
+This is equivalent to the <tt>@SQ</tt> entries in a SAM header but the <tt>@SQ</tt> entries are optional in both SAM and the SAM header in a BAM file.
+Also, the <tt>@SQ</tt> entries in the SAM header of a BAM file can be out of sync with the binary reference information entries.
 The authorative source for this information (most prominently the names and the order of the reference sequences).
-BAM records then only contain an integer `rId` for each reference that referes to the `rId`-th reference sequence in the binary header.
+BAM records then only contain an integer <tt>rId</tt> for each reference that referes to the <tt>rId</tt>-th reference sequence in the binary header.
 
 Because SAM and BAM files store the same information, there is only one record type to store it in SeqAn.
-The record type is the class seqan:Class.BamAlignmentRecord that was already introduced in the [wiki:Tutorial/BasicSamBamIO Basic SAM and BAM I/O] tutorial.
+The record type is the class seqan:Class.BamAlignmentRecord that was already introduced in the [[Tutorial/BasicSamBamIO| Basic SAM and BAM I/O]] tutorial.
 The structure of this class is designed after the BAM file so conversion from the BAM file on disk to the in-memory representation is fast.
 For example, the tags are stored as a binary string, the same as in a BAM file.
 When reading SAM, the tags are converted into the BAM representation whereas BAM tags can be copied verbatim.
@@ -64,7 +65,7 @@ The qualities are stored using a phred-style ASCII encoding for consistencies wi
 
 As a reminder, here is the synopsis of the seqan:Class.BamAlignmentRecord class again.
 
-{{{#!cpp
+<pre>#cpp
 namespace seqan {
 
 class BamAlignmentRecord
@@ -85,76 +86,76 @@ public:
     CharString tags;                // Tags, raw as in BAM.
 
     // Constants for marking pos, reference id and length members invalid (== *).
-    static __int32 const INVALID_POS = MaxValue<__int32>::VALUE;
+    static <u>int32 const INVALID_POS = MaxValue<</u>int32>::VALUE;
     static __int32 const INVALID_REFID = -1;
-    static __int32 const INVALID_LEN = MaxValue<__int32>::VALUE;
+    static <u>int32 const INVALID_LEN = MaxValue<</u>int32>::VALUE;
 };
 
 }  // namespace seqan
-}}}
+</pre>
 
-== Name Stores and Name Store Caches ==
+=== Name Stores and Name Store Caches ===
 
-In order to translate from numeric reference id (`rId`) to text reference sequence name, the names have to be stored in a seqan:Class.StringSet which we will call a '''name store'''.
+In order to translate from numeric reference id (<tt>rId</tt>) to text reference sequence name, the names have to be stored in a seqan:Class.StringSet which we will call a '''name store'''.
 For being able to translate back from a textual name (stored as a seqan:Shortcut.CharString, for example), we need a seqan:Class.NameStoreCache that allows the fast lookup of numeric ids from textual names.
 Both the name store and the cache are then wrapped by a seqan:Class.BamIOContext.
 This context object is used when reading and writing to abstrahize away the differences of SAM and BAM files when reading and writing.
 
 For example, when writing out a seqan:Class.BamAlignmentRecord to a SAM file, we need to look up the name of the reference from its numeric id to write it out as a string.
 When reading a record from a SAM file, we have to translate its name string into a numeric id.
-Even more, if the sequence is not know yet (remember, the `@SQ` headers are optional), we have to append it to the name store and register it with the cache.
+Even more, if the sequence is not know yet (remember, the <tt>@SQ</tt> headers are optional), we have to append it to the name store and register it with the cache.
 
 Here is a minimal example of setting up a name store, name store cache, and a seqan:Class.BamIOContext:
 We will build upon this example below when showing how to read and write SAM and BAM files.
 
 [[Include(source:/trunk/extras/demos/tutorial/bam_io/example1.cpp)]]
 
-== BGZF Files / Stream ==
+=== BGZF Files / Stream ===
 
 By default, the BAM format is compressed using the BGZF compression scheme (originating from [http://samtools.sourceforge.net/swlist.shtml Tabix], but also described in the [http://samtools.sourceforge.net/SAM1.pdf SAM standard]).
-You can read BGZF files with tools for processing `.gz` files, e.g. `gzip` and `zcat`.
+You can read BGZF files with tools for processing <tt>.gz</tt> files, e.g. <tt>gzip</tt> and <tt>zcat</tt>.
 
-However, there is a big difference between files written in BGZF and `.gz` files:
+However, there is a big difference between files written in BGZF and <tt>.gz</tt> files:
 BGZF is a sequence of compressed blocks.
 If the offset of a block is known, it can be decompressed independent of the rest of the file.
 This information can then be used together with indices.
 
-SeqAn provides the seqan:"Spec.BGZF Stream" class in the module `<seqan/stream.h>` to access such streams.
+SeqAn provides the seqan:"Spec.BGZF Stream" class in the module <tt><seqan/stream.h></tt> to access such streams.
 Here is an example for using a seqan:"Spec.BGZF Stream" for reading:
 
 [[Include(source:/trunk/extras/demos/tutorial/bam_io/example2.cpp)]]
 
-{{{#!cpp
+<pre>#cpp
 #include <seqan/stream.h>
 
 int main()
 {
     seqan::Stream<seqan::Bgzf> stream;
-    if (!open(stream, "filename.bam", "r"))
+    if (open(stream, "filename.bam", "r"))
         return 1;  // Could not open for reading.
     
     return 0;
 }
-}}}
+</pre>
 
 Using a seqan:"Spec.BGZF Stream" for writing:
 
 [[Include(source:/trunk/extras/demos/tutorial/bam_io/example3.cpp)]]
 
-{{{#!cpp
+<pre>#cpp
 #include <seqan/stream.h>
 
 int main()
 {
     seqan::Stream<seqan::Bgzf> stream;
-    if (!open(stream, "filename.bam", "w"))
+    if (open(stream, "filename.bam", "w"))
         return 1;  // Could not open for writing.
     
     return 0;
 }
-}}}
+</pre>
 
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 '''Assignment 1:''' Uncompressing a BGZF file.
  Type ::
   Review
@@ -165,15 +166,15 @@ int main()
  Solution ::
   Click ''more...'' to see the solution.
 
-{{{#!FoldOut
+<pre>#FoldOut
 ----
 [[Include(source:/trunk/extras/demos/tutorial/bam_io/solution1.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
-== Reading and Writing Headers ==
+=== Reading and Writing Headers ===
 
-The data structure seqan:Class.BamHeader has already been described in [wiki:Tutorial/BasicSamBamIO Basic SAM and BAM I/O] so we will not repeat that here.
+The data structure seqan:Class.BamHeader has already been described in [[Tutorial/BasicSamBamIO| Basic SAM and BAM I/O]] so we will not repeat that here.
 Instead, we will focus on how to read headers from SAM and BAM files.
 
 Here is a minimal example of reading and writing a header from and to a SAM file.
@@ -182,41 +183,41 @@ The example contains the creation of a seqan:Class.BamIOContext, the necessary s
 [[Include(source:/trunk/extras/demos/tutorial/bam_io/example4.cpp)]]
 
 Reading and writing headers from and to BAM files is simple.
-We simply replace `seqan::Sam()` by `seqan::Bam()` and use seqan:"Spec.BGZF Stream" objects instead of uncompressed streams.
+We simply replace <tt>seqan::Sam()</tt> by <tt>seqan::Bam()</tt> and use seqan:"Spec.BGZF Stream" objects instead of uncompressed streams.
 Also, we do not need a seqan:Class.RecordReader any more.
 
 [[Include(source:/trunk/extras/demos/tutorial/bam_io/example5.cpp)]]
 
-Note that except for the types, the signatures of the functions `readRecord()` and `write()` are the same.
-Thus, we can make copying of the header a template function `copyHeader()`.
+Note that except for the types, the signatures of the functions <tt>readRecord()</tt> and <tt>write()</tt> are the same.
+Thus, we can make copying of the header a template function <tt>copyHeader()</tt>.
 This function can now be used for both BAM and SAM.
 
 [[Include(source:/trunk/extras/demos/tutorial/bam_io/example6.cpp)]]
 
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 '''Assignment 2:''' Converting BAM header to SAM.
  Type ::
   Application
  Objective ::
-  Write a program that reads the header from a BAM file and writes it out as a SAM header to `std::cout`.
+  Write a program that reads the header from a BAM file and writes it out as a SAM header to <tt>std::cout</tt>.
  Solution ::
   Click ''more...'' to see the solution.
 
-{{{#!FoldOut
+<pre>#FoldOut
 ----
 [[Include(source:/trunk/extras/demos/tutorial/bam_io/solution2.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
-== Reading and Writing Alignment Records ==
+=== Reading and Writing Alignment Records ===
 
 [seqan:Class.BamAlignmentRecord BamAlignmentRecords] can be read and written the same way as seqan:Class.BamHeader objects.
 Here is an example for reading and writing of alignment records from SAM and to files:
 
-{{{#!cpp
+<pre>#cpp
 // Copy over records.
 seqan::BamAlignmentRecord record;
-while (!atEnd(reader))
+while (atEnd(reader))
 {
     if (readRecord(record, context, reader, seqan::Sam()) != 0)
     {
@@ -230,19 +231,19 @@ while (!atEnd(reader))
         return 1;
     }
 }
-}}}
+</pre>
 
 And here is the modified version for the BAM format.
 The only changes are that
 
- * we do not read from a seqan:Class.RecordReader but a seqan:"Spec.BGZF Stream" instead,
- * we need to write to a seqan:"Spec.BGZF Stream", and
- * we need to use the tag `seqan::Bam()` instead of `seqan::Sam()`.
+*we do not read from a seqan:Class.RecordReader but a seqan:"Spec.BGZF Stream" instead,
+*we need to write to a seqan:"Spec.BGZF Stream", and
+*we need to use the tag <tt>seqan::Bam()</tt> instead of <tt>seqan::Sam()</tt>.
 
-{{{#!cpp
+<pre>#cpp
 // Copy over records.
 seqan::BamAlignmentRecord record;
-while (!atEnd(reader))
+while (atEnd(reader))
 {
     if (readRecord(record, context, inStream, seqan::Bam()) != 0)
     {
@@ -256,9 +257,9 @@ while (!atEnd(reader))
         return 1;
     }
 }
-}}}
+</pre>
 
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 '''Assignment 3:''' Converting whole BAM files to SAM.
  Type ::
   Application
@@ -267,16 +268,16 @@ while (!atEnd(reader))
  Solution ::
   Click ''more...'' to see the solution.
 
-{{{#!FoldOut
+<pre>#FoldOut
 ----
 [[Include(source:/trunk/extras/demos/tutorial/bam_io/solution3.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
-== Using Indices ==
+=== Using Indices ===
 
-SeqAn also contains support for reading BAM indices with the format `.bai`.
-These indices can be built using the `samtools index` command.
+SeqAn also contains support for reading BAM indices with the format <tt>.bai</tt>.
+These indices can be built using the <tt>samtools index</tt> command.
 
 You can read such indices into a seqan:"Spec.BAI BamIndex" object with the function seqan:"Function.BamIndex#read".
 Then, you can use the function seqan:"Function.BamIndex#jumpToRegion" to jump within BAM files.
@@ -288,12 +289,16 @@ This would lead to this record being lost.
 
 [[Include(source:/trunk/extras/demos/tutorial/bam_io/example7.cpp)]]
 
-== Next Steps ==
+=== Next Steps ===
 
- * Read the [http://samtools.sourceforge.net/SAM1.pdf SAM Specification (pdf)].
- * Continue with the [wiki:Tutorial rest of the tutorials].
+*Read the [http://samtools.sourceforge.net/SAM1.pdf SAM Specification (pdf)].
+*Continue with the [[Tutorial| rest of the tutorials]].
 
-== Submit a  Comment ==
+=== Submit a  Comment ===
 
 If you found a mistake, or have suggestions about an improvement of this page press:
 [/newticket?component=Documentation&description=Tutorial+Enhancement+for+page+http://trac.seqan.de/wiki/Tutorial/BasicSamBamIO&type=enhancement submit your comment]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

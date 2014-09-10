@@ -1,5 +1,6 @@
-{{{
-#!html
+
+<pre>
+#html
 <!-- NOTE: Yes, using HTML directly is strongly discouraged, but OK for positioning
      things in such tables. -->
 <table class="teaser" style="background:#f6f6f6; padding-top:10px; margin-bottom:10px; width:960px;"><tr>  <!-- FIRST ROW -->
@@ -62,32 +63,36 @@
 </td>
 <td style="padding-right:15px; width:320px;"></td>
 </tr><table><!-- END OF TABLE -->
-}}}
+</pre>
 
-= Welcome To The SeqAn Trac Site =
+== Welcome To The SeqAn Trac Site ==
 
 SeqAn in the C++ library for sequence analysis.
 This is our Trac website that complements the [http://www.seqan.de SeqAn homepage] with a Wiki and [/report/3 tickets for bugs and issues].
 
  Are you looking for the Tutorial? ::
-   Take our '''[wiki:Tutorial]''' and learn more about SeqAn, for example [wiki:Tutorial/GettingStarted get started with SeqAn!]
+   Take our '''[[Tutorial]]''' and learn more about SeqAn, for example [[Tutorial/GettingStarted| get started with SeqAn!]]
  Are you looking for API documentation? ::
    Follow the links to our [http://docs.seqan.de/seqan/1.3/ release documentation] and the [http://docs.seqan.de/seqan/dev/ nightly developer documentation].
  Are you looking for How-Tos? ::
-   Take a look at [wiki:HowTo the list of How-Tos].
+   Take a look at [[HowTo| the list of How-Tos]].
    How-Tos are short, on-hands explanations addressing one particular issue.
  Have you found a bug? ::
    Have a look at the [/report/3 tickets/known issues] or [/newticket create a new ticket].
-   Also have a look at [wiki:SeqanPecularities pecularities of SeqAn] if you see weird behaviour.
+   Also have a look at [[SeqanPecularities| pecularities of SeqAn]] if you see weird behaviour.
  Do you have a question or proposal you want to tell us about? ::
    Subscribe to our [https://lists.fu-berlin.de/listinfo/seqan-dev#subscribe mailing list] and read the [https://lists.fu-berlin.de/pipermail/seqan-dev/ archives].
 
-Are you a SeqAn Developer? [wiki:WikiStartDev Here is your wiki front page].
+Are you a SeqAn Developer? [[WikiStartDev| Here is your wiki front page]].
 
 The Trac bug tracker allows you to watch the list of current changes in the [/timeline Timeline], [/browser/trunk browse the source code], [/report/3 view tickets], and [/newticket create tickets].
 
-{{{
-#!div style="!important; font-size:75%; margin-top:20px; color:#aaa;" class=""
+<pre>
+#div style="important; font-size:75%; margin-top:20px; color:#aaa;" class=""
 The icons used at the top of the page (except for the trac logo) are from the Tango project and are in the Public Domain.
 The Trac logo is published under the BSD License.
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

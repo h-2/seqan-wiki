@@ -1,79 +1,84 @@
-= New Features =
+
+== New Features ==
 
 After Release 1.3, we will collect all changes in a CHANGELOG file in the repository with each commit that contains the changes.
 However, before that we will collect a list here.
 
-== Headlines: ==
+=== Headlines: ===
 
- * Functionality
-  * New full sensitivity local aligner '''stellar''' (Blast speed for genome sized data) 
-  * New split read mapper '''splazers'''
-  * New journaled string data structure
-  * New random function generator
-  * Completely refurbished ''score'' module.
-  * New fragment store for 2nd generation sequencing:
-     * Represents multi-read alignments and genome annotations
-     * Supports SAM, Amos, GFF, GTF, UCSC Genome Browser formats
-     * Can be displayed as a visual SVG file 
-  * New read simulator '''mason'''
- * Development support
-  * New test system. Templates for applications and tests are available.
-  * Harmonized naming conventions.
- * Documentation and Distribution
-  * Added a new WIKI based tutorial
-  * The documentation can now be built in less than one minute.
- * Changed license to 3-clause BSD license.
- * Nightly documentation builds can be found at www.seqan.de/dddoc/html_devel/
- * Current changes in the trunk can now be found in the file [source:/trunk/seqan/projects/library/CHANGELOG projects/library/CHANGELOG] and on the wiki at ChangeLog.
+*Functionality
+**New full sensitivity local aligner '''stellar''' (Blast speed for genome sized data) 
+**New split read mapper '''splazers'''
+**New journaled string data structure
+**New random function generator
+**Completely refurbished ''score'' module.
+**New fragment store for 2nd generation sequencing:
+***Represents multi-read alignments and genome annotations
+***Supports SAM, Amos, GFF, GTF, UCSC Genome Browser formats
+***Can be displayed as a visual SVG file 
+**New read simulator '''mason'''
+*Development support
+**New test system. Templates for applications and tests are available.
+**Harmonized naming conventions.
+*Documentation and Distribution
+**Added a new WIKI based tutorial
+**The documentation can now be built in less than one minute.
+*Changed license to 3-clause BSD license.
+*Nightly documentation builds can be found at www.seqan.de/dddoc/html_devel/
+*Current changes in the trunk can now be found in the file [source:/trunk/seqan/projects/library/CHANGELOG projects/library/CHANGELOG] and on the wiki at ChangeLog.
 
-== Changelog == 
+=== Changelog === 
 
- * Various identifier have been renamed ([wiki:Retreat2010/Renaming#Identifiers list of renamed identifiers]).
- * SeqAn is now built nightly and errors are reported to our [http://www.seqan.de/cdash/index.php?project=SeqAn CDash Dashboard].
- * We dropped Support for Visual Studio 7, GCC 3.x and added support for LLVM and more current Visual Studio and GCC versions. The full list now is:
-  *  On Windows: Visual Studio 8, Visual Studio 9, and Visual Studio 10, MinGW
-  *  On Mac Os X and Linux: GCC 4.1-4.5 as well as the current LLVM trunk version.
- * Experimental ''seeds2'' module replacing module ''seeds'' in the future.
- * Overhauled test system.
- * Documentation building is much faster now.
- * Added journaled string feature in module ''string_journaled''.
- * Added swiss army knife ('''sak''') tool for slicing and dicing DNA files (FASTA, FASTQ).
- * Added RNA alphabet
- * Implemented local version of the SWIFT filter additionally to semi-global version (index/find_swift.h).
- * Added banded local alignment
- * Fixed assignments between infixes and suffixes (#320).
- * Patterns provide a copy constructor now (#318).
- * Fixed `StringSet` documentation: Default specialization (#275).
- * Fixed problem in suffix array implementation with max repeat calculation (#61).
- * Fixed `_MakeSigned` metafunction to work with `unsigned long long`.
- * Changing Infix Segment constructor to construct an infix of the whole string if no begin and end positions are given (#288).
- * Listing headers to include for each symbol in the documentation (#25).
- * Added much more documentation, fixing some issues (#326, #330).
- * Documentation works now correctly in Opera.
- * Fixed bug of `insertValue` with `String` of `CharString`s (#273).
- * `ModifiedString`s can now be appended to `std::string` objects (#251).
- * Implementing `std::swap` for `StringSet` and `String` (#296).
- * Fixing bug in `assignSource` and `globalAlignment`.
- * Fixing issue with missing `needle` in `MyersUkkonen` (#319).
- * Indices can be built in `StringSet`s of `Segment`s now (#191).
- * HMM algorithms use the new random module now (#351).
- * Fixing collision with `begin` and `end` in C++0x (#374).
- * `operator-` is now implemented for iterators of a string and infixes of a string (#317).
- * Unused reference counting feature of `Holder` is removed (#381).
- * Documented `haystack`, `host`, `needle` more clearly (#371).
- * `atEnd()` now works for `StringSet` iterators (#84).
- * The command line parser now accepts floating point arguments (#295).
- * `Pdf<Uniform>` now works correctly with float types (#502).
- * Line endings are set to ''native'' now via the ''svn:eol-style'' property (#386).
- * Non-external nested typedefs are suffixed with an underscore now to prevent accidental access (#289).
- * Naming of acronyms is more consistent now (#73).
- * Internal symbols for tag definitions do not violate the C++ standard any more (#290).
- * `fill` has been renamed to `resize` (#77).
- * added std::vector adaptions (#381)
+*Various identifier have been renamed ([[Retreat2010/Renaming#Identifiers| list of renamed identifiers]]).
+*SeqAn is now built nightly and errors are reported to our [http://www.seqan.de/cdash/index.php?project=SeqAn CDash Dashboard].
+*We dropped Support for Visual Studio 7, GCC 3.x and added support for LLVM and more current Visual Studio and GCC versions. The full list now is:
+**On Windows: Visual Studio 8, Visual Studio 9, and Visual Studio 10, MinGW
+**On Mac Os X and Linux: GCC 4.1-4.5 as well as the current LLVM trunk version.
+*Experimental ''seeds2'' module replacing module ''seeds'' in the future.
+*Overhauled test system.
+*Documentation building is much faster now.
+*Added journaled string feature in module ''string_journaled''.
+*Added swiss army knife ('''sak''') tool for slicing and dicing DNA files (FASTA, FASTQ).
+*Added RNA alphabet
+*Implemented local version of the SWIFT filter additionally to semi-global version (index/find_swift.h).
+*Added banded local alignment
+*Fixed assignments between infixes and suffixes (#320).
+*Patterns provide a copy constructor now (#318).
+*Fixed <tt>StringSet</tt> documentation: Default specialization (#275).
+*Fixed problem in suffix array implementation with max repeat calculation (#61).
+*Fixed <tt>_MakeSigned</tt> metafunction to work with <tt>unsigned long long</tt>.
+*Changing Infix Segment constructor to construct an infix of the whole string if no begin and end positions are given (#288).
+*Listing headers to include for each symbol in the documentation (#25).
+*Added much more documentation, fixing some issues (#326, #330).
+*Documentation works now correctly in Opera.
+*Fixed bug of <tt>insertValue</tt> with <tt>String</tt> of <tt>CharString</tt>s (#273).
+*<tt>ModifiedString</tt>s can now be appended to <tt>std::string</tt> objects (#251).
+*Implementing <tt>std::swap</tt> for <tt>StringSet</tt> and <tt>String</tt> (#296).
+*Fixing bug in <tt>assignSource</tt> and <tt>globalAlignment</tt>.
+*Fixing issue with missing <tt>needle</tt> in <tt>MyersUkkonen</tt> (#319).
+*Indices can be built in <tt>StringSet</tt>s of <tt>Segment</tt>s now (#191).
+*HMM algorithms use the new random module now (#351).
+*Fixing collision with <tt>begin</tt> and <tt>end</tt> in C++0x (#374).
+*<tt>operator-</tt> is now implemented for iterators of a string and infixes of a string (#317).
+*Unused reference counting feature of <tt>Holder</tt> is removed (#381).
+*Documented <tt>haystack</tt>, <tt>host</tt>, <tt>needle</tt> more clearly (#371).
+*<tt>atEnd()</tt> now works for <tt>StringSet</tt> iterators (#84).
+*The command line parser now accepts floating point arguments (#295).
+*<tt>Pdf<Uniform></tt> now works correctly with float types (#502).
+*Line endings are set to ''native'' now via the ''svn:eol-style'' property (#386).
+*Non-external nested typedefs are suffixed with an underscore now to prevent accidental access (#289).
+*Naming of acronyms is more consistent now (#73).
+*Internal symbols for tag definitions do not violate the C++ standard any more (#290).
+*<tt>fill</tt> has been renamed to <tt>resize</tt> (#77).
+*added std::vector adaptions (#381)
 
-== Deprecations == 
+=== Deprecations === 
 
- * `supremumValue`, `infimumValue` are deprecated
- * The `find_motif` module has known issues and will be replaced in a future version.
- * The `seeds` module has known issues. There is an experimental new version `seeds2` available in SeqAn trunk that will eventually replace `seeds` in the next release.
- * Currently, all non-container values (e.g. `int`, `char*`, even custom structs) are interpreted to be containers of length 1. This feature is rarely, if ever, used and will not be available in future releases.
+*<tt>supremumValue</tt>, <tt>infimumValue</tt> are deprecated
+*The <tt>find_motif</tt> module has known issues and will be replaced in a future version.
+*The <tt>seeds</tt> module has known issues. There is an experimental new version <tt>seeds2</tt> available in SeqAn trunk that will eventually replace <tt>seeds</tt> in the next release.
+*Currently, all non-container values (e.g. <tt>int</tt>, <tt>char*</tt>, even custom structs) are interpreted to be containers of length 1. This feature is rarely, if ever, used and will not be available in future releases.
+
+
+
+{{TracNotice|{{PAGENAME}}}}

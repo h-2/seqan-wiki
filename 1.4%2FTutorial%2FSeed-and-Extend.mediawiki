@@ -1,5 +1,6 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
-= Seed-and-Extend =
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[Tutorial]] if you need the documentation for the trunk version.'''
+== Seed-and-Extend ==
 
 [[TOC]]
 
@@ -12,14 +13,14 @@
  Duration ::
   2h
  Prerequisites ::
-  [wiki:Tutorial/Sequences], English language skills
+  [[Tutorial/Sequences]], English language skills
 
 Many efficient heuristics to find high scoring, but inexact, local alignments between two sequences start with small exact (or at least highly similar) segments, so called '''seeds''', and extend or combine them to get larger highly similar regions.
 Probably the most prominent tool of this kind is BLAST (Altschul et al. 1990), but there are many other examples like FASTA (Pearson 1990) or LAGAN (Brudno et al. 2003).
 
-SeqAn's header file for all data structures and functions related to two-dimensional seeds is `seqan/seeds.h`.
+SeqAn's header file for all data structures and functions related to two-dimensional seeds is <tt>seqan/seeds.h</tt>.
 
-== The Seed Class ==
+=== The Seed Class ===
 
 [[Image(Seeds.png, align=right, width=300px height=300px)]]
 
@@ -45,7 +46,7 @@ The following program gives an example of creating seeds as well as setting and 
 
 The output to the console is as follows.
 
-{{{#!ShellBox
+<pre>#ShellBox
 seed1
 beginPositionH == 0
 endPositionH == 0
@@ -61,26 +62,26 @@ beginPositionV == 10
 endPositionV == 14
 lowerDiagonal == -9
 upperDiagonal == -7
-}}}
+</pre>
 
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 '''Assignment 1'''
 
  Type ::
   Review
  Objective ::
-  Extend the program above such that `seed1` is updated from `seed2` and all members (begin positions, end positions, diagonals) are equal to the corresponding member of `seed` times two.
-  For example, the lower diagonal of `seed2` should be `2 * lowerDiagonal(seed1)`.
+  Extend the program above such that <tt>seed1</tt> is updated from <tt>seed2</tt> and all members (begin positions, end positions, diagonals) are equal to the corresponding member of <tt>seed</tt> times two.
+  For example, the lower diagonal of <tt>seed2</tt> should be <tt>2 * lowerDiagonal(seed1)</tt>.
  Solution ::
   Click ''more...'' to see the solution.
 
-{{{#!FoldOut
+<pre>#FoldOut
 ----
 [[Include(source:/trunk/core/demos/tutorial/seed_and_extend/solution1.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
-== Seed Extension ==
+=== Seed Extension ===
 
 Seeds are often created quickly using a ''k''-mer index:
 When a ''k''-mer of a given length is found in both sequences, we can use it as a seed.
@@ -88,20 +89,20 @@ However, the match can be longer than just ''k'' characters.
 To get longer matches, we use '''seed extension'''.
 
 In the most simple case we simply look for matching characters in both sequences to the left and right end of the seed.
-This is called '''match extension''' and available through the seqan:Function.extendSeed function using the `MatchExtend` tag.
+This is called '''match extension''' and available through the seqan:Function.extendSeed function using the <tt>MatchExtend</tt> tag.
 
 [[Include(source:/trunk/core/demos/tutorial/seed_and_extend/example3.cpp, fragment=example)]]
 
-{{{#!ShellBox
+<pre>#ShellBox
 original
 seedH: ROW
 seedV: ROW
 result
 seedH: ick BROW
 seedV: ick BROW
-}}}
+</pre>
 
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 '''Assignment 2'''
 
  Type ::
@@ -111,11 +112,11 @@ seedV: ick BROW
  Solution ::
   Click ''more...'' to see the solution.
 
-{{{#!FoldOut
+<pre>#FoldOut
 ----
 [[Include(source:/trunk/core/demos/tutorial/seed_and_extend/solution2.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
 A more complex case is the standard Bioinformatics approach of '''x-drop extension''':
 
@@ -128,16 +129,16 @@ Here, creating gaps is also possible but also assigned negative scores.
 
 [[Include(source:/trunk/core/demos/tutorial/seed_and_extend/example2.cpp, fragment=example)]]
 
-{{{#!ShellBox
+<pre>#ShellBox
 original
 seedH: ROW
 seedV: ROW
 result
 seedH: ick BROWN fox
 seedV: ick BROWN box
-}}}
+</pre>
 
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 '''Assignment 3'''
 
  Type ::
@@ -147,11 +148,11 @@ seedV: ick BROWN box
  Solution ::
   Click ''more...'' to see the solution.
 
-{{{#!FoldOut
+<pre>#FoldOut
 ----
 [[Include(source:/trunk/core/demos/tutorial/seed_and_extend/solution3.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
 After extending a seed, we might wish to actually get the resulting alignment.
 When using gapped x-drop extension, we need to perform a banded global alignment of the two sequence infixes that correspond to the seed.
@@ -159,35 +160,42 @@ This is shown in the following example:
 
 [[Include(source:/trunk/core/demos/tutorial/seed_and_extend/example4.cpp, fragment=example)]]
 
-{{{#!ShellBox
+<pre>#ShellBox
 Resulting alignment
       0     .    :    
         ick BROWN fox
-        |||||||||| ||
-        ick BROWN box
-}}}
+{| border=1 class="simple"
+!
+!
+!
+!
+! 
+|}
 
-{{{#!AssignmentBox
+        ick BROWN box
+</pre>
+
+<pre>#AssignmentBox
 '''Assignment 4'''
 
  Type ::
   Review
  Objective ::
-  Change the example from above to a gap open score of `-2` and a gap extension score of `-2`.
+  Change the example from above to a gap open score of <tt>-2</tt> and a gap extension score of <tt>-2</tt>.
   Use this scoring scheme for the global alignment as well and thus Gotoh's algorithm.
  Solution ::
   Click ''more...'' to see the solution.
 
-{{{#!FoldOut
+<pre>#FoldOut
 ----
-Note that we do not have to explicitely call Gotoh's algorithm in `globalAlignment()`.
+Note that we do not have to explicitely call Gotoh's algorithm in <tt>globalAlignment()</tt>.
 The fact that the gap extension score is different from the gap opening score is enough.
 
 [[Include(source:/trunk/core/demos/tutorial/seed_and_extend/solution4.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
-== Local Chaining using Seed Sets ==
+=== Local Chaining using Seed Sets ===
 
 Usually, we quickly determine a large number of seeds.
 When a seed is found, we want to find a "close" seed that we found previously and combine it to form a longer seed.
@@ -195,65 +203,65 @@ This combination is called '''local chaining'''.
 This approach has been pioneered in the CHAOS and BLAT programs.
 
 SeqAn provides the seqan:Class.SeedSet class as a data structure to efficiently store seeds and combine new seeds with existing ones.
-The following example creates a seqan:Class.SeedSet object `seeds`, adds four seeds to it and then prints its contents.
+The following example creates a seqan:Class.SeedSet object <tt>seeds</tt>, adds four seeds to it and then prints its contents.
 
 [[Include(source:/trunk/core/demos/tutorial/seed_and_extend/example5.cpp, fragment=example)]]
 
 The output of the program above can be seen below.
 
-{{{#!ShellBox
+<pre>#ShellBox
 Resulting seeds.
 (3, 5, 5, 7, -2, -2)
 (0, 2, 0, 2, 0, 0)
 (9, 11, 9, 11, 0, 0)
 (4, 7, 2, 5, 2, 2)
-}}}
+</pre>
 
-Note that we have used the `Single()` tag for adding the seeds.
+Note that we have used the <tt>Single()</tt> tag for adding the seeds.
 This forces the seeds to be added independent of the current seed set contents.
 
-By using different overloads of the seqan:Function.SeedSet#addSeed, we can use various local chaining strategies when adding seed `A`.
+By using different overloads of the seqan:Function.SeedSet#addSeed, we can use various local chaining strategies when adding seed <tt>A</tt>.
 
- `Merge` ::
-   If there is a seed `B` that overlaps with `A` and the difference in diagonals is smaller than a given threshold then `A` can be merged with `B`.
- `SimpleChain` ::
-   If there is a seed `B` whose distance in both sequences is smaller than a given threshold then `A` can be chained to `B`.
- `Chaos` ::
-   Following the strategy of [http://www.biomedcentral.com/1471-2105/4/66/abstract Chaos], if `A` is within a certain distance to `B` in both sequences and the distance in diagonals is smaller than a given threshold tehn `A` can be chained to `B`.
+ <tt>Merge</tt> ::
+   If there is a seed <tt>B</tt> that overlaps with <tt>A</tt> and the difference in diagonals is smaller than a given threshold then <tt>A</tt> can be merged with <tt>B</tt>.
+ <tt>SimpleChain</tt> ::
+   If there is a seed <tt>B</tt> whose distance in both sequences is smaller than a given threshold then <tt>A</tt> can be chained to <tt>B</tt>.
+ <tt>Chaos</tt> ::
+   Following the strategy of [http://www.biomedcentral.com/1471-2105/4/66/abstract Chaos], if <tt>A</tt> is within a certain distance to <tt>B</tt> in both sequences and the distance in diagonals is smaller than a given threshold tehn <tt>A</tt> can be chained to <tt>B</tt>.
 
 The seqan:Function.SeedSet#addSeed function returns a boolean value indicating success in finding a suitable partner for chaining.
-A call using the `Single` strategy always yields `true`.
+A call using the <tt>Single</tt> strategy always yields <tt>true</tt>.
 
-The following example shows how to use the `SimpleChain` strategy.
+The following example shows how to use the <tt>SimpleChain</tt> strategy.
 
 [[Include(source:/trunk/core/demos/tutorial/seed_and_extend/example7.cpp, fragment=example)]]
 
-As we can see, the seed `TSeed(4, 2, 3)` has been chained to `TSeed(0, 0, 2)`.
+As we can see, the seed <tt>TSeed(4, 2, 3)</tt> has been chained to <tt>TSeed(0, 0, 2)</tt>.
 
-{{{#!ShellBox
+<pre>#ShellBox
 Resulting seeds.
 (3, 5, 5, 7, -2, -2)
 (0, 7, 0, 5, 0, 2)
 (9, 11, 9, 11, 0, 0)
-}}}
+</pre>
 
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 '''Assignment 5'''
 
  Type ::
   Review
  Objective ::
-  Change the example above to use the `Chaos` strategy instead of the `SimpleChain`.
+  Change the example above to use the <tt>Chaos</tt> strategy instead of the <tt>SimpleChain</tt>.
  Solution ::
   Click ''more...'' to see the solution.
 
-{{{#!FoldOut
+<pre>#FoldOut
 ----
 [[Include(source:/trunk/core/demos/tutorial/seed_and_extend/solution5.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
-== Global Chaining ==
+=== Global Chaining ===
 
 [[Image(GlobalChaining.png, align=right, width=250px height=250px)]]
 
@@ -273,24 +281,24 @@ The following shows a simple example.
 
 [[Include(source:/trunk/core/demos/tutorial/seed_and_extend/example6.cpp, fragment=example)]]
 
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 '''Assignment 6'''
 
  Type ::
   Review
  Objective ::
   Change the example from above to use a different chain of seeds.
-  The seeds should be `TSeed(1, 1, 3)`, `TSeed(6, 9, 2)`, `TSeed(10, 13, 3)`, and `TSeed(20, 22, 5)1.
+  The seeds should be <tt>TSeed(1, 1, 3)</tt>, <tt>TSeed(6, 9, 2)</tt>, <tt>TSeed(10, 13, 3)</tt>, and `TSeed(20, 22, 5)1.
  Solution ::
   Click ''more...'' to see the solution.
 
-{{{#!FoldOut
+<pre>#FoldOut
 ----
 [[Include(source:/trunk/core/demos/tutorial/seed_and_extend/solution6.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
-== Banded Chain Alignment ==
+=== Banded Chain Alignment ===
 
 After obtaining such a valid seed chain, we would like to obtain an alignment along the chain.
 For this, we can use the so-called banded chain alignment algorithm (introduced by Brudno's LAGAN).
@@ -299,22 +307,28 @@ Around seeds, we can use banded DP alignment and the spaces between seeds can be
 In SeqAn you can compute the banded chain alignment by calling the function seqan:Function.bandedChainAlignment. This function gets the structure in which the alignment should be stored as the first parameter. This corresponds to the interface of the seqan:Function.globalAlignment and allows the same input types. Additionally, this function requires a non-empty, non-decreasing monotonic chain of seeds which is used as the rough global map for computing the global alignment. The third required parameter is the seqan:Class.Score. 
 
 Note, that there are a number of optional parameters that can be specified. These include a second seqan:Class.Score which, if specified, is used to evaluate the regions between two consecutive seeds differently than the regions around the seeds itself (for which then the first specified score is taken.). As for the global alignment you can use the seqan:Class.AlignConfig to specify the behavior for initial and end gaps. The last optional parameter is the band extension. This parameter specifies to which size the bands around the anchors should be extended. The default value is 15 and conforms the default value in the LAGAN-algorithm (Brudno et al. 2003). 
-{{{#!ImportantBox
+<pre>#ImportantBox
 At the moment the specified value for the band extension must be at least one. 
-}}}
+</pre>
 
 [[Include(source:/trunk/core/demos/tutorial/seed_and_extend/example8.cpp, fragment=example)]]
 
 The output of the example above.
-{{{#!ShellBox
+<pre>#ShellBox
 Score: 5
       0     .    :    .    :
         --CGAAT--CCATCCCACACA
-          || ||   |||    ||||
-        GGCG-ATNNNCATGG--CACA
-}}}
+{| border=1 class="simple"
+! 
+!   
+!/    
+!
+|}
 
-{{{#!AssignmentBox
+        GGCG-ATNNNCATGG--CACA
+</pre>
+
+<pre>#AssignmentBox
 '''Assignment 7'''
 
  Type ::
@@ -325,16 +339,20 @@ Score: 5
  Solution ::
   Click ''more...'' to see the solution.
 
-{{{#!FoldOut
+<pre>#FoldOut
 ----
 [[Include(source:/trunk/core/demos/tutorial/seed_and_extend/solution7.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
-{{{#!WarningBox
- * '''TODO''' Refer to LAGAN demo when it's done.
-}}}
+<pre>#WarningBox
+*'''TODO''' Refer to LAGAN demo when it's done.
+</pre>
 
-=== Submit a  comment ===
+==== Submit a  comment ====
 If you found a mistake, or have suggestions about an improvement of this page press:
 [/newticket?component=Documentation&description=Tutorial+Enhancement+for+page+http://trac.seqan.de/wiki/Tutorial/Seed-and-Extend&type=enhancement submit your comment]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

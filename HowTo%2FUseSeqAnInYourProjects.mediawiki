@@ -1,1 +1,6 @@
-See [wiki:"BuildManual/IntegrationWithYourOwnBuildSystem"].
+
+See [["BuildManual/IntegrationWithYourOwnBuildSystem"]].
+
+
+
+{{TracNotice|{{PAGENAME}}}}

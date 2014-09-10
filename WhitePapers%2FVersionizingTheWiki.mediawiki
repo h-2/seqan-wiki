@@ -1,8 +1,9 @@
-= Versionizing The Wiki =
 
-Quick instructions, see [https://groups.google.com/forum/?fromgroups=#!starred/trac-users/waamXBHCU-I this google groups discussion] (see below for a copy).
+== Versionizing The Wiki ==
 
-{{{#!sh
+Quick instructions, see [https://groups.google.com/forum/?fromgroups=#starred/trac-users/waamXBHCU-I this google groups discussion] (see below for a copy).
+
+<pre>#sh
 VERSION=1.4
 VERSION_LONG=1.4
 /usr/bin/trac-admin /web/trac.seqan.de/trac wiki dump pages Tutorial* HowTo* BuildManual*
@@ -10,7 +11,7 @@ VERSION_LONG=1.4
 pushd pages
 for f in $(ls * | grep "%2F"); do
   mv ${f} ${f}.bak
-  echo "'''Note: this page documents the ${VERSION} version of SeqAn, see [wiki:$(echo $f | sed "s/^${VERSION}%2F//g" | sed "s/%2F.*//g")] if you need the documentation for the trunk version.'''" > ${f}
+  echo "'''Note: this page documents the ${VERSION} version of SeqAn, see [[$(echo| $f | sed "s/^${VERSION}%2F//g" | sed "s/%2F.*//g")]] if you need the documentation for the trunk version.'''" > ${f}
   cat ${f}.bak >> ${f}
   rm ${f}.bak
 done
@@ -27,9 +28,9 @@ for x in $(/usr/bin/trac-admin /web/trac.seqan.de/trac wiki list | grep '^Tutori
         rm $y
     done
 done
-}}}
+</pre>
 
-{{{
+<pre>
 me (Manuel Holtgrewe change) 	
 Apr 23
 
@@ -68,4 +69,8 @@ trac-admin tracdev wiki load pages
 [1] http://trac.edgewall.org/wiki/TracAdmin#FullCommandReference 
 [2] http://trac-hacks.org/wiki/XmlRpcPlugin
 
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

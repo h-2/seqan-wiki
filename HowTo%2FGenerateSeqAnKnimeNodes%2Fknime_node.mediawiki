@@ -1,4 +1,5 @@
-{{{#!cpp
+
+<pre>#cpp
 // ==========================================================================
 //                                 knime_node
 // ==========================================================================
@@ -109,13 +110,13 @@ parseCommandLine(KnimeNodeOptions & options, int argc, char const ** argv)
     // Parse command line.
     seqan::ArgumentParser::ParseResult res = seqan::parse(parser, argc, argv);
 
-    std::cout << __LINE__ << std::endl;
+    std::cout << <u>LINE</u> << std::endl;
 
     // Only extract  options if the program will continue after parseCommandLine()
     if (res != seqan::ArgumentParser::PARSE_OK)
         return res;
 
-    std::cout << __LINE__ << std::endl;
+    std::cout << <u>LINE</u> << std::endl;
     // Extract option values.
     if (isSet(parser, "quiet"))
         options.verbosity = 0;
@@ -124,27 +125,27 @@ parseCommandLine(KnimeNodeOptions & options, int argc, char const ** argv)
     if (isSet(parser, "very-verbose"))
         options.verbosity = 3;
 
-    std::cout << __LINE__ << std::endl;
+    std::cout << <u>LINE</u> << std::endl;
     seqan::getArgumentValue(options.inputFile, parser, 0);
 
     // Get output file name from command line if set.  Otherwise, autogenerate from input file name.
     if (isSet(parser, "outputFile"))
     {
-        std::cout << __LINE__ << std::endl;
+        std::cout << <u>LINE</u> << std::endl;
         seqan::getOptionValue(options.outputFile, parser, "outputFile");
         std::cout << options.inputFile << std::endl;
         std::cout << options.outputFile << std::endl;
     }
     else
     {
-        std::cout << __LINE__ << std::endl;
+        std::cout << <u>LINE</u> << std::endl;
         options.outputFile = options.inputFile;
         std::cout << options.outputFile << std::endl;
         seqan::append(options.outputFile, ".fastq");
         std::cout << options.outputFile << std::endl;
     }
 
-    std::cout << __LINE__ << std::endl;
+    std::cout << <u>LINE</u> << std::endl;
     return seqan::ArgumentParser::PARSE_OK;
 }
 
@@ -173,7 +174,7 @@ int main(int argc, char const ** argv)
     // Print the command line arguments back to the user.
     if (options.verbosity > 0)
     {
-        std::cout << "__OPTIONS____________________________________________________________________\n"
+        std::cout << "<u>OPTIONS</u><u>_</u><u>_</u><u>_</u><u>_</u><u>_</u><u>_</u><u>_</u><u>_</u><u>_</u><u>_</u><u>_</u><u>_</u><u>_</u>_\n"
                   << '\n'
                   << "VERBOSITY\t" << options.verbosity << '\n'
                   << "INPUTFILE\t" << options.inputFile << "\n\n"
@@ -186,7 +187,7 @@ int main(int argc, char const ** argv)
     seqan::StringSet<seqan::Dna5String> seqs;
     seqan::StringSet<seqan::CharString> quals;
 
-    std::cout << __LINE__ << std::endl;
+    std::cout << <u>LINE</u> << std::endl;
  
     if (atEnd(seqIn))
     {
@@ -199,7 +200,7 @@ int main(int argc, char const ** argv)
         return 1;
     }
 
-    std::cout << __LINE__ << std::endl;
+    std::cout << <u>LINE</u> << std::endl;
     // DO SOMETHING HERE
     // *
     // *
@@ -215,8 +216,12 @@ int main(int argc, char const ** argv)
         std::cerr << "ERROR: Could not write records!\n";
         return 1;
     }
-    std::cout << __LINE__ << std::endl;
+    std::cout << <u>LINE</u> << std::endl;
 
     return 0;
 }
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

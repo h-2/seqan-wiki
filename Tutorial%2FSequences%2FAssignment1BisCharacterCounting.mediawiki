@@ -1,17 +1,18 @@
-= Task 1 Bis: Generic Character Counting =
 
-== Task ==
+== Task 1 Bis: Generic Character Counting ==
 
-Rewrite the function {{{countOneMers(str)}}} to accept a generic seqan:Shortcut.String.
-Call this function with the seqan:Shortcut.CharString {{{"Hello world!"}}}, seqan:Shortcut.DnaString {{{"TATACGCTA"}}} and seqan:Shortcut.Peptide {{{"MQDRVKRPMNAFIVWSRDQRRKMALEN"}}}.
+=== Task ===
 
-== Solution ==
+Rewrite the function <tt>countOneMers(str)</tt> to accept a generic seqan:Shortcut.String.
+Call this function with the seqan:Shortcut.CharString <tt>"Hello world!"</tt>, seqan:Shortcut.DnaString <tt>"TATACGCTA"</tt> and seqan:Shortcut.Peptide <tt>"MQDRVKRPMNAFIVWSRDQRRKMALEN"</tt>.
 
-We start off by including the IO steams library from the STL and the sequence module from !SeqAn.
+=== Solution ===
+
+We start off by including the IO steams library from the STL and the sequence module from SeqAn.
 
 [[Include(source:trunk/core/demos/tutorial/sequence/count_generic_characters.cpp, fragment=includes)]]
 
-Then, define the {{{countOneMers}}} function.
+Then, define the <tt>countOneMers</tt> function.
 
 [[Include(source:trunk/core/demos/tutorial/sequence/count_generic_characters.cpp, fragment=count-one-mers-define-function)]]
 
@@ -27,14 +28,14 @@ We print all pairs of characters and their counts if the ocunt is > 0.
 
 [[Include(source:trunk/core/demos/tutorial/sequence/count_generic_characters.cpp, fragment=count-one-mers-print-chars)]]
 
-In our {{{main}}} function, we call {{{countOneMers}}} with the strings from the task.
+In our <tt>main</tt> function, we call <tt>countOneMers</tt> with the strings from the task.
 
 [[Include(source:trunk/core/demos/tutorial/sequence/count_generic_characters.cpp, fragment=main)]]
 
-== Program Output ==
+=== Program Output ===
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 ASCII String: Hello world!
  :1
@@ -68,4 +69,8 @@ S:1
 W:1
 V:2
 </pre>
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

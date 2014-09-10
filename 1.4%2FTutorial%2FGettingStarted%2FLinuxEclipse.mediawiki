@@ -1,5 +1,6 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
-= Getting Started With SeqAn On Linux Using Eclipse CDT =
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[Tutorial]] if you need the documentation for the trunk version.'''
+== Getting Started With SeqAn On Linux Using Eclipse CDT ==
 
 [[TOC()]]
 
@@ -9,83 +10,83 @@ We assume that you are using the Debian or a Debian-like Linux distributions suc
 The only difference to other distributions is the name of the packages and the package management system in the Prerequisites section.
 It should be very simple for you to tailor these instructions to your requirements.
 
-== Prerequisites ==
+=== Prerequisites ===
 
 Use the following command line to install the required dependencies:
 The [http://subversion.apache.org/ Subversion] client, the [http://gcc.gnu.org/ GNU C++ compiler], [http://cmake.org CMake] for the build system, the [http://python.org Python] script interpreter for running helper scripts, and [http://www.eclipse.org Eclipse] with the [http://www.eclipse.org/cdt/ CDT plugin] for C++ development.
 
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 ~ # sudo apt-get install subversion g++ cmake python eclipse-cdt
-}}}
+</pre>
 
 The following command line installs optional dependencies:
 Developer versions of [http://zlib.org zlib] and [http://bzip.org libbzip2] (for compressed I/O support) and the [http://boost.org Boost] library (required by a few apps).
 
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 ~ # sudo apt-get install zlib1g-dev libbz2-dev libboost-dev
-}}}
+</pre>
 
-== Install ==
+=== Install ===
 
-Now, go to the directory you want to keep your SeqAn install in (e.g. `Development` in your home folder).
+Now, go to the directory you want to keep your SeqAn install in (e.g. <tt>Development</tt> in your home folder).
 
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 ~ # cd $HOME/Development
-}}}
+</pre>
 
 Then, use Subversion to retrieve the current SeqAn trunk:
 
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 Development # svn co http://svn.seqan.de/seqan/trunk seqan-trunk
-}}}
+</pre>
 
-You can now find the whole tree with the SeqAn library and applications in `seqan-trunk`.
+You can now find the whole tree with the SeqAn library and applications in <tt>seqan-trunk</tt>.
 
-== A First Build ==
+=== A First Build ===
 
 We will now use CMake to create Eclipse CDT project files.
-For this, we create a separate folder `seqan-trunk-build` on the same level as the folder `seqan-trunk`.
+For this, we create a separate folder <tt>seqan-trunk-build</tt> on the same level as the folder <tt>seqan-trunk</tt>.
 
-{{{#!ShellBox
+<pre>#ShellBox
 Development # mkdir seqan-trunk-build
-}}}
+</pre>
 
 When using Eclipse CDT, we have to create separate project files for debug builds (including debug symbols with no optimization) and release builds (debug symbols are stripped, optimization is high).
 Thus, we create a subdirectory for each build type.
 We start with debug builds since this is best for learning:
 Debug symbols are enabled and assertions are active
 
-{{{#!ImportantBox
+<pre>#ImportantBox
 Compiling ''debug mode yields very slow binaries''' since optimizations are disabled.
 Compile your programs in release mode if you want to run them on large data sets.
 
 The reason for disabling optimizations in debug mode is that the compiler performs less inlining and does not optimize variables away.
 This way, debugging your programs in a debugger becomes much easier.
-}}}
+</pre>
 
-{{{#!ShellBox
+<pre>#ShellBox
 Development # mkdir seqan-trunk-build/debug-eclipse
 Development # cd seqan-trunk-build/debug-eclipse
-}}}
+</pre>
 
 The resulting directory structure will look as follows.
 
-{{{
+<pre>
    ~/Development
      +-- seqan-trunk        source directory
      `-- seqan-trunk-build
          `-- debug-eclipse  build directory with debug symbols
-}}}
+</pre>
 
-Within the '''build directory''' `debug-eclipse`, we call CMake to generate The Eclipse CDT project in the debug mode.
+Within the '''build directory''' <tt>debug-eclipse</tt>, we call CMake to generate The Eclipse CDT project in the debug mode.
 
-{{{#!ShellBox
+<pre>#ShellBox
 debug-eclipse # cmake ../../seqan-trunk -G "Eclipse CDT4 - Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug
-}}}
+</pre>
 
 Now, open Eclipse.
 If this is your first Eclipse start then you have to select a workspace.
@@ -111,21 +112,21 @@ This can happen if, e.g. you accidentally run a binary before building the targe
 Now you have successfully setup Eclipse and can build your targets using the [[MenuTrace(Make Target)]] view (usually on the right hand side of the workbench).
 To build RazerS 2, open the folder [[MenuTrace(core, apps, razers2)]] in the [[MenuTrace(Make Target)]] view.
 Then, right-click on [[MenuTrace([exe] razers2)]] and select [[MenuTrace(Build Target)]].
-This will build the program `razers2`
+This will build the program <tt>razers2</tt>
 
 [[Image(eclipse_linux_build_razers2.png, width=800, align=center)]]
 
 The last line you see on the console at the bottom of the screen should be
 
-{{{
-#!IdeBox
+<pre>
+#IdeBox
 Built target razers2
 make[2]: Leaving directory `/home/USER/Development/seqan-trunk-build/debug-eclipse'
 /usr/bin/cmake -E cmake_progress_start /home/USER/Development/seqan-trunk-build/debug-eclipse/CMakeFiles 0
 make[1]: Leaving directory `/home/USER/Development/seqan-trunk-build/debug-eclipse'
-}}}
+</pre>
 
-== Hello World! ==
+=== Hello World! ===
 
 Now, let us create a '''sandbox''' for you.
 This sandbox will be your local workspace and you might want to have it versionized on your own Subversion repository at a later point.
@@ -133,55 +134,55 @@ All of your development will happen in your sandbox.
 
 We go back to the source directory and then use the SeqAn code generator to create a new sandbox.
 
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 debug-eclipse # cd ../../seqan-trunk
 seqan-trunk # ./util/bin/skel.py repository sandbox/my_sandbox
-}}}
+</pre>
 
-Now that you have your own working space, we create a new application `first_app`.
+Now that you have your own working space, we create a new application <tt>first_app</tt>.
 
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 seqan-trunk # ./util/bin/skel.py app first_app sandbox/my_sandbox
-}}}
+</pre>
 
-Details about the code generator are explained in [wiki:HowTo/UseTheCodeGenerator How To: Use the code generator].
+Details about the code generator are explained in [[HowTo/UseTheCodeGenerator| How To: Use the code generator]].
 
 Now, we go back into the build directory and call CMake again to make it detect the added app.
 
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 seqan-trunk # cd ../seqan-trunk-build/debug-eclipse
 debug # cmake .
-}}}
+</pre>
 
-{{{
-#!InfoBox
+<pre>
+#InfoBox
 '''Information:''' When and where do you have to call CMake?
 
 CMake is a cross-platform tool for creating and updating build files (IDE projects or Makefiles).
 When you first create the build files, you can configure things such as the build mode or the type of the project files.
 
-Whenever you add a new application, a demo or a test or whenever you make changes to `CMakeLists.txt` you need to call CMake again.
-Since CMake remembers the settings you chose the first time you called CMake in a file named `CMakeCache.txt`, all you have to do is to switch to your `debug` or `release` build directory and call "`cmake .`" in there.
+Whenever you add a new application, a demo or a test or whenever you make changes to <tt>CMakeLists.txt</tt> you need to call CMake again.
+Since CMake remembers the settings you chose the first time you called CMake in a file named <tt>CMakeCache.txt</tt>, all you have to do is to switch to your <tt>debug</tt> or <tt>release</tt> build directory and call "<tt>cmake .</tt>" in there.
 
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 ~ # cd $HOME/Development/seqan-trunk-build/debug
 debug # cmake .
-}}}
+</pre>
 
-Do not try to call "`cmake .`" from within the `seqan-trunk` directory '''but only from your build directory'''.
-}}}
+Do not try to call "<tt>cmake .</tt>" from within the <tt>seqan-trunk</tt> directory '''but only from your build directory'''.
+</pre>
 
 The step above creates the starting point for a real-world application, including an argument parser and several other things that are a bit too complicated to fit into the Getting Started tutorial.
 Therefore, we will replace the program of the app ''first_app'' with a very simple example program.
 
-Open the file `sandbox/my_sandbox/apps/first_app/first_app.cpp` (in seqan-trunk) with a text editor and replace its contents with the following:
+Open the file <tt>sandbox/my_sandbox/apps/first_app/first_app.cpp</tt> (in seqan-trunk) with a text editor and replace its contents with the following:
 
-{{{
-#!cpp
+<pre>
+#cpp
 #include <iostream>
 #include <seqan/sequence.h>  // CharString, ...
 #include <seqan/file.h>      // to stream a CharString into cout
@@ -193,15 +194,15 @@ int main(int, char const **)
     std::cout << mySeqanString << std::endl;
     return 1;
 }
-}}}
+</pre>
 
 After CMake is done with building the project files you can simply refresh the imported build project in Eclipse in order to make the applied changes working:
 In the [[MenuTrace(Project Explorer)]] view, right-click on [[MenuTrace(seqan-Debug@debug-eclipse)]] and select [[MenuTrace(Refresh (F5))]].
 
-{{{#!WarningBox
+<pre>#WarningBox
 In some cases the refresh does not work. 
 In this case simply close and reopen Eclipse.
-}}}
+</pre>
 
 Then, browse to your target in the [[MenuTrace(Make Target)]] view.
 Double-click on the target of your application and the binary is built immediately.
@@ -221,11 +222,15 @@ If everything went well, you will see something similar to this:
 
 Congratulations, you have successfully created your first application within the SeqAn build system using Eclipse and CDT.
 
-== Further Steps ==
+=== Further Steps ===
 
 As a next step, we suggest the following:
 
- * [wiki:Tutorial Continue with the Tutorials]
- * Look around in the files in `sandbox/my_sandbox/apps/first_app` or the demos in `core/demos` and `extras/demos`.
- * For the tutorial, using the SeqAn build system is great!
-   If you later want to use SeqAn as a library, have a look at [wiki:HowTo/UseSeqAnInYourProjects How To: Use SeqAn In Your Projects].
+*[[Tutorial| Continue with the Tutorials]]
+*Look around in the files in <tt>sandbox/my_sandbox/apps/first_app</tt> or the demos in <tt>core/demos</tt> and <tt>extras/demos</tt>.
+*For the tutorial, using the SeqAn build system is great!
+   If you later want to use SeqAn as a library, have a look at [[HowTo/UseSeqAnInYourProjects| How To: Use SeqAn In Your Projects]].
+
+
+
+{{TracNotice|{{PAGENAME}}}}

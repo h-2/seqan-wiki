@@ -1,98 +1,99 @@
-= API Documentation Guidelines =
+
+== API Documentation Guidelines ==
 [[TOC()]]
 
-== Some Nomenclauture ==
+=== Some Nomenclauture ===
 
-=== C++ Classes vs. Classes/Specializations in SeqAn ===
+==== C++ Classes vs. Classes/Specializations in SeqAn ====
 
 C++ provides us with the mechanism of classing and subclassing.
 
-{{{#!cpp
+<pre>#cpp
 class C
 {};
 
 class D : public C
 {};
-}}}
+</pre>
 
 C++ also provides us with class templates:
 
-{{{#!cpp
+<pre>#cpp
 template <typename T, template S>
 class A
 {};
-}}}
+</pre>
 
-Class templates can be instantiated, yielding classes of names such as `A<int, double>`.
+Class templates can be instantiated, yielding classes of names such as <tt>A<int, double></tt>.
 Classes can also be partially specialized:
 
-{{{#!cpp
+<pre>#cpp
 template <typename T>
 class A<T, int>
 {};
-}}}
+</pre>
 
-This partial specialization of the template `A` is now used for all instantiations of `A` where the second parameter is an integer.
+This partial specialization of the template <tt>A</tt> is now used for all instantiations of <tt>A</tt> where the second parameter is an integer.
 
-=== Concepts ===
+==== Concepts ====
 
-A concept is an informal interface for a type `T` specifying how this type can be used.
+A concept is an informal interface for a type <tt>T</tt> specifying how this type can be used.
 This can define the member functions, interface functions, or global functions working on it.
 
-=== Metafunctions ===
+==== Metafunctions ====
 
 Metafunctions are compile-time functions performing computation on types or constant values.
-They are implemented as template `struct` types and their resulting type/value is given by the `Type`/`VALUE` member.
+They are implemented as template <tt>struct</tt> types and their resulting type/value is given by the <tt>Type</tt>/<tt>VALUE</tt> member.
 
-=== Global Functions, Interface Functions, Member Functions ===
+==== Global Functions, Interface Functions, Member Functions ====
 
 C++ provides us with classes that can have member functions and member variables and it also provides us with global functions.
 In SeqAn, we also use the concept of an interface function which is a global function in the C++ sense but which is bound to a certain type.
 
-For example, the function `globalAlignment()` is a global function since it is not bound to a specific type.
-However, it has certain requirements on its argument (e.g. the `scoringScheme` parameter must be a specialization of the `Score<>` class template.
+For example, the function <tt>globalAlignment()</tt> is a global function since it is not bound to a specific type.
+However, it has certain requirements on its argument (e.g. the <tt>scoringScheme</tt> parameter must be a specialization of the <tt>Score<></tt> class template.
 
-The Functions `length()`, `begin()`, `end()` are examples of interface functions.
+The Functions <tt>length()</tt>, <tt>begin()</tt>, <tt>end()</tt> are examples of interface functions.
 They are global functions in the sense of C++ but bound to a certain class (or class template) or a concept.
-For example, the class template `String` might have the interface functions `length()`, `begin()`, and `end()` while the class template `Seed` only provides the `length()` function.
+For example, the class template <tt>String</tt> might have the interface functions <tt>length()</tt>, <tt>begin()</tt>, and <tt>end()</tt> while the class template <tt>Seed</tt> only provides the <tt>length()</tt> function.
 
-While the `length()` function is a global identifier in C++ and the different interface functions are just different overloads of the function in C++ terms, we bind it to a class template or concept.
-For example, the interface functions for the `String` are called `String#begin`, `String#end`, and `String#length`, the interface function `length()` for `Seed` is called `Seed#length`.
+While the <tt>length()</tt> function is a global identifier in C++ and the different interface functions are just different overloads of the function in C++ terms, we bind it to a class template or concept.
+For example, the interface functions for the <tt>String</tt> are called <tt>String#begin</tt>, <tt>String#end</tt>, and <tt>String#length</tt>, the interface function <tt>length()</tt> for <tt>Seed</tt> is called <tt>Seed#length</tt>.
 
-Metafunctions can also be part of an interface, e.g. `SequenceConcept#Size`, `String#Size`, `String#Value`.
+Metafunctions can also be part of an interface, e.g. <tt>SequenceConcept#Size</tt>, <tt>String#Size</tt>, <tt>String#Value</tt>.
 
-Member functions are called by their respective C++ names, e.g. `String::String` for the constructor or `Bar::foo` for a possible member function `foo` of class `Bar`.
+Member functions are called by their respective C++ names, e.g. <tt>String::String</tt> for the constructor or <tt>Bar::foo</tt> for a possible member function <tt>foo</tt> of class <tt>Bar</tt>.
 
-Interface functions and metafunctions are also linked to the owning type via a `.class` or a `.concept` link.
+Interface functions and metafunctions are also linked to the owning type via a <tt>.class</tt> or a <tt>.concept</tt> link.
 
-=== Uniqueness of Class Template and Concept Names ===
+==== Uniqueness of Class Template and Concept Names ====
 
 The names of all class templates and concepts as well as their specialization must be unique.
 
-All Concept names have the suffix `Concept`, e.g. `SequenceConcept`, `ContainerConcept`.
+All Concept names have the suffix <tt>Concept</tt>, e.g. <tt>SequenceConcept</tt>, <tt>ContainerConcept</tt>.
 
 Specializations in SeqAn work by further specializing on the last template argument:
 
- * `String<TValue, TSpec>`, `String<TValue, Alloc<> >`, `String<TValue, Packed<> >`
- * `StringSet<TString, TSpec>`, `StringSet<TString, Owner<> >`, `StringSet<TString, Owner<ConcatDirect<> > >`, `StringSet<TString, Owner<JournaledSet> >`
- * `Iter<T, TSpec>`, `Iter<TGraph, GraphIterator<> >`, `Iter<TGraph, GraphIterator<InternalAdjacencyIterator<> > >`
+*<tt>String<TValue, TSpec></tt>, <tt>String<TValue, Alloc<> ></tt>, <tt>String<TValue, Packed<> ></tt>
+*<tt>StringSet<TString, TSpec></tt>, <tt>StringSet<TString, Owner<> ></tt>, <tt>StringSet<TString, Owner<ConcatDirect<> > ></tt>, <tt>StringSet<TString, Owner<JournaledSet> ></tt>
+*<tt>Iter<T, TSpec></tt>, <tt>Iter<TGraph, GraphIterator<> ></tt>, <tt>Iter<TGraph, GraphIterator<InternalAdjacencyIterator<> > ></tt>
 
 Specialization of class templates are named by the following schema:
 
- * Go from the innermost specialization tag name to the outermost and put them in this order.
- * Remove duplicates from this sequence and keep the outermost instance.
- * The list is separated by one space.
+*Go from the innermost specialization tag name to the outermost and put them in this order.
+*Remove duplicates from this sequence and keep the outermost instance.
+*The list is separated by one space.
 
 For the examples above, the results are:
 
- * `String`, `Alloc String`, `Packed String`
- * `StringSet`, `Owner StringSet`, `ConcatDirect Owner StringSet`, `Journaled Owner StringSet`.
- * `Iter`, `Graph Iter`, `InternalAdjecency Graph Iter`
+*<tt>String</tt>, <tt>Alloc String</tt>, <tt>Packed String</tt>
+*<tt>StringSet</tt>, <tt>Owner StringSet</tt>, <tt>ConcatDirect Owner StringSet</tt>, <tt>Journaled Owner StringSet</tt>.
+*<tt>Iter</tt>, <tt>Graph Iter</tt>, <tt>InternalAdjecency Graph Iter</tt>
 
-=== Synonyms ===
+==== Synonyms ====
 
 Since some widely used types contain too many details, sometimes implementations details.
-We introduce synonyms for these types and also for certain iterators that are returned by the metafunction `Iterator`.
+We introduce synonyms for these types and also for certain iterators that are returned by the metafunction <tt>Iterator</tt>.
 The aim is to improve how easy it is to write about a certain type but at the same time to keep the documentation name close to the source code.
 The list of synonyms should be kept small.
 
@@ -100,79 +101,107 @@ When being redirected in the API documentation when accessing a synonym, the use
 
 Examples are:
 
- * `ConcatDirect StringSet`.
-   `ConcatDirect Owner StringSet` is too verbose for the very widely used string set.
-   The fact that it is implemented as an `Owner StringSet` is an implementation detail.
-   We add the synonym `ConcatDirect StringSet`.
- * `Mums BottomUp VSTree Iter`.
+*<tt>ConcatDirect StringSet</tt>.
+   <tt>ConcatDirect Owner StringSet</tt> is too verbose for the very widely used string set.
+   The fact that it is implemented as an <tt>Owner StringSet</tt> is an implementation detail.
+   We add the synonym <tt>ConcatDirect StringSet</tt>.
+*<tt>Mums BottomUp VSTree Iter</tt>.
    This name is too verbose and also contains implementation details.
-   The user only gets it through `Iterator<TIndex, MumsIterator>::Type`.
-   We add the synonym `Mums Iterator`.
- * `Pack Pair`.
-   Because the template tag `Packed` is already taken for strings, there is no `Pair<TValue, Packed>`, the specialization is named `Pair<TValue, Pack>`.
-   We add the synonym `Packed Pair`.
+   The user only gets it through <tt>Iterator<TIndex, MumsIterator>::Type</tt>.
+   We add the synonym <tt>Mums Iterator</tt>.
+*<tt>Pack Pair</tt>.
+   Because the template tag <tt>Packed</tt> is already taken for strings, there is no <tt>Pair<TValue, Packed></tt>, the specialization is named <tt>Pair<TValue, Pack></tt>.
+   We add the synonym <tt>Packed Pair</tt>.
 
-=== Specialization Tag Names ===
+==== Specialization Tag Names ====
 
 Only use alphanumeric CamelCase names.
 
-Use the naming scheme `SpecializationTag BaseTag`, for example `Gaps<TValue, ArrayGaps<> >`, `Gaps<TValue, AnchorGaps<> >` for any new class.
+Use the naming scheme <tt>SpecializationTag BaseTag</tt>, for example <tt>Gaps<TValue, ArrayGaps<> ></tt>, <tt>Gaps<TValue, AnchorGaps<> ></tt> for any new class.
 
 In certain areas, another naming schema is used.
-One example are indices: `Index<TText, IndexEsa<> >`, `Index<TText, IndexQGram<> >`.
+One example are indices: <tt>Index<TText, IndexEsa<> ></tt>, <tt>Index<TText, IndexQGram<> ></tt>.
 Here, go to the schema that most existing types use to reduce incompatibilities in users' code.
-For example, `FMIndex` is renamed to `IndexFM` since it is introduced in the current trunk only and was not there in the 1.3 release.
+For example, <tt>FMIndex</tt> is renamed to <tt>IndexFM</tt> since it is introduced in the current trunk only and was not there in the 1.3 release.
 
 In the next "major version" release, i.e. 2.0, go to the first rule for all types.
 
-=== Inheritance of Interface Functions ===
+==== Inheritance of Interface Functions ====
 
 Interface functions will be inherited in the documentation following Java method inheritance rules.
 
-== Return and Parameter Types ==
+=== Return and Parameter Types ===
 
 The return type of a function should always be documented.
-If it is a builtin type such as `int`, directly give it in the signature, e.g.:
+If it is a builtin type such as <tt>int</tt>, directly give it in the signature, e.g.:
 
-{{{#!cpp
+<pre>#cpp
 bool atEnd(it)
-}}}
+</pre>
 
-If it is more complex, use the naming scheme `T` followed by a class, concept, or metafunction name.
+If it is more complex, use the naming scheme <tt>T</tt> followed by a class, concept, or metafunction name.
 
 For example:
 
-For `String#begin`:
+For <tt>String#begin</tt>:
 
-{{{#!cpp
+<pre>#cpp
 TIter begin(str, tag)
-}}}
+</pre>
 
-For `String#value`:
+For <tt>String#value</tt>:
 
-{{{#!cpp
+<pre>#cpp
 TReference value(str, pos)
-}}}
+</pre>
 
 The return type should then be defined in the "Results" section, e.g.
 
-For `String#begin`:
+For <tt>String#begin</tt>:
 
-|| `TIter` || The iterator to the beginning of `str`, as returned by `Iterator<TString, TTag>::Type` where `TString` is the type of `str` and `TTag` is the type of `tag`. ||
+{| border=1 class="simple"
+! <tt>TIter</tt> 
+! The iterator to the beginning of <tt>str</tt>, as returned by <tt>Iterator<TString, TTag>::Type</tt> where <tt>TString</tt> is the type of <tt>str</tt> and <tt>TTag</tt> is the type of <tt>tag</tt>. 
+|}
 
-For `String#value`:
 
-|| `TReference` || A reference to the value of `str` at position `pos`. Is of type `Reference<TString>::Type` where `TString` is the type of `str`. ||
+For <tt>String#value</tt>:
+
+{| border=1 class="simple"
+! <tt>TReference</tt> 
+! A reference to the value of <tt>str</tt> at position <tt>pos</tt>. Is of type <tt>Reference<TString>::Type</tt> where <tt>TString</tt> is the type of <tt>str</tt>. 
+|}
+
 
 Parameter types are not given in the signature.
 They are given in the Parameters section, however, with the rules for return types:
 
-For `String#begin`:
+For <tt>String#begin</tt>:
 
-|| `str` || `String` || The String object to get the begin iterator of. ||
-|| `tag` || `TTag` || The tag to select the iterator kind. Can be `Standard` or `Rooted`. ||
+{| border=1 class="simple"
+! <tt>str</tt> 
+! <tt>String</tt> 
+! The String object to get the begin iterator of. 
+|- 
+|  <tt>tag</tt> 
+|  <tt>TTag</tt> 
+|  The tag to select the iterator kind. Can be <tt>Standard</tt> or <tt>Rooted</tt>. 
+|}
 
-For `String#value`:
 
-|| `str` || `String` || The String object to get a value from. ||
-|| `pos` || `TPos` || The position to get the string. Must be an integer. ||
+For <tt>String#value</tt>:
+
+{| border=1 class="simple"
+! <tt>str</tt> 
+! <tt>String</tt> 
+! The String object to get a value from. 
+|- 
+|  <tt>pos</tt> 
+|  <tt>TPos</tt> 
+|  The position to get the string. Must be an integer. 
+|}
+
+
+
+
+{{TracNotice|{{PAGENAME}}}}

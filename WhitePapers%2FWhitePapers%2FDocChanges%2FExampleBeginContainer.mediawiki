@@ -1,57 +1,62 @@
-{{{#!html
+
+<pre>#html
 <small>Function</small>
-}}}
+</pre>
 
-= ContainerConcept # begin =
+== ContainerConcept # begin ==
 
-{{{#!html
+<pre>#html
 <small>Part of the interface of the Concept <a href="#">ContainerConcept</a></small>
-}}}
+</pre>
 
-{{{#!cpp
+<pre>#cpp
 TIterator begin(container[, tag])
-}}}
+</pre>
 
-Return an iterator to the beginning of `container`.
+Return an iterator to the beginning of <tt>container</tt>.
 
-You can specify whether you want a standard or a rooted iterator using `tag`.
+You can specify whether you want a standard or a rooted iterator using <tt>tag</tt>.
 
-== Parameters ==
+=== Parameters ===
 
-{{{#!td valign=top
-`TContainer`
-}}}
-{{{#!td valign=top
-`container`
-}}}
-{{{#!td valign=top
+<pre>#td valign=top
+<tt>TContainer</tt>
+</pre>
+<pre>#td valign=top
+<tt>container</tt>
+</pre>
+<pre>#td valign=top
 The container to get the begin iterator of.
-`TContainer` must fulfill the concept [# ContainerConcept].
-}}}
+<tt>TContainer</tt> must fulfill the concept [# ContainerConcept].
+</pre>
 |----------------
-{{{#!td valign=top
-`TTag`
-}}}
-{{{#!td valign=top
-`tag`
-}}}
-{{{#!td valign=top
+<pre>#td valign=top
+<tt>TTag</tt>
+</pre>
+<pre>#td valign=top
+<tt>tag</tt>
+</pre>
+<pre>#td valign=top
 The tag to use for selecting the resulting iterator.
-One of `Standard` and `Rooted`.
-Defaults to `Rooted`.
-}}}
+One of <tt>Standard</tt> and <tt>Rooted</tt>.
+Defaults to <tt>Rooted</tt>.
+</pre>
 
-== Return Values ==
+=== Return Values ===
 
-{{{#!td valign=top
-`TIterator`
-}}}
-{{{#!td valign=top
-An iterator to the beginning of `container`.
-The type depends on the type `TTag` of `tag`.
-`TIterator` is computed as `Iterator<TContainer, TTag>::Type`.
-}}}
+<pre>#td valign=top
+<tt>TIterator</tt>
+</pre>
+<pre>#td valign=top
+An iterator to the beginning of <tt>container</tt>.
+The type depends on the type <tt>TTag</tt> of <tt>tag</tt>.
+<tt>TIterator</tt> is computed as <tt>Iterator<TContainer, TTag>::Type</tt>.
+</pre>
 
-== See Also ==
+=== See Also ===
 
-[wiki:WhitePapers/WhitePapers/DocChanges/ExampleEndContainer Container#end]
+[[WhitePapers/WhitePapers/DocChanges/ExampleEndContainer| Container#end]]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

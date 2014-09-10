@@ -1,46 +1,179 @@
-= Progress =
+
+== Progress ==
 
 See wiki:StyleGuide/DoxApiDocs for a description of the document 
 
-||= module =||= assignee =||= status =||
-||||||= core =||
-|| align || Manuel || DONE ||
-|| arg_parse || Manuel || DONE ||
-|| bam_io || Manuel || DONE ||
-|| basic || Manuel || DONE ||
-|| consensus || Manuel || DONE ||
-|| file || Manuel || DONE ||
-|| find || Manuel || DONE ||
-|| gff_io || Manuel || DONE ||
-|| graph_algorithms || Manuel || DONE ||
-|| graph_align || Manuel || DONE ||
-|| graph_msa || Manuel || DONE ||
-|| graph_types || Manuel || DONE ||
-|| index || Jochen || in progress ||
-|| map || Manuel || DONE ||
-|| misc || Manuel || DONE ||
-|| modifier || Manuel || DONE ||
-|| parallel || Manuel || DONE ||
-|| pipe || Manuel || DONE ||
-|| platform || Manuel || DONE ||
-|| random || Manuel || DONE ||
-|| score || Manuel || DONE ||
-|| seeds || Manuel || DONE ||
-|| seq_io || Manuel || DONE ||
-|| sequence || Manuel || DONE (adaptions missing) ||
-|| sequence_journaled || Manuel || DONE ||
-|| store || Manuel || DONE ||
-|| stream || Manuel || DONE (adaptions missing) ||
-|| system || || (no doc yet) ||
-||||||= extras =||
-|| alignment_free || Manuel || DONE ||
-|| align_split || Manuel || DONE ||
-|| align_profile || Manuel || DONE ||
-|| bed_io || Manuel || DONE ||
-|| find_motif || Manuel+Sascha || (new docs from Sascha's work) ||
-|| index || Jochen+Enrico || (Enrico needs to merge his work) ||
-|| journaled_set || Manuel || DONE ||
-|| math || David || (no doc yet) ||
-|| parse_lm || Manuel || DONE ||
-|| statistics || Manuel || DONE ||
-|| vcf_io || Manuel || DONE ||
+{| border=1 class="simple"
+!= module =
+!= assignee =
+!= status =
+|- 
+| 
+| 
+| = core =
+|- 
+|  align 
+|  Manuel 
+|  DONE 
+|- 
+|  arg_parse 
+|  Manuel 
+|  DONE 
+|- 
+|  bam_io 
+|  Manuel 
+|  DONE 
+|- 
+|  basic 
+|  Manuel 
+|  DONE 
+|- 
+|  consensus 
+|  Manuel 
+|  DONE 
+|- 
+|  file 
+|  Manuel 
+|  DONE 
+|- 
+|  find 
+|  Manuel 
+|  DONE 
+|- 
+|  gff_io 
+|  Manuel 
+|  DONE 
+|- 
+|  graph_algorithms 
+|  Manuel 
+|  DONE 
+|- 
+|  graph_align 
+|  Manuel 
+|  DONE 
+|- 
+|  graph_msa 
+|  Manuel 
+|  DONE 
+|- 
+|  graph_types 
+|  Manuel 
+|  DONE 
+|- 
+|  index 
+|  Jochen 
+|  in progress 
+|- 
+|  map 
+|  Manuel 
+|  DONE 
+|- 
+|  misc 
+|  Manuel 
+|  DONE 
+|- 
+|  modifier 
+|  Manuel 
+|  DONE 
+|- 
+|  parallel 
+|  Manuel 
+|  DONE 
+|- 
+|  pipe 
+|  Manuel 
+|  DONE 
+|- 
+|  platform 
+|  Manuel 
+|  DONE 
+|- 
+|  random 
+|  Manuel 
+|  DONE 
+|- 
+|  score 
+|  Manuel 
+|  DONE 
+|- 
+|  seeds 
+|  Manuel 
+|  DONE 
+|- 
+|  seq_io 
+|  Manuel 
+|  DONE 
+|- 
+|  sequence 
+|  Manuel 
+|  DONE (adaptions missing) 
+|- 
+|  sequence_journaled 
+|  Manuel 
+|  DONE 
+|- 
+|  store 
+|  Manuel 
+|  DONE 
+|- 
+|  stream 
+|  Manuel 
+|  DONE (adaptions missing) 
+|- 
+|  system 
+|  
+|  (no doc yet) 
+|- 
+| 
+| 
+| = extras =
+|- 
+|  alignment_free 
+|  Manuel 
+|  DONE 
+|- 
+|  align_split 
+|  Manuel 
+|  DONE 
+|- 
+|  align_profile 
+|  Manuel 
+|  DONE 
+|- 
+|  bed_io 
+|  Manuel 
+|  DONE 
+|- 
+|  find_motif 
+|  Manuel+Sascha 
+|  (new docs from Sascha's work) 
+|- 
+|  index 
+|  Jochen+Enrico 
+|  (Enrico needs to merge his work) 
+|- 
+|  journaled_set 
+|  Manuel 
+|  DONE 
+|- 
+|  math 
+|  David 
+|  (no doc yet) 
+|- 
+|  parse_lm 
+|  Manuel 
+|  DONE 
+|- 
+|  statistics 
+|  Manuel 
+|  DONE 
+|- 
+|  vcf_io 
+|  Manuel 
+|  DONE 
+|}
+
+
+
+
+{{TracNotice|{{PAGENAME}}}}

@@ -1,4 +1,5 @@
-= Wiki Page Templates = 
+
+== Wiki Page Templates == 
 
   ''(since [http://trac.edgewall.org/milestone/0.11 0.11])''
 
@@ -9,7 +10,7 @@ The initial content of a new page will simply be the content of the chosen templ
 
 To create a new template, simply create a new page having a name starting with ''PageTemplates/''.
 
-(Hint: one could even create a ''!PageTemplates/Template'' for facilitating the creation of new templates!)
+(Hint: one could even create a ''PageTemplates/Template'' for facilitating the creation of new templates!)
 
 After you have created your new template, a drop-down selection box will automatically appear on any new wiki pages that are created.  By default it is located on the right side of the 'Create this page' button.
 
@@ -17,3 +18,7 @@ Available templates:
 [[TitleIndex(PageTemplates/)]]
 ----
 See also: TracWiki
+
+
+
+{{TracNotice|{{PAGENAME}}}}

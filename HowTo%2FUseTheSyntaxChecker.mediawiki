@@ -1,23 +1,24 @@
-= How To: Use The Syntax Checker =
+
+== How To: Use The Syntax Checker ==
 [[TOC()]]
 
 The current trunk version of SeqAn contains a syntax checker that is based on the Python bindings to [http://www.google.de/search?q=libclang libclang].
 This library exposes the AST of clang to Python which then allows us to implement style checks from Python programs.
 The resulting program is located in ''util/bin/pyclangcheck.py''.
 
-== Synopsis ==
+=== Synopsis ===
 
 You call the program with
 
- * one or more source files with compilation units (.cpp files) to check,
- * one or more directories to use as include directories (similar to the directories you would give to a compiler), and
- * an arbitrary number of directories to exclude (useful for external code).
+*one or more source files with compilation units (.cpp files) to check,
+*one or more directories to use as include directories (similar to the directories you would give to a compiler), and
+*an arbitrary number of directories to exclude (useful for external code).
 
 Then, the program will parse all compilation units and the files in the include directories.
 It will look for violations of rules (currently mainly naming rules).
 Finally, it will report the locations of violations.
 
-{{{
+<pre>
 ./util/bin/pyclangcheck.py -h
 Usage: pyclangcheck.py [options] file.cpp
 
@@ -34,15 +35,15 @@ Options:
   -q, --quiet           Fewer message.
   -v, --verbose         More messages.
   --ignore-nolint       Ignore // nolint statements.
-}}}
+</pre>
 
-== Suppression of Rule Violations ==
+=== Suppression of Rule Violations ===
 
-You can suppress violations by adding `// nolint` as a line suffix.
+You can suppress violations by adding <tt>// nolint</tt> as a line suffix.
 This is useful if you write adaptions for STL code that requires ''lower_case_naming''.
 
-{{{
-#!cpp
+<pre>
+#cpp
 // ...
 namespace std
 {
@@ -59,8 +60,12 @@ namespace std
 	};
 }
 // ...
-}}}
+</pre>
 
-== False Positives and False Negatives ==
+=== False Positives and False Negatives ===
 
 In case of false positives and false negatives, please create a new ticket.
+
+
+
+{{TracNotice|{{PAGENAME}}}}

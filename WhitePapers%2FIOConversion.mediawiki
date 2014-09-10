@@ -1,76 +1,81 @@
-Using the following command line `ack -l '[^a-z]_parse|_streamRead|_streamEOF' core/include/seqan/gff_io`.
 
-== Needs to be Done ===
+Using the following command line <tt>ack -l '[^a-z]_parse|_streamRead|_streamEOF' core/include/seqan/gff_io</tt>.
+
+=== Needs to be Done ====
 
 '''RazerS family'''
 
- * core/apps/razers2/razers.cpp
- * core/apps/razers2/razers.h
- * core/apps/razers2/razers_matepairs.h
- * core/apps/razers2/paramChooser.h
- * core/apps/splazers/razers.h
- * core/apps/razers/razers_spliced.h
- * core/apps/razers/razers.cpp
- * core/apps/razers/razers.h
- * core/apps/razers/razers_matepairs.h
- * core/apps/razers/paramChooser.h
- * extras/apps/razers3/razers.h
- * extras/apps/razers3/outputFormat.h
- * extras/apps/razers3/paramChooser.h
+*core/apps/razers2/razers.cpp
+*core/apps/razers2/razers.h
+*core/apps/razers2/razers_matepairs.h
+*core/apps/razers2/paramChooser.h
+*core/apps/splazers/razers.h
+*core/apps/razers/razers_spliced.h
+*core/apps/razers/razers.cpp
+*core/apps/razers/razers.h
+*core/apps/razers/razers_matepairs.h
+*core/apps/razers/paramChooser.h
+*extras/apps/razers3/razers.h
+*extras/apps/razers3/outputFormat.h
+*extras/apps/razers3/paramChooser.h
 
 '''Insegt'''
 
- * extras/apps/insegt/read_gtf.h
- * extras/apps/insegt/base.h
- * extras/apps/insegt/read_gff.h
+*extras/apps/insegt/read_gtf.h
+*extras/apps/insegt/base.h
+*extras/apps/insegt/read_gff.h
 
 '''Graph Tests'''
 
- * core/tests/graph_align/test_graph_match_refinement.h
+*core/tests/graph_align/test_graph_match_refinement.h
 
 '''Fragment Store'''
 
- * core/include/seqan/store/store_io_sam.h
+*core/include/seqan/store/store_io_sam.h
 
-== Replacable / Deprecated Stuff ==
+=== Replacable / Deprecated Stuff ===
 
 '''Mason 2 could go into extras and soon replace Mason 1'''
 
- * core/apps/mason/mason.h
+*core/apps/mason/mason.h
 
 '''Could be removed from trunk'''
 
- * extras/apps/variant_comp/variant_comp.cpp
- * core/include/seqan/misc/cmdparser/cmdparser_parse.h
- * core/include/seqan/misc/cmdparser/cmdparser.h
+*extras/apps/variant_comp/variant_comp.cpp
+*core/include/seqan/misc/cmdparser/cmdparser_parse.h
+*core/include/seqan/misc/cmdparser/cmdparser.h
 
 '''Old file I/O stuff to be exchanged'''
 
- * core/include/seqan/misc/misc_parsing.h
- * core/include/seqan/file/chunk_collector.h
- * core/include/seqan/file/file_format_genbank.h
- * core/include/seqan/file/file_format.h
- * core/include/seqan/file/cstream.h
- * core/include/seqan/file/file_format_mmap.h
- * core/include/seqan/file/stream.h
- * core/include/seqan/file/file_format_fasta.h
- * core/include/seqan/file/file_format_fasta_align.h
- * core/include/seqan/file/file_format_embl.h
- * core/include/seqan/file/file_format_raw.h
+*core/include/seqan/misc/misc_parsing.h
+*core/include/seqan/file/chunk_collector.h
+*core/include/seqan/file/file_format_genbank.h
+*core/include/seqan/file/file_format.h
+*core/include/seqan/file/cstream.h
+*core/include/seqan/file/file_format_mmap.h
+*core/include/seqan/file/stream.h
+*core/include/seqan/file/file_format_fasta.h
+*core/include/seqan/file/file_format_fasta_align.h
+*core/include/seqan/file/file_format_embl.h
+*core/include/seqan/file/file_format_raw.h
 
 '''False Positives'''
 
- * extras/include/seqan/vcf_io/read_vcf.h
- * core/apps/stellar/stellar.cpp
- * core/include/seqan/stream/tokenize.h
- * core/include/seqan/stream/stream_char_array.h
- * core/include/seqan/stream/adapt_iostream.h
- * core/include/seqan/stream/adapt_fstream.h
- * core/include/seqan/stream/adapt_sstream.h
- * extras/apps/gustaf/gustaf.cpp
- * extras/apps/sgip/sgip.cpp
- * extras/apps/rep_sep/utils.h
- * extras/apps/searchjoin/db.h
- * core/include/seqan/gff_io/gff_io_base.h
- * core/include/seqan/arg_parse/arg_parse_doc.h
- * core/include/seqan/arg_parse/arg_parse_parse.h
+*extras/include/seqan/vcf_io/read_vcf.h
+*core/apps/stellar/stellar.cpp
+*core/include/seqan/stream/tokenize.h
+*core/include/seqan/stream/stream_char_array.h
+*core/include/seqan/stream/adapt_iostream.h
+*core/include/seqan/stream/adapt_fstream.h
+*core/include/seqan/stream/adapt_sstream.h
+*extras/apps/gustaf/gustaf.cpp
+*extras/apps/sgip/sgip.cpp
+*extras/apps/rep_sep/utils.h
+*extras/apps/searchjoin/db.h
+*core/include/seqan/gff_io/gff_io_base.h
+*core/include/seqan/arg_parse/arg_parse_doc.h
+*core/include/seqan/arg_parse/arg_parse_parse.h
+
+
+
+{{TracNotice|{{PAGENAME}}}}

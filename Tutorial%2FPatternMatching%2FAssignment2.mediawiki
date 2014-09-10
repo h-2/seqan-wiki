@@ -1,10 +1,11 @@
-= Assignment 2 =
 
-== Task ==
+== Assignment 2 ==
+
+=== Task ===
 
 Modify the example above to search with the seqan:Spec.Myers algorithm for matches of "more" with an edit distance of at most 2.
 
-== Solution ==
+=== Solution ===
 
 First we change the needle from "mo" to "more".
 [[Include(source:trunk/core/demos/tutorial/find/find_assignment2.cpp, fragment=initialization)]]
@@ -15,8 +16,8 @@ In SeqAn, edit distance corresponds to the scoring scheme (0,-1,-1) (match, mism
 [[Include(source:trunk/core/demos/tutorial/find/find_assignment2.cpp, fragment=output)]]
 
 Program output:
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 [2,4)	mo
 [2,5)	mon
@@ -31,4 +32,8 @@ Program output:
 [17,21)	mone
 [17,22)	money
 </pre>
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

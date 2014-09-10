@@ -1,4 +1,5 @@
-= Journaled Set =
+
+== Journaled Set ==
 
 [[TOC]]
 
@@ -10,11 +11,11 @@
  Duration ::
   2:00h
  Prerequisites ::
-  Tutorial [wiki:Tutorial/Metafunctions Metafunctions],
-  [wiki:Tutorial/Alphabets Alphabets],
-  [wiki:Tutorial/Sequences Sequences],
-  [wiki:Tutorial/StringSets StringSets],
-  [wiki:Tutorial/Iterators Iterators]
+  Tutorial [[Tutorial/Metafunctions| Metafunctions]],
+  [[Tutorial/Alphabets| Alphabets]],
+  [[Tutorial/Sequences| Sequences]],
+  [[Tutorial/StringSets| StringSets]],
+  [[Tutorial/Iterators| Iterators]]
 
 A typical task in bioinformatics is to find patterns in biological sequences e.g. transcription factors, or to examine different biological traits and the effects of modifications on such traits. With the current advances in sequencing technologies, sequences of whole populations have been made available. But the time for searching in all these sequences is proportional to the number of sequences searched. That's why it is important to find novel strategies to cope with the deluge of sequencing data. Since, many biological problems often involve the analysis of sequences of the same species, one effective strategy would be to exploit the similarities of such sequences. 
 
@@ -23,11 +24,11 @@ The first one is the [dox:JournaledString JournaledString] and the second is the
 
 In this tutorial, we will introduce you to both data structures and implement a simple online search step by step.
 
-== Journaled String ==
+=== Journaled String ===
 
 The [dox:JournaledString JournaledString] data structure behaves like a normal [dox:String String] in SeqAn, except that it is composed of two data structures.
 
- 1. The first data structure is a [dox:Holder Holder] which stores a sequence.
+#The first data structure is a [dox:Holder Holder] which stores a sequence.
  2. The second data structure stores modifications that are made to this particular sequence using a '''journal''' (see [http://en.wikipedia.org/wiki/Journaling_file_system Journaling Filesystems] for more information).
     This journal contains a list of deletions and insertions.
     The inserted characters are stored in an additional '''insertion buffer'''.
@@ -38,22 +39,22 @@ We want to show you how to work with these data structures so you can build your
 For this reason we keep the applicational background simple and implement an native online-search algorithm by which we examine different properties of the data structures. 
 
 Before we start implementing our online search algorithm, we show you how to work with the Journaled String to learn the basic principles. 
-To get access to the Journaled String implementation you have to include the `seqan/sequence_journaled.h` header file.
-Note that you will need the `seqan/file.h` too in order to print the sequences.
+To get access to the Journaled String implementation you have to include the <tt>seqan/sequence_journaled.h</tt> header file.
+Note that you will need the <tt>seqan/file.h</tt> too in order to print the sequences.
 
 [[Include(source:trunk/extras/demos/tutorial/data_journaling/example_journal_string_basic.cpp, fragment=main)]]
 
 In the next step we define the Journaled String type.
-A Journaled String is a specialization of the String class and is defined as `String<TValue, Journaled<THostSpec, TJournalSpec, TBufferSpec> >`.
-The specialization takes two parameters: (1) `TValue` defines the alphabet type used for the Journaled String and (2) `Journaled<>` selects the Journaled String specialization of the String class.
-`Journaled<>` is further specialized with:
+A Journaled String is a specialization of the String class and is defined as <tt>String<TValue, Journaled<THostSpec, TJournalSpec, TBufferSpec> ></tt>.
+The specialization takes two parameters: (1) <tt>TValue</tt> defines the alphabet type used for the Journaled String and (2) <tt>Journaled<></tt> selects the Journaled String specialization of the String class.
+<tt>Journaled<></tt> is further specialized with:
 
- * `THostSpec` selects the specialization of the underlying host sequence (`Alloc<>` for [dox:AllocString Alloc String),
- * `TJournaleSpec` selects the used implementation to manage the journaled differences (here: `SortedArray`), and
- * `TBufferSpec` selects the used specialization for the internally managed insertion buffer (here: `Alloc<>` as well).
+*<tt>THostSpec</tt> selects the specialization of the underlying host sequence (<tt>Alloc<></tt> for [dox:AllocString Alloc String),
+*<tt>TJournaleSpec</tt> selects the used implementation to manage the journaled differences (here: <tt>SortedArray</tt>), and
+*<tt>TBufferSpec</tt> selects the used specialization for the internally managed insertion buffer (here: <tt>Alloc<></tt> as well).
  
-In our scenario we use a `char` alphabet and [dox:AllocString Alloc String for the host string and the insertion buffer.
-Additionally, we use a `Sorted Array` as the model to manage the recorded differences.
+In our scenario we use a <tt>char</tt> alphabet and [dox:AllocString Alloc String for the host string and the insertion buffer.
+Additionally, we use a <tt>Sorted Array</tt> as the model to manage the recorded differences.
 
 We use the metafunction [dox:HostedConcept#Host Host] to get the type of the underlying host string used for the Journaled String.
 
@@ -66,19 +67,19 @@ Afterwards, we examine the data structure in more detail and print the host sequ
 
 [[Include(source:trunk/extras/demos/tutorial/data_journaling/example_journal_string_basic.cpp, fragment=init)]]
 
-{{{#!InfoBox
+<pre>#InfoBox
 '''In-Depth Information:''' The Journal
 
 A node in the Journaled String represents either a part of the host sequence or a part of the insertion buffer.
-The type of a node is distinguished by the member variable '''segmentSource''' and can be of value `SOURCE_ORIGINAL` to refere to a part in the host or `SOURCE_PATCH` to refere to a part in the insertion buffer.
+The type of a node is distinguished by the member variable '''segmentSource''' and can be of value <tt>SOURCE_ORIGINAL</tt> to refere to a part in the host or <tt>SOURCE_PATCH</tt> to refere to a part in the insertion buffer.
 A node further consists of three variables which specify the '''virtual position''', the '''physical position''' and the '''length''' of this part.
 The '''virtual position''' gives the relative position of the Journaled String after all modifications before this position have been "virtually" applied.
 The '''physical position''' gives the absolute position where this part of the journal maps to either the host sequence or the insertion buffer.
-}}}
+</pre>
 
 This is followed by modifying our Journaled String.
-We insert the string `"modified"` at position `7` and delete the suffix `"sequence"` at position `19`. 
-Note that position `19` refers to the string after the insertion of `"modified"` at position `7`.
+We insert the string <tt>"modified"</tt> at position <tt>7</tt> and delete the suffix <tt>"sequence"</tt> at position <tt>19</tt>. 
+Note that position <tt>19</tt> refers to the string after the insertion of <tt>"modified"</tt> at position <tt>7</tt>.
 Again we print the host, the journaled sequence and the nodes that represent the modifications to see how our changes affect the host and the journaled sequence.
 
 [[Include(source:trunk/extras/demos/tutorial/data_journaling/example_journal_string_basic.cpp, fragment=modification)]]
@@ -91,7 +92,7 @@ Again we print the sequences to see the effects.
 
 Here is the output of our small program.
 
-{{{#!ShellBox
+<pre>#ShellBox
 After creating the Journaled String:
 Host: thisisahostsequence
 Journal: thisisahostsequence
@@ -106,20 +107,20 @@ After flatten the Journaled String:
 Host: thisisamodifiedhost
 Journal: thisisamodifiedhost
 Nodes: JournalEntries({segmentSource=1, virtualPosition=0, physicalPosition=0, length=19})
-}}}
+</pre>
 
-{{{#!ImportantBox
+<pre>#ImportantBox
 Be careful when using the [dox:JournaledString#flatten flatten] function as it modifies the underlying host sequence.
 This might affect other journaled sequences that share the same host sequence.
 This becomes important especially when working with Journal Sets where a whole set of sequences is journaled to the same reference.
-}}}
+</pre>
 
-== Journaled Set ==
+=== Journaled Set ===
 
 The [dox:JournaledSet JournaledSet] is a specialization of the [dox:StringSet StringSet] which can be used exactly as such but also provides some additional functions optimized to work with [dox:JournaledString JournaledStrings]. The general interface is equal to the interface of the StringSet. 
 But it also provides some interfaces specialized for the use of Journaled Strings. One of these interfaces is the [dox:JournaledString#join join] function which journales a contained Journaled String to the previously set global reference. The following code snippet demonstrates the usage of the Journal Set and how to join a sequence to the previously set reference sequence.
 
-As usual we include the necessary headers. We need the header `seqan/journal_set.h` to get access to the Journal Set. Then we define a type for journaled sequences. After that we define our Journal Set. The Journal Set is a specialization of the [dox:OwnerStringSet Owner] concept of StringSets and is defined as `StringSet<TJournalString, Owner<JournaledSet> >`.
+As usual we include the necessary headers. We need the header <tt>seqan/journal_set.h</tt> to get access to the Journal Set. Then we define a type for journaled sequences. After that we define our Journal Set. The Journal Set is a specialization of the [dox:OwnerStringSet Owner] concept of StringSets and is defined as <tt>StringSet<TJournalString, Owner<JournaledSet> ></tt>.
 
 [[Include(source:trunk/extras/demos/tutorial/data_journaling/example_join.cpp, fragment=main)]]
 
@@ -131,96 +132,96 @@ Just adding sequences to the Journal Set does not automatically journal them to 
 
 [[Include(source:trunk/extras/demos/tutorial/data_journaling/example_join.cpp, fragment=join)]]
 
-{{{#!InfoBox
+<pre>#InfoBox
 '''In-Depth Information:''' Configuration of the Join Methods
 
 The [dox:JoinConfig JoinConfig] object differentiates two methods in general and each method further differs in the used strategy. The two methods are the [dox:GlobalAlign GlobalAlign] and the [dox:GlobalChain GlobalChain] method. They differ in the approach of computing the alignment which is necessary to construct the journal. The first method uses a global alignment algorithm while the second one uses an anchor approach in which first exact seeds are found using a q-gram index and after that the optimal chain between the identified anchors is computed. For each method the user can specify a different strategy. The first strategy is triggered by using [dox:JoinStrategiesTags JournaledManhatten]. This means for the the GlobalAlign method, that the complete sequence is inserted and the complete reference is deleted, while for the GlobalChain methods this means that the gaps between the anchors are connected through the Manhatten distance. The second strategy is specified using the [dox:JoinStrategiesTags JournaledCompact] tag. It computes the most compact form of a journal by menas of memory requirements. 
-}}}
+</pre>
 
 Here is the output of the program.
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 Reference: DPKKPRGKMSSYAFFVQTSREEHKKKHPDASVNFSEFSKKCSERWKTMSAKEKGKFEDMAKADKARYEREMKTYIPPKGE
 Journaled Sequence 0: DPKKPRGKMVNSPPAFFVQTSREEHKKKHPDASVFSKKCSERWKTMSAKEKGKFEDMAKARYEREMKTTYIPKGETYIPPKGE
 Journaled Sequence 1: DPHHPPKPRGKMVNSPPAFFVQTSREEHKPDASVFSKKCSERRMPNHHTMSAKEKGKFEDMAKARYEREMKTTYIPKGETYIPPKGE
 Journaled Sequence 2: DPKKPRGKMSSYAFFVQTSREEHKKKHPKKCDEFSKKCSERWKTMSAKEKGKFEDARYEREMKTYIPPKGE
-}}}
+</pre>
 
-== Implementing an Online-Search ==
+=== Implementing an Online-Search ===
 
 Now we have all foundations laid down to implement the online-search algorithm. Let us begin with the first assignment where we read in some sequences and use the currently learned things about the Journal Set.
 
 ==== Assignment 1 ====
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 
  Type :: Review, Application
- Objective :: Download the fasta file [attachment:sequences.fasta sequences.fasta] which contains some DNA sequences. Write a method called `loadAndJoin` that gets a Journal Set and a stream file pointing to the downloaded fasta file. The method reads in the sequences one after another using SeqAn's [dox:RecordReader RecordReader]. The first read sequences is set to the reference sequence. All following sequences are first appended to the StringSet and afterwards joined to the StringSet using a global alignment strategy and the most compact form.
+ Objective :: Download the fasta file [attachment:sequences.fasta sequences.fasta] which contains some DNA sequences. Write a method called <tt>loadAndJoin</tt> that gets a Journal Set and a stream file pointing to the downloaded fasta file. The method reads in the sequences one after another using SeqAn's [dox:RecordReader RecordReader]. The first read sequences is set to the reference sequence. All following sequences are first appended to the StringSet and afterwards joined to the StringSet using a global alignment strategy and the most compact form.
 
  Hints ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
-You can start using the following code snippet. Replace the path of the iostream such that it points to your path and fill in the missing parts [A],[B] and [C] in the function `loadAndJoin` (Altogether you will need 4 lines of code.).
+You can start using the following code snippet. Replace the path of the iostream such that it points to your path and fill in the missing parts [A],[B] and [C] in the function <tt>loadAndJoin</tt> (Altogether you will need 4 lines of code.).
 
 [[Include(source:trunk/extras/demos/tutorial/data_journaling/example_online_search_assignment1_hint.cpp, fragment=main)]]
 
-}}}
+</pre>
  Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 Here is the solution to the first assignment.
 [[Include(source:trunk/extras/demos/tutorial/data_journaling/solution_online_search_assignment1.cpp, fragment=main)]]
 
-}}}
+</pre>
 
-}}}
+</pre>
 
 Now we have loaded and journaled our sequences and we use the minimal possible memory requirements for our sequences.
-Let's continue and implement the exact online-search on the Journal Set. For this purpose we write a function called `searchPattern` which takes a StringSet of `String<int>` which we use to store each hit for each sequence in the Journal Set including the reference sequence. 
-First we have to check whether the reference sequence is set. If not we abort the search since we cannot guarantee a correct search when the reference is not set. We also have to clear our `hitSet` to ensure there remain no phantom hits from previous searches. Then we resize it to the number of contained Journaled Strings plus an additional space for the global reference sequence.
+Let's continue and implement the exact online-search on the Journal Set. For this purpose we write a function called <tt>searchPattern</tt> which takes a StringSet of <tt>String<int></tt> which we use to store each hit for each sequence in the Journal Set including the reference sequence. 
+First we have to check whether the reference sequence is set. If not we abort the search since we cannot guarantee a correct search when the reference is not set. We also have to clear our <tt>hitSet</tt> to ensure there remain no phantom hits from previous searches. Then we resize it to the number of contained Journaled Strings plus an additional space for the global reference sequence.
  
 [[Include(source:trunk/extras/demos/tutorial/data_journaling/example_online_search.cpp, fragment=searchPatternPart1)]]
 
-Before we can search for the pattern in the Journaled Strings we have to find all occurrences in the reference sequence. Therefore we call the function `findPatternInReference` which takes a `String<int>` which we use to store the hits, the global reference and the pattern.
+Before we can search for the pattern in the Journaled Strings we have to find all occurrences in the reference sequence. Therefore we call the function <tt>findPatternInReference</tt> which takes a <tt>String<int></tt> which we use to store the hits, the global reference and the pattern.
 
 [[Include(source:trunk/extras/demos/tutorial/data_journaling/example_online_search.cpp, fragment=searchPatternPart2)]]
 
-After that we implement the body to search for occurrences in the Journaled Strings. Therefore we use `for`-loop to iterate over all contained sequences and call for each sequence the function `findPatternInJournalString`. The function gets as parameters the corresponding `String<int>` from the `hitSet`, the journaled sequence the pattern and the identified hits in the reference sequence.
+After that we implement the body to search for occurrences in the Journaled Strings. Therefore we use <tt>for</tt>-loop to iterate over all contained sequences and call for each sequence the function <tt>findPatternInJournalString</tt>. The function gets as parameters the corresponding <tt>String<int></tt> from the <tt>hitSet</tt>, the journaled sequence the pattern and the identified hits in the reference sequence.
 
 [[Include(source:trunk/extras/demos/tutorial/data_journaling/example_online_search.cpp, fragment=searchPatternPart3)]]
 
-So far our program won't compile. We have to first implement the both functions `findPatternInReference` and `findPatternInJournalString`.
+So far our program won't compile. We have to first implement the both functions <tt>findPatternInReference</tt> and <tt>findPatternInJournalString</tt>.
 
 ==== Assignment 2 ====
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 
  Type :: Application
- Objective :: Implement the function `findPatternInReference` using a brute force pattern search algorithm. Store all found hits in the passed `hits` variable. Print all occurrences in the end of the `main` function.
+ Objective :: Implement the function <tt>findPatternInReference</tt> using a brute force pattern search algorithm. Store all found hits in the passed <tt>hits</tt> variable. Print all occurrences in the end of the <tt>main</tt> function.
 
  Hints ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 The following code snippet provides you with the backbone for the search algorithm. Fill in the missing parts [A], [B], [C] and [D].
 [[Include(source:trunk/extras/demos/tutorial/data_journaling/example_online_search_assignment2_hint.cpp, fragment=findPatternInReferenceHint)]]
 
-}}}
+</pre>
  Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
-Here is the solution to this function. If you want to have a complete solution of everything we have done so far, please visit [wiki:Tutorial/JournalSet/Assignment/Assignment2IntermediateSolution this page].
+Here is the solution to this function. If you want to have a complete solution of everything we have done so far, please visit [[Tutorial/JournalSet/Assignment/Assignment2IntermediateSolution| this page]].
 
 [[Include(source:trunk/extras/demos/tutorial/data_journaling/solution_online_search_assignment2.cpp, fragment=findPatternInReference)]]
 
-}}}
+</pre>
 
-}}}
+</pre>
 
-We know can search for all occurrences of a pattern in the reference sequence. Now we can try to find all occurrences in the journaled sequences. Therefore we implement the function `findPatternInJournalString`.
-Our function gets the variable `hitsTarget` which stores the hits found in the JournaledString. It gets the search text and the pattern and finally the hits detected in the reference sequence. Instead of searching each position in the Journaled String, we only search in areas that are new to the search. This involves all inserted parts and all parts where the pattern crosses a border to another node. So instead of iterating over each position we iterate over the nodes of the Journaled String. To do so we have to determine the type of the data structure that is used by the Journaled String to manage the nodes. We can use the metafunction [dox:JournaledString#JournalType JournalType] for this task.  Afterwards we define an Iterator over the so called `TJournalEntries` data structure. 
+We know can search for all occurrences of a pattern in the reference sequence. Now we can try to find all occurrences in the journaled sequences. Therefore we implement the function <tt>findPatternInJournalString</tt>.
+Our function gets the variable <tt>hitsTarget</tt> which stores the hits found in the JournaledString. It gets the search text and the pattern and finally the hits detected in the reference sequence. Instead of searching each position in the Journaled String, we only search in areas that are new to the search. This involves all inserted parts and all parts where the pattern crosses a border to another node. So instead of iterating over each position we iterate over the nodes of the Journaled String. To do so we have to determine the type of the data structure that is used by the Journaled String to manage the nodes. We can use the metafunction [dox:JournaledString#JournalType JournalType] for this task.  Afterwards we define an Iterator over the so called <tt>TJournalEntries</tt> data structure. 
 
 Again we check first whether the pattern fits into our sequence.
 
@@ -230,40 +231,40 @@ We then iterate over all nodes beginning from the first until we have reached th
 
 [[Include(source:trunk/extras/demos/tutorial/data_journaling/example_online_search.cpp, fragment=findPatternInJournalStringPart2)]]
 
-Now we search in each node until we have reached the end. For each node we first check the type of the journaled operation. If we are in an "original" node we call the function `_findInOriginalNode`. If we are in a "patch" node we call the function `_findInPatchNode` and in the end we call the function `_searchAtBorder` which is called for each node type and scans all possible hits at the border of a node.
+Now we search in each node until we have reached the end. For each node we first check the type of the journaled operation. If we are in an "original" node we call the function <tt>_findInOriginalNode</tt>. If we are in a "patch" node we call the function <tt>_findInPatchNode</tt> and in the end we call the function <tt>_searchAtBorder</tt> which is called for each node type and scans all possible hits at the border of a node.
 
 [[Include(source:trunk/extras/demos/tutorial/data_journaling/example_online_search.cpp, fragment=findPatternInJournalStringPart3)]]
 
-Let us begin with the implementation of the function `_findInOriginalNode`. In this function we exploit the journaling concept such that we can speed up the search algorithm from `O(p*n)` to `O(log_2(k))`, where `p` is the length of the pattern, `n` is the length of the search text, and `k` is the number of hits identified in the reference sequence. We need at most `log_2(k)` comparisons to find the first hit which occurred in the reference sequence that also occurs in the current original node.
+Let us begin with the implementation of the function <tt>_findInOriginalNode</tt>. In this function we exploit the journaling concept such that we can speed up the search algorithm from <tt>O(p*n)</tt> to <tt>O(log_2(k))</tt>, where <tt>p</tt> is the length of the pattern, <tt>n</tt> is the length of the search text, and <tt>k</tt> is the number of hits identified in the reference sequence. We need at most <tt>log_2(k)</tt> comparisons to find the first hit which occurred in the reference sequence that also occurs in the current original node.
 
 ==== Assignment 3 ====
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 
  Type :: Transfer
- Objective :: Implement the function `_findInOriginalNode`, which identifies all shared hits between the current `original` node and the corresponding part in the reference sequence. Note you do not need to scan all positions again. In the end print all occurrences to the console.
+ Objective :: Implement the function <tt>_findInOriginalNode</tt>, which identifies all shared hits between the current <tt>original</tt> node and the corresponding part in the reference sequence. Note you do not need to scan all positions again. In the end print all occurrences to the console.
 
  Hints ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 The following code snippet provides you with the backbone for this function. Fill in the missing parts [A], [B], [C], [D] and [E].
 Use the STL function [http://www.cplusplus.com/reference/algorithm/upper_bound/ ::std::upper_bound] to conduct a binary search to find the first possible hit from the reference that is also represented by the current node.
 [[Include(source:trunk/extras/demos/tutorial/data_journaling/example_online_search_assignment3_hint.cpp, fragment=findInOriginalNode)]]
 
-}}}
+</pre>
  Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
-Here is the solution to this function. If you want to have a complete solution of everything we have done so far, please visit [wiki:Tutorial/JournalSet/Assignment/Assignment3IntermediateSolution this page].
+Here is the solution to this function. If you want to have a complete solution of everything we have done so far, please visit [[Tutorial/JournalSet/Assignment/Assignment3IntermediateSolution| this page]].
 
 [[Include(source:trunk/extras/demos/tutorial/data_journaling/solution_online_search_assignment3.cpp, fragment=findInOriginalNode)]]
 
-}}}
+</pre>
 
-}}}
+</pre>
 
-We are almost at the end of our online-search algorithm. Let's now implement the method `_findInPatchNode`. We basically had this already implemented when we wrote the search function for the reference. Let's recall this part together.
+We are almost at the end of our online-search algorithm. Let's now implement the method <tt>_findInPatchNode</tt>. We basically had this already implemented when we wrote the search function for the reference. Let's recall this part together.
 
 First we write the body of our function and define now an Iterator over the Journaled String. 
 [[Include(source:trunk/extras/demos/tutorial/data_journaling/example_online_search.cpp, fragment=findInPatchNodePart1)]]
@@ -279,35 +280,35 @@ We need to use a second temporary iterator which is used to compare the current 
 To ensure that we are not missing any hits we also have to scan the regions where the pattern is leaving the current node. You can solve this problem in the next assignment.
 
 ==== Assignment 4 ====
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 
  Type :: Review
- Objective :: Implement the last function `_searchAtBorder`, which identifies all hits that cross the border of the current node to the next node.
+ Objective :: Implement the last function <tt>_searchAtBorder</tt>, which identifies all hits that cross the border of the current node to the next node.
 
  Hints ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 The following code snippet provides you with the backbone for this function. Fill in the missing parts [A], [B], [C] and [D].
 [[Include(source:trunk/extras/demos/tutorial/data_journaling/example_online_search_assignment4_hint.cpp, fragment=searchAtBorder)]]
 
-}}}
+</pre>
  Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
-Here is the solution to this function. If you want to have a complete solution of everything we have done so far, please visit [wiki:Tutorial/JournalSet/Assignment/Assignment4IntermediateSolution this page].
+Here is the solution to this function. If you want to have a complete solution of everything we have done so far, please visit [[Tutorial/JournalSet/Assignment/Assignment4IntermediateSolution| this page]].
 
 [[Include(source:trunk/extras/demos/tutorial/data_journaling/solution_online_search_assignment4.cpp, fragment=searchAtBorder)]]
 
-}}}
+</pre>
 
-}}}
+</pre>
 
 CONGRATULATIONS!!! You have just implemented a cool online-search which is speed up by exploiting the parallelism given by the data set.
 And here is the final result.
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 Search for: GTGGT:
 Hit in reference  at 311: GTGGT	644: GTGGT	
@@ -317,27 +318,31 @@ Hit in sequence 2 at 311: GTGGT	507: GTGGT
 Hit in sequence 3 at 327: GTGGT	
 Hit in sequence 4 at 307: GTGGT	312: GTGGT	317: GTGGT	
 Hit in sequence 5 at 0: GTGGT	320: GTGGT	986: GTGGT
-}}}
+</pre>
 
 
 ==== Assignment 5 ====
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 
  Type :: Transfer
 
- Objective :: Try to replace the brute force versions using using SeqAn's [dox:Finder Finder] and [dox:Pattern Pattern] concept. You can find additional material to this topic in the tutorial [wiki:Tutorial/PatternMatching Pattern Matching].
+ Objective :: Try to replace the brute force versions using using SeqAn's [dox:Finder Finder] and [dox:Pattern Pattern] concept. You can find additional material to this topic in the tutorial [[Tutorial/PatternMatching| Pattern Matching]].
 
  Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
-[wiki:Tutorial/JournalSet/Assignment/Assignment5CompleteSolution Here] is the solution to the extension using the Finder and the Pattern class.
+[[Tutorial/JournalSet/Assignment/Assignment5CompleteSolution| Here]] is the solution to the extension using the Finder and the Pattern class.
 
-}}}
+</pre>
 
-}}}
+</pre>
 
 
-=== Submit a  comment ===
+==== Submit a  comment ====
 If you found a mistake, or have suggestions about an improvement of this page press:
 [/newticket?component=Documentation&description=Tutorial+Enhancement+for+page+http://trac.seqan.de/wiki/Tutorial/Alignments&type=enhancement submit your comment]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

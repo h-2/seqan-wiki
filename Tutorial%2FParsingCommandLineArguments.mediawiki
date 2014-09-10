@@ -1,4 +1,5 @@
-= Parsing Command Line Arguments =
+
+== Parsing Command Line Arguments ==
 
 [[TOC()]]
 
@@ -9,43 +10,43 @@
    Easy
  Duration :: 30-60 min
  Prerequisites ::
-  [wiki:Tutorial/Basics], [wiki:Tutorial/Strings], Familiarity with building SeqAn apps.
+  [[Tutorial/Basics]], [[Tutorial/Strings]], Familiarity with building SeqAn apps.
 
 The simplest possible and also most flexible interface to a program is through the command line.
 This tutorial explains how to parse the command line using the SeqAn library's [dox:ArgumentParser ArgumentParser] class.
 
 Using this class will give you the following functionality:
 
- * Robust parsing of command line arguments.
- * Simple verification of arguments (e.g. within a range, one of a list of allowed values).
- * Automatically generated and nicely formatted help screens when called with `--help`.
+*Robust parsing of command line arguments.
+*Simple verification of arguments (e.g. within a range, one of a list of allowed values).
+*Automatically generated and nicely formatted help screens when called with <tt>--help</tt>.
    You can also export this help to HTML and man pages.
- * In the future, you will be able to automatically generate nodes for workflow engines such as [http://knime.org/ KNIME] or [http://en.wikipedia.org/wiki/Galaxy_(computational_biology) Galaxy].
+*In the future, you will be able to automatically generate nodes for workflow engines such as [http://knime.org/ KNIME] or [http://en.wikipedia.org/wiki/Galaxy_(computational_biology) Galaxy].
 
 As a continuous example, we will write a little program that is given strings on the command line and applies an operation to every i-th character:
 
-{{{#!ShellBox
+<pre>#ShellBox
 # modify_string --uppercase -i 2 "This is some text!"
 ThIs iS SoMe TeXt!
 # modify_string "This is some text!" --lowercase -i 1
 this is some text!
-}}}
+</pre>
 
 The program has three types of command line options/arguments:
 
- * Two '''flag options''' `--uppercase` and `--lowercase` that select the operation.
- * One '''(value) option''' `-i` that selects the period of the characters that the operation is to be applied to and is given a value (`2` in the first call, `1` in the second).
- * One '''(positional) argument''' with the text to modify (above `"This is some text!"`.
+*Two '''flag options''' <tt>--uppercase</tt> and <tt>--lowercase</tt> that select the operation.
+*One '''(value) option''' <tt>-i</tt> that selects the period of the characters that the operation is to be applied to and is given a value (<tt>2</tt> in the first call, <tt>1</tt> in the second).
+*One '''(positional) argument''' with the text to modify (above <tt>"This is some text!"</tt>.
    In contrast to options, arguments are not identified by their names but by their position.
 
-Command line options can have a '''long name''' (e.g. `--lowercase`) and/or a '''short name''' (e.g. `-i`).
+Command line options can have a '''long name''' (e.g. <tt>--lowercase</tt>) and/or a '''short name''' (e.g. <tt>-i</tt>).
 
-== A First Working Example ==
+=== A First Working Example ===
 
-The following small program will (1) setup a [dox:ArgumentParser ArgumentParser] object named `parser`, (2) parse the command line, (3) exit the program if there were errors or the user requested a functionality that is already built into the command line parser, and (4) printing the settings given from the command line.
+The following small program will (1) setup a [dox:ArgumentParser ArgumentParser] object named <tt>parser</tt>, (2) parse the command line, (3) exit the program if there were errors or the user requested a functionality that is already built into the command line parser, and (4) printing the settings given from the command line.
 Such functionality is printing the help, for example.
 
-{{{#!cpp
+<pre>#cpp
 #include <iostream>
 
 #include <seqan/arg_parse.h>
@@ -85,13 +86,13 @@ int main(int argc, char const ** argv)
 
     return 0;
 }
-}}}
+</pre>
 
 Let us first play a bit around with the program before looking at it in detail.
 
 For example, we can already let the program generate an online help:
 
-{{{#!ShellBox
+<pre>#ShellBox
 # modify_string -h
 modify_string
 =============
@@ -109,7 +110,7 @@ DESCRIPTION
 VERSION
     modify_string version: 
     Last update 
-}}}
+</pre>
 
 While already informative, the help screen looks like there is something missing.
 For example, there is no synopsis, no version and no date of the last update given.
@@ -117,109 +118,109 @@ We will fill this in later.
 
 When we pass some parameters, the settings are printed:
 
-{{{#!ShellBox
+<pre>#ShellBox
 # modify_string "This is a test." -i 1 -U
 period     1
 uppercase  1
 text       This is a test.
-}}}
+</pre>
 
-When we try to use the `--lowercase`/`-L` option, we get an error.
+When we try to use the <tt>--lowercase</tt>/<tt>-L</tt> option, we get an error.
 This is not surprising since we did not tell the argument parser about this option yet.
 
-{{{#!ShellBox
+<pre>#ShellBox
 # modify_string "This is a test." -i 1 -L
 modify_string: illegal option -- L
-}}}
+</pre>
 
-=== A Detailed Look ===
+==== A Detailed Look ====
 
 Let us look at this program in detail now.
-The required SeqAn module is `seqan/arg_parse.h`.
+The required SeqAn module is <tt>seqan/arg_parse.h</tt>.
 After inclusion, we can create an [dox:ArgumentParser ArgumentParser] object:
 
-{{{#!cpp
+<pre>#cpp
 seqan::ArgumentParser parser("modify_string");
-}}}
+</pre>
 
 Then, we define a positional argument using the function [dox:ArgumentParser#addArgument addArgument].
 The function accepts the parser and an [dox:ArgParseArgument ArgParseArgument] object.
 We call the [dox:ArgParseArgument ArgParseArgument] constructor with three parameters:
 The type of the argument (a string), and a label for the documentation.
 
-{{{#!cpp
+<pre>#cpp
 addArgument(parser, seqan::ArgParseArgument(
     seqan::ArgParseArgument::STRING, "TEXT"));
-}}}
+</pre>
 
 Then, we add options to the parser using [dox:ArgumentParser#addOption addOption].
 We pass the parser and an [dox:ArgParseOption ArgParseOption] object.
 
-{{{#!cpp
+<pre>#cpp
 addOption(parser, seqan::ArgParseOption(
     "i", "period", "Period to use for the index.",
     seqan::ArgParseArgument::INTEGER, "INT"));
 addOption(parser, seqan::ArgParseOption(
     "U", "uppercase", "Select to-uppercase as operation."));
-}}}
+</pre>
 
 The [dox:ArgParseOption ArgParseOption] constructor is called in two different variants.
 Within the first [dox:ArgumentParser#addOption addOption] call, we construct an integer option with a short and long name, a documentation string, and give it the label "INT".
 The second option is a flag (indicated by not giving a type) with a short and a long name and a description.
 
-{{{#!InfoBox
+<pre>#InfoBox
 '''Information:''' List Arguments and Options.
 
 You have to mark an option to be a list if you want to be able to collect multiple values for it from the command line.
 Consider the following program call:
 
-{{{#!ShellBox
+<pre>#ShellBox
 # program -a 1 -a 2 -a 3
-}}}
+</pre>
 
-If the option `a` is not a list then the occurence `-a 3` overwrites all previous settings.
+If the option <tt>a</tt> is not a list then the occurence <tt>-a 3</tt> overwrites all previous settings.
 
-However, if `a` is marked to be a list, then all values (`1`, `2`, and `3`) are stored as its values.
+However, if <tt>a</tt> is marked to be a list, then all values (<tt>1</tt>, <tt>2</tt>, and <tt>3</tt>) are stored as its values.
 We can get the number of elements using the function [dox:ArgumentParser#getOptionValueCount getOptionValueCount] and then access the individual arguments using the function [dox:ArgumentParser#getOptionValue getOptionValue].
-You can mark an option and arguments to be lists by using the `isList` parameter to the [dox:ArgParseArgument ArgParseArgument] and [dox:ArgParseOption ArgParseOption] construtors.
+You can mark an option and arguments to be lists by using the <tt>isList</tt> parameter to the [dox:ArgParseArgument ArgParseArgument] and [dox:ArgParseOption ArgParseOption] construtors.
 
 For arguments, only the first or the last argument or none can be a list but not both.
 Consider this program call:
 
-{{{#!ShellBox
+<pre>#ShellBox
 # program arg0 arg1 arg2 arg3
-}}}
+</pre>
 
-For example, if the program has three arguments and the first one is a list then `arg0` and `arg1` would be the content of the first argument.
-If it has two arguments and the last one is a list then `arg1`, `arg2`, and `arg3` would be the content of the last argument.
-}}}
+For example, if the program has three arguments and the first one is a list then <tt>arg0</tt> and <tt>arg1</tt> would be the content of the first argument.
+If it has two arguments and the last one is a list then <tt>arg1</tt>, <tt>arg2</tt>, and <tt>arg3</tt> would be the content of the last argument.
+</pre>
 
 Next, we parse the command line using [dox:ArgumentParser#parse parse].
 
-{{{#!cpp
+<pre>#cpp
 seqan::ArgumentParser::ParseResult res = seqan::parse(parser, argc, argv);
-}}}
+</pre>
 
 We then check the result of the parsing operation.
-The result is `seqan::ArgumentParser::PARSE_ERROR` if there was a problem with the parsing.
-Otherwise, it is `seqan::ArgumentParser::PARSE_OK` if there was no problem and no special functionality of the argument parser was triggered.
-The command line parser automatically adds some arguments, such as `--help`.
-If such built-in functionality is triggered, it will return a value that is neither `PARSE_ERROR` nor `PARSE_OK`.
+The result is <tt>seqan::ArgumentParser::PARSE_ERROR</tt> if there was a problem with the parsing.
+Otherwise, it is <tt>seqan::ArgumentParser::PARSE_OK</tt> if there was no problem and no special functionality of the argument parser was triggered.
+The command line parser automatically adds some arguments, such as <tt>--help</tt>.
+If such built-in functionality is triggered, it will return a value that is neither <tt>PARSE_ERROR</tt> nor <tt>PARSE_OK</tt>.
 
 The following two lines have the following behaviour:
 If the parsing went through and no special functionality was triggered then the branch is not taken.
-Otherwise, the method `main()` is left with `1` in case of errors and with `0` in case special behaviour was triggered (e.g. the help was printed).
+Otherwise, the method <tt>main()</tt> is left with <tt>1</tt> in case of errors and with <tt>0</tt> in case special behaviour was triggered (e.g. the help was printed).
 
-{{{#!cpp
+<pre>#cpp
 if (res != seqan::ArgumentParser::PARSE_OK)
     return res == seqan::ArgumentParser::PARSE_ERROR;
-}}}
+</pre>
 
 Finally, we access the values from the command line using the [dox:ArgumentParser ArgumentParser].
 The function [dox:ArgumentParser#getOptionValue getOptionValue] allows us to access the values from the command line after casting into C++ types.
 The function [dox:ArgumentParser#isSet isSet] allows us to query whether a given argument was set on the command line.
 
-{{{#!cpp
+<pre>#cpp
     unsigned period = 0;
     getOptionValue(period, parser, "period");
     bool toUppercase = isSet(parser, "uppercase");
@@ -229,9 +230,9 @@ The function [dox:ArgumentParser#isSet isSet] allows us to query whether a given
     std::cout << "period   \t" << period << '\n'
               << "uppercase\t" << toUppercase << '\n'
               << "text     \t" << text << '\n';
-}}}
+</pre>
 
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 '''Assignment 1: Getting a first working version'''
 
  Type ::
@@ -241,25 +242,25 @@ The function [dox:ArgumentParser#isSet isSet] allows us to query whether a given
    Compile it and test printing the help screen and calling it with the two command lines above.
  Solution ::
    You can do it!
-}}}
+</pre>
 
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 '''Assignment 2: Adding a lowercase option'''
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
  Type ::
    Reproduction
  Objective ::
    Adjust the program from above to also accept an option to convert characters to lower case, just as it accepts options to convert characters to upper case.
-   The long name should be `--lowercase`, the short name should be `-L`.
-   As for the `--uppercase` option, the program should print whether the flag was set or not.
+   The long name should be <tt>--lowercase</tt>, the short name should be <tt>-L</tt>.
+   As for the <tt>--uppercase</tt> option, the program should print whether the flag was set or not.
  Hint ::
-   Copy the two lines for defining the `--uppercase` option and replace the strings appropriately.
+   Copy the two lines for defining the <tt>--uppercase</tt> option and replace the strings appropriately.
  Solution ::
    Click ''more...''
 ----
-{{{#!cpp
+<pre>#cpp
 #include <iostream>
 
 #include <seqan/arg_parse.h>
@@ -303,37 +304,37 @@ int main(int argc, char const ** argv)
 
     return 0;
 }
-}}}
-}}}
-}}}
+</pre>
+</pre>
+</pre>
 
-== Using Default Values ==
+=== Using Default Values ===
 
-Would it not be nice if we could specify a default value for `--period`, so it is `1` if not specified and simply each character is modified?
+Would it not be nice if we could specify a default value for <tt>--period</tt>, so it is <tt>1</tt> if not specified and simply each character is modified?
 We can do this by using the function [dox:ArgumentParser#setDefaultValue setDefaultValue]:
 
-{{{
-#!cpp
+<pre>
+#cpp
 setDefaultValue(parser, "period", "1");
-}}}
+</pre>
 
 Note that we are giving the default value as a string.
 The [dox:ArgumentParser ArgumentParser] object will simply interpret it as if it was given on the command line.
 There, of course, each argument is a string.
 
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 '''Assignment 3: Setting a default value'''
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
  Type ::
    Reproduction
  Objective ::
-   Adjust the previous program to accept default values by adding the `setDefaultValue()` line from above into your program.
+   Adjust the previous program to accept default values by adding the <tt>setDefaultValue()</tt> line from above into your program.
  Solution ::
    Click ''more...''
 ----
-{{{#!cpp
+<pre>#cpp
 #include <iostream>
 
 #include <seqan/arg_parse.h>
@@ -376,22 +377,22 @@ int main(int argc, char const ** argv)
 
     return 0;
 }
-}}}
-}}}
-}}}
+</pre>
+</pre>
+</pre>
 
-== Best Practice: Using Option Structs ==
+=== Best Practice: Using Option Structs ===
 
 Instead of just printing the options back to the user, we should actually store them.
 To follow best practice, we should not use global variables for this but instead pass them as parameters.
 
-We will thus create a `ModifyStringOptions` struct that encapsulates the settings the user can give to the `modify_string` program.
+We will thus create a <tt>ModifyStringOptions</tt> struct that encapsulates the settings the user can give to the <tt>modify_string</tt> program.
 Note that we initialize the variables of the struct with initializer lists, as it is best practice in modern C++.
 
-{{{#!FoldOut
-The `ModifyStringOptions` struct's definition is shown below. Click ''more...'' to see the whole updated program.
+<pre>#FoldOut
+The <tt>ModifyStringOptions</tt> struct's definition is shown below. Click ''more...'' to see the whole updated program.
 
-{{{#!cpp
+<pre>#cpp
 struct ModifyStringOptions
 {
     unsigned period;
@@ -403,10 +404,10 @@ struct ModifyStringOptions
         period(1), toUppercase(false), toLowercase(false)
     {}
 };
-}}}
+</pre>
 ----
 
-{{{#!cpp
+<pre>#cpp
 #include <iostream>
 
 #include <seqan/arg_parse.h>
@@ -462,24 +463,24 @@ int main(int argc, char const ** argv)
 
     return 0;
 }
-}}}
-}}}
+</pre>
+</pre>
 
-== Best Practice: Wrapping Parsing In Its Own Function ==
+=== Best Practice: Wrapping Parsing In Its Own Function ===
 
-As a next step towards a cleaner program, we should extract the argument parsing into its own function, e.g. call it `parseCommandLine()`.
-Following the [wiki:StyleGuide/Cpp SeqAn C++ style guide], we first pass the output parameter, then the input parameters.
-The return value of our function is a `seqan::ArgumentParser::ParseResult` such that we can differentiate whether the program can go on, the help was printed and the program is to exit with success, or there was a problem with the passed argument and the program is to exit with an error code.
+As a next step towards a cleaner program, we should extract the argument parsing into its own function, e.g. call it <tt>parseCommandLine()</tt>.
+Following the [[StyleGuide/Cpp| SeqAn C++ style guide]], we first pass the output parameter, then the input parameters.
+The return value of our function is a <tt>seqan::ArgumentParser::ParseResult</tt> such that we can differentiate whether the program can go on, the help was printed and the program is to exit with success, or there was a problem with the passed argument and the program is to exit with an error code.
 
 Also, note that we should check that the user cannot specify both to-lowercase and to-uppercase.
 This check cannot be performed by the [dox:ArgumentParser ArgumentParser] by itself but we can easily add this check.
-We add this functionality to the `parseCommandLine()` function.
+We add this functionality to the <tt>parseCommandLine()</tt> function.
 
-{{{#!FoldOut
+<pre>#FoldOut
 Click ''more...'' to see the updated program.
 ----
 
-{{{#!cpp
+<pre>#cpp
 #include <iostream>
 
 #include <seqan/arg_parse.h>
@@ -557,16 +558,16 @@ int main(int argc, char const ** argv)
 
     return 0;
 }
-}}}
-}}}
+</pre>
+</pre>
 
-== Feature-Complete Example Program ==
+=== Feature-Complete Example Program ===
 
 The command line parsing part of our program is done now.
-Let us now add a function `modifyText()` that is given a `ModifyStringOptions` object and text and modifies the text.
-We simply use the C standard library functios `toupper()` and `tolower()` from the header `<cctype>` for converting to upper and lower case.
+Let us now add a function <tt>modifyText()</tt> that is given a <tt>ModifyStringOptions</tt> object and text and modifies the text.
+We simply use the C standard library functios <tt>toupper()</tt> and <tt>tolower()</tt> from the header <tt><cctype></tt> for converting to upper and lower case.
 
-{{{#!cpp
+<pre>#cpp
 #include <iostream>
 
 #include <seqan/arg_parse.h>
@@ -670,20 +671,20 @@ int main(int argc, char const ** argv)
 
     return 0;
 }
-}}}
+</pre>
 
-== Setting Restrictions ==
+=== Setting Restrictions ===
 
 One nice feature of the [dox:ArgumentParser ArgumentParser] is that it is able to perform some simple checks on the parameters.
 We can:
 
- * check numbers for whether they are greater/smaller than some limits,
- * mark options as being required, and
- * setting lists of valid values for each option.
+*check numbers for whether they are greater/smaller than some limits,
+*mark options as being required, and
+*setting lists of valid values for each option.
 
 In this section, we will give some examples.
 
-=== Setting Minimum and Maximum Values ===
+==== Setting Minimum and Maximum Values ====
 
 The functions [dox:ArgParseArgument#setMinValue setMinValue] and [dox:ArgParseArgument#setMaxValue setMaxValue] allow to give a smallest and/or largest value for a given option.
 Of course, this only works with integer- and double-typed command line options.
@@ -691,7 +692,7 @@ Of course, this only works with integer- and double-typed command line options.
 We can pass both the short and the long option name to these functions.
 The value is given as a string and parsed the same as parameters on the command line.
 
-{{{#!cpp
+<pre>#cpp
 seqan::ArgumentParser parser("modify_string");
 addOption(parser, seqan::ArgParseOption(
     "i", "integer-value", "An integer option",
@@ -699,23 +700,23 @@ addOption(parser, seqan::ArgParseOption(
 
 setMinValue(parser, "i", "10");
 setMaxValue(parser, "integer-value", "20");
-}}}
+</pre>
 
-{{{#!AssignmentBox
-'''Assignment 4: Setting min-value on `--period`'''
+<pre>#AssignmentBox
+'''Assignment 4: Setting min-value on <tt>--period</tt>'''
 
-{{{#!FoldOut
+<pre>#FoldOut
 
  Type ::
    Reproduction
  Objective ::
-   Use the function [dox:ArgParseArgument#setMinValue setMinValue] to set a minimal value of `1` for the parameter `--period`.
+   Use the function [dox:ArgParseArgument#setMinValue setMinValue] to set a minimal value of <tt>1</tt> for the parameter <tt>--period</tt>.
  Solution ::
    Click ''more...'' to see the solution.
 
 ----
 
-{{{#!cpp
+<pre>#cpp
 #include <iostream>
 
 #include <seqan/arg_parse.h>
@@ -827,101 +828,101 @@ int main(int argc, char const ** argv)
 
     return 0;
 }
-}}}
-}}}
-}}}
+</pre>
+</pre>
+</pre>
 
-=== Marking Options as Required ===
+==== Marking Options as Required ====
 
 We can mark options as being required using the function [dox:ArgumentParser#setRequired setRequired]:
 
-{{{#!cpp
+<pre>#cpp
 seqan::ArgumentParser parser("modify_string");
 addOption(parser, seqan::ArgParseOption(
     "i", "integer-value", "An integer option",
     seqan::ArgParseArgument::INTEGER, "INT"));
 
 setRequired(parser, "i");
-}}}
+</pre>
 
-=== Setting List of Valid Values ===
+==== Setting List of Valid Values ====
 
 Sometimes, it is useful to give a list of valid values for a command line option.
 You can give it as a space-separated list in a string to [dox:ArgumentParser#setValidValues setValidValues].
 The check whether the value from the command line is valid is case sensitive.
 
-{{{#!cpp
+<pre>#cpp
 seqan::ArgumentParser parser("modify_string");
 addOption(parser, seqan::ArgParseOption(
     "", "distance-model", "Distance model, either HAMMING or EDIT.",
     seqan::ArgParseArgument::STRING, "STR"));
 
 setValidValues(parser, "distance-model", "HAMMING EDIT");
-}}}
+</pre>
 
 
-== More Option and Argument Types ==
+=== More Option and Argument Types ===
 
 There are two slightly more special option and argument types:
 Paths to input/output files and tuple values.
 
-=== Input/Output File Names ===
+==== Input/Output File Names ====
 
-We could use `ArgParseArgument::STRING` to specify input and output files.
-However, there are two special argument/option types `ArgParseArgument::INPUTFILE` and `ArgParseArgument::OUTPUTFILE` that are more suitable:
+We could use <tt>ArgParseArgument::STRING</tt> to specify input and output files.
+However, there are two special argument/option types <tt>ArgParseArgument::INPUTFILE</tt> and <tt>ArgParseArgument::OUTPUTFILE</tt> that are more suitable:
 
- 1. In the near future, we plan to add basic checks for whether input files exist and are readable by the user.
+#In the near future, we plan to add basic checks for whether input files exist and are readable by the user.
     You will still have to check whether opening was successful when actually doing this but the program will fail earlier if the source file or target location are not accessible.
     The user will not have to wait for the program to run through to see that he mistyped the output directory name, for example, and you do not have to write this check.
- 1. For workflow engine integration, the input and output file options and arguments will be converted into appropriate input and output ports of the nodes.
- 1. You can use the previously introduced restrictions to specify what kind of files you expect and the [dox:ArgumentParser ArgumentParser] will check while parsing if the correct file type was provided.
+#For workflow engine integration, the input and output file options and arguments will be converted into appropriate input and output ports of the nodes.
+#You can use the previously introduced restrictions to specify what kind of files you expect and the [dox:ArgumentParser ArgumentParser] will check while parsing if the correct file type was provided.
 
 Here is an example for defining input and output file arguments:
 
-{{{#!cpp
+<pre>#cpp
 addOption(parser, seqan::ArgParseOption(
     "I", "input-file", "Path to the input file",
     seqan::ArgParseArgument::INPUTFILE, "IN"));
 addOption(parser, seqan::ArgParseOption(
     "O", "output-file", "Path to the output file",
     seqan::ArgParseArgument::OUTPUTFILE, "OUT"));
-}}}
+</pre>
 
 The restrictions are added by defining the expected file extension.
 
-{{{#!cpp
+<pre>#cpp
 setValidValues(parser, "input-file", "txt");
 setValidValues(parser, "output-file", "txt");
-}}}
+</pre>
 
-Again multiple values are provided as space-separated list. Note that the file ending check is case insensitive, so you do not need to provide `txt` and `TXT`.
+Again multiple values are provided as space-separated list. Note that the file ending check is case insensitive, so you do not need to provide <tt>txt</tt> and <tt>TXT</tt>.
 
 You can simply read the values of these options as you would read string options:
 
-{{{#!cpp
+<pre>#cpp
 seqan::CharString inputFileName, outputFileName; 
 seqan::getOptionValue(inputFileName, parser, "input-file");
 seqan::getOptionValue(outputFileName, parser, "output-file");
-}}}
+</pre>
 
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 '''Assignment 5: Using File Command Line Options'''
 
-{{{#!FoldOut
+<pre>#FoldOut
 
  Type ::
    Reproduction
  Objective ::
-   Replace the argument `TEXT` by a a command line option `-I`/`--input-file` in the program above.
+   Replace the argument <tt>TEXT</tt> by a a command line option <tt>-I</tt>/<tt>--input-file</tt> in the program above.
    The program should then read in the text instead of using the command line argument.
  Hint ::
-   We will also replace the `text` member of `ModifyStringOptions`, you might wish to do the same.
+   We will also replace the <tt>text</tt> member of <tt>ModifyStringOptions</tt>, you might wish to do the same.
  Solution ::
    Click ''more...'' to see the solution.
 
 ----
 
-{{{#!cpp
+<pre>#cpp
 #include <iostream>
 
 #include <seqan/arg_parse.h>
@@ -1028,7 +1029,7 @@ int main(int argc, char const ** argv)
         return res == seqan::ArgumentParser::PARSE_ERROR;
     
     std::fstream inFile(toCString(options.inputFileName), std::ios::binary | std::ios::in);
-    if (!inFile.good())
+    if (inFile.good())
     {
         std::cerr << "ERROR: Could not open input file " << options.inputFileName << '\n';
         return 1;
@@ -1044,57 +1045,57 @@ int main(int argc, char const ** argv)
 
     return 0;
 }
-}}}
-}}}
-}}}
+</pre>
+</pre>
+</pre>
 
-=== Tuples ===
+==== Tuples ====
 
 We can define an [dox:ArgParseArgument ArgParseArgument] and [dox:ArgParseOption ArgParseOption] to be a tuple with a fixed number of arguments.
 For example, an integer pair (tuple with two entries) could describe a range:
 
-{{{#!cpp
+<pre>#cpp
 addOption(parser, seqan::ArgParseOption(
     "r", "range", "The range to modify.",
     seqan::ArgParseArgument::INTEGER, "BEGIN END",
     false, 2));
-}}}
+</pre>
 
-We add two parameters after the label `"BEGIN END"` for the documentation:
-First, we specify that the option is not a list option (`false`) and second, that we need exactly two numbers for it.
+We add two parameters after the label <tt>"BEGIN END"</tt> for the documentation:
+First, we specify that the option is not a list option (<tt>false</tt>) and second, that we need exactly two numbers for it.
 
 The user can now use the parameter as follows:
 
-{{{#!ShellBox
+<pre>#ShellBox
 # modify_string -r 5 10 ...
-}}}
+</pre>
 
 We use the four-parameter variant with an integer index of [dox:ArgumentParser#getOptionValue getOptionValue] to access the entries in the tuple given on the command line.
 
-{{{#!cpp
+<pre>#cpp
 unsigned rangeBegin = 0, rangeEnd = 0;
 getOptionValue(rangeBegin, parser, "range", 0);
 getOptionValue(rangeEnd, parser, "range", 1);
-}}}
+</pre>
 
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 '''Assignment 6: Using Tuple Command Line Options'''
 
-{{{#!FoldOut
+<pre>#FoldOut
 
  Type ::
    Reproduction
  Objective ::
-   Add a command line option `--range` to the [dox:ArgumentParser ArgumentParser] in the program above.
-   Modify the function `modifyString()` such that only parameters in the given range are changed.
+   Add a command line option <tt>--range</tt> to the [dox:ArgumentParser ArgumentParser] in the program above.
+   Modify the function <tt>modifyString()</tt> such that only parameters in the given range are changed.
  Hint ::
-   We will add two `unsigned` members `rangeBegin` and `rangeEnd` to the `ModifyStringOptions` struct, you might wish to do the same.
+   We will add two <tt>unsigned</tt> members <tt>rangeBegin</tt> and <tt>rangeEnd</tt> to the <tt>ModifyStringOptions</tt> struct, you might wish to do the same.
  Solution ::
    Click ''more...'' to see the solution.
 
 ----
 
-{{{#!cpp
+<pre>#cpp
 #include <iostream>
 
 #include <seqan/arg_parse.h>
@@ -1201,63 +1202,63 @@ int main(int argc, char const ** argv)
 
     return 0;
 }
-}}}
-}}}
-}}}
+</pre>
+</pre>
+</pre>
 
-== Embedding Rich Documentation ==
+=== Embedding Rich Documentation ===
 
 Another very useful feature of [dox:ArgumentParser ArgumentParser] is that you can embed rich documentation into your programs:
 You can set the short description, the version string, date, synopsis and add text documentation settings.
 
 Let us first set the '''short description''', '''version string''', and '''date''' in our program from above.
-We insert the following lines just after the declaration of the variable `parser`.
+We insert the following lines just after the declaration of the variable <tt>parser</tt>.
 
-{{{#!cpp
+<pre>#cpp
 setShortDescription(parser, "String Modifier");
 setVersion(parser, "1.0");
 setDate(parser, "July 2012");
-}}}
+</pre>
 
-After the line with `setDate()`, we give a usage line and add to the description.
+After the line with <tt>setDate()</tt>, we give a usage line and add to the description.
 This information will go to the Synopsis section of the program help.
 
-{{{#!cpp
+<pre>#cpp
 addUsageLine(parser,
              "[\\fIOPTIONS\\fP] \"\\fITEXT\\fP\"");
 addDescription(parser,
                "This program allows simple character modifications to "
                "each i-th character.");
-}}}
+</pre>
 
-{{{#!InfoBox
+<pre>#InfoBox
 '''Information:''' Formatting Command Line Documentation
 
 The formatting of command line parameters might seem strange, at first:
-'''Font operators''' start with `\f` (which means that they start with `"\\f"` in in C++ string literals).
-The `\\f` is followed by the '''format specifier'''.
-The format specifier can be one of `I`, `B`, and `P`.
-`I` selects italic text (underlined on the shell), `B` selects bold and `P` resets the formatting to normal text.
+'''Font operators''' start with <tt>\f</tt> (which means that they start with <tt>"\\f"</tt> in in C++ string literals).
+The <tt>\\f</tt> is followed by the '''format specifier'''.
+The format specifier can be one of <tt>I</tt>, <tt>B</tt>, and <tt>P</tt>.
+<tt>I</tt> selects italic text (underlined on the shell), <tt>B</tt> selects bold and <tt>P</tt> resets the formatting to normal text.
 These font operators are legacies of man pages from Unix and offered a simple-to-implement solution to text formatting.
 
-For example, `"Words \\fBwere\\fP made for \\fIbeing\\fP written!"` would result in the formatted string "Words '''were''' made for ''being'' written!".
+For example, <tt>"Words \\fBwere\\fP made for \\fIbeing\\fP written!"</tt> would result in the formatted string "Words '''were''' made for ''being'' written!".
 
 Note that formatting the command line relies on [http://en.wikipedia.org/wiki/ANSI_escape_code ANSI escape codes] which is not supported by modern Windows versions.
 If you are using Windows, you will not see bold or underlined text.
-}}}
+</pre>
 
 The argument parser will add some options of its own, for example for printing the help and displaying version information.
 To separate our arguments from the autogenerated ones, we add the following line.
 This line will introduce the section "Modification Options" in the Description section of the output.
 
-{{{#!cpp
+<pre>#cpp
 addSection(parser, "Modification Options");
-}}}
+</pre>
 
 Finally, we will add a section with examples.
-Add the following lines just before the line with the `parse()` function call.
+Add the following lines just before the line with the <tt>parse()</tt> function call.
 
-{{{#!cpp
+<pre>#cpp
 addTextSection(parser, "Examples");
 
 addListItem(parser,
@@ -1267,13 +1268,13 @@ addListItem(parser,
             "\\fBmodify_string\\fP \\fB-L\\fP \\fB-i\\fP \\fI3\\fP \\fIveryverylongword\\fP",
             "Print \"veryverylongword\" with every third character "
             "converted to upper case.");
-}}}
+</pre>
 
-{{{#!FoldOut
+<pre>#FoldOut
 That were a lot of changes!
 Click ''more...'' to see the complete program.
 ----
-{{{#!cpp
+<pre>#cpp
 #include <iostream>
 
 #include <seqan/arg_parse.h>
@@ -1390,13 +1391,13 @@ int main(int argc, char const ** argv)
 
     return 0;
 }
-}}}
-}}}
+</pre>
+</pre>
 
 Let us look at the resulting documentation.
-Simply call the new program with the `--help` option.
+Simply call the new program with the <tt>--help</tt> option.
 
-{{{#!ShellBox
+<pre>#ShellBox
 # modify_string --help
 modify_string - String Modifier
 ===============================
@@ -1431,33 +1432,37 @@ EXAMPLES
 VERSION
     modify_string version: 1.0
     Last update July 2012
-}}}
+</pre>
 
-Also, there is an undocumented option called `--export-help` that is automatically added by [dox:ArgumentParser ArgumentParser].
-You can call it with the values `html` and `man`.
+Also, there is an undocumented option called <tt>--export-help</tt> that is automatically added by [dox:ArgumentParser ArgumentParser].
+You can call it with the values <tt>html</tt> and <tt>man</tt>.
 If the option is set then the argument parser will print the documentation as HTML or man format (man pages are a widely used format for Unix documentation).
 
 You can pipe the output to a file:
 
-{{{#!ShellBox
+<pre>#ShellBox
 # modify_string --export-help html > modify_string.html
 # modify_string --export-help man > modify_string.man
-}}}
+</pre>
 
-HTML can be displayed by any web browser, man pages can be displayed using the program `man`.
-Note that when opening a file using `man`, you have to give the file name either as an absolute or a relative path.
-Otherwise, it would try to look up the topic `modify_string.man`.
+HTML can be displayed by any web browser, man pages can be displayed using the program <tt>man</tt>.
+Note that when opening a file using <tt>man</tt>, you have to give the file name either as an absolute or a relative path.
+Otherwise, it would try to look up the topic <tt>modify_string.man</tt>.
 To view the generated man page use:
 
-{{{#!ShellBox
+<pre>#ShellBox
 # man ./modify_string.man
-}}}
+</pre>
 
 Below, you can see a part of the rendered HTML and man pages generated by the commands above.
 
 [[Image(modify_string.png, width=600px, align=center)]]
 
-== Further Reading ==
+=== Further Reading ===
 
- * Read the API documentation of the [dox:ArgumentParser ArgumentParser] class.
- * Have a look at the demo program [source:trunk/core/demos/arg_parse/argument_parser.cpp core/demos/arg_parse/argument_parser.cpp].
+*Read the API documentation of the [dox:ArgumentParser ArgumentParser] class.
+*Have a look at the demo program [source:trunk/core/demos/arg_parse/argument_parser.cpp core/demos/arg_parse/argument_parser.cpp].
+
+
+
+{{TracNotice|{{PAGENAME}}}}

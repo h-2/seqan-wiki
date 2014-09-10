@@ -1,70 +1,165 @@
-= Module ''find'' Specification =
+
+== Module ''find'' Specification ==
 
 '''WORK IN PROGRESS'''
 
 [[TOC]]
 
-== Basic Concepts ==
+=== Basic Concepts ===
 
 The purpose of the module '''find''' is to search for shorter strings (so-called ''needles'') in longer strings (so-called ''haystacks'').
 (Except for the local SWIFT algorithm).
 Its interface consists of two types of classes and supporting functions:
 
- * '''Finder''' classes wrapping the haystack related state and
- * '''Pattern''' classes wrapping the state related to the needle or a seqan:Class.StringSet of multiple needles.
+*'''Finder''' classes wrapping the haystack related state and
+*'''Pattern''' classes wrapping the state related to the needle or a seqan:Class.StringSet of multiple needles.
 
 The basic usage of the current is:
 
-{{{
-#!cpp
+<pre>
+#cpp
 // Initialize finder object with haystack.
 // Initialize pattern object with needle(s).
 while (find(finder, pattern)) {
   // Process match.
 }
-}}}
+</pre>
 
 Note that seqan:Function.find emulates a [http://en.wikipedia.org/wiki/Coroutine Coroutine] where the state is kept distributedly in the finder and pattern.
 An interesting future implementation would be a functor based interface, similar to the STL functions in the <algorithms> header.
 
-=== String Search Types ===
+==== String Search Types ====
 
 There are various design dimensions for string search algorithms:
 
- * Exact search or approximate search.
-  * If exact search:  Search for strings of arbitrary length of q-grams of fixed length and shape?
-  * If approximate search:  Which distance function?
- * Precomputation to speed up the string search: Yes/No.
-  * Precomputation on the needle(s) or on the haystack?
- * Search for one needle or a needle set.
+*Exact search or approximate search.
+**If exact search:  Search for strings of arbitrary length of q-grams of fixed length and shape?
+**If approximate search:  Which distance function?
+*Precomputation to speed up the string search: Yes/No.
+**Precomputation on the needle(s) or on the haystack?
+*Search for one needle or a needle set.
 
-The following table shows the design choices for the algorithm implementations in !SeqAn.
+The following table shows the design choices for the algorithm implementations in SeqAn.
 
-|| '''Algorithm''' || '''Search Type''' || '''Precomputation''' || '''Needles''' ||
-|| Simple || Exact || None || One ||
-|| Horspool || Exact || Pattern || One ||
-|| ShiftOr || Exact || Pattern || One ||
-|| Bfam || Exact || Pattern || One ||
-|| BndmAlgo || Exact || Pattern || One ||
-|| WuManber || Exact || Pattern || Multiple ||
-|| MultiBfam || Exact || Pattern || Multiple ||
-|| AhoCorasick || Exact || Pattern || Multiple ||
-|| MultipleShiftAnd || Exact || Pattern || Multiple ||
-|| ShiftHorspool || Exact || Pattern || Multiple ||
-|| DPSearch || Levenshtein || None  || One ||
-|| Myers || Levenshtein || Pattern || One ||
-|| Pex || Levenshtein || Pattern || One ||
-|| AbndmAlgo || Levenshtein || Pattern || One ||
-|| HammingSimple || Hamming || None || One ||
-|| HammingHorspool || Hamming || Pattern || One ||
-|| WildShiftAnd || Wildcard || Pattern || One ||
-|| IndexQGram || q-gram || Haystack || One ||
-|| IndexEsa || Exact || Haystack || One ||
-|| IndexWotd || Exact || Haystack || One ||
-|| SwiftLocal || Levenshtein or Hamming, part of the needle || Haystack || One ||
-|| SwiftSemiGlobal || Levenshtein or Hamming || Haystack || One ||
+{| border=1 class="simple"
+! '''Algorithm''' 
+! '''Search Type''' 
+! '''Precomputation''' 
+! '''Needles''' 
+|- 
+|  Simple 
+|  Exact 
+|  None 
+|  One 
+|- 
+|  Horspool 
+|  Exact 
+|  Pattern 
+|  One 
+|- 
+|  ShiftOr 
+|  Exact 
+|  Pattern 
+|  One 
+|- 
+|  Bfam 
+|  Exact 
+|  Pattern 
+|  One 
+|- 
+|  BndmAlgo 
+|  Exact 
+|  Pattern 
+|  One 
+|- 
+|  WuManber 
+|  Exact 
+|  Pattern 
+|  Multiple 
+|- 
+|  MultiBfam 
+|  Exact 
+|  Pattern 
+|  Multiple 
+|- 
+|  AhoCorasick 
+|  Exact 
+|  Pattern 
+|  Multiple 
+|- 
+|  MultipleShiftAnd 
+|  Exact 
+|  Pattern 
+|  Multiple 
+|- 
+|  ShiftHorspool 
+|  Exact 
+|  Pattern 
+|  Multiple 
+|- 
+|  DPSearch 
+|  Levenshtein 
+|  None  
+|  One 
+|- 
+|  Myers 
+|  Levenshtein 
+|  Pattern 
+|  One 
+|- 
+|  Pex 
+|  Levenshtein 
+|  Pattern 
+|  One 
+|- 
+|  AbndmAlgo 
+|  Levenshtein 
+|  Pattern 
+|  One 
+|- 
+|  HammingSimple 
+|  Hamming 
+|  None 
+|  One 
+|- 
+|  HammingHorspool 
+|  Hamming 
+|  Pattern 
+|  One 
+|- 
+|  WildShiftAnd 
+|  Wildcard 
+|  Pattern 
+|  One 
+|- 
+|  IndexQGram 
+|  q-gram 
+|  Haystack 
+|  One 
+|- 
+|  IndexEsa 
+|  Exact 
+|  Haystack 
+|  One 
+|- 
+|  IndexWotd 
+|  Exact 
+|  Haystack 
+|  One 
+|- 
+|  SwiftLocal 
+|  Levenshtein or Hamming, part of the needle 
+|  Haystack 
+|  One 
+|- 
+|  SwiftSemiGlobal 
+|  Levenshtein or Hamming 
+|  Haystack 
+|  One 
+|}
 
-=== Finder And Patterns ===
+
+==== Finder And Patterns ====
 
 Finders store the information about the haystack and the begin and end position of the needle in the haystack.
 Patterns store the information about the pattern.
@@ -72,13 +167,13 @@ Patterns store the information about the pattern.
 Note that in general, the length of the match is not the same as the length of the needle.
 This is the case when approximate string search with the Levenshtein distance or wildcard searches are performed.
 
-=== Search Results ===
+==== Search Results ====
 
 The result of a string search consists of the following:
 
- * the ''matching part of the haystack'',
- * the ''identifier'' of the needle in the string set when searching for multiple needles,
- * and ''matching part of the needle''.
+*the ''matching part of the haystack'',
+*the ''identifier'' of the needle in the string set when searching for multiple needles,
+*and ''matching part of the needle''.
 
 In most cases, the "matching part of the needle" will be the whole needle, except for SWIFT.
 
@@ -87,7 +182,7 @@ The current interface does not specify this, but it would be nice if the resulti
 In the following, we will call the search results ''occurrences''.
 An occurrence is an alignment of the needle against the haystack.
 
-=== Positions ===
+==== Positions ====
 
 The section [#SearchResults Search Results] mentioned begin and end positions.
 Many search types yield the begin and end position at the same time.
@@ -96,56 +191,59 @@ Each step has a computational cost.
 Thus, the implementation is separated into two steps:
 Finding the end position in seqan:Function.find and finding the start position in seqan:Function.findBegin.
 
-== Interface ==
+=== Interface ===
 
 The find module provides the following functions:
 
 For the finder:
 
- `host(finder)`, `haystack(finder)` :: Returns the underlying haystack string of the finder.
- `length(finder)` :: Length of the current occurrence of the needle in the haystack.
- `infix(finder)` :: seqan:Spec.Infix of the current occurrence of the needle in the haystack.
- `begin(finder)`, `end(finder)` :: Iterators to the begin/end of the current occurrence of the needle in the haystack.
- `beginPosition(finder)`, `endPosition(finder)` :: Begin and end positions of the current occurrence of the needle in the haystack.
+ <tt>host(finder)</tt>, <tt>haystack(finder)</tt> :: Returns the underlying haystack string of the finder.
+ <tt>length(finder)</tt> :: Length of the current occurrence of the needle in the haystack.
+ <tt>infix(finder)</tt> :: seqan:Spec.Infix of the current occurrence of the needle in the haystack.
+ <tt>begin(finder)</tt>, <tt>end(finder)</tt> :: Iterators to the begin/end of the current occurrence of the needle in the haystack.
+ <tt>beginPosition(finder)</tt>, <tt>endPosition(finder)</tt> :: Begin and end positions of the current occurrence of the needle in the haystack.
 
 For the pattern:
 
- `score(pattern)` :: Score of the current occurrence.  For exact searches, it always is 0.
- `findBeginScorePattern)` :: Score of the current begin position found by `findBegin()`.
- `host(pattern)`, `needle(pattern)`, `needles(pattern)` :: Returns the underlying needle(s) of the pattern.
- `length(pattern)` :: Length of the current occurrence of the needle in the haystack.
- `infix(pattern)` :: seqan:Spec.Infix of the current occurrence of the needle in the haystack.
- `begin(pattern)`, `end(pattern)` :: Iterators to the begin/end of the current occurrence of the needle in the haystack.
- `beginPosition(pattern)`, `endPosition(pattern)` :: Begin and end positions of the current occurrence of the needle in the haystack.
- `needleIndex` :: Index of the found needle in the needle set.
+ <tt>score(pattern)</tt> :: Score of the current occurrence.  For exact searches, it always is 0.
+ <tt>findBeginScorePattern)</tt> :: Score of the current begin position found by <tt>findBegin()</tt>.
+ <tt>host(pattern)</tt>, <tt>needle(pattern)</tt>, <tt>needles(pattern)</tt> :: Returns the underlying needle(s) of the pattern.
+ <tt>length(pattern)</tt> :: Length of the current occurrence of the needle in the haystack.
+ <tt>infix(pattern)</tt> :: seqan:Spec.Infix of the current occurrence of the needle in the haystack.
+ <tt>begin(pattern)</tt>, <tt>end(pattern)</tt> :: Iterators to the begin/end of the current occurrence of the needle in the haystack.
+ <tt>beginPosition(pattern)</tt>, <tt>endPosition(pattern)</tt> :: Begin and end positions of the current occurrence of the needle in the haystack.
+ <tt>needleIndex</tt> :: Index of the found needle in the needle set.
 
 For both finder and pattern:
 
- `find(finder, pattern)` :: Find the next ocurrence of the needle in the haystack.
- `findBegin(finder, pattern)` :: Find the next start position of the current occurrence of the needle in the haystack.
- `buildAlignment(finder, pattern, align)` :: Build the alignment `align` of the current occurrence of the needle in the haystack.
+ <tt>find(finder, pattern)</tt> :: Find the next ocurrence of the needle in the haystack.
+ <tt>findBegin(finder, pattern)</tt> :: Find the next start position of the current occurrence of the needle in the haystack.
+ <tt>buildAlignment(finder, pattern, align)</tt> :: Build the alignment <tt>align</tt> of the current occurrence of the needle in the haystack.
 
-Optionally, the functions `setBeginPosition(finder, pattern)` and `setEndPosition(finder, pattern)` can be supported.
+Optionally, the functions <tt>setBeginPosition(finder, pattern)</tt> and <tt>setEndPosition(finder, pattern)</tt> can be supported.
 These functions set the end/begin position of the needle.
-They return a `bool`, indicating whether the needle was found at this position.
-The exact and Hamming distance patterns support both functions, the dynamic search based Levenshtein distance patterns support only `setEndPosition(finder, pattern)`.
-Whether a pattern supports one or both of these functions can be retrieved using the Metafunction `HasFeature<TPattern, SetBeginPosition>::VALUE` and `HasFeature<TPattern, SetEndPosition>::VALUE`.
+They return a <tt>bool</tt>, indicating whether the needle was found at this position.
+The exact and Hamming distance patterns support both functions, the dynamic search based Levenshtein distance patterns support only <tt>setEndPosition(finder, pattern)</tt>.
+Whether a pattern supports one or both of these functions can be retrieved using the Metafunction <tt>HasFeature<TPattern, SetBeginPosition>::VALUE</tt> and <tt>HasFeature<TPattern, SetEndPosition>::VALUE</tt>.
 
-== Occurrence Examples ==
+=== Occurrence Examples ===
 
 This section contains examples of needle occurrences (i.e. alignments) in haystacks.
 It also shows the result of the functions on the functions above on the finder and pattern.
 
-The calls to `host(finder)` and `haystack(finder)` always return the original haystack, the calls to `host(pattern)` and `needle(pattern)` always return the original needle.
+The calls to <tt>host(finder)</tt> and <tt>haystack(finder)</tt> always return the original haystack, the calls to <tt>host(pattern)</tt> and <tt>needle(pattern)</tt> always return the original needle.
 
 ==== Example: Exact Occurrence ====
 
 Haystack is "Mississippi", needle is "issi".
 
-{{{
+<pre>
            0    5    10
 haystack:  Mississippi
-               ||||
+{| border=1 class="simple"
+!
+|}
+
 needle:        issi
 
        length(finder) == 10;
@@ -158,16 +256,19 @@ beginPosition(finder) ==  4;
 beginPosition(pattern) == 0;
   endPosition(pattern) == 4;
         infix(pattern) == Segment(0, 4) == "issi";
-}}}
+</pre>
 
 ==== Example: Hamming Distance Occurrence ====
 
 Haystack is "Mississippi", needle is "isii".
 
-{{{
+<pre>
            0    5    10
 haystack:  Mississippi
-               || |
+{| border=1 class="simple"
+! /
+|}
+
 needle:        isii
 
        length(finder) == 10;
@@ -180,16 +281,19 @@ beginPosition(finder) ==  4;
 beginPosition(pattern) ==  0;
   endPosition(pattern) ==  4;
         infix(pattern) == Segment(0, 4) == "isii";
-}}}
+</pre>
 
 ==== Example: Levenshtein Distance Occurrence ====
 
 Haystack is "Mississippi", needle is "isis".
 
-{{{
+<pre>
            0    5    10
 haystack:  Mississippi
-               || |
+{| border=1 class="simple"
+! /
+|}
+
 needle:        is-is
 
        length(finder) == 10;
@@ -202,16 +306,19 @@ beginPosition(finder) ==  4;
 beginPosition(pattern) ==  0;
   endPosition(pattern) ==  4;
         infix(pattern) == Segment(0, 4) == "isis";
-}}}
+</pre>
 
 ==== Example: Local Hamming Distance Occurrence (e.g. SWIFT) ====
 
 Haystack is "Mississippi", needle is "aisiia".
 
-{{{
+<pre>
            0    5   10
 haystack:  Mississippi
-               || |
+{| border=1 class="simple"
+! /
+|}
+
 needle:       aisiia
 
        length(finder) == 10;
@@ -224,12 +331,12 @@ beginPosition(finder) ==  4;
 beginPosition(pattern) ==  1;
   endPosition(pattern) ==  5;
         infix(pattern) == Segment(1, 5) == "isii";
-}}}
+</pre>
 
 ==== Example: Semi-Global Hamming Distance Occurrence (e.g. SWIFT) ====
 
 
-== Search Algorithm State ==
+=== Search Algorithm State ===
 
 As mentioned above, the finder and pattern object encapsulate the state of a coroutine.
 The search can be in the following states:
@@ -245,7 +352,7 @@ Afterwards, it will always return false.
 
 The following transitions are possible:
 
-{{{
+<pre>
                    find() = true             find() = false
                        ,---------- [start] ----------.
                 .----, |                             |
@@ -261,68 +368,200 @@ The following transitions are possible:
              `------'      |                                           |
     findBegin() = true     `-------------------------------------------'
                                      find() = false
-}}}
+</pre>
 
-== Allowed Function Calls And States ==
+=== Allowed Function Calls And States ===
 
 The following functions can be called in any state:
 
- * `host(finder)`
- * `haystack(finder)`
- * `host(pattern)`
- * `needle(pattern)`
- * `needles(pattern)`
+*<tt>host(finder)</tt>
+*<tt>haystack(finder)</tt>
+*<tt>host(pattern)</tt>
+*<tt>needle(pattern)</tt>
+*<tt>needles(pattern)</tt>
 
 The following functions can only be called in the ''found'' and ''found begin'' states:
 
- * `findBegin(finder, pattern)`
- * `endPosition(finder)`
- * `end(finder)`
- * `endPosition(pattern)`
- * `end(pattern)`
- * `needleIndex(pattern)`
+*<tt>findBegin(finder, pattern)</tt>
+*<tt>endPosition(finder)</tt>
+*<tt>end(finder)</tt>
+*<tt>endPosition(pattern)</tt>
+*<tt>end(pattern)</tt>
+*<tt>needleIndex(pattern)</tt>
 
 The following functions can only be called in the ''found begin'' state.
 Note that for some finders, the ''found'' state implies the ''found begin'' state.
 
- * `buildAlignment(finder, pattern, align)`
- * `beginPosition(finder)`
- * `begin(finder)`
- * `infix(finder)`
- * `length(finder)`
- * `beginPosition(pattern)`
- * `begin(pattern)`
- * `infix(pattern)`
- * `length(pattern)`
+*<tt>buildAlignment(finder, pattern, align)</tt>
+*<tt>beginPosition(finder)</tt>
+*<tt>begin(finder)</tt>
+*<tt>infix(finder)</tt>
+*<tt>length(finder)</tt>
+*<tt>beginPosition(pattern)</tt>
+*<tt>begin(pattern)</tt>
+*<tt>infix(pattern)</tt>
+*<tt>length(pattern)</tt>
 
-The function `find(finder, pattern)` can be called in the states ''start'', ''found'' and ''find begin''.
+The function <tt>find(finder, pattern)</tt> can be called in the states ''start'', ''found'' and ''find begin''.
 
-== Score-Related Feature Changes ==
+=== Score-Related Feature Changes ===
 
 The score-related features are removed:
 
- * The score limit cannot be given to the `find(finder, pattern)` function anymore.
- * The score limit cannot be set after the creation of the pattern.
+*The score limit cannot be given to the <tt>find(finder, pattern)</tt> function anymore.
+*The score limit cannot be set after the creation of the pattern.
 
 The reason is that if any precomputation is performed, it has to be redone when changing the score limit.
-Instead, we provide the function `reinit(finder, pattern, ...)` that gets the same parameters as the pattern class' constructor and resets the pattern.
+Instead, we provide the function <tt>reinit(finder, pattern, ...)</tt> that gets the same parameters as the pattern class' constructor and resets the pattern.
 
-== TODO ==
+=== TODO ===
 
 The following functions should exist in the interface and probably exist in the current interface but do not appear here yet:
 
- * `clear(finder, pattern)`, reset the finder and pattern to the ''start'' state with the original parametrization, `reinit(finder, pattern)` is similar to a clear but changes the parametrization.
- * Introduce more metafunctions `HasFeature` for the other functions with non-universal support.
- * Maybe other name for `HasFeature`?
+*<tt>clear(finder, pattern)</tt>, reset the finder and pattern to the ''start'' state with the original parametrization, <tt>reinit(finder, pattern)</tt> is similar to a clear but changes the parametrization.
+*Introduce more metafunctions <tt>HasFeature</tt> for the other functions with non-universal support.
+*Maybe other name for <tt>HasFeature</tt>?
 
-== Function Support ==
+=== Function Support ===
 
 The following matrix shows which patterns support which functions:
 
-|| '''pattern''' || '''host''' || '''needle''' || '''needles''' || '''length''' || '''infix''' || '''begin''' || '''end''' || '''beginPosition''' || '''endPosition''' || '''find''' || '''findBegin''' || '''buildAlignment''' || '''score''' || '''findBeginScore''' || '''scoreLimit''' || '''scoringScheme''' || '''needleIndex''' ||
-|| Simple                         || X || X ||   || X || X || X || X || X || X || X || X || X ||    ||   ||   ||   ||   ||
-|| HammingSimple                  || X || X ||   || X || X || X || X || X || X || X || X || X ||  X || X || X ||   ||   ||
-|| DPSearch<TScore, TSpec, True>  || X || X ||   || X || X || X || X || X || X || X || X || X ||  X || X || X || X ||   ||
-|| DPSearch<TScore, TSpec, False> || X || X ||   ||   || X ||   ||   ||   ||   || X ||   ||   ||    || X || X || X ||   ||
-|| WildShiftAnd                   || X || X ||   || X || X || X || X || X || X || X || X || X ||    ||   ||   ||   ||   ||
-|| MultipleSimple                 || X ||   || X || X || X || X || X || X || X || X || X || X ||    ||   ||   ||   || X ||
+{| border=1 class="simple"
+! '''pattern''' 
+! '''host''' 
+! '''needle''' 
+! '''needles''' 
+! '''length''' 
+! '''infix''' 
+! '''begin''' 
+! '''end''' 
+! '''beginPosition''' 
+! '''endPosition''' 
+! '''find''' 
+! '''findBegin''' 
+! '''buildAlignment''' 
+! '''score''' 
+! '''findBeginScore''' 
+! '''scoreLimit''' 
+! '''scoringScheme''' 
+! '''needleIndex''' 
+|- 
+|  Simple                         
+|  X 
+|  X 
+|    
+|  X 
+|  X 
+|  X 
+|  X 
+|  X 
+|  X 
+|  X 
+|  X 
+|  X 
+|     
+|    
+|    
+|    
+|    
+|- 
+|  HammingSimple                  
+|  X 
+|  X 
+|    
+|  X 
+|  X 
+|  X 
+|  X 
+|  X 
+|  X 
+|  X 
+|  X 
+|  X 
+|   X 
+|  X 
+|  X 
+|    
+|    
+|- 
+|  DPSearch<TScore, TSpec, True>  
+|  X 
+|  X 
+|    
+|  X 
+|  X 
+|  X 
+|  X 
+|  X 
+|  X 
+|  X 
+|  X 
+|  X 
+|   X 
+|  X 
+|  X 
+|  X 
+|    
+|- 
+|  DPSearch<TScore, TSpec, False> 
+|  X 
+|  X 
+|    
+|    
+|  X 
+|    
+|    
+|    
+|    
+|  X 
+|    
+|    
+|     
+|  X 
+|  X 
+|  X 
+|    
+|- 
+|  WildShiftAnd                   
+|  X 
+|  X 
+|    
+|  X 
+|  X 
+|  X 
+|  X 
+|  X 
+|  X 
+|  X 
+|  X 
+|  X 
+|     
+|    
+|    
+|    
+|    
+|- 
+|  MultipleSimple                 
+|  X 
+|    
+|  X 
+|  X 
+|  X 
+|  X 
+|  X 
+|  X 
+|  X 
+|  X 
+|  X 
+|  X 
+|     
+|    
+|    
+|    
+|  X 
+|}
+
+
+
+
+{{TracNotice|{{PAGENAME}}}}

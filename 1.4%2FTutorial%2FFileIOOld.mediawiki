@@ -1,20 +1,21 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
-= File I/O =
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[Tutorial]] if you need the documentation for the trunk version.'''
+== File I/O ==
 [[TOC]]
 
-{{{#!WarningBox
+<pre>#WarningBox
 '''Caution''':
 The old I/O system will be replaced by the new I/O system.
-Consider using the new I/O system for sequence files as described [wiki:Tutorial/BasicSequenceIO here].
-}}}
+Consider using the new I/O system for sequence files as described [[Tutorial/BasicSequenceIO| here]].
+</pre>
 
-== Raw Data ==
+=== Raw Data ===
 
 SeqAn supports the input and output of files in different [seqan:"Tag.File Format" file formats].
-The most simple file format is `Raw` that is used to load a file "as is" into a string or vice versa.
+The most simple file format is <tt>Raw</tt> that is used to load a file "as is" into a string or vice versa.
 
-{{{
-#!cpp
+<pre>
+#cpp
 // Loading.
 ::std::fstream fstrm;
 fstrm.open("input.txt", ::std::ios_base::in | ::std::ios_base::binary);
@@ -23,24 +24,24 @@ String<char> str;
 read(fstrm, str, Raw());
 ::std::cout << str << ::std::endl;
 fstrm.close();
-}}}
+</pre>
 
-In this example, the tag `Raw()` can also be omitted, since `Raw` is the default file format.
-Instead of using seqan:Function.read and seqan:Function.write to read and write raw data, one can also use the operators `<<` and `>>`.
+In this example, the tag <tt>Raw()</tt> can also be omitted, since <tt>Raw</tt> is the default file format.
+Instead of using seqan:Function.read and seqan:Function.write to read and write raw data, one can also use the operators <tt><<</tt> and <tt>>></tt>.
 
 Files can either be instances of a [seqan:Adaption.std::iostream standard stream class],
-or a C-style stream (i.e. `FILE *`) or a [seqan:Class.File SeqAn `File` object] (see below).
+or a C-style stream (i.e. <tt>FILE *</tt>) or a [seqan:Class.File SeqAn <tt>File</tt> object] (see below).
 Note that the files should always be opened in binary mode.
 
 
-== File Formats for Bioinformatics ==
+=== File Formats for Bioinformatics ===
 
-Apart from `Raw`, SeqAn offers [seqan:"Tag.File Format" other file formats] relevant in bioinformatics such as `Fasta`, `Embl`, or `Genbank`.
+Apart from <tt>Raw</tt>, SeqAn offers [seqan:"Tag.File Format" other file formats] relevant in bioinformatics such as <tt>Fasta</tt>, <tt>Embl</tt>, or <tt>Genbank</tt>.
 These file formats consist of one or more data records. 
 Multiple records in a file can be loaded by iteratively calling the function seqan:Function.read.
 
-{{{
-#!cpp
+<pre>
+#cpp
 ::std::fstream fstrm;
 fstrm.open("est.fasta", ::std::ios_base::in | ::std::ios_base::binary);
 String<Dna> est;
@@ -48,7 +49,7 @@ while (! fstrm.eof()) {
  read(fstrm, est, Fasta());
  ::std::cout << est << ::std::endl;
 }
-}}}
+</pre>
 
 The function seqan:Function.goNext skips the current record and proceeds to the next record.
 
@@ -56,8 +57,8 @@ Each record contains a piece of data (i.e. a sequence or an alignment) and optio
 One can load these metadata before loading the actual data using seqan:Function.readMeta. 
 The function fills a string with the unparsed metadata.
 
-{{{
-#!cpp
+<pre>
+#cpp
 ::std::fstream fstrm;
 fstrm.open("est.fasta", ::std::ios_base::in | ::std::ios_base::binary);
 String<Dna> est;
@@ -69,43 +70,43 @@ while (! fstrm.eof())
  read(fstrm, est, Fasta());
  ::std::cout << est << ::std::endl;
 }
-}}}
+</pre>
 
 seqan:Function.write is used to write a record into a file. 
 Depending on the file format, a suitable metadata string must be passed to seqan:Function.write.
 
-{{{
-#!cpp
+<pre>
+#cpp
 FILE * cstrm = fopen("genomic_data.fa", "w");
 write(cstrm, "acgt", "the metadata", Fasta());
 fclose(cstrm);
-}}}
+</pre>
 
 This code creates the following file "genomic_data.fa".
 
-{{{
+<pre>
 >the metadata
 ACGT
-}}}
+</pre>
 
-== File Reader Strings ==
+=== File Reader Strings ===
 
 The easiest way for a read-only access of sequence data stored in a file is a [seqan:"Spec.File Reader String" file reader string].
 A file reader string implements the [seqan:Concept.Container container concept], i.e. it implements common functions like seqan:Function.length or seqan:Function.begin.
 It has minimal memory consumption, because each part of the sequence data is not loaded before it is needed.
 
-{{{
-#!cpp
+<pre>
+#cpp
 String<Dna, FileReader<Fasta> > fr("ests.fa");
 //Print the length of the first sequence.
 ::std::cout << length(fr);
-}}}
+</pre>
 
 The constructor of the file reader string can also take a file from which the sequences will be loaded.
 For example, the following code will read the second sequence in the file:
 
-{{{
-#!cpp
+<pre>
+#cpp
 FILE * cstrm = fopen("est.fasta", "r");
 goNext(cstrm, Fasta());
 //Read the meta data of the second record.
@@ -116,8 +117,12 @@ readMeta(cstrm, meta_data, Fasta());
 String<Dna, FileReader<Fasta> > fr(cstrm);
 ::std::cout << fr << ::std::endl;
 fclose(cstrm);
-}}}
+</pre>
 
-=== Submit a  comment ===
+==== Submit a  comment ====
 If you found a mistake, or have suggestions about an improvement of this page press:
 [/newticket?component=Documentation&description=Tutorial+Enhancement+for+page+http://trac.seqan.de/wiki/Tutorial/FileIO&type=enhancement submit your comment]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

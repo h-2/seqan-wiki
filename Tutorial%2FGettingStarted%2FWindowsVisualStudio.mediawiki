@@ -1,4 +1,5 @@
-= Getting Started With SeqAn On Windows Using Visual Studio =
+
+== Getting Started With SeqAn On Windows Using Visual Studio ==
 
 [[TOC()]]
 
@@ -6,101 +7,101 @@ This tutorial explains how to get started with SeqAn on Windows using Visual Stu
 
 We use Visual Studio 9 here, but you should be able to easily follow the tutorial if you are using any other supported version (8, 9, 10).
 
-== Prerequisites ==
+=== Prerequisites ===
 
 We assume that you have the following software installed:
 
- * [http://tortoisesvn.net/downloads.html TortoiseSVN] for version control and retrieving 
- * Microsoft Visual Studio for compiling C++ code.
+*[http://tortoisesvn.net/downloads.html TortoiseSVN] for version control and retrieving 
+*Microsoft Visual Studio for compiling C++ code.
    If you do not have Visual Studio already, you can download the [http://www.microsoft.com/express/ free Visual Studio Express Edition from Microsoft].
    Note that at some point you can pick between the Express Edition or a Demo of the Full Version.
    Pick the Express Edition here for a smaller and continuously free version.
- * [http://www.cmake.org/cmake/resources/software.html CMake] for generating project files
- * [http://python.org/download/ Python 2.x] for the code generator.
+*[http://www.cmake.org/cmake/resources/software.html CMake] for generating project files
+*[http://python.org/download/ Python 2.x] for the code generator.
    Note that Python 3 will not work, use a Python 2 version.
 
-Also, we assume that your user name is `seqan_dev`.
-Replace `seqan_dev` by your actual user name in the steps below.
+Also, we assume that your user name is <tt>seqan_dev</tt>.
+Replace <tt>seqan_dev</tt> by your actual user name in the steps below.
 
-{{{#!ImportantBox
-When installing CMake and Python, make sure to let the installers add the paths to the `cmake.exe` and `python.exe` binaries to your `PATH` environment variable.
-}}}
+<pre>#ImportantBox
+When installing CMake and Python, make sure to let the installers add the paths to the <tt>cmake.exe</tt> and <tt>python.exe</tt> binaries to your <tt>PATH</tt> environment variable.
+</pre>
 
-== Install ==
+=== Install ===
 
-First, create a new folder in your Windows Explorer for the SeqAn files (e.g. `C:\Users\seqan_dev\Development\seqan-trunk`).
+First, create a new folder in your Windows Explorer for the SeqAn files (e.g. <tt>C:\Users\seqan_dev\Development\seqan-trunk</tt>).
 Right click on this folder and choose [[MenuTrace(SVN Checkout...)]] from the context menu.
 
 [[Image(win_tortoise.png, 400px, align=center)]]
 
 Type the following in the field [[MenuTrace(URL of repository)]]
 
-{{{#!IdeBox
+<pre>#IdeBox
 https://github.com/seqan/seqan/branches/master
-}}}
+</pre>
 
 The [[MenuTrace(Checkout repository)]] should be the folder you just created.
 Leave the other settings set to their default ([[MenuTrace(fully recursive)]], [[MenuTrace(HEAD revision)]]) and click [[MenuTrace(OK)]].
 
-== A First Build ==
+=== A First Build ===
 
 Next, we will use CMake to create a Visual Studio 9 project for building the applications, demo programs (short: demos), and tests.
 
 We will do this using the command prompt.
 Start a Windows command prompt ([[MenuTrace(Start,All Programs,Accessories,Command Prompt)]]).
-Then, go to the parent directory of `seqan-trunk`.
-There, we create a separate folder `seqan-trunk-build`:
+Then, go to the parent directory of <tt>seqan-trunk</tt>.
+There, we create a separate folder <tt>seqan-trunk-build</tt>:
 
-{{{#!ShellBox
+<pre>#ShellBox
 C:\Users\seqan_dev> C:
 C:\Users\seqan_dev> cd C:\Users\seqan_dev\Development
 C:\Users\seqan_dev\Development\> mkdir seqan-trunk-build
-}}}
+</pre>
 
 In the future, we might create a different set of project files (e.g. when we upgrade our Visual Studio version or switch to 64 bit builds).
-Thus, we create a subdirectory called `vs9` for our Visual Studio 9 project.
+Thus, we create a subdirectory called <tt>vs9</tt> for our Visual Studio 9 project.
 
-{{{#!ShellBox
+<pre>#ShellBox
 C:\Users\seqan_dev\Development> mkdir seqan-trunk-build\vs9
 C:\Users\seqan_dev\Development> cd seqan-trunk-build\vs9
-}}}
+</pre>
 
 The resulting directory structure will look as follows.
 
-{{{
+<pre>
    ~/Development
      ├─ seqan-trunk                 source directory
      └─ seqan-trunk-build
         └─ vs9                      Visual Studio 9 project
-}}}
+</pre>
 
-Within the '''build directory''' `vs9`, we call CMake to generate the Visual Studio 9 project:
+Within the '''build directory''' <tt>vs9</tt>, we call CMake to generate the Visual Studio 9 project:
 
-{{{#!ShellBox
+<pre>#ShellBox
 C:\Users\seqan_dev\Development\seqan-trunk-build\vs9> cmake ..\..\seqan-trunk -G "Visual Studio 9 2008"
-}}}
+</pre>
 
-{{{#!InfoBox
+<pre>#InfoBox
 '''Information:''' Using a different version or multiple versions of Visual Studio.
 
 Using a different Visual Studio version is easy:
 Simply use the appropriate generator.
 For example, here is how to use the Visual Studio 10 generator:
 
-{{{#!ShellBox
+<pre>#ShellBox
 C:\...\seqan-trunk-build\vs10> cmake ..\..\seqan-trunk -G "Visual Studio 10"
-}}}
+</pre>
 
 Also, if you want to create 64 bit builds, you need to use another generator.
 Changing generators in an existing project directory is not possible.
 
- * If you use another version of Visual Studio, you can find out the correct parameter by typing `cmake --help`.
- * If you plan to use different versions of Visual Studio then follow the How To [wiki:HowTo/UseParallelBuildDirectories Use Parallel Build Directories].
- * Note that you have to choose the "Win64" variants of the "Visual Studio" generators if you want to build 64 bit binaries.
-}}}
+*If you use another version of Visual Studio, you can find out the correct parameter by typing <tt>cmake --help</tt>.
+*If you plan to use different versions of Visual Studio then follow the How To [[HowTo/UseParallelBuildDirectories| Use Parallel Build Directories]].
+*Note that you have to choose the "Win64" variants of the "Visual Studio" generators if you want to build 64 bit binaries.
+</pre>
 
 Now, you can open the project file from the Windows explorer:
-Go to the `C:\Users\seqan_dev\Development\seqan-trunk-build\vs9\core\apps` directory and double click on the file `seqan_core_apps.sln`.
+Go to the <tt>C:\Users\seqan_dev\Development\seqan-trunk-build\vs9\core\apps</tt> directory and double click on the file <tt>seqan_core_apps.sln</tt>.
 In the [[MenuTrace(Solution Explorer)]] to the left you will find all applications of the SeqAn core.
 
 [[Image(source:/trunk/core/demos/tutorial/getting_started/win_solution_explorer.png, 500px, align=center)]]
@@ -116,7 +117,7 @@ To compile and execute RazerS 2, choose [[MenuTrace(Debug,Start Without Debuggin
 
 On successful compilation and execution, a terminal windows should pop up and display:
 
-{{{#!ShellBox
+<pre>#ShellBox
 ***********************************************************
 *** RazerS - Fast Read Mapping with Sensitivity Control ***
 ***          (c) Copyright 2009 by David Weese          ***
@@ -125,18 +126,18 @@ Usage: razers2.exe [OPTION]... <GENOME FILE> <READS FILE>
        razers2.exe [OPTION]... <GENOME FILE> <MP-READS FILE1> <MP-READS FILE2>
 Try 'razers2.exe --help' for more information.
 Press any key to continue . . .
-}}}
+</pre>
 
-{{{#!InfoBox
+<pre>#InfoBox
 '''Information:''' Starting with and without Debugging in Visual Studio
 
 Starting a program without debugger in Visual Studio will make the program wait for the user pressing a key.
 This is very useful for inspecting the output.
 In Debug mode, the program does not wait when executed and the window simply disappears.
 The reason for this is that when using the debugger, the user is expected to set a breakpoint.
-}}}
+</pre>
 
-== Hello World! ==
+=== Hello World! ===
 
 Now, let us create a '''sandbox''' for you.
 This sandbox will be your local workspace and you might want to have it versionized on your own Subversion repository at a later point.
@@ -144,45 +145,45 @@ All of your development will happen in your sandbox.
 
 We go back to the source directory and then use the SeqAn code generator to create a new sandbox.
 
-{{{#!ShellBox
+<pre>#ShellBox
 C:\Users\seqan_dev\Development\seqan-trunk-build\vs9> cd ..\..\seqan-trunk
 C:\Users\seqan_dev\Development\seqan-trunk> python util\bin\skel.py repository sandbox\my_sandbox
-}}}
+</pre>
 
 Within this sandbox, we can now create a new application using the code generator.
 
-{{{#!ShellBox
+<pre>#ShellBox
 C:\Users\seqan_dev\Development\seqan-trunk> python util\bin\skel.py app first_app sandbox\my_sandbox
-}}}
+</pre>
 
-Details about the code generator are explained in [wiki:HowTo/UseTheCodeGenerator How To: Use the code generator].
+Details about the code generator are explained in [[HowTo/UseTheCodeGenerator| How To: Use the code generator]].
 
-{{{
-#!InfoBox
+<pre>
+#InfoBox
 '''Information:''' When and where do you have to call CMake?
 
 CMake is a cross-platform tool for creating and updating build files (IDE projects or Makefiles).
 When you first create the build files, you can configure things such as the build mode or the type of the project files.
 
-Whenever you add a new application, a demo or a test or whenever you make changes to `CMakeLists.txt` you need to call CMake again.
-Since CMake remembers the settings you chose the first time you called CMake in a file named `CMakeCache.txt`, all you have to do is to switch to your `debug` or `release` build directory and call "`cmake .`" in there.
+Whenever you add a new application, a demo or a test or whenever you make changes to <tt>CMakeLists.txt</tt> you need to call CMake again.
+Since CMake remembers the settings you chose the first time you called CMake in a file named <tt>CMakeCache.txt</tt>, all you have to do is to switch to your <tt>debug</tt> or <tt>release</tt> build directory and call "<tt>cmake .</tt>" in there.
 
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 ~ # cd $HOME/Development/seqan-trunk-build/debug
 debug # cmake .
-}}}
+</pre>
 
-Do not try to call "`cmake .`" from within the `seqan-trunk` directory '''but only from your build directory'''.
-}}}
+Do not try to call "<tt>cmake .</tt>" from within the <tt>seqan-trunk</tt> directory '''but only from your build directory'''.
+</pre>
 
 The step above creates the starting point for a real-world application, including an argument parser and several other things that are a bit too complicated to fit into the Getting Started tutorial.
-Therefore, we will replace the program of the app `first_app` with a very simple example program.
+Therefore, we will replace the program of the app <tt>first_app</tt> with a very simple example program.
 
-Open the file `C:\Users\seqan_dev\Development\seqan-trunk\sandbox\my_sandbox\first_app\first_app.cpp` with the Visual Studio text editor and replace its contents with the following:
+Open the file <tt>C:\Users\seqan_dev\Development\seqan-trunk\sandbox\my_sandbox\first_app\first_app.cpp</tt> with the Visual Studio text editor and replace its contents with the following:
 
-{{{
-#!cpp
+<pre>
+#cpp
 #include <iostream>
 #include <seqan/sequence.h>  // CharString, ...
 #include <seqan/file.h>      // to stream a CharString into cout
@@ -194,40 +195,44 @@ int main(int, char const **)
     std::cout << mySeqanString << std::endl;
     return 1;
 }
-}}}
+</pre>
 
 Now, we go back into the build directory and call CMake again to make it detect the added app.
 
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 C:\Users\seqan_dev\Development\seqan-trunk> cd ..\seqan-trunk-build\vs9
 C:\Users\seqan_dev\Development\seqan-trunk-build\vs9> cmake .
-}}}
+</pre>
 
-Now, you can open the project file `C:\Users\seqan_dev\Development\seqan-trunk-build\vs9\sandbox\my_sandbox\seqan_sandbox_my_sandbox.sln` for your sandbox using Visual Studio.
+Now, you can open the project file <tt>C:\Users\seqan_dev\Development\seqan-trunk-build\vs9\sandbox\my_sandbox\seqan_sandbox_my_sandbox.sln</tt> for your sandbox using Visual Studio.
 Right-click [[MenuTrace(first_app)]] in the [[MenuTrace(Solution Explorer)]] and click [[MenuTrace(Set as StartUp Project)]].
 Now, start the program without debugging using [[MenuTrace(Debug,Start Without Debugging)]].
 
 Visual Studio will now compile your program and execute it.
 A command line window will pop up and should display the following.
 
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 Hello World!
 Hello SeqAn!
 Press any key to continue . . .
-}}}
+</pre>
 
 Congratulations, you have successfully created your first application within the SeqAn build system using Visual studio.
 
-== Further Steps ==
+=== Further Steps ===
 
 As a next step, we suggest the following:
 
- * [wiki:Tutorial Continue with the Tutorial]
- * If you have not done so, install optional dependencies of SeqAn.
-   To read and write compressed files, follow [wiki:HowTo/InstallContribsWindows How To: Install Contribs On Windows].
- * Look around in the files in `sandbox/my_sandbox/apps/first_app` or the demos in `core/demos` and `extras/demos`.
- * [wiki:Infrastructure/RepositoryStructure Learn about the SeqAn SVN repository structure]
- * For the tutorial, using the SeqAn build system is great!
-   If you later want to use SeqAn as a library, have a look at [wiki:HowTo/UseSeqAnInYourProjects How To: Use SeqAn In Your Projects].
+*[[Tutorial| Continue with the Tutorial]]
+*If you have not done so, install optional dependencies of SeqAn.
+   To read and write compressed files, follow [[HowTo/InstallContribsWindows| How To: Install Contribs On Windows]].
+*Look around in the files in <tt>sandbox/my_sandbox/apps/first_app</tt> or the demos in <tt>core/demos</tt> and <tt>extras/demos</tt>.
+*[[Infrastructure/RepositoryStructure| Learn about the SeqAn SVN repository structure]]
+*For the tutorial, using the SeqAn build system is great!
+   If you later want to use SeqAn as a library, have a look at [[HowTo/UseSeqAnInYourProjects| How To: Use SeqAn In Your Projects]].
+
+
+
+{{TracNotice|{{PAGENAME}}}}

@@ -1,2 +1,7 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:HowTo] if you need the documentation for the trunk version.'''
-See [wiki:"BuildManual/IntegrationWithYourOwnBuildSystem"].
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[HowTo]] if you need the documentation for the trunk version.'''
+See [["BuildManual/IntegrationWithYourOwnBuildSystem"]].
+
+
+
+{{TracNotice|{{PAGENAME}}}}

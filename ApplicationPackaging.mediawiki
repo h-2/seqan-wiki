@@ -1,6 +1,7 @@
+
 This page describes the general structure of application packages in SeqAn.
 
-The package should contain 2 folders, ```example``` and ```bin```, as well as two files, namely ```LICENSE``` and ```README```.           
+The package should contain 2 folders, <tt><tt><tt>example</tt></tt><tt> and </tt><tt><tt>bin</tt></tt><tt>, as well as two files, namely </tt><tt><tt>LICENSE</tt></tt><tt> and </tt><tt><tt>README</tt></tt></tt>.           
 
 == README
 
@@ -8,16 +9,16 @@ The README file should be structured as described below. First we present genera
 
 Since the README file should easily be readable on the console and not depend on fancy formatting we set the following rules:
 
- * Each line should consist of no more than 78 characters. Exceptions are links.
- * In between two sentences there should be 2 spaces. Dots of data structures can easily be identified this way and it seems to be convention.
- * Each caption should be flanked by a newline and line, such that the order is:
-{{{
+*Each line should consist of no more than 78 characters. Exceptions are links.
+*In between two sentences there should be 2 spaces. Dots of data structures can easily be identified this way and it seems to be convention.
+*Each caption should be flanked by a newline and line, such that the order is:
+<pre>
 ------------------------------------------------------------------------------
 Caption
 ------------------------------------------------------------------------------ 
-}}}
- * There should be a newline after a line and after each paragraph.
- * A command line call should start with a ```$```.
+</pre>
+*There should be a newline after a line and after each paragraph.
+*A command line call should start with a <tt><tt><tt>$</tt></tt></tt>.
 
 === Header Section
 
@@ -25,14 +26,14 @@ The header contains the name of the application, a sub-header, as well as the li
 
 ==== Example
 
-{{{
+<pre>
                         STELLAR
                         the SwifT Exact LocaL AligneR
 
                   http://www.seqan.de/projects/stellar.html
                                  Version 1.3
                                  April, 2012
-}}}
+</pre>
 
 === Table of Contents Section
 
@@ -40,16 +41,16 @@ This section describes the table of content wish should be equal for all applica
 
 ==== Example
 
-{{{
+<pre>
 ------------------------------------------------------------------------------
 Table of Contents
 ------------------------------------------------------------------------------
 
-  1. Overview
+##Overview
   2. Examples
   3. Reference and Contact
   4. File Formats
-}}}
+</pre>
 
 === Overview Section
 
@@ -57,9 +58,9 @@ The overview section describes '''what''' the application does and how.
 
 ==== Example
 
-{{{
+<pre>
 ------------------------------------------------------------------------------
-1. Overview
+#Overview
 ------------------------------------------------------------------------------
 
 STELLAR is a tool for finding pairwise local alignments between long genomic
@@ -71,7 +72,7 @@ STELLAR applies the SWIFT filter algorithm to identify parallelograms of the
 alignment matrix that overlap with a potential local alignment. These
 parallelograms are verified subsequently and the resulting local alignments
 written to the output file.
-}}}
+</pre>
 
 === Examples Section
 
@@ -79,11 +80,11 @@ One or two examples (besides showing how to call the help) should demonstrate th
 
 In addition you should always provide the sentence:
 
-You can find the binary ```application``` in the directory "bin" and the example files in "example".
+You can find the binary <tt><tt><tt>application</tt></tt></tt> in the directory "bin" and the example files in "example".
 
 ==== Example
 
-{{{
+<pre>
 ------------------------------------------------------------------------------
 2. Examples
 ------------------------------------------------------------------------------
@@ -143,7 +144,7 @@ to only 30 what allows splitting a read into up to 3 fragments:
 The output file will contain 15 matches, 6 entirely mapped reads, 3 reads
 split into 2 fragments each, and one read split into 3 matches at different
 genome locations.
-}}}
+</pre>
 
 === Reference and Contact Section
 
@@ -151,7 +152,7 @@ This sections shows how to cite the application and offers a contact email for q
 
 ==== Example
 
-{{{
+<pre>
 ------------------------------------------------------------------------------
 3. Reference and Contact
 ------------------------------------------------------------------------------
@@ -166,7 +167,7 @@ Please cite:
 For questions or comments contact:
 
   Birte Kehr <birte.kehr@fu-berlin.de>
-}}}
+</pre>
 
 === File Formats Section
 
@@ -176,7 +177,7 @@ The input files should be described before the output options are shown.
 
 ==== Example
 
-{{{
+<pre>
 ------------------------------------------------------------------------------
 4. File Formats
 ------------------------------------------------------------------------------
@@ -199,8 +200,8 @@ queries.
 STELLAR supports currently two output format selectable via the "--outFormat
 STRING" option. The following values for STRING are possible:
 
- * gff: General Feature Format (GFF)
- * txt: Human Readable Alignment Format
+*gff: General Feature Format (GFF)
+*txt: Human Readable Alignment Format
 
 The following subsections describe the structure of these formats.
  
@@ -263,4 +264,8 @@ one for the query sequence, both containing gap characters. Inbetween there
 is a row containing '|' and spaces, where '|' indicates a match. Lines are
 wrapped after 50 alignment columns. To assist for counting positions, there
 is a '.' above each line every 5 positions and a ':' every ten positions.
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

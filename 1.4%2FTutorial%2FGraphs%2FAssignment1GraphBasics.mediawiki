@@ -1,7 +1,8 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
-= Task 1 (Graph Basics) =
 
-== Task ==
+'''Note: this page documents the 1.4 version of SeqAn, see [[Tutorial]] if you need the documentation for the trunk version.'''
+== Task 1 (Graph Basics) ==
+
+=== Task ===
 Write a program which creates a directed graph with the following edges:
 
 (1,0), (0,4), (2,1), (4,1), (5,1), (6,2), (3,2), (2,3), (7,3), (5,4), (6,5), (5,6), (7,6), (7,7)
@@ -11,10 +12,10 @@ Use the function seqan:Function.addEdges instead of adding each edge separately.
 Output the graph to the screen.
 
 
-== Solution ==
+=== Solution ===
 
 We first have to include the corresponding header file for graphs.
-Instead of `seqan/graph_types.h` we can also include `seqan/graph_algorithms.h` as it already includes `seqan/graph_types.h`.
+Instead of <tt>seqan/graph_types.h</tt> we can also include <tt>seqan/graph_algorithms.h</tt> as it already includes <tt>seqan/graph_types.h</tt>.
 
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/graph/graph_algo_scc.cpp, fragment=includes)]]
 
@@ -29,8 +30,8 @@ The array of vertex descriptors is sorted in the way predecessor1, successor1, p
 
 The screen output of the graph consists of an adjacency list for the vertices and an edge list:
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 Adjacency list:
 0 -> 4,
@@ -57,4 +58,8 @@ Source: 7,Target: 7 (Id: 13)
 Source: 7,Target: 6 (Id: 12)
 Source: 7,Target: 3 (Id: 8)
 </pre>
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

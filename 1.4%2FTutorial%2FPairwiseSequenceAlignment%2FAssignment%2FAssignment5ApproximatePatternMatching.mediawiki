@@ -1,26 +1,27 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[Tutorial]] if you need the documentation for the trunk version.'''
 = Assignment 5: Approximate String Matching.
 
-=== Objective ===
+==== Objective ====
 
-Write an approximate pattern matching algorithm using alignment algorithms. Report the positions of all hits where the pattern matches the text with at most `2` errors. Output the number of total edits used to match the pattern and print the corresponding cigar string of the alignment without leading and trailing gaps in the pattern. Text: `MISSISSIPPIANDMISSOURI` Pattern: `SISSI`
+Write an approximate pattern matching algorithm using alignment algorithms. Report the positions of all hits where the pattern matches the text with at most <tt>2</tt> errors. Output the number of total edits used to match the pattern and print the corresponding cigar string of the alignment without leading and trailing gaps in the pattern. Text: <tt>MISSISSIPPIANDMISSOURI</tt> Pattern: <tt>SISSI</tt>
 
-=== Solution ===
+==== Solution ====
 
-Write the `main` body of the program with type definition and initalization of the used data structures.
+Write the <tt>main</tt> body of the program with type definition and initalization of the used data structures.
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/alignments/pairwise_sequence_alignment_assignment5.cpp, fragment=main)]]
 
-In the first part of the algorithm we implement am alignment based verification process to identify positions in the `database` at which we can find our pattern with at most `2` errors. We slide the `5*5` alignment matrix position by position over the `database` and use the `MeyersBitVector` to verify the hits. If the score is greater or equal than `-2`, then we have found a hit.
-We store the begin position of the hit in `locations`.
+In the first part of the algorithm we implement am alignment based verification process to identify positions in the <tt>database</tt> at which we can find our pattern with at most <tt>2</tt> errors. We slide the <tt>5*5</tt> alignment matrix position by position over the <tt>database</tt> and use the <tt>MeyersBitVector</tt> to verify the hits. If the score is greater or equal than <tt>-2</tt>, then we have found a hit.
+We store the begin position of the hit in <tt>locations</tt>.
 
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/alignments/pairwise_sequence_alignment_assignment5.cpp, fragment=verfication)]]
 
-In the second part of the algorithm we iterate over all reported locations.  This time we compute a semi-global alignment since we won't penalize gaps at the beginning and at the end of our pattern. We also compute a band allowing at most `2` errors in either direction.
+In the second part of the algorithm we iterate over all reported locations.  This time we compute a semi-global alignment since we won't penalize gaps at the beginning and at the end of our pattern. We also compute a band allowing at most <tt>2</tt> errors in either direction.
 Don't forget to clear the gaps in each iteration, otherwise we might encounter wrong alignments.
 
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/alignments/pairwise_sequence_alignment_assignment5.cpp, fragment=alignment)]]
 
-In the next part we determine the cigar string for the matched pattern. We have to remove leading and trailing gaps in the `gapsPattern` object using the functions seqan:Function.setClippedBeginPosition and seqan:Function.setClippedEndPosition. We also need to set the clipped begin position for the `gapsText` object such that both Gaps begin at the same position.
+In the next part we determine the cigar string for the matched pattern. We have to remove leading and trailing gaps in the <tt>gapsPattern</tt> object using the functions seqan:Function.setClippedBeginPosition and seqan:Function.setClippedEndPosition. We also need to set the clipped begin position for the <tt>gapsText</tt> object such that both Gaps begin at the same position.
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/alignments/pairwise_sequence_alignment_assignment5.cpp, fragment=cigar)]]
 
 First, we identify insertions using the functions seqan:Function.isGap and seqan:Function.countGaps.
@@ -38,8 +39,8 @@ Finally we print out the position of the hit, its total number of edits and the 
 
 Here is the output of this program.
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 Text: MISSISSIPPIANDMISSOURI	Pattern: SISSI
 Hit at position  0	total edits: 1	cigar: 1S4M
@@ -49,4 +50,8 @@ Hit at position  3	total edits: 0	cigar: 5M
 Hit at position  4	total edits: 1	cigar: 1I4M
 Hit at position  6	total edits: 2	cigar: 2M2S1M
 Hit at position  14	total edits: 2	cigar: 1S3M1S
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

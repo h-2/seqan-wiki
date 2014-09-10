@@ -1,7 +1,8 @@
-= How To: Filtering Similar Sequences =
+
+== How To: Filtering Similar Sequences ==
 [[TOC]]
 
-== Using Swift ==
+=== Using Swift ===
 
 In the next example we are going to use the seqan:Spec.Swift filter to efficiently find pairs of similar reads.
 The Swift algorithms searches for so-called epsilon matches, local alignments, of two sequences with an error rate below a certain epsilon threshold.
@@ -25,3 +26,7 @@ Thus, we have to specialize the seqan:Class.Pattern with a seqan:Spec.IndexQGram
 seqan:Class.Finder and seqan:Class.Pattern classes have to be specialized with seqan:Spec.SwiftSemiGlobal in the second template argument.
 The main loop iterates over all potential matches which can be further processed, e.g. by a semi-global or overlap aligner.
 [[Include(source:trunk/core/demos/howto/filter_similar_sequences.cpp, fragment=filter)]]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

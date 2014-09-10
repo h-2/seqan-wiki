@@ -1,35 +1,36 @@
-= Manuel's Random Notes =
+
+== Manuel's Random Notes ==
 [[TOC]]
 
-== General ==
+=== General ===
 
- * Global operators such as `operator==` are better only specialized for as `template <typename TSpec, typename TOther> operator==(Klass<..., TSpec> const &, TOther const &)` for class `Klass`.
+*Global operators such as <tt>operator==</tt> are better only specialized for as <tt>template <typename TSpec, typename TOther> operator==(Klass<..., TSpec> const &, TOther const &)</tt> for class <tt>Klass</tt>.
    The reason for this is that it there will be ambiguities otherwise.
    This style is generally also closer to specifying the operator in the class itself.
    However, if the left hand type is a builtin type such as an integer or a pointer, this operator should also be defined (think comparison of char-pointers to strings!)
- * However, what about `Dna*`.
-   Here, the value 0 is a perfectly nice value, compared to `char*`!
-   Probably, the operator should only be defined for `char` and`wchar_t`?
- * It appears that the "code structure architecture" is as follows:
-  * There is a `_interface.h` header that defines the tags and metafunctions from the current module and global implementations of facade functions that call a function of the same name with one more parameter, e.g. `begin()`.
+*However, what about <tt>Dna*</tt>.
+   Here, the value 0 is a perfectly nice value, compared to <tt>char*</tt>!
+   Probably, the operator should only be defined for <tt>char</tt> and<tt>wchar_t</tt>?
+*It appears that the "code structure architecture" is as follows:
+**There is a <tt>_interface.h</tt> header that defines the tags and metafunctions from the current module and global implementations of facade functions that call a function of the same name with one more parameter, e.g. <tt>begin()</tt>.
     Furthermore, the interface has a lot of "specialization only" dddoc entries that describes the interface of the module's types.
-    These super-global functions have the property that the error will not be in the user location, where the `begin` function is called for example, but one layer deeper.
- * Concepts are closer to interfaces in other languages.
- * The iterator concept could be further subdivided as STL iterators are.
+    These super-global functions have the property that the error will not be in the user location, where the <tt>begin</tt> function is called for example, but one layer deeper.
+*Concepts are closer to interfaces in other languages.
+*The iterator concept could be further subdivided as STL iterators are.
 
-== Ideas For Advanced Tutorials ==
+=== Ideas For Advanced Tutorials ===
 
- * Search Algorithm: Regular expression + Index
- * Implementing Your Own Online Finder
- * File Converters
- * Copy Over Some !BioPython Cookbook entries. http://biopython.org/DIST/docs/tutorial/Tutorial.html#htoc208
+*Search Algorithm: Regular expression + Index
+*Implementing Your Own Online Finder
+*File Converters
+*Copy Over Some BioPython Cookbook entries. http://biopython.org/DIST/docs/tutorial/Tutorial.html#htoc208
 
-== Code Formatting ==
+=== Code Formatting ===
 
 The following appears to be useful:
 
-{{{
-#!cpp
+<pre>
+#cpp
 
 // ==========================================================================
 //                 SeqAn - The Library for Sequence Analysis
@@ -93,7 +94,7 @@ namespace seqan {
 ..summary:A class with some specializations.
 ..signature:MyClass<TSpec>
 ..param.TSpec:Specialization
- */
+*/
 
 template <typename TSpec>
 struct MyClass;
@@ -110,7 +111,7 @@ typedef Template<SomeTag_> SomeTag;
 ..general:ClassMyClass
 ..summary:Some Tag specialization.
 ..signature:MyClass<SomeTag>
- */
+*/
 
 template <>
 struct MyClass<SomeTag>
@@ -130,7 +131,7 @@ typedef Template<SomeOtherTag_> SomeOtherTag;
 ..general:ClassMyClass
 ..summary:Some Other Tag specialization.
 ..signature:MyClass<SomeOtherTag>
- */
+*/
 
 template <>
 struct MyClass<SomeOtherTag>
@@ -206,4 +207,8 @@ bool operator!=(...)
 }  // namespace seqan
 
 #ifndef  // #ifndef SEQAN_PATH_TO_HEADER_
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

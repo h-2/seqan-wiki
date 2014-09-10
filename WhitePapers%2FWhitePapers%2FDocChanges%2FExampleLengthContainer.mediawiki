@@ -1,38 +1,43 @@
-{{{#!html
+
+<pre>#html
 <small>Function</small>
-}}}
+</pre>
 
-= ContainerConcept # length =
+== ContainerConcept # length ==
 
-{{{#!html
+<pre>#html
 <small>Part of the interface of the Concept <a href="#">ContainerConcept</a></small>
-}}}
+</pre>
 
-{{{#!cpp
+<pre>#cpp
 TSize length(container)
-}}}
+</pre>
 
 Returns the number of items in a container.
 
-== Parameters ==
+=== Parameters ===
 
-{{{#!td valign=top
-`TContainer`
-}}}
-{{{#!td valign=top
-`container`
-}}}
-{{{#!td valign=top
+<pre>#td valign=top
+<tt>TContainer</tt>
+</pre>
+<pre>#td valign=top
+<tt>container</tt>
+</pre>
+<pre>#td valign=top
 The container to query.
-`TContainer` must fulfill the concept [# ContainerConcept].
-}}}
+<tt>TContainer</tt> must fulfill the concept [# ContainerConcept].
+</pre>
 
-== Return Values ==
+=== Return Values ===
 
-{{{#!td valign=top
-`TSize`
-}}}
-{{{#!td valign=top
+<pre>#td valign=top
+<tt>TSize</tt>
+</pre>
+<pre>#td valign=top
 The number of items in the container.
-`TSize` is the [# Size] type of `TContainer` (`Size<TContainer>::Type`)
-}}}
+<tt>TSize</tt> is the [# Size] type of <tt>TContainer</tt> (<tt>Size<TContainer>::Type</tt>)
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

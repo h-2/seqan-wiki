@@ -1,7 +1,8 @@
+
 Draft for the stream concept, in dddoc.
 Put into ''docs/concepts/Stream.dddoc'' and rebuild docs to see it in HTML.
 
-{{{
+<pre>
 .Concept.Stream
 ..summary:Object for I/O.
 
@@ -191,4 +192,8 @@ Put into ''docs/concepts/Stream.dddoc'' and rebuild docs to see it in HTML.
 ..param.stream:The stream to get position of.
 ...type:Concept.Stream
 ..returns:$int$, I/O error code.
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

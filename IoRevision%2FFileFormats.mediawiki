@@ -1,4 +1,5 @@
-= File Formats =
+
+== File Formats ==
 [[TOC()]]
 
 Generally, BioPerl has a huge list of supported formats, we can only hope to implement a subset.
@@ -7,36 +8,36 @@ Reading a file and writing it out again might add or remove certain features, e.
 
 SeqAn is concerned with sequence analysis, so the support for FASTA/FASTQ import is essential and should be most advanced.
 For alignments, a few formats should be supported, which are right now?
-Basic graph loading should work, although at lower priority, conversion of labels should be done with a `lexicalCast<>()` function.
+Basic graph loading should work, although at lower priority, conversion of labels should be done with a <tt>lexicalCast<>()</tt> function.
 
 People can always contribute their parsers later on...
 
 Output is much simpler, so it is probably easier to support formats there.
 
- * http://bioperl.org/wiki/Sequence_formats
- * http://bioperl.org/wiki/Multiple_alignment_formats
+*http://bioperl.org/wiki/Sequence_formats
+*http://bioperl.org/wiki/Multiple_alignment_formats
 
-== Sequences ==
+=== Sequences ===
 
- * FASTA
-  * distinction between alphabets
-  * Dna
-  * Dna5
-  * AminoAcid
- * FASTQ
-  * alphabet as in FASTA
-  * fastq-sanger ("fastq")
-  * fastq-illumina
-  * fastq-solexa
- * RAW
-  * alphabet as for FASTA
- * Illumina pipeline output files with internal file formats.
+*FASTA
+**distinction between alphabets
+**Dna
+**Dna5
+**AminoAcid
+*FASTQ
+**alphabet as in FASTA
+**fastq-sanger ("fastq")
+**fastq-illumina
+**fastq-solexa
+*RAW
+**alphabet as for FASTA
+*Illumina pipeline output files with internal file formats.
 
-== Alignments ==
+=== Alignments ===
 
- * http://bioperl.org/wiki/Multiple_alignment_formats
+*http://bioperl.org/wiki/Multiple_alignment_formats
 
-== File Format Guessing ==
+=== File Format Guessing ===
 
 File formats can be guessed by either looking at the file name or the file contents.
 The BioPerl wiki [http://bioperl.org/wiki/HOWTO:SeqIO lists common extensions] for file names.
@@ -44,12 +45,12 @@ Guessing by file name is not possible when reading from stdin, guessing by conte
 
 One should be able to give hints to the file format guesser, but there should be a sensible set of defaults.
 In SeqAn, we do not have to deal with the same issues as in BioPerl, the resulting type is known at compile time.
-Thus, when loading data into a `StringSet<String<Dna5> >`, one can assume that the input file is a sequence type.
+Thus, when loading data into a <tt>StringSet<String<Dna5> ></tt>, one can assume that the input file is a sequence type.
 If the guessed file type is different than the target type then the reader should warn the programmer/user in some way.
-Maybe an optional check function `isCompatible` is enough?
+Maybe an optional check function <tt>isCompatible</tt> is enough?
 
-{{{
-#!cpp
+<pre>
+#cpp
 
 int
 guessFileFormat(FileFormat<Sequence> & format, CharString fileName)
@@ -72,14 +73,17 @@ template <typename TStream, typename TSpec>
 int
 guessFileFormat(FileFormat<Sequence> & format, StreamBuffer<TStream, TSpec> & streamBuffer)
 {
-    if (!hasMore(streamBuffer))
+    if (hasMore(streamBuffer))
         return -1;  // I/O error
     // guess file format
     if (value(streamBuffer) == '>')
         format.format = SEQ_FORMAT_FASTA;
     else if (value(streamBuffer) == '@')
         format.format = SEQ_FORMAT_FASTA;
-    else if ((value(streamBuffer) >= 'A' && value(streamBuffer) <= 'Z') || (value(streamBuffer) >= 'a' && value(streamBuffer) <= 'z'))
+{| border=1 class="simple"
+! (value(streamBuffer) >= 'a' && value(streamBuffer) <= 'z'))
+|}
+
         format.format = SEQ_FORMAT_RAW;
     else
         return 1;  // Could not guess.
@@ -190,9 +194,13 @@ public:
         : alphabet(SEQ_ALPHABET_CHAR), format(AL_FORMAT_UNKNOWN)
     {}
 }
-}}}
+</pre>
 
-== Resources ==
+=== Resources ===
 
- * [http://bioperl.org/wiki/HOWTO:SeqIO BioPerl Sequence I/O]
- * [http://biopython.org/wiki/SeqIO BioPython Sequence I/O]
+*[http://bioperl.org/wiki/HOWTO:SeqIO BioPerl Sequence I/O]
+*[http://biopython.org/wiki/SeqIO BioPython Sequence I/O]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

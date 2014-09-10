@@ -1,82 +1,83 @@
-= Getting Started =
+
+== Getting Started ==
 
 This chapter gives you the necessary steps to get started with SeqAn:
 
- * Necessary Prerequisites
- * Installing SeqAn from Subversion
- * Creating a first build.
- * Creating your own first application.
+*Necessary Prerequisites
+*Installing SeqAn from Subversion
+*Creating a first build.
+*Creating your own first application.
 
 Use the following links to select your target operating system and IDE/build system.
 The bold items show the recommended build system for the given platforms.
 
-{{{#!th style="align:center; text-align:top; width:200px"
-[[Image(/static/Tutorial/GettingStarted/Linux.png,width=80px,height=80px,link=)]] [[br]] Linux
-}}}
-{{{#!th style="align:center; text-align:top; width:200px"
-[[Image(/static/Tutorial/GettingStarted/MacOsX.png,width=80px,height=80px,link=)]] [[br]] Mac Os X
-}}}
-{{{#!th style="align:center; text-align:top; width:200px"
-[[Image(/static/Tutorial/GettingStarted/Windows7.png,width=80px,height=80px,link=)]] [[br]] Windows
-}}}
+<pre>#th style="align:center; text-align:top; width:200px"
+[[Image(/static/Tutorial/GettingStarted/Linux.png,width=80px,height=80px,link=)]] <br> Linux
+</pre>
+<pre>#th style="align:center; text-align:top; width:200px"
+[[Image(/static/Tutorial/GettingStarted/MacOsX.png,width=80px,height=80px,link=)]] <br> Mac Os X
+</pre>
+<pre>#th style="align:center; text-align:top; width:200px"
+[[Image(/static/Tutorial/GettingStarted/Windows7.png,width=80px,height=80px,link=)]] <br> Windows
+</pre>
 |--------------------------------------------------------
-{{{#!td valign="top" align="center"
+<pre>#td valign="top" align="center"
 Getting started on Linux using
 
-{{{#!table style="border:none;"
-{{{#!td style="border:none; padding-left:20px; padding-right:20px;" align="center"
-[[Image(/static/Tutorial/GettingStarted/LinuxTerminal.png,width=50px,height=50px,link=wiki:Tutorial/GettingStarted/LinuxMakefiles)]] [[br]]
-'''[wiki:Tutorial/GettingStarted/LinuxMakefiles Makefiles]'''
-}}}
-{{{#!td style="border:none; padding-left:20px; padding-right:20px;" align="center"
-[[Image(/static/Tutorial/GettingStarted/Eclipse.png,width=50px,height=50px,link=wiki:Tutorial/GettingStarted/LinuxEclipse)]] [[br]]
-[wiki:Tutorial/GettingStarted/LinuxEclipse Eclipse]
-}}}
-}}}
-}}}
-{{{#!td valign="top" align="center"
+<pre>#table style="border:none;"
+<pre>#td style="border:none; padding-left:20px; padding-right:20px;" align="center"
+[[Image(/static/Tutorial/GettingStarted/LinuxTerminal.png,width=50px,height=50px,link=wiki:Tutorial/GettingStarted/LinuxMakefiles)]] <br>
+'''[[Tutorial/GettingStarted/LinuxMakefiles| Makefiles]]'''
+</pre>
+<pre>#td style="border:none; padding-left:20px; padding-right:20px;" align="center"
+[[Image(/static/Tutorial/GettingStarted/Eclipse.png,width=50px,height=50px,link=wiki:Tutorial/GettingStarted/LinuxEclipse)]] <br>
+[[Tutorial/GettingStarted/LinuxEclipse| Eclipse]]
+</pre>
+</pre>
+</pre>
+<pre>#td valign="top" align="center"
 Getting started on Mac Os X using
 
-{{{#!table style="border:none;" 
-{{{#!td style="border:none; padding-left:20px; padding-right:20px;" align="center"
-[[Image(/static/Tutorial/GettingStarted/Xcode.png,width=50px,height=50px,link=wiki:Tutorial/GettingStarted/MacXcode)]] [[br]]
-'''[wiki:Tutorial/GettingStarted/MacXcode Xcode]'''
-}}}
-{{{#!td style="border:none; padding-left:20px; padding-right:20px;" align="center"
-[[Image(/static/Tutorial/GettingStarted/MacTerminal.png,width=50px,height=50px,link=wiki:Tutorial/GettingStarted/MacMakefiles)]] [[br]]
-[wiki:Tutorial/GettingStarted/MacMakefiles Makefiles]
-}}}
-}}}
-}}}
-{{{#!td valign="top" align="center"
+<pre>#table style="border:none;" 
+<pre>#td style="border:none; padding-left:20px; padding-right:20px;" align="center"
+[[Image(/static/Tutorial/GettingStarted/Xcode.png,width=50px,height=50px,link=wiki:Tutorial/GettingStarted/MacXcode)]] <br>
+'''[[Tutorial/GettingStarted/MacXcode| Xcode]]'''
+</pre>
+<pre>#td style="border:none; padding-left:20px; padding-right:20px;" align="center"
+[[Image(/static/Tutorial/GettingStarted/MacTerminal.png,width=50px,height=50px,link=wiki:Tutorial/GettingStarted/MacMakefiles)]] <br>
+[[Tutorial/GettingStarted/MacMakefiles| Makefiles]]
+</pre>
+</pre>
+</pre>
+<pre>#td valign="top" align="center"
 Getting started on Windows using
 
-{{{#!table style="border:none;"
-{{{#!td style="border:none;" align="center"
-[[Image(/static/Tutorial/GettingStarted/VisualStudio2010.png,width=50px,height=50px,link=wiki:Tutorial/GettingStarted/WindowsVisualStudio)]] [[br]]
-'''[wiki:Tutorial/GettingStarted/WindowsVisualStudio Visual Studio 8, 9, 10, 11]'''
-}}}
-{{{#!td style="border:none;" colspan=2 align="center"
-[[Image(/static/Tutorial/GettingStarted/Eclipse.png,width=50px,height=50px,link=wiki:Tutorial/GettingStarted/WindowsEclipse)]] [[br]]
-~~[wiki:Tutorial/GettingStarted/WindowsEclipse MinGW + Eclipse]~~
-}}}
-}}}
-}}}
+<pre>#table style="border:none;"
+<pre>#td style="border:none;" align="center"
+[[Image(/static/Tutorial/GettingStarted/VisualStudio2010.png,width=50px,height=50px,link=wiki:Tutorial/GettingStarted/WindowsVisualStudio)]] <br>
+'''[[Tutorial/GettingStarted/WindowsVisualStudio| Visual Studio 8, 9, 10, 11]]'''
+</pre>
+<pre>#td style="border:none;" colspan=2 align="center"
+[[Image(/static/Tutorial/GettingStarted/Eclipse.png,width=50px,height=50px,link=wiki:Tutorial/GettingStarted/WindowsEclipse)]] <br>
+<s>[[Tutorial/GettingStarted/WindowsEclipse| MinGW + Eclipse]]</s>
+</pre>
+</pre>
+</pre>
 
-{{{
-#!comment
+<pre>
+#comment
 MinGW Makefiles are not described yet
-[[Image(/static/Tutorial/GettingStarted/WindowsTerminal.png,width=50px,height=50px,link=wiki:Tutorial/GettingStarted/WindowsMinGW)]] [[br]]
-[wiki:Tutorial/GettingStarted/WindowsMinGW MinGW Makefiles]
-}}}
+[[Image(/static/Tutorial/GettingStarted/WindowsTerminal.png,width=50px,height=50px,link=wiki:Tutorial/GettingStarted/WindowsMinGW)]] <br>
+[[Tutorial/GettingStarted/WindowsMinGW| MinGW Makefiles]]
+</pre>
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 Click "more" for details on the supported development platforms.
 ----
 
-{{{
-#!InfoBox
+<pre>
+#InfoBox
 '''In-Depth Information:''' Supported OS, Build Systems, and Compilers
 
 The content of this box is meant as additional information.
@@ -85,42 +86,46 @@ You do not need to understand it to use SeqAn or follow the tutorials.
 There are three degrees of freedom when selecting a SeqAn development platform.
 The degrees of freedom are:
 
- 1. The '''operating system'''.
+#The '''operating system'''.
     We support Linux, Mac Os X and Windows.
- 1. The '''build system'''.
+#The '''build system'''.
     This is partially orthogonal to the operating system, although each build system is only available on some platforms (e.g. Visual Studio is only supported on Windows).
     We use CMake to generate the actual build files and the build system maps to "CMake generators".
     A CMake generator creates either build files for a build system (e.g. GNU Make) or a project file for an IDE (e.g. for Visual Studio 2008).
- 1. The '''compiler'''.
+#The '''compiler'''.
     This is partially orthogonal to the operating system and build system, although only some combinations of each are possible.
     For example, Visual Studio projects of a particular version can only use the Visual Studio compiler of the same version.
 
 The SeqAn team offers support for the following operating systems, build systems, and compilers:
 
- * '''Operating System:''' Linux, Mac Os X, Windows.
- * '''Build System:''' Makefiles, Visual Studio projects, XCode projects, Eclipse CDT projects.
- * '''Compilers:''' GNU g++ from version 4.1, LLVM/Clang from version 3.0, Visual C++ from Version 8.
+*'''Operating System:''' Linux, Mac Os X, Windows.
+*'''Build System:''' Makefiles, Visual Studio projects, XCode projects, Eclipse CDT projects.
+*'''Compilers:''' GNU g++ from version 4.1, LLVM/Clang from version 3.0, Visual C++ from Version 8.
 
 We are told that SeqAn also works on FreeBSD.
-It should work with all [http://www.cmake.org/cmake/help/v2.8.8/cmake.html#section_Generators generators available in CMake] that work with the supported compilers (e.g. the !CodeBlocks generator will probably work as long as you use it on a operating system with a supported compiler, although we cannot offer any support for !CodeBlocks).
-}}}
-}}}
+It should work with all [http://www.cmake.org/cmake/help/v2.8.8/cmake.html#section_Generators generators available in CMake] that work with the supported compilers (e.g. the CodeBlocks generator will probably work as long as you use it on a operating system with a supported compiler, although we cannot offer any support for CodeBlocks).
+</pre>
+</pre>
 
-== Relevant How-Tos ==
+=== Relevant How-Tos ===
 
 Although slightly more advanced than "getting started", the following How-Tos apply to setting up your build environment:
 
- [wiki:HowTo/UseParallelBuildDirectories How To: Use Parallel Build Directories] ::
+ [[HowTo/UseParallelBuildDirectories| How To: Use Parallel Build Directories]] ::
    With CMake, it is easy to create multiple build directories and thus different Makefile configurations or project files for different IDEs.
    This is important to know if you want to have debug and release Makefiles next to each other.
    Also, if you want to have build files for more than one Visual Studio version, then this How-To is for you!
- [wiki:HowTo/UseSeqAnInYourProjects How To: Use SeqAn In Your Projects] ::
+ [[HowTo/UseSeqAnInYourProjects| How To: Use SeqAn In Your Projects]] ::
    This How-To explains how to use SeqAn in your projects with your own build system.
    It deals with the precompiler defines to set, paths etc.
- [wiki:HowTo/UseLatestClangInXcode How To: Use The Latest Clang In XCode] ::
+ [[HowTo/UseLatestClangInXcode| How To: Use The Latest Clang In XCode]] ::
    Clang is a new C++ compiler with very nice error output.
    This How-To describes how to use the latest in XCode on Mac Os X.
- [wiki:HowTo/InstallContribsWindows How To: Install Contribs on Windows] ::
+ [[HowTo/InstallContribsWindows| How To: Install Contribs on Windows]] ::
    Installing and compiling libraries such as zlib or libbz2 on Windows can be tricky.
    We provide prebuilt binaries which we recommend to use with SeqAn on Windows.
    This How-To describes how to install them (it's as easy as extracting one ZIP file).
+
+
+
+{{TracNotice|{{PAGENAME}}}}

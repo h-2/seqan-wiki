@@ -1,13 +1,14 @@
-= Getting Started With SeqAn On Mac OS X Using Xcode =
+
+== Getting Started With SeqAn On Mac OS X Using Xcode ==
 
 [[TOC()]]
 
 This article describes how to get started with SeqAn on Mac OS X using XCode.
 
-We assume that you want to use [http://www.macports.org/ MacPorts] for installing some dependencies (!MacPorts is a package management system that easily allows you to install Unix software on OS X).
+We assume that you want to use [http://www.macports.org/ MacPorts] for installing some dependencies (MacPorts is a package management system that easily allows you to install Unix software on OS X).
 Of course, if you want to use a different way for installing the dependencies (e.g. using Homebrew) then you are free to do so.
 
-== Prerequisites ==
+=== Prerequisites ===
 
 First, you have to install the Apple [https://developer.apple.com/downloads/index.action Xcode via Apple Developer] or preferably [http://itunes.apple.com/de/app/xcode/id497799835?mt=12 Xcode via the Mac App Store].
 
@@ -16,129 +17,129 @@ In the shown table you will find the Command Line Tools. Click on  [[MenuTrace(I
 
 [[Image(source:/trunk/core/demos/tutorial/getting_started/xcode/download-command-line-tools.png, width=500px, align=center)]]
 
-{{{#!ImportantBox
-If you already had Xcode installed and you '''updated to Xcode 4.3''' it is likely that `xcode-select` is not pointing to the new Xcode location.
+<pre>#ImportantBox
+If you already had Xcode installed and you '''updated to Xcode 4.3''' it is likely that <tt>xcode-select</tt> is not pointing to the new Xcode location.
 
-To make sure you can properly work with Xcode 4.3 please open your `Terminal` and type:
-{{{#!ShellBox
+To make sure you can properly work with Xcode 4.3 please open your <tt>Terminal</tt> and type:
+<pre>#ShellBox
 ~ # xcode-select -print-path
-}}}
-The command should output `/Applications/Xcode.app/Contents/Developer`.
+</pre>
+The command should output <tt>/Applications/Xcode.app/Contents/Developer</tt>.
 If it doesn't please note down the actual output (for backup purpose) and type in:
-{{{#!ShellBox
+<pre>#ShellBox
 ~ # sudo xcode-select -switch /Applications/Xcode.app/Contents/Developer
-}}}
-This will configure `xcode-select` properly and make it work with SeqAn.
-}}}
+</pre>
+This will configure <tt>xcode-select</tt> properly and make it work with SeqAn.
+</pre>
 
-{{{#!ImportantBox
+<pre>#ImportantBox
 '''Problem with CMake.'''
 With the current MacPort version of CMake it is no more possible to open sub projects.
-Either open only the root project `seqan.xcodeproj` or install our [attachment:cmake-2.8.9.20120903-g6ef858-dirty-Darwin-i386.dmg patched version of CMake] instead.
+Either open only the root project <tt>seqan.xcodeproj</tt> or install our [attachment:cmake-2.8.9.20120903-g6ef858-dirty-Darwin-i386.dmg patched version of CMake] instead.
 
-Note: The package installs the binary at `/usr/usr/bin/cmake`.
-Please add the following line to your `~/.profile` file:
-{{{#!ShellBox
+Note: The package installs the binary at <tt>/usr/usr/bin/cmake</tt>.
+Please add the following line to your <tt>~/.profile</tt> file:
+<pre>#ShellBox
 export PATH=/usr/usr/bin:$PATH
-}}}
+</pre>
 
-}}}
+</pre>
 
-After installing the Xcode SDK, please install !MacPorts following [http://www.macports.org/install.php these instructions].
-To check that the !MacPorts install was successful, enter the following on your shell.
-If the `port` program is found then you can go on.
+After installing the Xcode SDK, please install MacPorts following [http://www.macports.org/install.php these instructions].
+To check that the MacPorts install was successful, enter the following on your shell.
+If the <tt>port</tt> program is found then you can go on.
 
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 ~ # port info
-}}}
+</pre>
 
-Next, install Subversion using the `port` command.
+Next, install Subversion using the <tt>port</tt> command.
 
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 ~ # sudo port install subversion
-}}}
+</pre>
 
 There is a problem with the current version of CMake.
 Please read '''Problem with CMake''' box above and either install our patched version of CMake (see attachments) or the current MacPort  version which has a problem with sub projects:
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 ~ # sudo port install cmake
-}}}
+</pre>
 
-== Install ==
+=== Install ===
 
-Now, go to the directory you want to keep your SeqAn install in (e.g. `Development` in your home folder).
+Now, go to the directory you want to keep your SeqAn install in (e.g. <tt>Development</tt> in your home folder).
 
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 ~ # cd $HOME/Development
-}}}
+</pre>
 
 Then, use Subversion to retrieve the current SeqAn trunk:
 
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 Development # svn co https://github.com/seqan/seqan/branches/master seqan-trunk
-}}}
+</pre>
 
 You can now find the whole tree with the SeqAn library and applications in $HOME/Development/seqan-trunk.
 
-== A First Build ==
+=== A First Build ===
 
-Next, we will use CMake to create an Xcode project for building the applications, demo programs (short: demos), and tests. For this, we create a separate folder `seqan-trunk-build` on the same level as the folder `seqan-trunk`.
+Next, we will use CMake to create an Xcode project for building the applications, demo programs (short: demos), and tests. For this, we create a separate folder <tt>seqan-trunk-build</tt> on the same level as the folder <tt>seqan-trunk</tt>.
 
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 # Development # mkdir -p seqan-trunk-build/xcode
-}}}
+</pre>
 
 The resulting directory structure will look as follows.
 
-{{{
+<pre>
    ~/Development
      ├─ seqan-trunk             source directory
      └┬ seqan-trunk-build
       └─ xcode                  build directory
-}}}
+</pre>
 
-Within the '''build directory''' `xcode`, we call CMake to generate Xcode project files.
+Within the '''build directory''' <tt>xcode</tt>, we call CMake to generate Xcode project files.
 
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 Development # cd seqan-trunk-build/xcode
 xcode # cmake ../../seqan-trunk -G Xcode
-}}}
+</pre>
 
-This will generate several Xcode project files in `xcode`, namely for the !SeqAn core applications, demos, and tests.
+This will generate several Xcode project files in <tt>xcode</tt>, namely for the SeqAn core applications, demos, and tests.
 The same will happen for the extras and sandbox directories.
 
 Now, open the project for the core applications:
 
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 # xcode # open seqan.xcodeproj
-}}}
+</pre>
 
 Xcode starts and will look like this:
 
 [[Image(source:/trunk/core/demos/tutorial/getting_started/xcode/xcode_startup.png, width=500px, align=center)]]
 
 Now we are ready to compile and run our first application.
-For this, please choose the target `razers2` in the top left corner of your Xcode application.
-When selected click on `Run` just left to where you chose the target.
+For this, please choose the target <tt>razers2</tt> in the top left corner of your Xcode application.
+When selected click on <tt>Run</tt> just left to where you chose the target.
 
 [[Image(source:/trunk/core/demos/tutorial/getting_started/xcode/razers2_selection.png, width=300px, align=center)]]
 
-Optionally, we could also use "`ALL_BUILD`" instead of "`razers2`".
+Optionally, we could also use "<tt>ALL_BUILD</tt>" instead of "<tt>razers2</tt>".
 However, this '''can take a long time and is not really necessary'''.
 
-After having compiled and run `razers2` your Xcode should display `razers2`'s output in the bottom right area.
+After having compiled and run <tt>razers2</tt> your Xcode should display <tt>razers2</tt>'s output in the bottom right area.
 
 [[Image(source:/trunk/core/demos/tutorial/getting_started/xcode/razers2_built.png, width=500px, align=center)]]
 
-== Hello World! ==
+=== Hello World! ===
 
 Now, let us create a '''sandbox''' for you.
 This sandbox will be your local workspace and you might want to have it versionized on your own Subversion repository at a later point.
@@ -146,59 +147,59 @@ All of your development will happen in your sandbox.
 
 We go back to the source directory and then use the SeqAn code generator to create a new sandbox.
 
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 xcode # cd ../../seqan-trunk
 seqan-trunk # ./util/bin/skel.py repository sandbox/my_sandbox
-}}}
+</pre>
 
-Now that you have your own working space, we create a new application `first_app`.
+Now that you have your own working space, we create a new application <tt>first_app</tt>.
 
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 seqan-trunk # ./util/bin/skel.py app first_app sandbox/my_sandbox
-}}}
+</pre>
 
-Details about the code generator are explained in [wiki:HowTo/UseTheCodeGenerator How To: Use the code generator].
+Details about the code generator are explained in [[HowTo/UseTheCodeGenerator| How To: Use the code generator]].
 
 Now, we go back into the build directory and call CMake again to make it detect the added app.
 
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 seqan-trunk # cd ../seqan-trunk-build/xcode
 xcode # cmake .
-}}}
+</pre>
 
-{{{
-#!InfoBox
+<pre>
+#InfoBox
 '''Information:''' When and where do you have to call CMake?
 
 CMake is a cross-platform tool for creating and updating build files (IDE projects or Makefiles).
 When you first create the build files, you can configure things such as the build mode or the type of the project files.
 
-Whenever you add a new application, a demo or a test or whenever you make changes to `CMakeLists.txt` you need to call CMake again.
-Since CMake remembers the settings you chose the first time you called CMake in a file named `CMakeCache.txt`, all you have to do is to switch to your `debug` or `release` build directory and call "`cmake .`" in there.
+Whenever you add a new application, a demo or a test or whenever you make changes to <tt>CMakeLists.txt</tt> you need to call CMake again.
+Since CMake remembers the settings you chose the first time you called CMake in a file named <tt>CMakeCache.txt</tt>, all you have to do is to switch to your <tt>debug</tt> or <tt>release</tt> build directory and call "<tt>cmake .</tt>" in there.
 
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 ~ # cd $HOME/Development/seqan-trunk-build/xcode
 debug # cmake .
-}}}
+</pre>
 
-Do not try to call "`cmake .`" from within the `seqan-trunk` directory '''but only from your build directory'''.
-}}}
+Do not try to call "<tt>cmake .</tt>" from within the <tt>seqan-trunk</tt> directory '''but only from your build directory'''.
+</pre>
 
 The step above creates the starting point for a real-world application, including an argument parser and several other things that are a bit too complicated to fit into the Getting Started tutorial.
 Therefore, we will replace the program of the app ''first_app'' with a very simple example program.
 
-Select the file `/Sources/first_app/Source Files/first_app.cpp` in Xcode and open it:
+Select the file <tt>/Sources/first_app/Source Files/first_app.cpp</tt> in Xcode and open it:
 
 [[Image(source:/trunk/core/demos/tutorial/getting_started/xcode/first_app_old.png, width=500px, align=center)]]
 
 Replace its contents with the following:
 
-{{{
-#!cpp
+<pre>
+#cpp
 #include <iostream>
 #include <seqan/sequence.h>  // CharString, ...
 #include <seqan/file.h>      // to stream a CharString into cout
@@ -210,28 +211,32 @@ int main(int, char const **)
     std::cout << mySeqanString << std::endl;
     return 1;
 }
-}}}
+</pre>
 
 [[Image(source:/trunk/core/demos/tutorial/getting_started/xcode/first_app_new.png, width=500px, align=center)]]
 
-Afterwards, you can simply compile and run your application by clicking on the `Run` button on the very top left corner in Xcode.
+Afterwards, you can simply compile and run your application by clicking on the <tt>Run</tt> button on the very top left corner in Xcode.
 
 On completion, you should see the following output:
 
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 Hello World!
 Hello SeqAn!
-}}}
+</pre>
 
 Congratulations, you have successfully created your first application within the SeqAn build system with Xcode!
 
-== Further Steps ==
+=== Further Steps ===
 
 As a next step, we suggest the following:
 
- * [wiki:Tutorial Continue with the Tutorials]
- * Look around in the files in `sandbox/my_sandbox/apps/first_app` or the demos in `core/demos` and `extras/demos`.
- * [wiki:Infrastructure/RepositoryStructure Learn about the SeqAn SVN repository structure]
- * For the tutorial, using the SeqAn build system is great!
-   If you later want to use SeqAn as a library, have a look at [wiki:HowTo/UseSeqAnInYourProjects How To: Use SeqAn In Your Projects].
+*[[Tutorial| Continue with the Tutorials]]
+*Look around in the files in <tt>sandbox/my_sandbox/apps/first_app</tt> or the demos in <tt>core/demos</tt> and <tt>extras/demos</tt>.
+*[[Infrastructure/RepositoryStructure| Learn about the SeqAn SVN repository structure]]
+*For the tutorial, using the SeqAn build system is great!
+   If you later want to use SeqAn as a library, have a look at [[HowTo/UseSeqAnInYourProjects| How To: Use SeqAn In Your Projects]].
+
+
+
+{{TracNotice|{{PAGENAME}}}}

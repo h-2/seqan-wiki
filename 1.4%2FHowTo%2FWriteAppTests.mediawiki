@@ -1,10 +1,11 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:HowTo] if you need the documentation for the trunk version.'''
-= How To: Write Application Tests =
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[HowTo]] if you need the documentation for the trunk version.'''
+== How To: Write Application Tests ==
 [[TOC]]
 
-This !HowTo describes the basics of writing your own app tests.
+This HowTo describes the basics of writing your own app tests.
 
-== Overview ==
+=== Overview ===
 
 SeqAn application tests allow the simple testing of apps:
 The application is run several times, each with a different set of parameters and/or input files.
@@ -18,7 +19,7 @@ The general data flow for app tests is as follows (a simple working example are 
 There are two major steps involved:
 (A) Test data generation and (B) actually running the tests.
 
-=== Test Data Generation ===
+==== Test Data Generation ====
 
 This is done once when preparing the test.
 
@@ -40,7 +41,7 @@ This allows for easily changing this.
 These shell scripts should also be well-documented.
 See the ''generate_outputs.sh'' file of pair_align or tree_recon for simple and mostly clean examples.
 
-=== Running Tests ===
+==== Running Tests ====
 
 The app tests are then run in the nightly CMake builds and their results are submitted to CDash.
 There are two steps involed here: (1) Executing the programs and (2) comparing their result with the expected ones.
@@ -48,22 +49,22 @@ There is a Python test driver program (called ''run_tests.py'' by convention) fo
 
 These programs us the Python module ''seqan.app_tests'' for running and usually mirror the corresponding ''generate_outputs.sh'' file.
 
-== Creating App Tests ==
+=== Creating App Tests ===
 
 We will create app tests for a small app that converts its argument to upper case and prints it to stdout.
 
-=== Setup App "upcase" ===
+==== Setup App "upcase" ====
 
 First, create the app using ''skel.py''.
 
-{{{
+<pre>
 $ ./util/bin/skel.py app upcase sandbox/$USER
-}}}
+</pre>
 
 Then, edit ''upcase.cpp'' to look as follows:
 
-{{{
-#!cpp
+<pre>
+#cpp
 #include <iostream>
 #include <cstring>
 
@@ -86,11 +87,11 @@ int main(int argc, char const ** argv)
     
     return 0;
 }
-}}}
+</pre>
 
 Then, go to your build directory (here: ''build/Debug''), build the app, and make sure it works correctly.
 
-{{{
+<pre>
 $ cd build/Debug
 $ cmake .
 $ cd sandbox/$USER/apps/upcase
@@ -100,32 +101,32 @@ THIS
 IS
 A
 TEST
-}}}
+</pre>
 
-=== Creating App Tests ===
+==== Creating App Tests ====
 
 You can use the ''skel.py'' program to create the app tests.
 
-{{{
+<pre>
 $ cd ../../../../../..
 $ ./util/bin/skel.py app_tests sandbox/$USER/apps/upcase/
-}}}
+</pre>
 
 As suggested by the output of ''skel.py'', add the following to your ''sandbox/$USER/upcase/CMakeLists.txt'':
 
-{{{
+<pre>
 # Add app tests if Python interpreter could be found.
 if(PYTHONINTERP_FOUND)
   add_test(NAME app_test_upcase COMMAND ${PYTHON_EXECUTABLE}
     ${CMAKE_CURRENT_SOURCE_DIR}/tests/run_tests.py ${CMAKE_SOURCE_DIR}
     ${CMAKE_BINARY_DIR})
 endif(PYTHONINTERP_FOUND)
-}}}
+</pre>
 
 Now, open the file ''sandbox/$USER/upcase/tests/generate_outputs.sh'' and modify it as follows.
 
-{{{
-#!sh
+<pre>
+#sh
 #!/bin/sh
 #
 # Output generation script for upcase
@@ -138,23 +139,23 @@ UPCASE=../../../../../build/Debug/sandbox/holtgrew/apps/upcase/upcase
 
 ${UPCASE} simple example > simple.stdout
 ${UPCASE} 'another()/' 'examplE!' > other.stdout
-}}}
+</pre>
 
 We now run the program two times with different arguments and stored the output in files ''simple.stdout'' and ''other.stdout''.
 These files are kept in the directory ''sandbox/$USER/apps/upcase/tests'' and can now go into version control.
 
-{{{
+<pre>
 $ cd sandbox/$USER/apps/upcase/tests
 $ ./generate_outputs.sh
 $ head -1000 simple.stdout other.stdout 
-==> simple.stdout <==
+===> simple.stdout <===
 SIMPLE
 EXAMPLE
 
-==> other.stdout <==
+===> other.stdout <===
 ANOTHER()/
 EXAMPLE!
-}}}
+</pre>
 
 Now, we have the expected test output files.
 We now have to modify the test driver script ''run_tests.py''.
@@ -162,8 +163,8 @@ Open the file ''sandbox/$USER/apps/upcase/tests/run_tests.py''.
 This file is a Python script that runs the programs, collects their output and compares the expected output prepared above with the actual one.
 It should look like the following:
 
-{{{
-#!python
+<pre>
+#python
 #!/usr/bin/env python
 """Execute the tests for upcase.
 
@@ -180,7 +181,7 @@ import os.path
 import sys
 
 # Automagically add util/py_lib to PYTHONPATH environment variable.
-path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..',
+path = os.path.abspath(os.path.join(os.path.dirname(<u>file</u>), '..', '..',
                                     '..', '..', 'util', 'py_lib'))
 sys.path.insert(0, path)
 
@@ -253,14 +254,14 @@ def main(source_base, binary_base):
     return failures != 0
 
 
-if __name__ == '__main__':
+if <u>name</u> == '<u>main</u>':
     sys.exit(app_tests.main(main))
-}}}
+</pre>
 
 Here, we now mirror the ''generate_outputs.sh'' file by replacing the section ''First Section'' with the following:
 
-{{{
-#!python
+<pre>
+#python
     # ============================================================
     # Run Program upcase.
     # ============================================================
@@ -282,19 +283,19 @@ Here, we now mirror the ''generate_outputs.sh'' file by replacing the section ''
         to_diff=[(ph.inFile('other.stdout'),
                   ph.outFile('other.stdout'))])
     conf_list.append(conf)
-}}}
+</pre>
 
 Finally, we can run the program using ctest.
 
-{{{
+<pre>
 $ cd ../../../../..
 $ cd build/Debug/sandbox/holtgrew/apps/upcase
 $ ctest .
-}}}
+</pre>
 
 If everything goes well, the output will be as follows:
 
-{{{
+<pre>
 $ ctest .
 Test project ${PATH_TO_CHECKOUT}/build/Debug/sandbox/holtgrew/apps/upcase
     Start 1: app_test_upcase
@@ -303,11 +304,11 @@ Test project ${PATH_TO_CHECKOUT}/build/Debug/sandbox/holtgrew/apps/upcase
 100% tests passed, 0 tests failed out of 1
 
 Total Test time (real) =   0.05 sec
-}}}
+</pre>
 
 In the case of failures, the output could be as follows.
 
-{{{
+<pre>
 $ ctest .
 Test project /home/holtgrew/Development/seqan-trunk/build/Debug/sandbox/holtgrew/apps/upcase
     Start 1: app_test_upcase
@@ -320,13 +321,13 @@ Total Test time (real) =   0.03 sec
 The following tests FAILED:
 	  1 - app_test_upcase (Failed)
 Errors while running CTest
-}}}
+</pre>
 
-The `ctest` command has many options.
-A useful one for debugging is `--output-on-failure` which will print the test result if the test does not succeed.
+The <tt>ctest</tt> command has many options.
+A useful one for debugging is <tt>--output-on-failure</tt> which will print the test result if the test does not succeed.
 For example, the output could be as follows:
 
-{{{
+<pre>
 $ ctest . --output-on-failure
 Test project /home/holtgrew/Development/seqan-trunk/build/Debug/sandbox/holtgrew/apps/upcase
     Start 1: app_test_upcase
@@ -344,20 +345,24 @@ Total Test time (real) =   0.03 sec
 The following tests FAILED:
 	  1 - app_test_upcase (Failed)
 Errors while running CTest
-}}}
+</pre>
 
 This is a common error that tells us that we have to appropriately set the environment variable ''PYTHONPATH'' so the module ''seqan.app_tests'' is available from within Python.
 
 You have to add ''util/py_lib'' to your PYTHONPATH.
 On Linux/Mac Os X, you can do this as follows (on Windows you have to set the environment variable, e.g. following [http://vlaurie.com/computers2/Articles/environment.htm this guide]).
 
-{{{
+<pre>
 $ export PYTHONPATH=${PYTHONPATH}:PATH_TO_SEQAN/util/py_lib
-}}}
+</pre>
 
 Now, you test should run through:
 
-{{{
+<pre>
 $ ctest . --output-on-failure
 ...
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

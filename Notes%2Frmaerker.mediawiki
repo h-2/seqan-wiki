@@ -1,3 +1,4 @@
+
 Ideas for a revised Iterator Design:
 
 Current Problems with the Iterator Interface.
@@ -20,3 +21,7 @@ Index -> ParentLink
 Than if a iterator needs to be overloaded for a special object overload it using the left Argument: TObject to specialize the function. Maybe use heredity here.
 
 Draft concept:
+
+
+
+{{TracNotice|{{PAGENAME}}}}

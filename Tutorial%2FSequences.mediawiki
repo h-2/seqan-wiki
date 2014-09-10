@@ -1,117 +1,118 @@
-= Sequences =
+
+== Sequences ==
 
 [[TOC()]]
 
  Learning Objective ::
   You will learn about the SeqAn sequence concept and its main class [dox:String String] as well as the class [dox:Segment Segment].
-  After completing this tutorial, you will be able to use important functionalities of sequences in SeqAn and you will be ready to continue with the more specific tutorials, e.g. [wiki:Tutorial/Iterators], [wiki:Tutorial/Alignments].
+  After completing this tutorial, you will be able to use important functionalities of sequences in SeqAn and you will be ready to continue with the more specific tutorials, e.g. [[Tutorial/Iterators]], [[Tutorial/Alignments]].
  Difficulty ::
   Very basic
  Duration ::
   45 min
  Prerequisites ::
-  Basic C or C++ knowledge, the [wiki:Tutorial/FirstStepsInSeqAn First Steps in SeqAn] tutorial helps.
+  Basic C or C++ knowledge, the [[Tutorial/FirstStepsInSeqAn| First Steps in SeqAn]] tutorial helps.
 
 Sequences are the core concept of SeqAn. 
 A sequence is a container that stores an ordered list of values. 
 In SeqAn, there are three kinds of sequences: Strings, Sequence Adaptions and Segments.
 
 The [dox:String String] class is one of the most fundamental classes in SeqAn. 
-It is designed as a generic data structure that can be instantiated for all kinds of values, both simple (e.g. `char`, [dox:Dna Dna], [dox:AminoAcid AminoAcid]) and non-simple value types (e.g. [dox:Tuple Tuple], [dox:String String]).
+It is designed as a generic data structure that can be instantiated for all kinds of values, both simple (e.g. <tt>char</tt>, [dox:Dna Dna], [dox:AminoAcid AminoAcid]) and non-simple value types (e.g. [dox:Tuple Tuple], [dox:String String]).
 With Sequence [seqan:Indexpage.Adaption adaptions] SeqAn offers an interface for accessing data types that are not part of SeqAn, namely standard library strings and c-style char arrays. 
 Thus those built-in types can be handled in a similar way as SeqAn strings, for example with the [dox:ContainerConcept#length length] function.  
 [dox:Segment Segments] are contiguous subsequences that represent parts of other sequences.
 
 This tutorial will deal with the SeqAn sequence classes [dox:String String] and [dox:Segment Segment].
 
-== Strings ==
+=== Strings ===
 
 In this section, we will have a detailed look at the SeqAn class [dox:String String].
 You will learn how to build and expand strings as well as how to compare and convert them. 
 
-=== Building Strings ===
+==== Building Strings ====
 
-Let's first have a look at an example on how to define a [dox:String String]. The type of the contained value is specified by the first template argument, e.g. `char` or `int`.
+Let's first have a look at an example on how to define a [dox:String String]. The type of the contained value is specified by the first template argument, e.g. <tt>char</tt> or <tt>int</tt>.
 
-{{{#!cpp
+<pre>#cpp
 String<char>  myText;     // A string of characters.
 String<int>   myNumbers;  // A string of integers.
-}}}
+</pre>
 
 Any type that provides a default constructor, a copy constructor and an assignment operator can be used as the alphabet / contained type of a [dox:String String].
-This includes the C++ [http://www.parashift.com/c++-faq-lite/intrinsic-types.html#faq-26.7 POD types], e.g. `char`, `int`, `double` etc., but you can use more complex types, e.g.[dox:String Strings], too.
+This includes the C++ [http://www.parashift.com/c++-faq-lite/intrinsic-types.html#faq-26.7 POD types], e.g. <tt>char</tt>, <tt>int</tt>, <tt>double</tt> etc., but you can use more complex types, e.g.[dox:String Strings], too.
 
-{{{#!cpp
+<pre>#cpp
 String<String<char> >   myStringList;   // A string of character strings.
-}}}
+</pre>
 
-{{{#!InfoBox
+<pre>#InfoBox
 '''Information''': Nested Sequences (aka "Strings of Strings")
 
-A set of sequences can either be stored in a sequence of sequences, for example in a `String< String<char> >`, or in [dox:StringSet StringSet]. 
-See [wiki:Tutorial/StringSets] for more information about [dox:StringSet StringSets].
-}}}
+A set of sequences can either be stored in a sequence of sequences, for example in a <tt>String< String<char> ></tt>, or in [dox:StringSet StringSet]. 
+See [[Tutorial/StringSets]] for more information about [dox:StringSet StringSets].
+</pre>
 
 SeqAn also provides the following types that are useful in bioinformatics: 
-[dox:AminoAcid AminoAcid], [dox:Dna Dna], [dox:Dna5 Dna5], [dox:DnaQ DnaQ], [dox:Dna5Q Dna5Q], [dox:Finite Finite], [dox:Iupac Iupac],[dox:Rna Rna], [dox:Rna5 Rna5]. You can find detailed information in [wiki:Tutorial/Alphabets].
+[dox:AminoAcid AminoAcid], [dox:Dna Dna], [dox:Dna5 Dna5], [dox:DnaQ DnaQ], [dox:Dna5Q Dna5Q], [dox:Finite Finite], [dox:Iupac Iupac],[dox:Rna Rna], [dox:Rna5 Rna5]. You can find detailed information in [[Tutorial/Alphabets]].
 
-{{{#!cpp
+<pre>#cpp
 String<Dna>        myGenome;   // A string of nucleotides.
 String<AminAcid>   myProtein;  // A string of amino acids.
-}}}
+</pre>
 
 For commonly used string parameterizations, SeqAn has a range of [seqan:Indexpage.Shortcut shortcuts] implemented, e.g. [dox:DnaString Dna5String], [dox:RnaString RnaString] and [dox:Peptide Peptide].
 
-{{{#!cpp
+<pre>#cpp
 // Instead of String<Dna> dnaSeq we can also write:
 DnaString dnaSeq = "TATA";
-}}}
+</pre>
 
 The user can specify the kind of string that should be used in an optional second template argument of [dox:String String].
 This is also known as selecting the specialization of a class in SeqAn.
 The default string implementation is [dox:AllocString Alloc String], which is in most cases the best choice.
 
-{{{#!cpp
+<pre>#cpp
 String<Dna>              myGenome;   // A default string of nucleotides.
 String<Dna, Alloc<> >    myGenome;   // The same as above.
-}}}
+</pre>
 
 For some scenarios though, there might be other types more suitable.
 One such example is when processing extremely large strings that are much larger than the available main memory.
 In this case, using [dox:ExternalString External Strings] is a good choice.
 
-{{{#!cpp
+<pre>#cpp
 // Most of the string is stored on the disk.
 String<Dna, External<> > myLargeGenome;
-}}}
+</pre>
 
-More details about the different specializations you can find in the [wiki:Tutorial/SequencesInDepth].
+More details about the different specializations you can find in the [[Tutorial/SequencesInDepth]].
 
-{{{#!InfoBox
+<pre>#InfoBox
 '''Information''': String Simplify Memory Management
 
 One advantage of using Strings is that the user does not need to reserve memory manually with '''new''' and does not need '''delete''' to free memory.
 Instead, those operations are automatically handeld by the [dox:String String] class.
 
-{{{#!cpp
+<pre>#cpp
 String<Dna> myGenome = "TATACGCG";
-}}}
-}}}
+</pre>
+</pre>
 
-=== Functionality ===
+==== Functionality ====
 
 SeqAn also provides the common C++ operators for strings.
 You can use them like STL strings, for example:
 
-{{{#!cpp
+<pre>#cpp
 String<Dna> dnaSeq = "TATA";
 dnaSeq += "CGCG";
 std::cout << dnaSeq << std::endl;
-}}}
+</pre>
 
-{{{#!ShellBox
+<pre>#ShellBox
 TATACGCG
-}}}
+</pre>
 
 Each sequence object has a capacity, i.e. the maximum length of a sequence that can be stored in this object.
 While some sequence types have a fixed capacity, the capacity of other sequence classes like [dox:AllocString Alloc String] or std::basic_string can be changed at runtime.
@@ -122,48 +123,48 @@ In the following example, a [dox:String String] of [dox:Dna5String Dna5String], 
 After assigning two elements we append one more element with [dox:SequenceConcept#appendValue appendValue]. 
 In the last step the capacity is implicitly changed.
 
-{{{#!cpp
+<pre>#cpp
 String<Dna5String> readList; 
 resize(readList, 2);
 readList[0] = "GGTTTCGACG";
 readList[1] = "AAGATGTCGC";
 appendValue(readList, "TATGCATGAT");
-}}}
+</pre>
 
 Using the function [dox:SequenceConcept#length length], we can now get the length of our strings, e.g.:
 
-{{{#!cpp
+<pre>#cpp
 std::cout << length(readList) << std::endl;
 std::cout << length(readList[0]) << std::endl;
-}}}
+</pre>
 
-{{{#!ShellBox
+<pre>#ShellBox
 3
 10
-}}}
+</pre>
 To empty a [dox:String String], the function [dox:SequenceConcept#clear clear] resets the object.
-{{{#!cpp
+<pre>#cpp
 clear(readList); 
-}}}
+</pre>
 
 SeqAn offers a range of other functions for the work with the [dox:String String] class, e.g.
 [dox:AssignableConcept#assign assign], [dox:RandomAccessContainerConcept#assignValue assignValue], [dox:RandomAccessContainerConcept#value value],
 [dox:ContainerConcept#getValue getValue], [dox:ContainerConcept#empty empty], etc.  The full list of functions you can find in the documentation
 [dox:String String].
 
-{{{#!AssignmentBox
-=== Assignment 1 ===
+<pre>#AssignmentBox
+==== Assignment 1 ====
  Type ::
   Review
  Objective :: 
    In the following assignment, you will write a small function that builds the reverse complement of a given string.
    Copy the code below and add the following functionalities:
    
-    1. Use the resize function to resize the revComplGenome variable.
-    2. Using the getRevCompl function, get the reverse complement for every nucleotide `genome` and store it in reverse order `revComplGenome`.
+###Use the resize function to resize the revComplGenome variable.
+    2. Using the getRevCompl function, get the reverse complement for every nucleotide <tt>genome</tt> and store it in reverse order <tt>revComplGenome</tt>.
     3. Print out the original genome and the reverse complement.
 
-{{{#!cpp
+<pre>#cpp
 #include <seqan/sequence.h>
 #include <seqan/basic.h>
 #include <iostream>
@@ -197,15 +198,15 @@ int main()
     std::cout << genome << std::endl;
     return 0;
 }
-}}}
+</pre>
  Hints ::
-  Remember that the last element in `genome` is stored at position `length(genome) - 1`.
+  Remember that the last element in <tt>genome</tt> is stored at position <tt>length(genome) - 1</tt>.
  Solution :: 
   Click ''more...'' to see the solution.
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
-{{{#!cpp
+<pre>#cpp
 #include <seqan/sequence.h>
 #include <seqan/basic.h>
 #include <iostream>
@@ -242,21 +243,21 @@ int main()
     std::cout << genome << std::endl;
     return 0;
 }
-}}}
-}}}
+</pre>
+</pre>
 
-=== Workshop Assignment ===
+==== Workshop Assignment ====
  Type ::
   Review
  Objective :: 
    In this assignment, you will do some simple string building tasks, and write a simple alignment of the given reads and chromosomes.
    Use the given code template to solve these subtasks:
    
-    1. Assume we have mapped the reads to the positions 7, 100, 172, and 272 in 'chr1'. Store these positions in another string 'alignPosList'.
+###Assume we have mapped the reads to the positions 7, 100, 172, and 272 in 'chr1'. Store these positions in another string 'alignPosList'.
     2. Build another String bsChr1 as a copy of chr1, and exchange every 'C' with a 'T', as in a bisulfite treated genome.
-    3. Print alignments of the reads and chr1 (or bschr1) using the function `printAlign` and the string `alignPosList`.
+    3. Print alignments of the reads and chr1 (or bschr1) using the function <tt>printAlign</tt> and the string <tt>alignPosList</tt>.
 
-{{{#!cpp
+<pre>#cpp
 #include <iostream>
 #include <seqan/sequence.h> 
 #include <seqan/file.h>
@@ -321,79 +322,79 @@ int main(int, char const **)
     }
     return 1;
 }
-}}}
+</pre>
  Hints ::
   You have to create a copy of the fragment in chr1 (bsChr1) that is aligned to the read.
  Solution :: 
   Click ''more...'' to see the solution.
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:trunk/core/demos/tutorial/sequences/string_assignment_1_solution.cpp)]]
-}}}
+</pre>
 
-}}}
+</pre>
 
-=== Comparisons ===
+==== Comparisons ====
 
-Two sequences can be lexicographically '''compared''' using standard operators such as `<` or `>=`.
+Two sequences can be lexicographically '''compared''' using standard operators such as <tt><</tt> or <tt>>=</tt>.
 
-{{{#!cpp
+<pre>#cpp
 String<char> a = "beta";
 String<char> b = "alpha";
 
 std::cout << (a != b) << std::endl;
 std::cout << (a < b) << std::endl;
 std::cout << (a > b) << std::endl;
-}}}
+</pre>
 
-{{{#!ShellBox
+<pre>#ShellBox
 1
 0
 1
-}}}
+</pre>
 
 Each comparison involves a scan of the two sequences for searching the first mismatch between the strings.
 This could be costly if the two sequences share a long common prefix.
-Suppose we want to branch in a program depending on whether `a < b`, `a == b`, or `a > b`.
+Suppose we want to branch in a program depending on whether <tt>a < b</tt>, <tt>a == b</tt>, or <tt>a > b</tt>.
 
-{{{#!cpp
+<pre>#cpp
 if (a < b)      { /* code for case "a < b"  */ }
 else if (a > b) { /* code for case "a > b"  */ }
 else            { /* code for case "a == b" */ }
-}}}
+</pre>
 
 In this case, although only one scan would be enough to decide what case is to be applied, each operator > and < performs a new comparison.
 SeqAn offers the class [dox:Lexical Lexical] to avoid unnecessary sequence scans. Lexicals can store the result of a comparison, for example:
 
-{{{#!cpp
+<pre>#cpp
 // Compare a and b and store the result in comp
 Lexical<> comp(a, b);   
 
 if (isLess(comp))         { /* code for case "a < b"  */ }
 else if (isGreater(comp)) { /* code for case "a > b"  */ }
 else                      { /* code for case "a == b" */ }
-}}}
+</pre>
 
-=== Conversions ===
+==== Conversions ====
 
 A sequence of type A values can be converted into a sequence of type B values, if A can be converted into B.
 SeqAn offers different conversion alternatives.
 
 Copy conversion:
 The source sequence is copied into the target sequence.
-This can be done by assignment ({{{operator=}}}) or using the function [dox:AssignableConcept#assign assign].
+This can be done by assignment (<tt>operator=</tt>) or using the function [dox:AssignableConcept#assign assign].
 
-{{{#!cpp
+<pre>#cpp
 String<Dna> source = "acgtgcat";
 String<char> target;
 assign(target, source);
 std::cout << target;
-}}}
+</pre>
 
-{{{#!ShellBox
+<pre>#ShellBox
 acgtgcat
-}}}
+</pre>
 
 Move conversion:
 If the source sequence is not needed any more after the conversion, it is always advisable to use
@@ -401,29 +402,29 @@ If the source sequence is not needed any more after the conversion, it is always
 The function [dox:AssignableConcept#move move] does not make a copy but can reuse the source sequence storage.
 In some cases, [dox:AssignableConcept#move move] can also perform an in-place conversion.
 
-{{{#!cpp
+<pre>#cpp
 String<char> source = "acgtgcat";
 String<Dna> target;
 //The in-place move conversion.
 move(target, source);
 std::cout << target;
-}}}
+</pre>
 
-{{{#!ShellBox
+<pre>#ShellBox
 acgtgcat
-}}}
+</pre>
 
 
-{{{#!AssignmentBox
-=== Assignment 2 ===
+<pre>#AssignmentBox
+==== Assignment 2 ====
  Type ::
   Review
  Objective :: 
   In this assignment you will sort nucleotides.
-  Copy the code below. Adjust the code such that all nucleotides, which are lexicographically smaller than a Dna5 `'G'` are stored in a list `lesser`, while all nucleotides which are greater, should be stored in a list `greater`.
+  Copy the code below. Adjust the code such that all nucleotides, which are lexicographically smaller than a Dna5 <tt>'G'</tt> are stored in a list <tt>lesser</tt>, while all nucleotides which are greater, should be stored in a list <tt>greater</tt>.
   Print out the final lists.
 
-{{{#!cpp
+<pre>#cpp
 #include <iostream>
 #include <seqan/sequence.h>
 #include <seqan/file.h>
@@ -435,21 +436,21 @@ int main()
     String<Dna5> nucleotides = "AGTCGTGNNANCT";
     String<Dna5> selected;
     // Append all elements of nucleotides, apart of Gs, 
-    // to the list `selected` 
+    // to the list <tt>selected</tt> 
     for (unsigned i = 0; i < length(nucleotides); ++i){
         appendValue(selected, nucleotides[i]);
     }
     std::cout << "Selected nucleotides: " << selected << std::endl;
     return 0;
 }
-}}}
+</pre>
  Hints ::
  Solution :: 
   Click ''more...'' to see the solution.
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
-{{{#!cpp
+<pre>#cpp
 #include <iostream>
 #include <seqan/sequence.h>
 #include <seqan/file.h>
@@ -471,33 +472,33 @@ int main()
     std::cout << "Lesser nucleotides: " << lesser << std::endl;
     std::cout << "Greater nucleotides: " << greater << std::endl;
 }
-}}}
-}}}
-=== Assignment 3 ===
+</pre>
+</pre>
+==== Assignment 3 ====
 
  Type ::
   Transfer
  Objective :: 
   In this task you will compare whole sequences.
-  Reuse the code from above. Instead of a `String<Dna5>` we will now deal with a `String<Dna5String>`. 
+  Reuse the code from above. Instead of a <tt>String<Dna5></tt> we will now deal with a <tt>String<Dna5String></tt>. 
   Build a string which contains the Dna5Strings "ATATANGCGT", "AAGCATGANT" and "TGAAANTGAC".
   Now check for all elements of the container, if they are lexicographically smaller or bigger than the  given reference sequence "GATGCATGAT" and append them to a appropriate list. 
   Print out the final lists.
  Hints :: Try to avoid unnecessary sequence scans.
  Solution :: 
   Click ''more...'' to see the solution.
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:trunk/core/demos/tutorial/sequences/lexical_assignment_solution.cpp)]]
-}}}
+</pre>
 
 
 
-}}}
+</pre>
 
 
-== Segments ==
+=== Segments ===
 The following section will introduce you into the [dox:Segment Segment] class of SeqAn.
 
 [dox:Segment Segments] are contiguous subsequences that represent parts of other sequences.
@@ -509,7 +510,7 @@ The metafunctions [dox:SegmentableConcept#Infix Infix], [dox:SegmentableConcept#
 For prefixes, we use the function [dox:SegmentableConcept#prefix prefix] to build the prefix. The first parameter is the sequence we build the prefix from, the second the excluding(!) end position. For [dox:SegmentableConcept#infix infix]es, we have to provide both the including start and the excluding end position. For [dox:SegmentableConcept#suffix suffix]es, the second parameter of the function denotes the including starting position of the suffix:
 
 
-{{{#!cpp
+<pre>#cpp
 String<Dna> dnaSeq = "AGTTGGCATG";
 Prefix<String<Dna> >::Type pre = prefix(dnaSeq, 4);
 std::cout << "Prefix: " << pre << std::endl;
@@ -519,62 +520,66 @@ std::cout << "Infix: " << inf << std::endl;
 
 Suffix<String<Dna> >::Type suf = suffix(dnaSeq, 4);
 std::cout << "Suffix: " << suf << std::endl;
-}}}
+</pre>
 
-{{{#!ShellBox
+<pre>#ShellBox
 Prefix: AGTT 
 Infix: GGC
 Suffix: GGCATG
-}}}
+</pre>
 
 Segments store a pointer on the underlying sequence object, the ''host'', and an start and/or end position, depending on the type of segment.
 The segment is ''not'' a copy of the sequence segment.
 
-{{{#!WarningBox
+<pre>#WarningBox
 Please note that it is not possible anymore to change the underlying sequence by changing the segment.
 If you want to change the host sequence, you have to explicilty modify this. 
 If you want to modify only the segment, you have to explicitly make a copy of the string.
-}}}
+</pre>
 
-{{{#!AssignmentBox
-=== Assignment 4 ===
+<pre>#AssignmentBox
+==== Assignment 4 ====
  Type ::
   Application
  Objective :: 
   In this task you will use a segment to pass over an infix of a given sequence to a function without copying the corresponding fragment.
   Use the code given below. 
-  Lets assume that we have given a `genome` and a `read` sequence as well as the begin position of a given alignment.
-  In the main function a fragment of the Dna5String `genome` is copied and passed together with the Dna5String `read` to a `print` function. 
+  Lets assume that we have given a <tt>genome</tt> and a <tt>read</tt> sequence as well as the begin position of a given alignment.
+  In the main function a fragment of the Dna5String <tt>genome</tt> is copied and passed together with the Dna5String <tt>read</tt> to a <tt>print</tt> function. 
   Adjust the code to use an infix of the genome, instead of copying the corresponding fragment. 
  
 [[Include(source:trunk/core/demos/tutorial/sequences/segments_assignment_hint.cpp)]]
  Solution :: 
   Click ''more...'' to see the solution.
-{{{#!FoldOut
+<pre>#FoldOut
 ----
 [[Include(source:trunk/core/demos/tutorial/sequences/segments_assignment_solution.cpp)]]
-}}}
+</pre>
 
-=== Workshop Assignment 2 ===
+==== Workshop Assignment 2 ====
  Type ::
   Review
  Objective :: 
    Take the solution from the workshop assignment above and change it to use Segments for building the genome fragment.
 
  Hints ::
-  Note that because `printAlign` uses templates, you don't have to change the function even though the type of `genomeFragment` is different.
+  Note that because <tt>printAlign</tt> uses templates, you don't have to change the function even though the type of <tt>genomeFragment</tt> is different.
  Solution :: 
   Click ''more...'' to see the solution.
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:trunk/core/demos/tutorial/sequences/segments_assignment_2_solution.cpp)]]
-}}}
+</pre>
 
-}}}
+</pre>
 
 
 
-== Submit a  comment ==
+=== Submit a  comment ===
 If you found a mistake, or have suggestions about an improvement of this page press:
 [/newticket?component=Documentation&description=Tutorial+Enhancement+for+page+http://trac.seqan.de/wiki/Tutorial/Sequences&type=enhancement submit your comment]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

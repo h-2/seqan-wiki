@@ -1,19 +1,20 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:HowTo] if you need the documentation for the trunk version.'''
-= How To: Troubleshooting Problems =
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[HowTo]] if you need the documentation for the trunk version.'''
+== How To: Troubleshooting Problems ==
 [[TOC()]]
 
 This section collects some useful tricks for troubleshooting when programming with SeqAn.
 
-== Compile Time Errors ==
+=== Compile Time Errors ===
 
-=== Use Multiple Compilers ===
+==== Use Multiple Compilers ====
 
 We recommend to use subdirectories below ''build'' when running CMake so you are able to generate Makefiles for different compilers.
-You can specify the compiler to use when running CMake with the environment variable `CXX`.
+You can specify the compiler to use when running CMake with the environment variable <tt>CXX</tt>.
 For example:
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 cd build
 mkdir Debug-gcc4.3
@@ -24,24 +25,24 @@ mkdir Debug-clang
 cd Debug-clang
 CXX=clang++ cmake ../..
 cd ..
-}}}
+</pre>
 
 
-=== Problems Before The Build Process Is Initiated ===
+==== Problems Before The Build Process Is Initiated ====
 
 Sometimes it is necessary to regenerate the build files by CMake, e.g. after installing a new version of python.
 Since CMake keeps a lot of information in a cache file it is advisable to also delete this file:
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 cd build
 rm CMakeCache.txt
 cmake ..
-}}}
+</pre>
 
 
-=== Use Clang ===
+==== Use Clang ====
 
 The error reporting of llvm/clang is much better than the one of the GCC.
 Try installing the Clang++ compiler and see what it has to say about your programs.
@@ -50,8 +51,8 @@ SeqAn should compile with clang++ versions >= 2.9.
 
 Consider the following program:
 
-{{{
-#!cpp
+<pre>
+#cpp
 #include <seqan/graph_types.h>
 
 int main(int, char const **)                                                                                                                                                               
@@ -71,29 +72,29 @@ int main(int, char const **)
 
     return 0;
 }
-}}}
+</pre>
 
 Can you spot the error?
 This is what g++ 4.2 has to say about it:
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 template_error.cpp: In function ‘int main(int, const char**)’:
 template_error.cpp:16: error: no matching function for call to ‘addEdge(main(int, const char**)::TGraph&, main::TVertexDescriptor&, main::TVertexDescriptor&, int)’
 </pre>
-}}}
+</pre>
 
 And this is what Clang++ 2.9 says about it (the actual output is coloured with better readability).
 Do you spot the error now?
 The solution is below the output.
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 sandbox/mysandbox/demos/template_error.cpp:16:5: error: no matching function for call to 'addEdge'
     addEdge(g, vertBerlin, vertHamburg, 289);
-    ^~~~~~~
+    ^<s>~</s>~
 In file included from sandbox/mysandbox/demos/template_error.cpp:1:
 In file included from core/include/seqan/graph_types.h:58:
 core/include/seqan/graph_types/graph_impl_directed.h:572:1: note: candidate function template not viable: requires 3 arguments, but 4 were
@@ -154,23 +155,23 @@ addEdge(Graph&lt;Hmm&lt;TAlphabet, TCargo, TSpec> >& g,
 ^
 1 error generated.
 </pre>
-}}}
+</pre>
 
-While the output is overly verbose, get the important clue that the error is caused when deducing the type for the `addEdge()` function template.
+While the output is overly verbose, get the important clue that the error is caused when deducing the type for the <tt>addEdge()</tt> function template.
 The function itself exists, but none of the candidates has the correct types.
-The problem is that we specify the cargo type as `unsigned int` in the definition of the graph but in the program, we try to use `int` as the cargo.
-Corrected, we have to use an `unsigned int` literal `289u` instead of `289` in line 16:
+The problem is that we specify the cargo type as <tt>unsigned int</tt> in the definition of the graph but in the program, we try to use <tt>int</tt> as the cargo.
+Corrected, we have to use an <tt>unsigned int</tt> literal <tt>289u</tt> instead of <tt>289</tt> in line 16:
 
-{{{
-#!cpp
+<pre>
+#cpp
     addEdge(g, vertBerlin, vertHamburg, 289u);
-}}}
+</pre>
 
-== Run Time Errors ==
+=== Run Time Errors ===
 
 This section lists some useful tools for troubleshooting run time errors.
 
-=== Valgrind ===
+==== Valgrind ====
 
  Type ::
   Memory checker and debugger.
@@ -183,7 +184,7 @@ This section lists some useful tools for troubleshooting run time errors.
 
 Valgrind is one of the most useful tools for debugging memory access problems.
 
-=== Libmemusage ===
+==== Libmemusage ====
 
  Type ::
   Memory Usage Reporting
@@ -197,8 +198,8 @@ Valgrind is one of the most useful tools for debugging memory access problems.
 Automatically installed on all major Linux systems, libmemusage allows to see information on memory allocation, e.g. the maximum amount of allocated memory over the program's running time.
 It does so at a quite low overhead.
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 $ LD_PRELOAD=libmemusage.so g++ --version
 g++ (Debian 4.4.5-8) 4.4.5
@@ -235,4 +236,8 @@ Histogram for block sizes:
  1600-1615            1   1% ==
  2048-2063            1   1% ==
  4064-4079            3   3% ======
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

@@ -1,4 +1,5 @@
-= Dox API Docs =
+
+== Dox API Docs ==
 
 [[TOC()]]
 
@@ -6,117 +7,117 @@ Since the 1.4.1 release, SeqAn uses a new documentation system.
 The syntax is similar to [http://doxygen.sf.net Doxygen] but slightly different.
 The main differences are (1) not identifying functions by their signatures but only by their names, (2) adding the idea of metafunctions, (3) adding the idea of interface functions and (4) an extension to SeqAn-specific things like documenting concepts.
 
-== General Documentation Structure ==
+=== General Documentation Structure ===
 
-Dox comments are placed between `/*!` and ` */`.
-The first dox tag should be placed on the next line, each line should begin with a correctly indented star `*`.
-The first line only contains the `/*!` and the last line only contains the ` */`:
+Dox comments are placed between <tt>/*!</tt> and <tt> */</tt>.
+The first dox tag should be placed on the next line, each line should begin with a correctly indented star <tt>*</tt>.
+The first line only contains the <tt>/*!</tt> and the last line only contains the <tt> */</tt>:
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @fn myFunction
- * @signature void myFunction()
- */
-}}}
+*@fn myFunction
+*@signature void myFunction()
+*/
+</pre>
 
 The documentation and the code are independent.
 Each item to be documented (adaption, class, concept, enum, function, group, macro, metafunction, page, tag, typedef, variable) has to be epxlicitely given (see tags below).
 The available top level tags are [#adaption @adaption], [#class @class], [#concept @concept], [#defgroup @defgroup], [#enum @enum], [#fn @fn], [#macro @macro], [#metafunction @mfn], [#page @page], [#tag @tag], [#typedef @typedef], and [#variable @var].
 
 Each top level tag creates a documentation entry.
-For example, the following defines a class `Klass` with two global interface functions `f1` and `f2` for this class:
+For example, the following defines a class <tt>Klass</tt> with two global interface functions <tt>f1</tt> and <tt>f2</tt> for this class:
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @class Klass
- * @fn Klass#f1
- * @fn Klass#f2
- */
-}}}
+*@class Klass
+*@fn Klass#f1
+*@fn Klass#f2
+*/
+</pre>
 
-Member functions are given using `::`, the same as in the C++ language:
+Member functions are given using <tt>::</tt>, the same as in the C++ language:
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @class Klass
- * @fn Klass::memberFunc
- */
-}}}
+*@class Klass
+*@fn Klass::memberFunc
+*/
+</pre>
 
 Global interface functions are global functions that belong to the interface of a type.
 Similar, interface metafunctions are metafunctions that belong to the interface of a type.
-Their fully qualified name for dox consists of the type name, followed by a hash `#` and the function/metafunction name:
+Their fully qualified name for dox consists of the type name, followed by a hash <tt>#</tt> and the function/metafunction name:
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @class Klass
- * @fn Klass#interfaceFunc
- * @mfn Klass#InterfaceMetaFunc
- */
-}}}
+*@class Klass
+*@fn Klass#interfaceFunc
+*@mfn Klass#InterfaceMetaFunc
+*/
+</pre>
 
 Below the top-level tags, come the second-level tags.
 The first kind of second-level tags defines properties of an entry.
-Important such second-level entries are `@brief`, `@signature`, `@see`, `@param`, `@tparam`, `@return`.
-You can also write text for the description of your entity and use tags such as `@section`, `@subsection`, `@snippet`, `@code` to format the description.
+Important such second-level entries are <tt>@brief</tt>, <tt>@signature</tt>, <tt>@see</tt>, <tt>@param</tt>, <tt>@tparam</tt>, <tt>@return</tt>.
+You can also write text for the description of your entity and use tags such as <tt>@section</tt>, <tt>@subsection</tt>, <tt>@snippet</tt>, <tt>@code</tt> to format the description.
 You can use HTML tags for formatting the documentation.
 
 Example:
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @class Align
- * @brief Store a tabular alignment.
+*@class Align
+*@brief Store a tabular alignment.
  *
- * @signature template <typename TSource, typename TSpec>
- *            class Align;
- * @tparam TSource The type of the underlying sequence.
- * @tparam TSpec   Tag for selecting the specialization of the Align class.
+*@signature template <typename TSource, typename TSpec>
+*class Align;
+*@tparam TSource The type of the underlying sequence.
+*@tparam TSpec   Tag for selecting the specialization of the Align class.
  *
- * The <tt>Align</tt> class provides a tabular alignment of sequences with the
- * same type.  The sequences are given with <tt>TSource</tt>.  An <tt>Align</tt>
- * object will use a <a href="seqan:Gaps">Gaps</a> object for each sequence.
- * The specialization of the <a href="seqan:Gaps">Gaps</a> object can be selected
- * using the <tt>TSpec</tt> template parameter.
+*The <tt>Align</tt> class provides a tabular alignment of sequences with the
+*same type.  The sequences are given with <tt>TSource</tt>.  An <tt>Align</tt>
+*object will use a <a href="seqan:Gaps">Gaps</a> object for each sequence.
+*The specialization of the <a href="seqan:Gaps">Gaps</a> object can be selected
+*using the <tt>TSpec</tt> template parameter.
  *
- * @see Gaps
- * @see globalAlignment
- */
-}}}
+*@see Gaps
+*@see globalAlignment
+*/
+</pre>
 
-Images are included using `<img src="${PATH}">` where `${PATH}` is relative to the source image directory.
+Images are included using <tt><img src="${PATH}"></tt> where <tt>${PATH}</tt> is relative to the source image directory.
 
-== Tag Documentation ==
+=== Tag Documentation ===
 
 Below, we differentiate between '''names''' and '''labels'''.
 
 '''Names''' are used to identify documentation items and must follow extended C++ identifier rules.
 An sub name consists of only alphanumeric characters and the underscore is allowed, must not start with a number.
-Sub names can be glued together with `::` for class members and `#` for interface functions.
+Sub names can be glued together with <tt>::</tt> for class members and <tt>#</tt> for interface functions.
 In contracts, '''labels''' are used for the display to the user.
-For example, the alloc string has the name `AllocString` but the label "Alloc String", the constructor of `AllocString` has name `AllocString::String`, and its length function has name `AllocString#length`.
+For example, the alloc string has the name <tt>AllocString</tt> but the label "Alloc String", the constructor of <tt>AllocString</tt> has name <tt>AllocString::String</tt>, and its length function has name <tt>AllocString#length</tt>.
 
-=== @adaption ===
+==== @adaption ====
 
-'''Signature''' {{{@adaption AdaptionName [Adaption Label]}}}
+'''Signature''' <tt>@adaption AdaptionName [Adaption Label]</tt>
 
 Top-level tag.
 
 Definition of an adaption with the given name and an optional label.
 
 An adaption is a collection of global interface functions and metafunctions that adapt a type outside the SeqAn library to a concept in the SeqAn library.
-For example, the STL `std::string` class can be adapted to the interface of the `SequenceConcept` concept.
+For example, the STL <tt>std::string</tt> class can be adapted to the interface of the <tt>SequenceConcept</tt> concept.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @adaption StdStringToSequenceConcept std::string to Sequence concept
- * @brief The <tt>std::string</tt> class is adapted to the Sequence concept.
- */
-}}}
+*@adaption StdStringToSequenceConcept std::string to Sequence concept
+*@brief The <tt>std::string</tt> class is adapted to the Sequence concept.
+*/
+</pre>
 
-=== @aka ===
+==== @aka ====
 
-'''Signature''' {{{@aka OtherName}}}
+'''Signature''' <tt>@aka OtherName</tt>
 
 Second-level entry.
 
@@ -124,138 +125,138 @@ Assign an alias name for a function, metafunction, class, concept, or enum.
 The list of aliases will be printed for each code entry.
 Also, the aliases will be incorporated into search results.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @class InfixSegment
- * @brief Represents a part of a string.
+*@class InfixSegment
+*@brief Represents a part of a string.
  *
- * @aka substring
- */
+*@aka substring
+*/
 
 template <typename TSequence>
 class InfixSegment<TSequence, Infix>;
-}}}
+</pre>
 
 
-=== @brief ===
+==== @brief ====
 
-'''Signature''' {{{@brief Brief description.}}}
+'''Signature''' <tt>@brief Brief description.</tt>
 
 Second-level tag.
 
 Defines the brief description of the top-level entry it belongs to.
 You can use HTML in the description.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @fn f
- * @brief A minimal function.
- * @signature void f();
- */
+*@fn f
+*@brief A minimal function.
+*@signature void f();
+*/
 
 void f();
-}}}
+</pre>
 
-=== @class ===
+==== @class ====
 
-'''Signature''' {{{@class ClassName [Class Label]}}}
+'''Signature''' <tt>@class ClassName [Class Label]</tt>
 
 Top-level tag.
 
-Define a class with the given name `ClassName` and an optional label.
+Define a class with the given name <tt>ClassName</tt> and an optional label.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @class AllocString Alloc String
- * @extends String
- * @brief Implementation of the String class using dynamically allocated
- *        array.
+*@class AllocString Alloc String
+*@extends String
+*@brief Implementation of the String class using dynamically allocated
+*array.
  *
- * @signature template <typename TAlphabet, typename TSpec>
- *            class String<TAlphabet, Alloc<TSpec> >;
- * @tparam TAlphabet Type of the alphabet (the string's value).
- * @tparam TSpec     Tag for the further specialization.
- */
+*@signature template <typename TAlphabet, typename TSpec>
+*class String<TAlphabet, Alloc<TSpec> >;
+*@tparam TAlphabet Type of the alphabet (the string's value).
+*@tparam TSpec     Tag for the further specialization.
+*/
 
 template <typename TAlphabet, typename TSpec>
 class String<TAlphabet, Alloc<TSpec> >
 {
     // ...
 };
-}}}
+</pre>
 
-=== @code ===
+==== @code ====
 
-'''Signature''' {{{@code{.ext} ... @endcode}}}
+'''Signature''' <tt>@code{.ext} ... @endcode</tt>
 
 Second-level tag.
 
 Provides the means to display code blocks in the documentation.
-The extension `.ext` is used for identifying the type (use `.cpp` for C++ code) and selecting the appropriate highlighting.
+The extension <tt>.ext</tt> is used for identifying the type (use <tt>.cpp</tt> for C++ code) and selecting the appropriate highlighting.
 
-{{{#!cpp
+<pre>#cpp
 /**
- * @fn f
- * @brief Minimal function.
- * @signature void f();
+*@fn f
+*@brief Minimal function.
+*@signature void f();
  *
- * @code{.cpp}
- * int main()
- * {
- *     f();  // Call function.
- *     return 0;
- * }
- * @endcode
- */
+*@code{.cpp}
+*int main()
+*{
+*f();  // Call function.
+*return 0;
+*}
+*@endcode
+*/
 
 void f();
-}}}
+</pre>
 
-Note that you can use the extension value `.console` to see console output.
+Note that you can use the extension value <tt>.console</tt> to see console output.
 
-{{{#!cpp
+<pre>#cpp
 /**
- * @fn f
- * @brief Some function
+*@fn f
+*@brief Some function
  *
- * @section Examples
+*@section Examples
  *
- * @include demos/module/demo_f.cpp
+*@include demos/module/demo_f.cpp
  *
- * The output is as follows:
+*The output is as follows:
  *
- * @code{.console}
- * This is some output of the program.
- * @endcode
- */
-}}}
+*@code{.console}
+*This is some output of the program.
+*@endcode
+*/
+</pre>
 
 
-=== @concept ===
+==== @concept ====
 
-'''Signature''' {{{@concept ConceptName [Concept Label]}}}
+'''Signature''' <tt>@concept ConceptName [Concept Label]</tt>
 
 Top-level tag.
 
 Create a documentation entry for a concept with the given name and an optional label.
-All concept names should have the suffix `Concept`.
-Use the fake keyword `concept` in the `@signature`.
+All concept names should have the suffix <tt>Concept</tt>.
+Use the fake keyword <tt>concept</tt> in the <tt>@signature</tt>.
 
 A concept is the C++ equivalent to interfaces known in other classes.
 C++ provides no real way for concepts so at the moment they are a formal construct used in the documentation.
 
-{{{#!cpp
+<pre>#cpp
 /**
- * @concept SequenceConcept Sequence
- * @signature concept SequenceConcept;
- * @extends ContainerConcept
- * @brief Concept for sequence types.
- */
-}}}
+*@concept SequenceConcept Sequence
+*@signature concept SequenceConcept;
+*@extends ContainerConcept
+*@brief Concept for sequence types.
+*/
+</pre>
 
-=== @defgroup ===
+==== @defgroup ====
 
-'''Signature''' {{{@defgroup GroupName [Group Label]}}}
+'''Signature''' <tt>@defgroup GroupName [Group Label]</tt>
 
 Top-level tag.
 
@@ -264,360 +265,360 @@ Groups are for rough grouping of global functions and/or tags.
 
 You can put types and functions into a group similar to making global interface functions and metafunctions part of the interface of a class or concept.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @defgroup FastxIO FASTA/FASTQ I/O
- * @brief Functionality for FASTA and FASTQ I/O.
+*@defgroup FastxIO FASTA/FASTQ I/O
+*@brief Functionality for FASTA and FASTQ I/O.
  *
- * @fn FastxIO#readRecord
- * @brief Read one record from FASTA/FASTQ files.
+*@fn FastxIO#readRecord
+*@brief Read one record from FASTA/FASTQ files.
  *
- * @fn FastxIO#writeRecord
- * @brief Write one record to FASTA/FASTQ files.
+*@fn FastxIO#writeRecord
+*@brief Write one record to FASTA/FASTQ files.
  *
- * @fn FastxIO#readBatch
- * @brief Read multiple records from FASTA/FASTQ file, limit to a given count.
+*@fn FastxIO#readBatch
+*@brief Read multiple records from FASTA/FASTQ file, limit to a given count.
  *
- * @fn FastxIO#writeBatch
- * @brief Write multiple records to FASTA/FASTQ file, limit to a given count.
+*@fn FastxIO#writeBatch
+*@brief Write multiple records to FASTA/FASTQ file, limit to a given count.
  *
- * @fn FastxIO#readAll
- * @brief Read all records from a FASTA/FASTQ file.
+*@fn FastxIO#readAll
+*@brief Read all records from a FASTA/FASTQ file.
  *
- * @fn FastxIO#writeAll
- * @brief Write all records to a FASTA/FASTQ file.
- */
-}}}
+*@fn FastxIO#writeAll
+*@brief Write all records to a FASTA/FASTQ file.
+*/
+</pre>
 
-=== @deprecated ===
+==== @deprecated ====
 
-'''Signature''' {{{@deprecated message}}}
+'''Signature''' <tt>@deprecated message</tt>
 
 Second-level entry.
 
 Mark a given function, metafunction, class, concept, or enum as deprecated.
 A deprecation message will be generated in the API documentation.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @fn f
- * @deprecated Use @link g @endlink instead.
- * @brief Minimal function.
- */
+*@fn f
+*@deprecated Use @link g @endlink instead.
+*@brief Minimal function.
+*/
 
 void f();
-}}}
+</pre>
 
-=== @enum ===
+==== @enum ====
 
-'''Signature''' {{{@enum EnumName [Enum Label]}}}
+'''Signature''' <tt>@enum EnumName [Enum Label]</tt>
 
 Top-level entry.
 
 Documentation for an enum with given name and optional label.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @enum MyEnum
- * @brief An enum.
+*@enum MyEnum
+*@brief An enum.
  *
- * @val MyEnum VALUE1
- * @brief VALUE1 value of enum MyEnum.
+*@val MyEnum VALUE1
+*@brief VALUE1 value of enum MyEnum.
  *
- * @val MyEnum VALUE2
- * @brief VALUE2 value of enum MyEnum.
- */
+*@val MyEnum VALUE2
+*@brief VALUE2 value of enum MyEnum.
+*/
 
 enum MyEnum
 {
   VALUE1,
   VALUE2
 };
-}}}
+</pre>
 
-=== @extends ===
+==== @extends ====
 
-'''Signature''' {{{@extends OtherName}}}
+'''Signature''' <tt>@extends OtherName</tt>
 
 Gives a parent class for a given class or a parent concept for a given concept.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @concept OneConcept
+*@concept OneConcept
  *
- * @concept TwoConcept
- * @extends OneConept
+*@concept TwoConcept
+*@extends OneConept
  *
- * @class MyClass
+*@class MyClass
  *
- * @class OtherClass
- * @extends MyClass
- */
-}}}
+*@class OtherClass
+*@extends MyClass
+*/
+</pre>
 
-=== @fn ===
+==== @fn ====
 
-'''Signature''' {{{@fn FunctionName [Function Label]}}}
+'''Signature''' <tt>@fn FunctionName [Function Label]</tt>
 
 Top-level entry.
 
 Document a function (global, global interface, or member) with given name and label.
 The type of the function is given by its name.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @fn globalAlignment
- * @brief Pairwise, DP-based global alignment.
- */
-}}}
+*@fn globalAlignment
+*@brief Pairwise, DP-based global alignment.
+*/
+</pre>
 
-=== @headerfile ===
+==== @headerfile ====
 
-'''Signature''' {{{@headerfile path}}}
+'''Signature''' <tt>@headerfile path</tt>
 
 Second-level entry.
 
-Give the required `#include` path for a code entry.
+Give the required <tt>#include</tt> path for a code entry.
 
 '''Note:''' Use angular brackets as below for SeqAn includes.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @fn f
- * @brief A minimal function.
- * @headerfile <seqan/module.h>
- */
-}}}
+*@fn f
+*@brief A minimal function.
+*@headerfile <seqan/module.h>
+*/
+</pre>
 
-=== @implements ===
+==== @implements ====
 
-'''Signature''' {{{@implements ConceptName}}}
+'''Signature''' <tt>@implements ConceptName</tt>
 
 Second-level entry.
 
 Marks a class to implement a given concept.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @concept MyConcept
+*@concept MyConcept
  *
- * @class ClassName
- * @implements MyConcept
- */
-}}}
+*@class ClassName
+*@implements MyConcept
+*/
+</pre>
 
-=== @include ===
+==== @include ====
 
-'''Signature''' {{{@include path/to/file}}}
+'''Signature''' <tt>@include path/to/file</tt>
 
 Second-level entry.
 
 Include a C++ source file as an example.
 See [#snippet @snippet] for including fragments.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @fn f
- * @brief Minimal function.
+*@fn f
+*@brief Minimal function.
  *
- * The following example shows the usage of the function.
- * @include core/demos/use_f.cpp
- */
-}}}
+*The following example shows the usage of the function.
+*@include core/demos/use_f.cpp
+*/
+</pre>
 
-=== @internal ===
+==== @internal ====
 
-'''Signature''' {{{@internal [ignored comment}}}
+'''Signature''' <tt>@internal [ignored comment</tt>
 
 Second-level entry.
 
 Mark a given function, metafunction, class, concept, or enum as internal.
 You can also provide a comment that is ignored/not used in the output.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @fn f
- * @internal
- * @brief Minimal function.
- */
+*@fn f
+*@internal
+*@brief Minimal function.
+*/
 
 void f();
-}}}
+</pre>
 
-=== @link ===
+==== @link ====
 
-'''Signature''' {{{@link TargetName target label}}}
+'''Signature''' <tt>@link TargetName target label</tt>
 
 In-text tag.
 
 Tag to link to a documentation entry with a given label.
 
-The difference to [#see @see] is that `@link .. @endlink` is used inline in text whereas `@see` is a second-level tag and adds a `see` property to the documented top-level entry.
-Use `@link` to link to entries within the documentation and the HTML `<a>` tag to link to external resources.
+The difference to [#see @see] is that <tt>@link .. @endlink</tt> is used inline in text whereas <tt>@see</tt> is a second-level tag and adds a <tt>see</tt> property to the documented top-level entry.
+Use <tt>@link</tt> to link to entries within the documentation and the HTML <tt><a></tt> tag to link to external resources.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @fn f
- * @brief Minimal function.
+*@fn f
+*@brief Minimal function.
  *
- * The function is mostly useful with the @link String string class@endlink.
- */
-}}}
+*The function is mostly useful with the @link String string class@endlink.
+*/
+</pre>
 
-=== @macro ===
+==== @macro ====
 
-'''Signature''' {{{@macro MacroName [Macro Label]}}}
+'''Signature''' <tt>@macro MacroName [Macro Label]</tt>
 
 Top-level tag.
 
 Document a macro.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @macro MY_MACRO
- * @brief Multiply two values.
+*@macro MY_MACRO
+*@brief Multiply two values.
  *
- * @signature #define MY_MACRO(i, j) ...
- * @param i A value for i.
- * @param j A value for j.
- * @return The product of i and j: (i * j)
- */
+*@signature #define MY_MACRO(i, j) ...
+*@param i A value for i.
+*@param j A value for j.
+*@return The product of i and j: (i * j)
+*/
 
 #define MY_MACRO(i, j) (i * j)
-}}}
+</pre>
 
-=== @mfn ===
+==== @mfn ====
 
-'''Signature''' {{{@mfn MetafunctionName [Metafunction Label]}}}
+'''Signature''' <tt>@mfn MetafunctionName [Metafunction Label]</tt>
 
 Top-level tag.
 
 Document a metafunction.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @mfn Identity
- * @brief Identity function for types.
+*@mfn Identity
+*@brief Identity function for types.
  *
- * @signature Identity<T>::Type
- * @tparam T The type to pass in.
- * @returns The type T.
- */
+*@signature Identity<T>::Type
+*@tparam T The type to pass in.
+*@returns The type T.
+*/
 
 template <typename T>
 struct Identity
 {
     typedef T Type;
 };
-}}}
+</pre>
 
-=== @note ===
+==== @note ====
 
-'''Signature''' {{{@note message}}}
+'''Signature''' <tt>@note message</tt>
 
 Second-level entry.
 
 Add an informative note to a function, metafunction, class, concept, enum, or group.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @fn f
- * @note Very useful if used together with @link g @endlink.
- * @brief Minimal function.
- */
+*@fn f
+*@note Very useful if used together with @link g @endlink.
+*@brief Minimal function.
+*/
 
 void f();
-}}}
+</pre>
 
-=== @page ===
+==== @page ====
 
-'''Signature''' {{{@page PageName [Page Title]}}}
+'''Signature''' <tt>@page PageName [Page Title]</tt>
 
 Top-level entry.
 
 Create a documentation page.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @page SomePage Page Title
+*@page SomePage Page Title
  *
- * A very simple page
+*A very simple page
  *
- * @section Section
- * A section!
- * @subsection Subsection
- * A subsection!
- */
-}}}
+*@section Section
+*A section!
+*@subsection Subsection
+*A subsection!
+*/
+</pre>
 
-=== @param ===
+==== @param ====
 
-'''Signature''' {{{@param Name Label}}}
+'''Signature''' <tt>@param Name Label</tt>
 
 Second-level entry.
 
 Document a value (and non-type) parameter from a function or member function.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @fn square
- * @brief Compute the square of an <tt>int</tt> value.
+*@fn square
+*@brief Compute the square of an <tt>int</tt> value.
  *
- * @signature int square(x);
- * @param x The value to compute square of (type <tt>int</tt>).
- * @return int The square of <tt>x</tt>.
- */
+*@signature int square(x);
+*@param x The value to compute square of (type <tt>int</tt>).
+*@return int The square of <tt>x</tt>.
+*/
 
 int square(int x);
-}}}
+</pre>
 
-=== @return ===
+==== @return ====
 
-'''Signature''' {{{@return Type Label}}}
+'''Signature''' <tt>@return Type Label</tt>
 
 Define the return value for a function or metafunction.
 
 Also see the example for [#param @param].
 
-When documenting functions and the result type is the result of a metafunction then use a `TXyz` return type in `@return` and document `TXyz` in the text of `@return` as follows:
+When documenting functions and the result type is the result of a metafunction then use a <tt>TXyz</tt> return type in <tt>@return</tt> and document <tt>TXyz</tt> in the text of <tt>@return</tt> as follows:
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @fn lengthSquare
- * @brief Compute the square of the length of a container.
+*@fn lengthSquare
+*@brief Compute the square of the length of a container.
  *
- * @signature TSize square(c);
+*@signature TSize square(c);
  *
- * @param c The container to compute the squared length of.
- * @return TSize squared length of <tt>c</tt>.  <tt>TSize</tt> is the size type of <tt>c</tt>.
- */
+*@param c The container to compute the squared length of.
+*@return TSize squared length of <tt>c</tt>.  <tt>TSize</tt> is the size type of <tt>c</tt>.
+*/
 
 template <typename TContainer>
 typename Size<TContainer>::Type lengthSquare(TContainer const & c);
-}}}
+</pre>
 
-=== @throw ===
+==== @throw ====
 
-'''Signature''' {{{@return Exception Label}}}
+'''Signature''' <tt>@return Exception Label</tt>
 
 Add note on a function or macro throwing ane xception.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @fn myFunction
- * @brief Writes things to a file.
- * @signature void myFunction(char const * filename);
+*@fn myFunction
+*@brief Writes things to a file.
+*@signature void myFunction(char const * filename);
  *
- * @param[in] filename File to write to.
+*@param[in] filename File to write to.
  *
- * @throw std::runtime_error If something goes wrong.
- */
+*@throw std::runtime_error If something goes wrong.
+*/
 void myFunction(char const * filename);
-}}}
+</pre>
 
-=== @section ===
+==== @section ====
 
-'''Signature''' {{{@section Title}}}
+'''Signature''' <tt>@section Title</tt>
 
 Second-level entry.
 
@@ -625,25 +626,25 @@ Adds a section to the documentation of an entry.
 
 See the example for [#page @page].
 
-=== @see ===
+==== @see ====
 
-'''Signature''' {{{@see EntryName}}}
+'''Signature''' <tt>@see EntryName</tt>
 
 Second-level entry.
 
 Add "see also" link to a documentation entry.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @fn g
- * @brief A simple function.
- * @see f
- */
-}}}
+*@fn g
+*@brief A simple function.
+*@see f
+*/
+</pre>
 
-=== @signature ===
+==== @signature ====
 
-'''Signature''' {{{@signature <signature text>}}}
+'''Signature''' <tt>@signature <signature text></tt>
 
 Second-level entry.
 
@@ -651,28 +652,28 @@ Document the signature of an entry.
 
 See the example for [#param @param].
 
-=== @snippet ===
+==== @snippet ====
 
-'''Signature''' {{{@snippet path/to/file.h <Snippet Name}}}
+'''Signature''' <tt>@snippet path/to/file.h <Snippet Name</tt>
 
 Second-level entry.
 
 Include a part of a file.
 An example for a comment including a snippet.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @fn f
- * @brief A simple function.
+*@fn f
+*@brief A simple function.
  *
- * Here is a snippet:
- * @snippet core/demos/use_f.cpp Simple Function
- */
-}}}
+*Here is a snippet:
+*@snippet core/demos/use_f.cpp Simple Function
+*/
+</pre>
 
 And here is the file with the snippet.
 
-{{{#!cpp
+<pre>#cpp
 /* Some code */
 
 int main(int argc, char const ** argv)
@@ -683,74 +684,74 @@ int main(int argc, char const ** argv)
 }
 
 /* Some more code */
-}}}
+</pre>
 
-=== @tag ===
+==== @tag ====
 
-'''Signature''' {{{@tag TagName}}}
+'''Signature''' <tt>@tag TagName</tt>
 
 Top-level entry.
 
 Document a tag.
 Mostly, you would group tags in a group using [#defgroup @defgroup].
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @defgroup MyTagGroup My Tag Group
+*@defgroup MyTagGroup My Tag Group
  *
- * @tag MyTagGroup#TagName
- * @tag MyTagGroup#MyOtherTagName
- */
-}}}
+*@tag MyTagGroup#TagName
+*@tag MyTagGroup#MyOtherTagName
+*/
+</pre>
 
-=== @tparam ===
+==== @tparam ====
 
-'''Signature''' {{{@tparam TArg}}}
+'''Signature''' <tt>@tparam TArg</tt>
 
 Second-level entry.
 
 Document a template parameter of a metafunction or class template.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @mfn MetaFunc
- * @signature MetaFunc<T1, T2>::Type
+*@mfn MetaFunc
+*@signature MetaFunc<T1, T2>::Type
  *
- * @tparam T1 First type.
- * @tparam T2 Second type.
- */
-}}}
+*@tparam T1 First type.
+*@tparam T2 Second type.
+*/
+</pre>
 
-=== @typedef ===
+==== @typedef ====
 
-'''Signature''' {{{@typedef TypedefName}}}
+'''Signature''' <tt>@typedef TypedefName</tt>
 
 Top-level entry.
 
 Document a typedef.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @typedef CharString
- * @brief An AllocString of character.
+*@typedef CharString
+*@brief An AllocString of character.
  *
- * @signature typedef String<char, Alloc<> > CharString;
- */
-}}}
+*@signature typedef String<char, Alloc<> > CharString;
+*/
+</pre>
 
-=== @var ===
+==== @var ====
 
-'''Signature''' {{{@var VariableType VariableName}}}
+'''Signature''' <tt>@var VariableType VariableName</tt>
 
 Top-level entry.
 Document a global variable or member variable.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @class MyClass
+*@class MyClass
  *
- * @var int MyClass::iVar
- */
+*@var int MyClass::iVar
+*/
 
 class MyClass
 {
@@ -758,100 +759,100 @@ public:
     int iVar;
 };
 
-=== @val ===
+==== @val ====
 
-'''Signature''' {{{@val EnumType EnumValueName}}}
+'''Signature''' <tt>@val EnumType EnumValueName</tt>
 
 Top-level entry.
 Document an enum value.
 
 /*!
- * @enum EnumName
- * @brief My enum.
- * @signature enum EnumName;
+*@enum EnumName
+*@brief My enum.
+*@signature enum EnumName;
  *
- * @val EnumName::VALUE1;
- * @brief The first enum value.
+*@val EnumName::VALUE1;
+*@brief The first enum value.
  *
- * @val EnumName::VALUE2;
- * @brief The second enum value.
- */
+*@val EnumName::VALUE2;
+*@brief The second enum value.
+*/
 
 enum MyEnum
 {
     VALUE1,
     VALUE2
 };
-}}}
+</pre>
 
-=== @warning ===
+==== @warning ====
 
-'''Signature''' {{{@warning message}}}
+'''Signature''' <tt>@warning message</tt>
 
 Second-level entry.
 
 Add a warning to a function, metafunction, class, concept, enum, or group.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @fn f
- * @note Using this function can lead to memory leaks.  Try to use @link g @endlink instead.
- * @brief Minimal function.
- */
+*@fn f
+*@note Using this function can lead to memory leaks.  Try to use @link g @endlink instead.
+*@brief Minimal function.
+*/
 
 void f();
-}}}
+</pre>
 
-== Best Practice ==
+=== Best Practice ===
 
 This section describes the best practice when writing documentation.
 
-=== Clarifying Links ===
+==== Clarifying Links ====
 
 Our usability research indicates that some functionality is confusing (e.g. see #1050) but cannot be removed.
-One example is the function `reserve()` which can be used to ''increase'' the ''capacity'' of a container whereas the function `resize()` allows to change the ''size'' of a container, ''increasing or decreasing'' its size.
+One example is the function <tt>reserve()</tt> which can be used to ''increase'' the ''capacity'' of a container whereas the function <tt>resize()</tt> allows to change the ''size'' of a container, ''increasing or decreasing'' its size.
 
 The documentation of such functions should contain a clarifying text and a link to the other function.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @fn Sequence#reserve
+*@fn Sequence#reserve
  *
- * Can be used to increase the <b>capacity</b> of a sequence.
+*Can be used to increase the <b>capacity</b> of a sequence.
  *
- * Note that you can only modify the capacity of the sequence.  If you want to modify the
- * <b>length</b> of the sequence then you have to use @link Sequence#resize @endlink.
- */
-}}}
+*Note that you can only modify the capacity of the sequence.  If you want to modify the
+*<b>length</b> of the sequence then you have to use @link Sequence#resize @endlink.
+*/
+</pre>
 
-=== Documentation Location ===
+==== Documentation Location ====
 
 '''Add the documentation where it belongs.'''
 For example, when documenting a class with multiple member functions, put the dox comments for the class before the class, the documentation of the member functions in front of the member functions.
 For another example, if you have to define multiple signatures for a global interface function or metafunctions, put the documentation before the first function.
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @class Klass
- * @brief A class.
+*@class Klass
+*@brief A class.
 */
 class Klass
 {
 public:
     /*!
-     * @var int Klass::x
-     * @brief The internal value.
-     */
+***@var int Klass::x
+***@brief The internal value.
+***/
     int x;
 
     /*!
-     * @fn Klass::Klass
-     * @brief The constructor.
+***@fn Klass::Klass
+***@brief The constructor.
      *
-     * @signature Klass::Klass()
-     * @signature Klass::Klass(i)
-     * @param i The initial value for the member <tt>x</tt> (type <tt>int</tt>).
-     */
+***@signature Klass::Klass()
+***@signature Klass::Klass(i)
+***@param i The initial value for the member <tt>x</tt> (type <tt>int</tt>).
+***/
     Klass() : x(0)
     {}
 
@@ -859,152 +860,156 @@ public:
     {}
 
     /*!
-     * @fn Klass::f
-     * @brief Increment member <tt>x</tt>
-     * @signature void Klass::f()
-     */
+***@fn Klass::f
+***@brief Increment member <tt>x</tt>
+***@signature void Klass::f()
+***/
     void f()
     {
         ++x;
     }
 };
-}}}
+</pre>
 
-=== Signatures ===
+==== Signatures ====
 
 Always document the return type of a function.
-If it is the result of a metafunction or otherwise depends on the input type, use `TResult` or so and document it with `@return`.
+If it is the result of a metafunction or otherwise depends on the input type, use <tt>TResult</tt> or so and document it with <tt>@return</tt>.
 
-== HTML Subset ==
+=== HTML Subset ===
 
 You can use inline HTML to format your description and also for creating links.
 
- * Links into the documentation can be generated using `<a>` if the scheme in `href` is `seqan:`:
-   `<a href="seqan:AllocString">the alloc string</a>.`
- * Use `<i>` for italic/emphasized text.
- * Use `<b>` for bold text.
- * Use `<tt>` for typewriter text.
+*Links into the documentation can be generated using <tt><a></tt> if the scheme in <tt>href</tt> is <tt>seqan:</tt>:
+   <tt><a href="seqan:AllocString">the alloc string</a>.</tt>
+*Use <tt><i></tt> for italic/emphasized text.
+*Use <tt><b></tt> for bold text.
+*Use <tt><tt></tt> for typewriter text.
 
-=== Tag Ordering ===
+==== Tag Ordering ====
 
 '''Keep consistent ordering of second-level tags.'''
 The following order should be used, i.e. if several of the following tags appear, they should appear in the order below.
 
- 1. `@internal`
- 1. `@deprecated`
- 1. `@warning`
- 1. `@note`
- 1. `@brief`
- 1. `@extends`
- 1. `@implements`
- 1. `@signature`
- 1. `@param`
- 1. `@tparam`
- 1. `@return`
- 1. `@headerfile`
- 1. The documentation body with the following tags in any order (as fit for the documentation text) and possibly interleaved with text:
-    `@code`, `@snippet`, `@include`, `@section`, `@subsection`.
- 1. `@see`
- 1. `@aka`
+#<tt>@internal</tt>
+#<tt>@deprecated</tt>
+#<tt>@warning</tt>
+#<tt>@note</tt>
+#<tt>@brief</tt>
+#<tt>@extends</tt>
+#<tt>@implements</tt>
+#<tt>@signature</tt>
+#<tt>@param</tt>
+#<tt>@tparam</tt>
+#<tt>@return</tt>
+#<tt>@headerfile</tt>
+#The documentation body with the following tags in any order (as fit for the documentation text) and possibly interleaved with text:
+    <tt>@code</tt>, <tt>@snippet</tt>, <tt>@include</tt>, <tt>@section</tt>, <tt>@subsection</tt>.
+#<tt>@see</tt>
+#<tt>@aka</tt>
 
-=== Documenting Concepts ===
+==== Documenting Concepts ====
 
-All concepts should have the suffix `Concept`.
+All concepts should have the suffix <tt>Concept</tt>.
 
-Use the pseudo keyword `concept` in the `@signature`.
-
-Use the following template:
-
-{{{#!cpp
-/*!
- * @concept MyConcept
- * @brief The concept title.
- *
- * @signature concept MyConcept;
- *
- * The concept description possibly using include, snippet, and <b><i>formatting</i></b> etc.
- */
-}}}
-
-=== Documenting Classes ===
+Use the pseudo keyword <tt>concept</tt> in the <tt>@signature</tt>.
 
 Use the following template:
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @class AllocString Alloc String
- * @brief A string storing its elements on dynamically heap-allocated arrays.
+*@concept MyConcept
+*@brief The concept title.
  *
- * @signature template <typename TAlphabet, typename TSpec>
- *                   class AllocString<TAlphabet, Alloc<TSpec> >;
- * @tparam TAlphabet The alphabet/value type to use.
- * @tparam TSpec    The tag to use for further specialization.
+*@signature concept MyConcept;
  *
- * The class description possibly using include, snippet, and <b><i>formatting</i></b> etc.
- */
-}}}
+*The concept description possibly using include, snippet, and <b><i>formatting</i></b> etc.
+*/
+</pre>
 
-=== Documenting Functions ===
+==== Documenting Classes ====
 
 Use the following template:
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @fn globalAlignment
- * @brief Global DP-based pairwise alignment.
+*@class AllocString Alloc String
+*@brief A string storing its elements on dynamically heap-allocated arrays.
  *
- * @signature TScore globalAlignment(align, scoringScheme);
- * @signature TScore globalAlignment(align, scoringScheme, lowerBand, upperBand);
- * @param align Align object to store the result in. Must have length 2 and be filled with sequences.
- * @param scoringScheme Score object to use for scoring.
- * @param lowerBand The lower band of the alignment (<tt>int</tt>).
- * @param upperBAnd The upper band of the alignment (<tt>int</tt>).
- * @return TScore The alignment score of type `Value<TScore>::Type` where `TScore` is the type of `scoringScheme`.
+*@signature template <typename TAlphabet, typename TSpec>
+*class AllocString<TAlphabet, Alloc<TSpec> >;
+*@tparam TAlphabet The alphabet/value type to use.
+*@tparam TSpec    The tag to use for further specialization.
  *
- * The function description possibly using include, snippet, and <b><i>formatting</i></b> etc.
- */
-}}}
+*The class description possibly using include, snippet, and <b><i>formatting</i></b> etc.
+*/
+</pre>
 
-=== Documenting Metafunctions ===
+==== Documenting Functions ====
 
 Use the following template:
 
-{{{#!cpp
+<pre>#cpp
 /*!
- * @mfn Size
- * @brief Return size type of another type.
+*@fn globalAlignment
+*@brief Global DP-based pairwise alignment.
  *
- * @signature Size<T>::Type
- * @tparam T The type to query for its size type.
- * @return TSize The size type to use for T.
+*@signature TScore globalAlignment(align, scoringScheme);
+*@signature TScore globalAlignment(align, scoringScheme, lowerBand, upperBand);
+*@param align Align object to store the result in. Must have length 2 and be filled with sequences.
+*@param scoringScheme Score object to use for scoring.
+*@param lowerBand The lower band of the alignment (<tt>int</tt>).
+*@param upperBAnd The upper band of the alignment (<tt>int</tt>).
+*@return TScore The alignment score of type <tt>Value<TScore>::Type</tt> where <tt>TScore</tt> is the type of <tt>scoringScheme</tt>.
  *
- * The class description possibly using include, snippet, and <b><i>formatting</i></b> etc.
- */
-}}}
+*The function description possibly using include, snippet, and <b><i>formatting</i></b> etc.
+*/
+</pre>
 
-=== Documenting Enums ===
+==== Documenting Metafunctions ====
 
-{{{#!cpp
+Use the following template:
+
+<pre>#cpp
 /*!
- * @enum EnumName
- * @brief My enum.
- * @signature enum EnumName;
+*@mfn Size
+*@brief Return size type of another type.
  *
- * @var EnumName::VALUE
- * @summary The enum's first value.
+*@signature Size<T>::Type
+*@tparam T The type to query for its size type.
+*@return TSize The size type to use for T.
  *
- * @var EnumName::VALUE2
- * @summary The enum's second value.
- */
-}}}
+*The class description possibly using include, snippet, and <b><i>formatting</i></b> etc.
+*/
+</pre>
 
-== Difference to Doxygen ==
+==== Documenting Enums ====
+
+<pre>#cpp
+/*!
+*@enum EnumName
+*@brief My enum.
+*@signature enum EnumName;
+ *
+*@var EnumName::VALUE
+*@summary The enum's first value.
+ *
+*@var EnumName::VALUE2
+*@summary The enum's second value.
+*/
+</pre>
+
+=== Difference to Doxygen ===
 
 If you already know Doxygen, the following major difference apply.
 
- * The documentation is more independent of the actual code.
-   Doxygen creates a documentation entry for all functions that are present in the code and allows the additional documentation, e.g. using `@fn` for adding functions.
+*The documentation is more independent of the actual code.
+   Doxygen creates a documentation entry for all functions that are present in the code and allows the additional documentation, e.g. using <tt>@fn</tt> for adding functions.
    With the SeqAn dox system, you have to explicitely use a top level tag for adding documentationitems.
- * Documentation entries are not identified by their signature but by their name.
- * We allow the definition of interface functions and metafunctions (e.g. `@fn Klass#func` and `@mfn Klass#Func`) in addition to member functions (`@fn Klass::func`).
- * We do not allow tags with backslashes but consistently use at signs (`@`).
+*Documentation entries are not identified by their signature but by their name.
+*We allow the definition of interface functions and metafunctions (e.g. <tt>@fn Klass#func</tt> and <tt>@mfn Klass#Func</tt>) in addition to member functions (<tt>@fn Klass::func</tt>).
+*We do not allow tags with backslashes but consistently use at signs (<tt>@</tt>).
+
+
+
+{{TracNotice|{{PAGENAME}}}}

@@ -1,4 +1,5 @@
-= Modifiers =
+
+== Modifiers ==
 
 [[TOC]]
 
@@ -10,27 +11,27 @@
  Duration ::
   20 min
  Prerequisites ::
-  You should know about the basic principles of SeqAn and it's sequence concept, e.g. [wiki:Tutorial/FirstStepsInSeqAn First Steps in SeqAn] and [wiki:Tutorial/Sequences].
+  You should know about the basic principles of SeqAn and it's sequence concept, e.g. [[Tutorial/FirstStepsInSeqAn| First Steps in SeqAn]] and [[Tutorial/Sequences]].
 
-== Overview ==
+=== Overview ===
 
 Modifiers give a different view to other classes. They can be used to change the elements of a container without touching them. For example, someone gave you an algorithm that works on two arbitrary [dox:String Strings], but you want to use it for the special pair of a string and its reverse (left-to-right mirror). The classical approach would be to make a copy of the one string, where all elements are mirrored from left to right and call the algorithm with both strings. With modifiers, e.g. a [dox:ModifiedString ModifiedString], you can create the reverse in O(1) extra memory without copying the original string. This can be handy if the original sequence is large.
 
 Modifiers implement a certain concept (e.g. [dox:Container Container], [dox:RandomAccessIteratorConcept Iterator], ...) or class interface ([dox:String String], ...)
 and thus can be used as such. The mirror modifier is already part of SeqAn and implements the class interface of [dox:String String] and can be used in every algorithm that works on strings.
 
-== The Modified String ==
+=== The Modified String ===
 
 The [dox:ModifiedString ModidiedString] is a modifier that implements the [dox:String String] interface and thus can be used like a [dox:String String]. It has two template parameters. The first one specifies a sequence type (e.g. [dox:String String], [dox:Segment Segment], ...) and the second one specifies the modifiers behavior. That can be [dox:ModReverse ModReverse] for mirroring a string left to right or [dox:ModView ModView] for applying a function to every single character (like 'C'->'G', 'A'->'T', ...).
 
-=== ModReverse ===
+==== ModReverse ====
 
 We begin with the specialization [dox:ModReverse ModReverse] from the example above. Now we have a given string:
 
 [[Include(source:trunk/core/demos/tutorial/modifiers/modifier_modreverse.cpp, fragment=main)]]
 
-and want to get the reverse. So we need a [dox:ModifiedString ModifiedString] specialized with {{{String<char>}}} and [dox:ModReverse ModReverse].
-We create the modifier and link it with {{{myString}}}:
+and want to get the reverse. So we need a [dox:ModifiedString ModifiedString] specialized with <tt>String<char></tt> and [dox:ModReverse ModReverse].
+We create the modifier and link it with <tt>myString</tt>:
 
 [[Include(source:trunk/core/demos/tutorial/modifiers/modifier_modreverse.cpp, fragment=modifier)]]
 
@@ -38,27 +39,27 @@ The result is:
 
 [[Include(source:trunk/core/demos/tutorial/modifiers/modifier_modreverse.cpp, fragment=output1)]]
 
-{{{#!ShellBox
+<pre>#ShellBox
 A man, a plan, a canal-Panama
 amanaP-lanac a ,nalp a ,nam A
-}}}
+</pre>
 
-To verify that we didn't copy {{{myString}}}, we replace an infix of the original string and see that, as a side effect, the modified string has also changed:
+To verify that we didn't copy <tt>myString</tt>, we replace an infix of the original string and see that, as a side effect, the modified string has also changed:
 
 [[Include(source:trunk/core/demos/tutorial/modifiers/modifier_modreverse.cpp, fragment=output2)]]
 
-{{{#!ShellBox
+<pre>#ShellBox
 A man, a master plan, a canal-Panama
 amanaP-lanac a ,nalp retsam a ,nam A
-}}}
+</pre>
 
 [seqan:Demo.ModReverse Click here] to see the complete source code of the [dox:ModReverse ModReverse] example.
 
-=== ModView ===
-Another specialization of the [dox:ModifiedString ModifiedString] is the [dox:ModView ModView] modifier. Assume we need all characters of {{{myString}}} to be in upper case without copying {{{myString}}}. In SeqAn you first create a functor (a STL unary function) which converts a character to its upper-case character:
+==== ModView ====
+Another specialization of the [dox:ModifiedString ModifiedString] is the [dox:ModView ModView] modifier. Assume we need all characters of <tt>myString</tt> to be in upper case without copying <tt>myString</tt>. In SeqAn you first create a functor (a STL unary function) which converts a character to its upper-case character:
 
-{{{
-#!cpp
+<pre>
+#cpp
 struct MyFunctor : public ::std::unary_function<char,char> 
 {
     inline char operator()(char x) const 
@@ -67,49 +68,63 @@ struct MyFunctor : public ::std::unary_function<char,char>
         return x; 
     }
 };
-}}}
+</pre>
 
-and then create a [dox:ModifiedString ModifiedString] specialized with {{{ModView<MyFunctor>}}}:
+and then create a [dox:ModifiedString ModifiedString] specialized with <tt>ModView<MyFunctor></tt>:
 
-{{{
-#!cpp
+<pre>
+#cpp
 ModifiedString< String<char>, ModView<MyFunctor> > myModifier(myString);
-}}}
+</pre>
 
 The result is:
-{{{
-#!cpp
+<pre>
+#cpp
 ::std::cout << myString << ::std::endl;
 ::std::cout << myModifier << ::std::endl;
-}}}
+</pre>
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 A man, a plan, a canal-Panama
 A MAN, A PLAN, A CANAL-PANAMA
 </pre>
-}}}
+</pre>
 
 The upper-case functor and some other predefined functors are part of SeqAn (in seqan/modifier/modifier_functors.h) already.
 The following functors can be used as an argument of [dox:ModView ModView]:
-||'''Functor'''||'''Description'''||
-||{{{FunctorUpcase<TValue>}}}||Converts each character of type {{{TValue}}} to its upper-case character||
-||{{{FunctorLowcase<TValue>}}}||Converts each character to type {{{TValue}}} to its lower-case character||
-||{{{FunctorComplement<Dna>}}}||Converts each nucleotide to its complementary nucleotide||
-||{{{FunctorComplement<Dna5>}}}||The same for the [dox:Dna5 Dna5] alphabet||
-||{{{FunctorConvert<TInValue,TOutValue>}}}||Converts the type of each character from {{{TInValue}}} to {{{TOutValue}}}||
+{| border=1 class="simple"
+!'''Functor'''
+!'''Description'''
+|- 
+| <tt>FunctorUpcase<TValue></tt>
+| Converts each character of type <tt>TValue</tt> to its upper-case character
+|- 
+| <tt>FunctorLowcase<TValue></tt>
+| Converts each character to type <tt>TValue</tt> to its lower-case character
+|- 
+| <tt>FunctorComplement<Dna></tt>
+| Converts each nucleotide to its complementary nucleotide
+|- 
+| <tt>FunctorComplement<Dna5></tt>
+| The same for the [dox:Dna5 Dna5] alphabet
+|- 
+| <tt>FunctorConvert<TInValue,TOutValue></tt>
+| Converts the type of each character from <tt>TInValue</tt> to <tt>TOutValue</tt>
+|}
+
 
 So instead of defining your own functor we could have used a predefined one:
-{{{
-#!cpp
+<pre>
+#cpp
 ModifiedString< String<char>, ModView<FunctorUpcase<char> > > myModifier(myString);
-}}}
+</pre>
 
 [seqan:Demo.ModView Click here] to see the complete source code of the [dox:ModView ModView] example.
 
 
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 === Assignment 1
  Type ::
   Review
@@ -124,75 +139,95 @@ ModifiedString< String<char>, ModView<FunctorUpcase<char> > > myModifier(myStrin
 
  Solution :: 
   Click ''more...'' to see the solution.
-{{{#!FoldOut
+<pre>#FoldOut
 ----
 [[Include(source:trunk/core/demos/tutorial/modifiers/assignment1_solution.cpp)]]
-{{{#!ShellBox
+<pre>#ShellBox
 CCCGGCATCATCC
 CTTGGCATTATTC
-}}}
-{{{#!ShellBox  
+</pre>
+<pre>#ShellBox  
 TTTGGTATTATTT
 TTTGGTATTATTT
-}}}
-}}}
+</pre>
+</pre>
 
 
 
 
-}}}
+</pre>
 
 
-=== Shortcuts ===
+==== Shortcuts ====
 
 For some commonly used modifiers you can use the following shortcuts:
-||'''Shortcut'''||'''Substitution'''||
-||{{{ModComplementDna}}}||{{{ModView< FunctorComplement<Dna> >}}}||
-||{{{ModComplementDna5}}}||{{{ModView< FunctorComplement<Dna5> >}}}||
-||{{{DnaStringComplement}}}||{{{ModifiedString< DnaString, ModComplementDna >}}}||
-||{{{Dna5StringComplement}}}||{{{ModifiedString< Dna5String, ModComplementDna5 >}}}||
-||{{{DnaStringReverse}}}||{{{ModifiedString< DnaString, ModReverse >}}}||
-||{{{Dna5StringReverse}}}||{{{ModifiedString< Dna5String, ModReverse >}}}||
-||{{{DnaStringReverseComplement}}}||{{{ModifiedString< ModifiedString< DnaString, ModComplementDna >, ModReverse >}}}||
-||{{{Dna5StringReverseComplement}}}||{{{ModifiedString< ModifiedString< Dna5String, ModComplementDna5 >, ModReverse >}}}||
+{| border=1 class="simple"
+!'''Shortcut'''
+!'''Substitution'''
+|- 
+| <tt>ModComplementDna</tt>
+| <tt>ModView< FunctorComplement<Dna> ></tt>
+|- 
+| <tt>ModComplementDna5</tt>
+| <tt>ModView< FunctorComplement<Dna5> ></tt>
+|- 
+| <tt>DnaStringComplement</tt>
+| <tt>ModifiedString< DnaString, ModComplementDna ></tt>
+|- 
+| <tt>Dna5StringComplement</tt>
+| <tt>ModifiedString< Dna5String, ModComplementDna5 ></tt>
+|- 
+| <tt>DnaStringReverse</tt>
+| <tt>ModifiedString< DnaString, ModReverse ></tt>
+|- 
+| <tt>Dna5StringReverse</tt>
+| <tt>ModifiedString< Dna5String, ModReverse ></tt>
+|- 
+| <tt>DnaStringReverseComplement</tt>
+| <tt>ModifiedString< ModifiedString< DnaString, ModComplementDna >, ModReverse ></tt>
+|- 
+| <tt>Dna5StringReverseComplement</tt>
+| <tt>ModifiedString< ModifiedString< Dna5String, ModComplementDna5 >, ModReverse ></tt>
+|}
 
-== The Modified Iterator ==
+
+=== The Modified Iterator ===
 
 We have seen how a [dox:ModifiedString ModifiedString] can be used to modify strings without touching or copying original data.
 The same can be done with iterators. The [dox:ModifiedIterator ModifiedIterator] implements the [dox:RandomAccessIteratorConcept Iterator] concept and thus can be used in every algorithm or data structure that expects an iterator. In fact, we have already used the [dox:ModifiedIterator ModifiedIterator] unknowingly in the examples above, as in our cases the [dox:ModifiedString ModifiedString] returns a corresponding [dox:ModifiedIterator ModifiedIterator] via the [dox:ContainerConcept#Iterator Iterator] meta-function. The main work is done in the [dox:ModifiedIterator ModifiedIterator], whereas the [dox:ModifiedString ModifiedString] only overloads the [dox:ContainerConcept#begin begin] and [dox:ContainerConcept#end end].
 Normally, you are going to use the [dox:ModifiedString ModifiedString] and maybe the result of its [dox:ContainerConcept#Iterator Iterator] meta-function instead of a [dox:ModifiedIterator ModifiedIterator] directly.
 
-== Nested Modifiers ==
+=== Nested Modifiers ===
 
 As modifiers implement a certain concept and depend on classes of this concept, two modifiers can be chained to create a new modifier. We have seen how the [dox:ModifiedString ModifiedString] specialized with [dox:ModReverse ModReverse] and [dox:ModView ModView] can be used. Now we want to combine them to create a modifier for the reverse complement of a [dox:DnaString DnaString]
 We begin with the original string:
 
-{{{
-#!cpp
+<pre>
+#cpp
 String<Dna> myString = "attacgg";
-}}}
+</pre>
 
 Then we define the modifier that complements a [dox:DnaString DnaString]:
-{{{
-#!cpp
+<pre>
+#cpp
 typedef ModifiedString<String<Dna>, ModComplementDna>   TMyComplement;
-}}}
+</pre>
 
 This modifier now should be reversed from left to right:
-{{{
-#!cpp
+<pre>
+#cpp
 typedef ModifiedString<TMyComplement, ModReverse>       TMyReverseComplement;
-}}}
+</pre>
 
 The original string can be given to the constructor.
-{{{
-#!cpp
+<pre>
+#cpp
 TMyReverseComplement myReverseComplement(myString);
-}}}
+</pre>
 
 The result is:
-{{{
-#!cpp
+<pre>
+#cpp
 ::std::cout << myString << ::std::endl;
 ::std::cout << myReverseComplement << ::std::endl;
 
@@ -200,27 +235,31 @@ infix(myString, 1, 1) = "cgt";
 
 ::std::cout << myString << ::std::endl;
 ::std::cout << myReverseComplement << ::std::endl;
-}}}
-{{{
-#!html
+</pre>
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 ATTACGG
 CCGTAAT
 ACGTTTACGG
 CCGTAAACGT
 </pre>
-}}}
+</pre>
 
 Using a predefined shortcut, the whole example could be reduced to:
-{{{
-#!cpp
+<pre>
+#cpp
 String<Dna> myString = "attacgg";
 ::std::cout << myString << ::std::endl;
 ::std::cout << DnaStringReverseComplement(myString) << ::std::endl;
-}}}
+</pre>
 
 [seqan:"Demo.Nested Modifiers" Click here] to see the complete source code of the nested modifiers example.
 
-== Submit a  Comment ==
+=== Submit a  Comment ===
 If you found a mistake, or have suggestions about an improvement of this page press:
 [/newticket?component=Documentation&description=Tutorial+Enhancement+for+page+http://trac.seqan.de/wiki/Tutorial/Modifiers&type=enhancement submit your comment]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

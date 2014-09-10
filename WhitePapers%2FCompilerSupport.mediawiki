@@ -1,11 +1,12 @@
-= Compiler Support =
+
+== Compiler Support ==
 [[TOC()]]
 
 '''THIS IS WORK IN PROGRESS'''
 
 This article describes the compiler support timeline of SeqAn and the policy behind it.
 
-== Compiler Support ==
+=== Compiler Support ===
 
 At the moment, SeqAn strives to support the C++ compilers '''GCC''', '''llvm/clang''', and '''Microsoft Visual C++'''.
 We directly support the operating systems '''Debian Linux''', '''Mac Os X''', and '''Microsoft Windows''' and have [http://www.seqan.de/cdash/index.php?project=SeqAn nightly tests] for them.
@@ -13,32 +14,78 @@ We want to support both 32 and 64 bit address widths.
 
 The following table shows the supported compilers and operating systems for the current trunk version of SeqAn:
 
-|| '''Compiler''' || '''OS''' || ''Compiler Versions'' ||
-|| GCC || Linux || >=4.3 ||
-|| GCC || Mac Os X || 4.2 ||
-|| LLVM || Linux || 2.9, trunk ||
-|| LLVM || Mac Os X || "3.0"* ||
-|| Visual C++ || Windows || 8 ("2005"), 9 ("2008"), 10 ("2010") ||
-|| MinGW || Windows || 8 ("2005"), 9 ("2008"), 10 ("2010") ||
+{| border=1 class="simple"
+! '''Compiler''' 
+! '''OS''' 
+! ''Compiler Versions'' 
+|- 
+|  GCC 
+|  Linux 
+|  >=4.3 
+|- 
+|  GCC 
+|  Mac Os X 
+|  4.2 
+|- 
+|  LLVM 
+|  Linux 
+|  2.9, trunk 
+|- 
+|  LLVM 
+|  Mac Os X 
+|  "3.0"* 
+|- 
+|  Visual C++ 
+|  Windows 
+|  8 ("2005"), 9 ("2008"), 10 ("2010") 
+|- 
+|  MinGW 
+|  Windows 
+|  8 ("2005"), 9 ("2008"), 10 ("2010") 
+|}
 
-* Dubbed 3.0, the XCode 4.1 compiler is actually 3.0 rc1.
 
-== Timeline ==
+*Dubbed 3.0, the XCode 4.1 compiler is actually 3.0 rc1.
+
+=== Timeline ===
 
 Later versions are always supported.
 No expiration date is given for them, [#Policy Policy] explains how to compute it for them.
 
-|| Compiler || Version || Support Up To ||
-|| GCC || 4.2 || Dec 2011 ||
-|| GCC || 4.3, 4.4 || Debian 6.0 Release + 6mo ||
-|| LLVM || 2.9 || Debian 6.0 Release + 6mo ||
-|| VC++ || 8 || VC++ 11 Release ||
-|| VC++ || 9 || VC++ 12 Release ||
-|| VC++ || 10 || VC++ 13 Release ||
+{| border=1 class="simple"
+! Compiler 
+! Version 
+! Support Up To 
+|- 
+|  GCC 
+|  4.2 
+|  Dec 2011 
+|- 
+|  GCC 
+|  4.3, 4.4 
+|  Debian 6.0 Release + 6mo 
+|- 
+|  LLVM 
+|  2.9 
+|  Debian 6.0 Release + 6mo 
+|- 
+|  VC++ 
+|  8 
+|  VC++ 11 Release 
+|- 
+|  VC++ 
+|  9 
+|  VC++ 12 Release 
+|- 
+|  VC++ 
+|  10 
+|  VC++ 13 Release 
+|}
+
 
 An exception in the future is given in [#Policy Policy].
 
-== Policy ==
+=== Policy ===
 
 The policy for Visual C++ is to support the three most recent compiler versions.
 
@@ -56,3 +103,7 @@ The policy for LLVM is currently to support >=2.9 and will be changed to the sam
 Candidates for this are Visual C++ 8 and 9.
 However, by then Visual C++ 11 ("2011") should be available so there are two versions with "good enough" C++11
 Also, since Microsoft distributes free versions of its C++ compilers ("express edition"), we do not see this as a problem.
+
+
+
+{{TracNotice|{{PAGENAME}}}}

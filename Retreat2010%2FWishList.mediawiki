@@ -1,30 +1,35 @@
-== Wish list from the retreat participants ==
 
- * Adaptors for RNA analysis packages like Vienna RNA package or LISA
- * Improve documentation of FragmentStore, especially:
+=== Wish list from the retreat participants ===
+
+*Adaptors for RNA analysis packages like Vienna RNA package or LISA
+*Improve documentation of FragmentStore, especially:
         - Annotation store: how to iterate over annotations, build interval graph, etc.
         - general: how to access elements in a FragmentStore (examples)
         - would be nice to contribute/extend FragmentStore with fileparsers for loading/parsing/saving of different formats (PSL, WIG, etc)
                 - requires interfaces...
                 - handling different file formats is the main task for data-analysists and could help seqan a lot to get more accepted
         - example application: for a given SAM file determine how many reads lie in exons/introns/UTRs...
- * Basic documentation of available macros
- * Some links to the theory behind the algorithms could be useful in the documentation; e.g. lecture slides, not only the references to the papers
- * Exact multiple alignment with Carillo-Lipmann (KR: already in the list)
- * Basic phylogenetic algorithms
- * Training of HMMs with Baum-Welch algorithm
- * Algorithms on automata other than parsing (e.g. minimization of DFA)
- * Probabilistic Arithmetic Automata  (see work of Inke Herms (Uni Bielefeld), Sven Rahmann, Tobias Marshall (TU Dortmund) )
- * Gene clusters (see work of Katharina Jahn, Jens Stoye (Uni Bielefeld) )
- * Required header files: It is not easy to determine which header files are needed for a particular application. Either a lookup table describing the content of each header file is required or the  hint that seqan.h solves all the problems.
- * Indices: it would be good to indicate that one quickly encounters the range limit of the indexing type (unsigned int/long) for large q and/or large alphabets. A firewall to prevent/indicate potential unexpected behavior should be implemented if possible or at least a warning should be issued in the section covering indices.
- * General: The differences of class specializations could be indicated more clearly. An example could be given for each specialization (for example in fibre)  or a pro/contra table showing the advantages and disadvantages of each specialization.
- * seqan Bugtracking/Documentation: It would be great if reported/known bugs from the issue-tracker could be (automatically) linked to documentation to indicate the issue to the developer. Once the bug is solved the warning should be removed as well.
- * I also hope the communication of known bugs to the community via the documentation will be strengthened. The documentation is, at least for myself, the first point of consultation when searching for information. Known issues (see point above) are however "tucked away" in the issue tracker. In case whole modules get a makeover this should be announced on the webpage and possibly in the documentation of the respective (old) classes and possible changes in the concept noted (such as changes in the ranges of how seeds are represented in the new module) in order to enable the developer to take these changes into account.
- * My only suggestion for the tutorial would be a simple biological  application earlier on in the set of tutorials, even if not all the  basic concepts have been introduced.
+*Basic documentation of available macros
+*Some links to the theory behind the algorithms could be useful in the documentation; e.g. lecture slides, not only the references to the papers
+*Exact multiple alignment with Carillo-Lipmann (KR: already in the list)
+*Basic phylogenetic algorithms
+*Training of HMMs with Baum-Welch algorithm
+*Algorithms on automata other than parsing (e.g. minimization of DFA)
+*Probabilistic Arithmetic Automata  (see work of Inke Herms (Uni Bielefeld), Sven Rahmann, Tobias Marshall (TU Dortmund) )
+*Gene clusters (see work of Katharina Jahn, Jens Stoye (Uni Bielefeld) )
+*Required header files: It is not easy to determine which header files are needed for a particular application. Either a lookup table describing the content of each header file is required or the  hint that seqan.h solves all the problems.
+*Indices: it would be good to indicate that one quickly encounters the range limit of the indexing type (unsigned int/long) for large q and/or large alphabets. A firewall to prevent/indicate potential unexpected behavior should be implemented if possible or at least a warning should be issued in the section covering indices.
+*General: The differences of class specializations could be indicated more clearly. An example could be given for each specialization (for example in fibre)  or a pro/contra table showing the advantages and disadvantages of each specialization.
+*seqan Bugtracking/Documentation: It would be great if reported/known bugs from the issue-tracker could be (automatically) linked to documentation to indicate the issue to the developer. Once the bug is solved the warning should be removed as well.
+*I also hope the communication of known bugs to the community via the documentation will be strengthened. The documentation is, at least for myself, the first point of consultation when searching for information. Known issues (see point above) are however "tucked away" in the issue tracker. In case whole modules get a makeover this should be announced on the webpage and possibly in the documentation of the respective (old) classes and possible changes in the concept noted (such as changes in the ranges of how seeds are represented in the new module) in order to enable the developer to take these changes into account.
+*My only suggestion for the tutorial would be a simple biological  application earlier on in the set of tutorials, even if not all the  basic concepts have been introduced.
  I was thinking for example of the code sample on the numpy Getting Started page http://new.scipy.org/getting-started.html, which shows the  benefit of the library with few lines of code.   Of course this is easier to do with a high level library than with SeqAn.
- * It would be better, if all tutorials have a link on the main tutorial page (Generic programming, Meta functions)
- * Which functions have to be implemented for a class and which are not needed? (esp. Index/Iterator/Pattern/Finder). For example alignment(Iterator<Index>) is not needed
- *  Generally some more information for "under the hood" developers
- * The documentation regarding the virtual suffix tree iterator often refers to the Index_ESA (even though it's also applicable for other kinds of indexes)
- * The navigation bar is not displayed correctly in Opera
+*It would be better, if all tutorials have a link on the main tutorial page (Generic programming, Meta functions)
+*Which functions have to be implemented for a class and which are not needed? (esp. Index/Iterator/Pattern/Finder). For example alignment(Iterator<Index>) is not needed
+*Generally some more information for "under the hood" developers
+*The documentation regarding the virtual suffix tree iterator often refers to the Index_ESA (even though it's also applicable for other kinds of indexes)
+*The navigation bar is not displayed correctly in Opera
+
+
+
+{{TracNotice|{{PAGENAME}}}}

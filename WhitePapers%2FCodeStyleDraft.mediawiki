@@ -1,10 +1,11 @@
-= SeqAn Code Style =
 
-This has been superseded with [wiki:StyleGuide/Cpp SeqAn C++ Style Guide].
+== SeqAn Code Style ==
 
-{{{
-#!comment
-= SeqAn Code Style =
+This has been superseded with [[StyleGuide/Cpp| SeqAn C++ Style Guide]].
+
+<pre>
+#comment
+== SeqAn Code Style ==
 [[TOC()]]
 
 The aim of this style guide is to enforce a certain level of canonicality on all SeqAn code.
@@ -12,45 +13,51 @@ Besides good comments, having a common style guide is the key to being able to u
 
 (The style guide partially follows the [http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml Google C++ Code Style Guide].)
 
-== C++ Features ==
+=== C++ Features ===
 
-=== Reference Arguments ===
+==== Reference Arguments ====
 
 We prefer reference arguments over pointer arguments.
-Use `const` where possible.
+Use <tt>const</tt> where possible.
 
-=== Use C-Style Logical Operators (&&, ||, !) ===
+{| border=1 class="simple"
+!, !) ====
+|}
 
-{{{
-#!FoldOut
-Use `&&`, `||`, and `!` instead of `and`, `or`, and `not`.
+
+<pre>
+#FoldOut
+{| border=1 class="simple"
+!</tt>, and <tt>!</tt> instead of <tt>and</tt>, <tt>or</tt>, and <tt>not</tt>.
+|}
+
 ----
-While available from C++98, MSVC does not support them out of the box, a special header `<iso646.h>` has to be included.
+While available from C++98, MSVC does not support them out of the box, a special header <tt><iso646.h></tt> has to be included.
 Also, they are unfamiliar to most C++ programmers and nothing in SeqAn is using them.
-}}}
+</pre>
 
-=== Default Arguments ===
+==== Default Arguments ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 Default arguments to global functions are problematic with generated forwards.
 They can be replaced with function overloading, so do not use them.
 ----
 You can replace default arguments with function overloading as follows.
 Do not do this.
 
-{{{
-#!cpp
+<pre>
+#cpp
 inline double f(int x, double y = 1.0)
 {
     // ...
 }
-}}}
+</pre>
 
 Do this instead.
 
-{{{
-#!cpp
+<pre>
+#cpp
 inline double f(int x, double y)
 {
     // ...
@@ -60,21 +67,21 @@ inline double f(int x)
 {
     return f(x, 1.0);
 }
-}}}
-}}}
+</pre>
+</pre>
 
-=== Exceptions ===
+==== Exceptions ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 Currently, the SeqAn code does not use any exceptions and is not exception safe.
 Do not use any exceptions yourself, instead use return codes.
 ----
-The following is an example where two chars are read using `<cstdio>` I/O.
-We use a return code of `0` to indicate no errors.
+The following is an example where two chars are read using <tt><cstdio></tt> I/O.
+We use a return code of <tt>0</tt> to indicate no errors.
 
-{{{
-#!cpp
+<pre>
+#cpp
 int readSome(char & c, FILE * fp)
 {
     int res = fgetc(fp);
@@ -86,31 +93,31 @@ int readSome(char & c, FILE * fp)
     c = res;
     return 0;
 }
-}}}
-}}}
+</pre>
+</pre>
 
-=== Virtual Member Functions ===
+==== Virtual Member Functions ====
 
 Do not use virtual member functions:
 Since we mostly use template subclassing instead of C++ built-in subclassing, there rarely is the need for member functions.
-In the case where there are member functions, they should not be `virtual` since this is slow when used in tight loops.
+In the case where there are member functions, they should not be <tt>virtual</tt> since this is slow when used in tight loops.
 
-=== `static_cast<>` ===
+==== <tt>static_cast<></tt> ====
 
-Prefer `static_cast<>` over C-style casts.
+Prefer <tt>static_cast<></tt> over C-style casts.
 
-=== `const_cast<>` ===
+==== <tt>const_cast<></tt> ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 Use const-casts only to make an object const, do not remove consts.
-Rather, use the `mutable` keyword on selected members.
-`const_cast<>` is allowed for interfacing with external (C) APIs where the `const` keyword is missing but which do not modify the variable.
+Rather, use the <tt>mutable</tt> keyword on selected members.
+<tt>const_cast<></tt> is allowed for interfacing with external (C) APIs where the <tt>const</tt> keyword is missing but which do not modify the variable.
 ----
-The following is an example where `const_cast<>` is OK:
+The following is an example where <tt>const_cast<></tt> is OK:
 
-{{{
-#!cpp
+<pre>
+#cpp
 template <typename T>
 bool isXyz(T const & x)
 {
@@ -122,66 +129,66 @@ bool isXyz(T & x)
 {
     return const_cast<T const &>(x)._member == 0;
 }
-}}}
-}}}
+</pre>
+</pre>
 
-=== `reinterpret_cast<>` ===
+==== <tt>reinterpret_cast<></tt> ====
 
-Only use `reinterpret_cast<>` when you absolutely have to and you know what you are doing!
+Only use <tt>reinterpret_cast<></tt> when you absolutely have to and you know what you are doing!
 Sometimes, it is useful for very low-level code but mostly it indicates a design flaw.
 
-=== pre/post increment/decrement ===
+==== pre/post increment/decrement ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 Prefer the "pre" variants for decrement and increment, especially in loops.
 Their advantage is that no copy of an object has to be made.
 ----
 Good:
 
-{{{
-#!cpp
+<pre>
+#cpp
 typedef Iterator<TContainer>::Type TIterator;
-for (TIterator it = begin(container); !atEnd(it); ++it)
+for (TIterator it = begin(container); atEnd(it); ++it)
 {
     // do work
 }
-}}}
+</pre>
 
 Bad:
 
-{{{
-#!cpp
+<pre>
+#cpp
 typedef Iterator<TContainer>::Type TIterator;
-for (TIterator it = begin(container); !atEnd(it); it++)
+for (TIterator it = begin(container); atEnd(it); it++)
 {
     // do work
 }
-}}}
-}}}
+</pre>
+</pre>
 
-== Code Quality ==
+=== Code Quality ===
 
-=== Const-Correctness ===
+==== Const-Correctness ====
 
 Write const correct code.
 Read the [http://www.parashift.com/c++-faq-lite/const-correctness.html C++ FAQ const correctness article] for more information.
 Besides other things, this allows to use temporary objects without copying in functions that do not need to change their arguments.
 
-=== Compiler Warnings ===
+==== Compiler Warnings ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 All code in the ''core'' and ''extras'' repository must compile without any warnings using the flags generated by the CMake system.
 ----
 Currently, the GCC flags are:
 
-{{{
+<pre>
 -W -Wall -Wstrict-aliasing -pedantic -Wno-long-long -Wno-variadic-macros
-}}}
-}}}
+</pre>
+</pre>
 
-=== Style Conformance ===
+==== Style Conformance ====
 
 Follow this code style whenever possible.
 However, prefer consistency over conformance.
@@ -189,44 +196,44 @@ However, prefer consistency over conformance.
 If you are editing code that is non-conforming consider whether you could/should adapt the whole file to the new style.
 If this is not feasible, prefer consistency over conformance.
 
-== Semantics ==
+=== Semantics ===
 
-=== Parameter Ordering ===
+==== Parameter Ordering ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 The general parameter order should be (1) output, (2) non-const input (e.g. file handles), (3) input, (4) tags.
 Within these groups, the order should be from mandatory to optional.
 ----
-In SeqAn, we read functions `f(out1, out2, out3, ..., in1, in2, in3, ...)` as `(out1, out2, out3, ...) <- f(in1, in2, in3, ...)`.
+In SeqAn, we read functions <tt>f(out1, out2, out3, ..., in1, in2, in3, ...)</tt> as <tt>(out1, out2, out3, ...) <- f(in1, in2, in3, ...)</tt>.
 
-E.g. `assign()`:
+E.g. <tt>assign()</tt>:
 
-{{{
-#!cpp
+<pre>
+#cpp
 template <typename T>
 void f(T & out, T const & in)
 {
     out = in;
 }
-}}}
-}}}
+</pre>
+</pre>
 
-== Scoping, Helper Code ==
+=== Scoping, Helper Code ===
 
-=== Global Variables ===
+==== Global Variables ====
 
 Do not use global variables.
 They introduce hard-to find bugs and require the introduction of a link-time library.
 
-=== Tags In Function Arguments ===
+==== Tags In Function Arguments ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 Tags in function arguments should always be const.
 ----
-{{{
-#!cpp
+<pre>
+#cpp
 // somewhere in your code:
 
 struct Move_;
@@ -238,92 +245,92 @@ void appendValue(TContainer, Move const &)
 {
     // ...
 }
-}}}
-}}}
+</pre>
+</pre>
 
-== Structs and Classes ==
+=== Structs and Classes ===
 
-=== Visibility Specifiers ===
+==== Visibility Specifiers ====
 
-{{{
-#!FoldOut
-Visibility specifiers should go on the same indentation level as the `class` keyword.
+<pre>
+#FoldOut
+Visibility specifiers should go on the same indentation level as the <tt>class</tt> keyword.
 ----
 Example:
 
-{{{
-#!cpp
+<pre>
+#cpp
 class MyStruct
 {
 public:
 protected:
 private:
 };
-}}}
-}}}
+</pre>
+</pre>
 
-=== Tag Definitions ===
+==== Tag Definitions ====
 
-{{{
-#!FoldOut
-Tags that are possibly also used in other modules must not have additional parameters and be defined using the `Tag<>` template.
+<pre>
+#FoldOut
+Tags that are possibly also used in other modules must not have additional parameters and be defined using the <tt>Tag<></tt> template.
 Tags that have parameters must only be used within the module they are defined in and have non-generic names.
 ----
-Tags defined with the `Tag<>` template and a typedef can be defined multiply.
+Tags defined with the <tt>Tag<></tt> template and a typedef can be defined multiply.
 These definitions must have the following pattern:
 
-{{{
-#!cpp
+<pre>
+#cpp
 struct TagName_;
 typedef Tag<TagName_> TagName;
-}}}
+</pre>
 
-This way, there can be multiple definitions of the same tag since the struct `TagName_` is only declared but not defined and there can be duplicate typedefs.
+This way, there can be multiple definitions of the same tag since the struct <tt>TagName_</tt> is only declared but not defined and there can be duplicate typedefs.
 
 For tags (also those used for specialization) that have template parameters, the case is different.
-Here, we cannot wrap them inside the `Tag<>` template with a typedef since it still depends on parameters.
+Here, we cannot wrap them inside the <tt>Tag<></tt> template with a typedef since it still depends on parameters.
 Also we want to be able to instantiate tags so we can pass them as function arguments.
 Thus, we have to add a struct body and thus define the struct.
 There cannot be multiple identical definitions in C++.
 Thus, each tag with parameters must have a unique name throughout SeqAn.
 Possibly too generic names should be avoided.
-E.g. `Chained` should be reserved as the name for a global tag but `ChainedFile<>` can be used as a specialization tag in a file-related module.
+E.g. <tt>Chained</tt> should be reserved as the name for a global tag but <tt>ChainedFile<></tt> can be used as a specialization tag in a file-related module.
 
 Note that this restriction does not apply for internally used tags (e.g. those that have an underscore postfix) since these can be renamed without breaking the public API.
-}}}
+</pre>
 
-=== In-Place Member Functions ===
+==== In-Place Member Functions ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 Whenever possible, functions should be declared and defined outside the class.
 The constructor, destructor and few operators have to be defined inside the class, however.
 ----
 The following has to be defined and declared within the class (also see [http://en.wikipedia.org/wiki/Operators_in_C_and_C%2B%2B Wikipedia]):
 
- * constructors
- * destructors
- * function call operator `operator()`
- * type cast operator `operator T()`
- * array subscript operator `operator[]()`
- * dereference-and-access-member operator `operator->()`
- * assignment operator `operator=()`
-}}}
+*constructors
+*destructors
+*function call operator <tt>operator()</tt>
+*type cast operator <tt>operator T()</tt>
+*array subscript operator <tt>operator[]()</tt>
+*dereference-and-access-member operator <tt>operator->()</tt>
+*assignment operator <tt>operator=()</tt>
+</pre>
 
-== Formatting ==
+=== Formatting ===
 
-=== Constructor Initialization Lists ===
+==== Constructor Initialization Lists ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 If the whole function prototype fits in one line, keep it in one line.
 Otherwise, wrap line after column and put each argument on its own line indented by one level.
 Align the initialization list.
 ----
 Example:
 
-{{{
-#!cpp
+<pre>
+#cpp
 class Class
 {
     MyClass() :
@@ -332,99 +339,99 @@ class Class
         member3(3)
     {}
 };
-}}}
-}}}
+</pre>
+</pre>
 
-=== Line Length ===
+==== Line Length ====
 
 The maximum line length is 120.
 Use a line length of 80 for header comments and the code section separators.
 
-=== Non-ASCII Characters ===
+==== Non-ASCII Characters ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 All files should be UTF-8, non-ASCII characters should not occur in them nevertheless.
 ----
-In comments, use `ss` instead of `ß` and `ae` instead of `ä` etc.
+In comments, use <tt>ss</tt> instead of <tt>ß</tt> and <tt>ae</tt> instead of <tt>ä</tt> etc.
 
-In strings, use UTF-8 coding. For example, `"\xEF\xBB\xBF"` is the Unicode zero-width no-break space character, which would be invisible if included in the source as straight UTF-8.
-}}}
+In strings, use UTF-8 coding. For example, <tt>"\xEF\xBB\xBF"</tt> is the Unicode zero-width no-break space character, which would be invisible if included in the source as straight UTF-8.
+</pre>
 
-=== Spaces VS Tabs ===
+==== Spaces VS Tabs ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 Do not use tabs, use spaces.
-Use `"\t"` in strings instead of plain tabs.
+Use <tt>"\t"</tt> in strings instead of plain tabs.
 ----
 After some discussion, we settled on this.
 All programmer's editors can be configured to use spaces instead of tabs.
 We use a four spaces to a tab.
 
 There can be problems when indenting in for loops with tabs, for example.
-Consider the following (`-->|` is a tab, `_` is a space):
+Consider the following (<tt>-->|</tt> is a tab, <tt>_</tt> is a space):
 
-{{{
-#!cpp
+<pre>
+#cpp
 for (int i = 0, j = 0, k = 0, ...;
-_____cond1 && cond2 &&; ++i)
+<u>_</u>cond1 && cond2 &&; ++i)
 {
   // ...
 }
-}}}
+</pre>
 
 Here, indentation can happen up to match the previous line.
 Mixing tabs and spaces works, too.
 However, since tabs are not shown in the editor, people might indent a file with mixed tabs and spaces with spaces if they are free to mix tabs and spaces.
 
-{{{
-#!cpp
+<pre>
+#cpp
 for (int i = 0, j = 0, k = 0, ...;
 -->|_cond1 && cond2 &&; ++i)
 {
   // ...
 }
-}}}
-}}}
+</pre>
+</pre>
 
-=== Indentation ===
+==== Indentation ====
 
 We use an indentation of four spaces per level.
 
-=== Trailing Whitespace ===
+==== Trailing Whitespace ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 Trailing whitespace is forbidden.
 ----
 Trailing whitespace is not visible, leading whitespace for indentation is perceptible through the text following it.
 Anything that cannot be seen can lead to "trash changes" in the SVN when somebody accidently removes it.
-}}}
+</pre>
 
-=== Inline Comments ===
+==== Inline Comments ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 Use inline comments to document variables.
 ----
 Possibly align inline comments.
 
-{{{
-#!cpp
+<pre>
+#cpp
 short x;    // a short is enough!
 int myVar;  // this is my variable, do not touch it
-}}}
-}}}
+</pre>
+</pre>
 
-=== Brace Positions ===
+==== Brace Positions ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 Always put brace positions on the next line.
 ----
-{{{
-#!cpp
+<pre>
+#cpp
 class MyClass
 {
 public:
@@ -443,19 +450,19 @@ void foo(char c)
     }
     // ...
 }
-}}}
-}}}
+</pre>
+</pre>
 
-=== Conditionals ===
+==== Conditionals ====
 
-{{{
-#!FoldOut
-Use no spaces inside the parantheses, the `else` keyword belongs on a new line, use block braces consistently.
+<pre>
+#FoldOut
+Use no spaces inside the parantheses, the <tt>else</tt> keyword belongs on a new line, use block braces consistently.
 ----
 Conditional statements should look like this:
 
-{{{
-#!cpp
+<pre>
+#cpp
 if (a == b)
 {
     return 0;
@@ -470,13 +477,13 @@ if (a == b)
     return 0;
 else if (c == d)
     return a + b + d;
-}}}
+</pre>
 
 Do not leave out the spaces before and after the parantheses, do not put leading or trailing space in the paranthesis.
 The following is wrong:
 
-{{{
-#!cpp
+<pre>
+#cpp
 if (foo){
     return 0;
 }
@@ -484,13 +491,13 @@ if(foo)
     return 0;
 if (foo ) 
     return 0;
-}}}
+</pre>
 
 Make sure to add braces to all blocks if any block has one.
 The following is wrong:
 
-{{{
-#!cpp
+<pre>
+#cpp
 if (a == b)
     return 0;
 else if (c == d)
@@ -498,22 +505,22 @@ else if (c == d)
     int x = a + b + d;
     return x;
 }
-}}}
-}}}
+</pre>
+</pre>
 
-=== Loops and Switch Statements ===
+==== Loops and Switch Statements ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 Switch statements may use braces for blocks.
-Empty loop bodies should use `{}` or `continue`.
+Empty loop bodies should use <tt>{}</tt> or <tt>continue</tt>.
 ----
 Format your switch statements as follows.
 The usage of blocks is optional.
 Blocks can be useful for declaring variables inside the switch statement.
 
-{{{
-#!cpp
+<pre>
+#cpp
 switch (var)
 {
 case 0:
@@ -538,12 +545,12 @@ case 1:
 default:
     SEQAN_ASSERT_FAIL("Invalid value!);
 }
-}}}
+</pre>
 
-Empty loop bodies should use `{}` or `continue`, but not a single semicolon.
+Empty loop bodies should use <tt>{}</tt> or <tt>continue</tt>, but not a single semicolon.
 
-{{{
-#!cpp
+<pre>
+#cpp
 while (condition)
 {
   // Repeat test until it returns false.
@@ -553,70 +560,75 @@ for (int i = 0; i < kSomeNumber; ++i)
     {}  // Good - empty body.
 while (condition)
     continue;  // Good - continue indicates no logic.
-}}}
-}}}
+</pre>
+</pre>
 
-=== Expressions ===
+==== Expressions ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 Binary expressions are surrounded by one space. Unary expressions are preceded by one space.
 ----
 Example:
 
-{{{
-#!cpp
-if (a == b || c == d || e == f || !x)
+<pre>
+#cpp
+{| border=1 class="simple"
+! c == d 
+! e == f 
+! x)
+|}
+
 {
     // ...
 }
 
-bool y = !x;
+bool y = x;
 unsigned i = ~j;
-}}}
-}}}
+</pre>
+</pre>
 
-=== Type Expressions ===
+==== Type Expressions ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 No spaces around period or arrow.
 Add spaces before and after pointer and references.
-`const` comes after the type.
+<tt>const</tt> comes after the type.
 ----
 The following are good examples:
 
-{{{
-#!cpp
+<pre>
+#cpp
 int x = 0;
 int * ptr = x;                     // OK, spaces are good.
 int const & ref = x;               // OK, const after int
 int main(int argc, char ** argv);  // OK, group pointers.
-}}}
+</pre>
 
 Bad Examples:
 
-{{{
-#!cpp
+<pre>
+#cpp
 int x = 0;
 int* ptr = x;         // bad spaces
 int *ptr = x;         // bad spaces
 const int & ref = x;  // wrong placement of const
 int x = ptr -> z;     // bad spaces
 int x = obj. z;       // bad spaces
-}}}
-}}}
+</pre>
+</pre>
 
-=== Function Return Types ===
+==== Function Return Types ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 If a function definition is short, everything is on the same line. Otherwise, split.
 ----
 Good example:
 
-{{{
-#!cpp
+<pre>
+#cpp
 int foo();
 
 template <typename TString>
@@ -625,19 +637,19 @@ anotherFunction(TString const & foo, TString const & bar, /*...*/)
 {
     // ...
 }
-}}}
-}}}
+</pre>
+</pre>
 
-=== Inline Functions ===
+==== Inline Functions ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 If a function definition is short, everything is on the same line. Otherwise put inline and return type in the same line.
 ----
 Good example:
 
-{{{
-#!cpp
+<pre>
+#cpp
 inline int foo();
 
 template <typename TString>
@@ -646,21 +658,21 @@ anotherFunction(TString const & foo, TString const & bar, /*...*/)
 {
     // ...
 }
-}}}
-}}}
+</pre>
+</pre>
 
-=== Function Argument Lists ===
+==== Function Argument Lists ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 If it fits in one line, keep in one line.
 Otherwise, wrap at the paranthesis, put each argument on its own line.
 For very long function names and parameter lines, break after opening bracket.
 ----
 Good example:
 
-{{{
-#!cpp
+<pre>
+#cpp
 template <typename TA, typename TB>
 inline void foo(TA & a, TB & b);
 
@@ -678,48 +690,48 @@ inline void _functionThisIsAVeryVeryLongFunctionNameSinceItsAHelper(
     TC & c,
     TB & d,
     ...);
-}}}
-}}}
+</pre>
+</pre>
 
-=== Template Argument Lists ===
+==== Template Argument Lists ====
 
-{{{
-#!FoldOut
-Follow conventions of function parameter lists, no blank after opening `<`.
+<pre>
+#FoldOut
+Follow conventions of function parameter lists, no blank after opening <tt><</tt>.
 ----
 As for function parameters, try to fit everything on one line if possible, otherwise, break the template parameters over multiple lines and put the commas directly after the type names.
-{{{
-#!cpp
+<pre>
+#cpp
 template <typename T1, typename T1>
 void foo() {}
 
 template <typename T1, typename T2, ...
           typename T10, typename T11>
 void bar() {}
-}}}
+</pre>
 
-Multiple closing `>` go to the same line and are only separated by spaces if two closing angular brackets come after each other.
+Multiple closing <tt>></tt> go to the same line and are only separated by spaces if two closing angular brackets come after each other.
 
-{{{
-#!cpp
+<pre>
+#cpp
 typedef Iterator<Value<TValue>::Type,
                  Standard> ::Type
 
 typedef String<char, Alloc<> > TMyString
 // -------------------------^
-}}}
-}}}
+</pre>
+</pre>
 
-=== Function Calls ===
+==== Function Calls ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 Similar rules as in [#FunctionArgumentLists Function Argument Lists] apply.
 When wrapped, not each parameter has to occur on its own line.
 ----
 Example:
-{{{
-#!cpp
+<pre>
+#cpp
 foo(a, b);
 
 foo2(a, b, c, ...
@@ -733,24 +745,24 @@ if (x)
             firstParameterWithALongName, b, c, d);
     }
 }
-}}}
-}}}
+</pre>
+</pre>
 
-== Naming Rules ==
+=== Naming Rules ===
 
 In the following, camel case means that the first letter of each word is written upper case, the remainder is written in lower case.
 Abbreviations of length 2 are kept in upper case, longer abbreviations are camel-cased.
 
-=== Macros ===
+==== Macros ====
 
-{{{
-#!FoldOut
-Macros are all upper case, separated by underscores, prefixed with `SEQAN_`.
+<pre>
+#FoldOut
+Macros are all upper case, separated by underscores, prefixed with <tt>SEQAN_</tt>.
 ----
 Example:
 
-{{{
-#!cpp
+<pre>
+#cpp
 SEQAN_ASSERT_EQ(val1, val2);
 
 #define SEQAN_MY_TMP_MACRO(x) f(x)
@@ -758,20 +770,20 @@ SEQAN_ASSERT_EQ(val1, val2);
 SEQAN_MY_TMP_MACRO(1);
 // ...
 #undef SEQAN_MY_TMP_MACRO
-}}}
-}}}
+</pre>
+</pre>
 
-=== Variable Naming ===
+==== Variable Naming ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 Variables are named in camel case, starting with a lower-case parameter.
 Internal member variables have an underscore prefix.
 ----
 Example:
 
-{{{
-#!cpp
+<pre>
+#cpp
 int x;
 int myVar;
 int saValue(/*...*/);
@@ -781,19 +793,19 @@ struct FooBar
 {
     int _x;
 };
-}}}
-}}}
+</pre>
+</pre>
 
-=== Constant / Enum Value Naming ===
+==== Constant / Enum Value Naming ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 Constant and enum values are named like macros: All-upper case, separated by dashes.
 ----
 Example:
 
-{{{
-#!cpp
+<pre>
+#cpp
 enum MyEnum
 {
     MY_ENUM_VALUE1 = 1,
@@ -801,21 +813,21 @@ enum MyEnum
 };
 
 int const MY_VAR = 10;
-}}}
-}}}
+</pre>
+</pre>
 
-=== Struct / Enum / Class Naming ===
+==== Struct / Enum / Class Naming ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 Types are written in camel case, starting with an upper case character.
 ----
 Internal library types have an underscore suffix.
 
 Example:
 
-{{{
-#!cpp
+<pre>
+#cpp
 struct InternalType_
 {};
 
@@ -824,21 +836,21 @@ struct SAValue
 
 struct LcpTable
 {};
-}}}
-}}}
+</pre>
+</pre>
 
-=== Metafunction Naming ===
+==== Metafunction Naming ====
 
-{{{
-#!FoldOut
-Metafunctions are named like structs, defined values are named `VALUE`, types `Type`.
+<pre>
+#FoldOut
+Metafunctions are named like structs, defined values are named <tt>VALUE</tt>, types <tt>Type</tt>.
 ----
 Metafunctions should not export any other types or values publically, e.g. they should have an underscore suffix.
 
 Example:
 
-{{{
-#!cpp
+<pre>
+#cpp
 template <typename T>
 struct MyMetaFunction
 {
@@ -852,19 +864,19 @@ struct MyMetaFunction2
     typedef True Type;
     static bool const VALUE = false;
 };
-}}}
-}}}
+</pre>
+</pre>
 
-=== Function Naming ===
+==== Function Naming ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 The same naming rule as for variables applies.
 ----
 Example:
 
-{{{
-#!cpp
+<pre>
+#cpp
 void fooBar();
 
 template <typename T>
@@ -872,27 +884,27 @@ int saValue(T & x);
 
 template <typename T>
 void lcpTable(T & x);
-}}}
-}}}
+</pre>
+</pre>
 
-=== Names In Documentation ===
+==== Names In Documentation ====
 
 In the documentation, classes have the same name as in the source code, e.g. the class StringSet is documented as "class StringSet."
-Specializations are named "`$SPEC $CLASS`", e.g. "Concat StringSet", "Horspool Finder."
+Specializations are named "<tt>$SPEC $CLASS</tt>", e.g. "Concat StringSet", "Horspool Finder."
 
-== Comments ==
+=== Comments ===
 
-=== File Comments ===
+==== File Comments ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 Each file should begin with a file header.
 ----
 The file header has the format.
 The ''skel.py'' tool automatically generates files with appropriate headers.
 
-{{{
-#!cpp
+<pre>
+#cpp
 // ==========================================================================
 //                              $PROJECT NAME
 // ==========================================================================
@@ -905,20 +917,20 @@ The ''skel.py'' tool automatically generates files with appropriate headers.
 // ==========================================================================
 // $FILE_DESCRIPTION
 // ==========================================================================
-}}}
-}}}
+</pre>
+</pre>
 
-=== Class, Function, Metafunction, Enum, Macro DDDoc Comments ===
+==== Class, Function, Metafunction, Enum, Macro DDDoc Comments ====
 
-{{{
-#!FoldOut
-Each public class, function, metafunction, enum, and macro should be documented using [wiki:HowTo/DocumentCode DDDoc].
+<pre>
+#FoldOut
+Each public class, function, metafunction, enum, and macro should be documented using [[HowTo/DocumentCode| DDDoc]].
 Internal code should be documented, too.
 ----
 Example:
 
-{{{
-#!cpp
+<pre>
+#cpp
 /**
 .Class.IntervalAndCargo:
 ..cat:Miscellaneous
@@ -947,93 +959,99 @@ class IntervalAndCargo
 
 void _helperFunction(/*...*/)
 {}
-}}}
-}}}
+</pre>
+</pre>
 
-=== Implementation Comments ===
+==== Implementation Comments ====
 
 All functions etc. should be well-documented.
 In most cases, it is more important how something is done instead of of what is done.
 
-=== TODO Comments ===
+==== TODO Comments ====
 
-TODO comments have the format `// TODO($USERNAME): $TODO_COMMENT`.
+TODO comments have the format <tt>// TODO($USERNAME): $TODO_COMMENT</tt>.
 The username is the username of the one writing the item, not the one to fix it.
 Use tickets for this.
 
-== Source Tree Structure ==
+=== Source Tree Structure ===
 
-=== File Name Rules ===
+==== File Name Rules ====
 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 File and directories are named all-lower case, words are separated by underscores.
 ----
 Exceptions are ''INFO'', ''COPYING'', ''README'', ... files.
 
 Examples:
 
- * ''string_base.h''
- * ''string_packed.h''
- * ''suffix_array.h''
- * ''lcp_table.h''
-}}}
+*''string_base.h''
+*''string_packed.h''
+*''suffix_array.h''
+*''lcp_table.h''
+</pre>
 
-=== Overall Structure ===
-
-Can be found in wiki:WhitePapers/RepositoryStructure for now.
-
-=== Repositories ===
+==== Overall Structure ====
 
 Can be found in wiki:WhitePapers/RepositoryStructure for now.
 
-=== Library Modules ===
+==== Repositories ====
 
 Can be found in wiki:WhitePapers/RepositoryStructure for now.
 
-=== Tests ===
+==== Library Modules ====
 
 Can be found in wiki:WhitePapers/RepositoryStructure for now.
 
-=== Demos ===
+==== Tests ====
 
 Can be found in wiki:WhitePapers/RepositoryStructure for now.
 
-=== Apps ===
+==== Demos ====
 
 Can be found in wiki:WhitePapers/RepositoryStructure for now.
 
-== File Structure ==
+==== Apps ====
 
-=== Header `#define` guard ===
+Can be found in wiki:WhitePapers/RepositoryStructure for now.
 
-{{{
-#!FoldOut
-The header `#define` include guards are constructed from full paths to the repository root.
+=== File Structure ===
+
+==== Header <tt>#define</tt> guard ====
+
+<pre>
+#FoldOut
+The header <tt>#define</tt> include guards are constructed from full paths to the repository root.
 ----
 Example:
 
-|| '''filename''' || '''preprocessor symbol'''
-|| core/include/seqan/basic/iterator_base.h || `CORE_INCLUDE_SEQAN_BASIC_ITERATOR_BASE_H_` ||
+{| border=1 class="simple"
+! '''filename''' 
+! '''preprocessor symbol'''
+|- 
+|  core/include/seqan/basic/iterator_base.h 
+|  <tt>CORE_INCLUDE_SEQAN_BASIC_ITERATOR_BASE_H_</tt> 
+|}
 
-{{{
-#!cpp
+
+<pre>
+#cpp
 #ifndef CORE_INCLUDE_SEQAN_BASIC_ITERATOR_BASE_H_ 
 #define CORE_INCLUDE_SEQAN_BASIC_ITERATOR_BASE_H_ 
 #endif  // #ifndef CORE_INCLUDE_SEQAN_BASIC_ITERATOR_BASE_H_ 
-}}}
-}}}
+</pre>
+</pre>
 
-=== Include Order ===
+==== Include Order ====
 
 The include order should be (1) standard library requirements, (2) external requirements, (3) required SeqAn modules.
 
 In SeqAn module headers (e.g. ''basic.h''), then all files in the module are included.
 
-=== CPP File Structure ===
+==== CPP File Structure ====
 
-{{{
-#!cpp
+<pre>
+#cpp
 // ==========================================================================
 //                                $APP_NAME
 // ==========================================================================
@@ -1084,12 +1102,12 @@ int main(int argc, char const ** argv)
 {
     // ...
 }
-}}}
+</pre>
 
-=== Application Header Structure ===
+==== Application Header Structure ====
 
-{{{
-#!cpp
+<pre>
+#cpp
 // ==========================================================================
 //                                $APP_NAME
 // ==========================================================================
@@ -1158,12 +1176,12 @@ namespace seqan {
 }  // namespace seqan
 
 #endif  // CORE_APPS_APP_NAME_HEADER_FILE_H_
-}}}
+</pre>
 
-=== Library Header Structure ===
+==== Library Header Structure ====
 
-{{{
-#!cpp
+<pre>
+#cpp
 // ==========================================================================
 //                 SeqAn - The Library for Sequence Analysis
 // ==========================================================================
@@ -1232,5 +1250,9 @@ namespace seqan {
 }  // namespace seqan
 
 #endif  // CORE_INCLUDE_SEQAN_BASIC_ITERATOR_BASE_H_
-}}}
-}}}
+</pre>
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

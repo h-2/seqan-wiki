@@ -1,19 +1,20 @@
-= Notes on Parsing =
+
+== Notes on Parsing ==
 [[TOC()]]
 
 Parsing is probably not the most exact word, it's rather [http://en.wikipedia.org/wiki/Tokenizer tokenizing].
 
-== File Format Detection ==
+=== File Format Detection ===
 
 It would be perfect if parsers would also work on incomplete data, and simply return a error code different from any other on EOF.
 File format guessing could then be based on the real parsers.
 
-== To peek or not to peek ==
+=== To peek or not to peek ===
 
 The current parse functions look like this:
 
-{{{
-#!cpp
+<pre>
+#cpp
 template <typename TBuffer, typename TStream>
 int parseReadLine(TBuffer & buffer, TStream & stream, char & c)
 {
@@ -36,13 +37,13 @@ int parseReadLine(TBuffer & buffer, TStream & stream, char & c)
     }
     return 0;
 }
-}}}
+</pre>
 
-Most streams implement a `peek()` function.
+Most streams implement a <tt>peek()</tt> function.
 Thus, the implementation becomes:
 
-{{{
-#!cpp
+<pre>
+#cpp
 template <typename TBuffer, typename TStream>
 int parseReadLine(TBuffer & buffer, TStream & stream)
 {
@@ -64,6 +65,10 @@ int parseReadLine(TBuffer & buffer, TStream & stream)
         }
     }
     return 0;
-}}}}
+</pre>}
 
 However, not much is gained and the [http://bzip.org/ bzlib] for reading ''.bz2'' files has no peek.
+
+
+
+{{TracNotice|{{PAGENAME}}}}

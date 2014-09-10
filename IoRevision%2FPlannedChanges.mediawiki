@@ -1,68 +1,73 @@
-== IO-Revision Report Phase 2 (beta) ==
+
+=== IO-Revision Report Phase 2 (beta) ===
 
 Basic structure of new streaming module, as planned with holtgrew is now in extras/include/stream/
 
 Concept:
- * contains stream concept and adaptations for fstream and cstdio, as well as specializations for char array and compressed files. Implementation mostly by holtgrew, partly by h4nn3s (all dddoc'ed and tested)
- * could maybe use an adaptation for sequence, as in (old) sequence/sequence_stream.h  [PHASE 3]
+*contains stream concept and adaptations for fstream and cstdio, as well as specializations for char array and compressed files. Implementation mostly by holtgrew, partly by h4nn3s (all dddoc'ed and tested)
+*could maybe use an adaptation for sequence, as in (old) sequence/sequence_stream.h  [PHASE 3]
 
 Tokenizing:
- * contains new tokenizing.h which replaces many frequently used tokenizing functions as well as many helpers for reading [completely dddoc'ed and tested]
- * tokenizing functions not transferred to tokenizing.h are deprecated (might be added at a later point in time if really needed)
- * contains is.h which right now only contains dddoc for stdcio's is*() calls
- * contains lexical_cast.h which offers conversions from string-types to numerical types [ddoced and tested]
+*contains new tokenizing.h which replaces many frequently used tokenizing functions as well as many helpers for reading [completely dddoc'ed and tested]
+*tokenizing functions not transferred to tokenizing.h are deprecated (might be added at a later point in time if really needed)
+*contains is.h which right now only contains dddoc for stdcio's is*() calls
+*contains lexical_cast.h which offers conversions from string-types to numerical types [ddoced and tested]
 
 Sequence Formats (reading): PRIORITY FOR PHASE 3
- * contains basic structure for generic record reader [complete in PHASE 3] and a draft implementation for fasta/fastq
- * needs single pass implementations for the following sequence formats: fasta, fastq, embl, genbank, QSeq, raw(?) [PHASE 3]
- * needs double pass implementations for the following sequence formats: fasta, fastq [PHASE 3]
- * needs something new for detecting file format [PHASE 3]
- * create list of things that are still todo
+*contains basic structure for generic record reader [complete in PHASE 3] and a draft implementation for fasta/fastq
+*needs single pass implementations for the following sequence formats: fasta, fastq, embl, genbank, QSeq, raw(?) [PHASE 3]
+*needs double pass implementations for the following sequence formats: fasta, fastq [PHASE 3]
+*needs something new for detecting file format [PHASE 3]
+*create list of things that are still todo
 
 Sequence Formats (writing) PRIORITY FOR PHASE 3
- * need something for writing sequence file formats (same formats as above plus CGViz)  [PHASE 3]
+*need something for writing sequence file formats (same formats as above plus CGViz)  [PHASE 3]
 
 The above steps will render the following files deprecated:
 
- 1. seqan/file/cstream.h
- 1. seqan/file/stream.h
- 1. seqan/file/file_base.h
- 1. seqan/file/file_cstyle.h
- 1. seqan/file/file_filereaderiterator.h
- 1. seqan/file/file_filereader.h
- 1. seqan/file/file_format.h
- 1. seqan/file/stream_algorithms.h
- 1. seqan/file/file_format_raw.h
- 1. seqan/file/file_format_fasta.h
- 1. seqan/file/file_format_embl.h
- 1. seqan/file/file_format_genbank.h
- 1. seqan/file/file_format_cgviz.h
- 1. seqan/file/file_format_mmap.h
- 1. seqan/sequence/sequence_stream.h
- 1. seqan/misc/misc_parsing.h
+#seqan/file/cstream.h
+#seqan/file/stream.h
+#seqan/file/file_base.h
+#seqan/file/file_cstyle.h
+#seqan/file/file_filereaderiterator.h
+#seqan/file/file_filereader.h
+#seqan/file/file_format.h
+#seqan/file/stream_algorithms.h
+#seqan/file/file_format_raw.h
+#seqan/file/file_format_fasta.h
+#seqan/file/file_format_embl.h
+#seqan/file/file_format_genbank.h
+#seqan/file/file_format_cgviz.h
+#seqan/file/file_format_mmap.h
+#seqan/sequence/sequence_stream.h
+#seqan/misc/misc_parsing.h
 
 The following files will be retained:
 
- 1. seqan/file/chunk_collector.h
- 1. seqan/file/file_page.h
- 1. seqan/file/file_page_raid0.h
- 1. seqan/file/string_external.h
- 1. seqan/file/string_mmap.h
- 1. seqan/file/file_array.h
- 1. seqan/system/file_directory.h
- 1. seqan/system/file_async.h
- 1. seqan/system/file_sync.h
+#seqan/file/chunk_collector.h
+#seqan/file/file_page.h
+#seqan/file/file_page_raid0.h
+#seqan/file/string_external.h
+#seqan/file/string_mmap.h
+#seqan/file/file_array.h
+#seqan/system/file_directory.h
+#seqan/system/file_async.h
+#seqan/system/file_sync.h
 
 
 
 Store-IO: 2nd PRIORITRY
- * seqan/store/store_io*
- * adapt to RecordReader
+*seqan/store/store_io*
+*adapt to RecordReader
 
 
 
 Alignment and Alignment Graph formats: Last Prioritry
- * TCoffeLib, BlastLib, MummerLib, NewickFormat (all in seqan/graph/graph_align_tcoffee_io.h) and fasta-alignment format (in seqan/graph/graph_align_tcoffee_io.h AND in seqan/file/file_format_fasta_align.h)
- * split into individual files
- * adapt to new reading and writing structures
+*TCoffeLib, BlastLib, MummerLib, NewickFormat (all in seqan/graph/graph_align_tcoffee_io.h) and fasta-alignment format (in seqan/graph/graph_align_tcoffee_io.h AND in seqan/file/file_format_fasta_align.h)
+*split into individual files
+*adapt to new reading and writing structures
 
+
+
+
+{{TracNotice|{{PAGENAME}}}}

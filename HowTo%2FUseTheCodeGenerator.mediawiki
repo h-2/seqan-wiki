@@ -1,4 +1,5 @@
-= How To: Use The Code Generator =
+
+== How To: Use The Code Generator ==
 [[TOC()]]
 
 SeqAn comes with a code generator to create new sandboxes, library modules, apps, tests, and demos.
@@ -6,18 +7,18 @@ You must have Python (>= 2.5) installed to use this generator.
 
 The generator can be used to create:
 
- * library modules,
- * tests for library modules,
- * application (app) directories,
- * demo programs,
- * headers for applications, and
- * library headers.
+*library modules,
+*tests for library modules,
+*application (app) directories,
+*demo programs,
+*headers for applications, and
+*library headers.
 
-For more information, see the articles [wiki:Infrastructure/RepositoryStructure SeqAn Repository Structure] and [wiki:Infrastructure/BuildSystem CMake-Based Build System].
+For more information, see the articles [[Infrastructure/RepositoryStructure| SeqAn Repository Structure]] and [[Infrastructure/BuildSystem| CMake-Based Build System]].
 
-The top level help screen of the `skel.py` program looks as follows:
+The top level help screen of the <tt>skel.py</tt> program looks as follows:
 
-{{{#!ShellBox
+<pre>#ShellBox
 Usage: skel.py [options] repository NAME
        skel.py [options] [module|test|app|demo|header|lheader] NAME LOCATION
 
@@ -40,14 +41,14 @@ Options:
   -c, --cmakelists-only
                         Only create CMakeLists.txt files
   -i, --infos-only      Only create INFO files
-}}}
+</pre>
 
-== Creating A Sandbox ==
+=== Creating A Sandbox ===
 
 Creating a sandbox is easy.
 The following command will create a new sandbox called ''my_sandbox'' within the directory ''sandbox'' of the repository.
 
-{{{#!ShellBox
+<pre>#ShellBox
 seqan # ./util/bin/skel.py repository sandbox/my_sandbox
 ...
 seqan # $ tree sandbox/my_sandbox/
@@ -61,14 +62,14 @@ sandbox/my_sandbox/
 │   └── seqan
 └── tests
     └── CMakeLists.txt
-}}}
+</pre>
 
-== Creating An App ==
+=== Creating An App ===
 
 Inside the sandboxes, you can create new apps using the ''skel.py'' tool, too.
 We create a new app in our sandbox called "my_app".
 
-{{{#!ShellBox
+<pre>#ShellBox
 seqan # ./util/bin/skel.py app my_app sandbox/my_sandbox
 ...
 seqan # tree sandbox/my_sandbox/apps 
@@ -78,13 +79,13 @@ sandbox/my_sandbox/apps
     ├── CMakeLists.txt
     ├── INFO
     └── my_app.cpp
-}}}
+</pre>
 
-== Creating A Library Module ==
+=== Creating A Library Module ===
 
 Library modules can be created likewise.
 
-{{{#!ShellBox
+<pre>#ShellBox
 seqan # ./util/bin/skel.py module my_module sandbox/my_sandbox
 ...
 seqan # tree sandbox/my_sandbox/include/seqan
@@ -93,74 +94,74 @@ sandbox/my_sandbox/include/seqan
 │   ├── INFO
 │   └── my_module_base.h
 └── my_module.h
-}}}
+</pre>
 
-== Creating A Test ==
+=== Creating A Test ===
 
 Now, we can also create a test for our module.
 
-{{{#!ShellBox
+<pre>#ShellBox
 seqan # ./util/bin/skel.py test my_module sandbox/my_sandbox
 ...
 sandbox/my_sandbox/tests/my_module/
 ├── CMakeLists.txt
 ├── test_my_module.cpp
 └── test_my_module.h
-}}}
+</pre>
 
-== Create A Demo ==
+=== Create A Demo ===
 
 Demos can be created in a similar way:
 
-{{{#!ShellBox
+<pre>#ShellBox
 seqan # ./util/bin/skel.py demo my_demo sandbox/my_sandbox
 ...
 seqan # tree ./sandbox/my_sandbox/demos
 ./sandbox/my_sandbox/demos
 ├── CMakeLists.txt
 └── my_demo.cpp
-}}}
+</pre>
 
-== Create A Header ==
+=== Create A Header ===
 
 To create a header in your application, use the following command:
 
-{{{#!ShellBox
+<pre>#ShellBox
 seqan # ./util/bin/skel.py header header_name.h sandbox/my_sandbox/apps/my_app 
-}}}
+</pre>
 
-== Create A Library Header ==
+=== Create A Library Header ===
 
-To create a library header (one with a `namespace seqan { ... }` construct), use the following:
+To create a library header (one with a <tt>namespace seqan { ... }</tt> construct), use the following:
 
-{{{#!ShellBox
+<pre>#ShellBox
 seqan # ./util/bin/skel.py lheader lheader_name.h sandbox/my_sandbox/include/seqan/my_module
-}}}
+</pre>
 
-== Setting The Author String ==
+=== Setting The Author String ===
 
-By default, SeqAn uses `Your Name <your.email@example.net>` as the author string in the generated files.
+By default, SeqAn uses <tt>Your Name <your.email@example.net></tt> as the author string in the generated files.
 There are two ways to change this:
 
-First, you can set the environment variable `SEQAN_AUTHOR`:
+First, you can set the environment variable <tt>SEQAN_AUTHOR</tt>:
 
-{{{#!ShellBox
+<pre>#ShellBox
 seqan # export SEQAN_AUTHOR='Me <me@example.com>'
 seqan # ./util/bin/skel.py demo my_demo sandbox/my_sandbox
-}}}
+</pre>
 
-Second, you can use the `--author` parameter when calling ''skel.py''.
-This will override the environment variable `SEQAN_AUTHOR` if set.
+Second, you can use the <tt>--author</tt> parameter when calling ''skel.py''.
+This will override the environment variable <tt>SEQAN_AUTHOR</tt> if set.
 
-{{{#!ShellBox
+<pre>#ShellBox
 seqan # ./util/bin/skel.py --author 'Me <me@example.com>' demo my_demo sandbox/my_sandbox
-}}}
+</pre>
 
-== Creating App Tests ==
+=== Creating App Tests ===
 
-See [wiki:HowTo/WriteAppTests the How To: Write App Tests] for this.
+See [[HowTo/WriteAppTests| the How To: Write App Tests]] for this.
 
-== Using Your Own Templates ==
+=== Using Your Own Templates ===
 
 You might want to use your own templates, e.g. to replace the license comment header at each top of the file.
 To do this, you have to create a copy of ''/util/skel'', e.g. to ''~/.seqan/templates''.
@@ -170,7 +171,7 @@ You can specify the location of your template by specifying ''--skel-root'' or h
 In your templates, the following placeholders will be replaced.
 Note the trailing '''s''', leaving this out is a common source of error.
 
-{{{
+<pre>
   %(AUTHOR)s  will be replaced by the author's name, either given on command
               line or taken from environment variable SEQAN_AUTHOR.
 
@@ -186,4 +187,8 @@ Note the trailing '''s''', leaving this out is a common source of error.
 
   %(CMAKE_PROJECT_PATH)s  will be replaced by lower_case_path to the target
                           directory.
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

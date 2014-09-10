@@ -1,68 +1,73 @@
-= More Code Robustness =
 
-== Use development tools ==
+== More Code Robustness ==
 
-   * Static Code Analysis
-      * http://en.wikipedia.org/wiki/PVS-Studio
-      * Microsoft Visual Studio
-      * http://en.wikipedia.org/wiki/PC-Lint
-   * Code Review
-      * GitHub Pull Request
-      * Gerrit
-      * Rietveld
-   * Software Testing
-   * Debugging
-   * Performance Analysis
+=== Use development tools ===
+
+**Static Code Analysis
+****http://en.wikipedia.org/wiki/PVS-Studio
+****Microsoft Visual Studio
+****http://en.wikipedia.org/wiki/PC-Lint
+**Code Review
+****GitHub Pull Request
+****Gerrit
+****Rietveld
+**Software Testing
+**Debugging
+**Performance Analysis
 
 Follow John Carmack's Keynote on [http://www.youtube.com/watch?v=4zgYG-_ha28&feature=player_detailpage#t=54m00s QuakeCon 2011]
 
 TODO(holtgrew): Write our own?
 
-   * Code Style Verifier
-      * There is a C/Python interface to LLVM that could be use to enforce simple stuff like naming rules. It gives access to the AST. Also see ''util/py_lib/clang''.
+**Code Style Verifier
+****There is a C/Python interface to LLVM that could be use to enforce simple stuff like naming rules. It gives access to the AST. Also see ''util/py_lib/clang''.
 
-== Follow our coding advices ==
+=== Follow our coding advices ===
 
-   * '''No copy'n'paste code'''
-      * Disadvantages:
-         * hard to read: reading multiple copies of the same/similar code is like playing "find the difference"
-         * more code that attract bugs
-         * hard to maintain: it is very likely that bug fixes or extensions aren't applied to all copies
-      * Instead use template functions or lamda expressions
-         * unify all DP alignment/search algorithms  that differ only in the DP function, the DP area, traceback
-   * Be generic wherever possible
-      * avoid instrinsic types and use meta-function instead, e.g. use a Size<> type to index container elements
-      * leave room for extensions of your classes, e.g. define TSpecs (=void per default) in your class like Index<TText, Index_Esa<TSpec> >
-      * let meta-functions or TConfig arguments decide the members of your class to let the user change the default behavior 
-      * TODO(holtgrew): Should we reserve `Default` for default behaviour, e.g. template `<typename T1, typename T2> TPL; TPL<int, Default>` selects a complex default behaviour for T2?
-   * Avoid messy C code
-      * '''don't use pointers to address objects''': use indices into a String of objects
-      * '''don't call `new`, `delete`, `malloc`, `free` directly''': use again Strings and indices if possible, otherwise use Allocators 
-      * TODO(holtgrew): What about STL style uninitialized buffers? http://www.sgi.com/tech/stl/get_temporary_buffer.html
-   * Use `SEQAN_ASSERT_` extensively
-   * Use concepts
+**'''No copy'n'paste code'''
+****Disadvantages:
+*****hard to read: reading multiple copies of the same/similar code is like playing "find the difference"
+*****more code that attract bugs
+*****hard to maintain: it is very likely that bug fixes or extensions aren't applied to all copies
+****Instead use template functions or lamda expressions
+*****unify all DP alignment/search algorithms  that differ only in the DP function, the DP area, traceback
+**Be generic wherever possible
+****avoid instrinsic types and use meta-function instead, e.g. use a Size<> type to index container elements
+****leave room for extensions of your classes, e.g. define TSpecs (=void per default) in your class like Index<TText, Index_Esa<TSpec> >
+****let meta-functions or TConfig arguments decide the members of your class to let the user change the default behavior 
+****TODO(holtgrew): Should we reserve <tt>Default</tt> for default behaviour, e.g. template <tt><typename T1, typename T2> TPL; TPL<int, Default></tt> selects a complex default behaviour for T2?
+**Avoid messy C code
+****'''don't use pointers to address objects''': use indices into a String of objects
+****'''don't call <tt>new</tt>, <tt>delete</tt>, <tt>malloc</tt>, <tt>free</tt> directly''': use again Strings and indices if possible, otherwise use Allocators 
+****TODO(holtgrew): What about STL style uninitialized buffers? http://www.sgi.com/tech/stl/get_temporary_buffer.html
+**Use <tt>SEQAN_ASSERT_</tt> extensively
+**Use concepts
 
-== Things to rework in Seqan ==
-   * Objects are containers of length 1
-   * Every pointer `*T` is the interpreted as a string of elements of type `T`
-      * holtgrew: This should be true for `char`, `wchar_t`, maybe turn this on through a Metafunction `InterpretAsChar`? weese: We can use `IsSequence`.
-   * Untransparent behavior of Holders (they use a reference if possible, otherwise copy), use `shared_ptr` and explicit calls like `copy()`
-   * rework ambigous metafunctions, e.g.:
-      * `Position`, `Difference`, `Size`
-      * `Reference`, `Value`, `GetValue`, `Parameter`, ...
-   * Fix parameter order in older SeqAn functions. Output comes first, then input.
-   * Once the elements-are-containers insanity is gone, we could have `String<unsigned> numbers(10);` to auto-resize container on startup. (holtgrew)
-   * Use more `explicit` constructors, educate people about the `explicit` keyword. (holtgrew)
-   * Gaps Array and possibly the whole class definition are severely broken. Also see wiki:Seqan2.0/FixGaps
-   * For some functions such as `length()`, `atEnd()` etc. const and non-const versions exist. Since constness has a higher precedence than type matching, they have to be specified everywhere in a const and non-const fashion. This leads to code bloat and many subtle errors.
+=== Things to rework in Seqan ===
+**Objects are containers of length 1
+**Every pointer <tt>*T</tt> is the interpreted as a string of elements of type <tt>T</tt>
+****holtgrew: This should be true for <tt>char</tt>, <tt>wchar_t</tt>, maybe turn this on through a Metafunction <tt>InterpretAsChar</tt>? weese: We can use <tt>IsSequence</tt>.
+**Untransparent behavior of Holders (they use a reference if possible, otherwise copy), use <tt>shared_ptr</tt> and explicit calls like <tt>copy()</tt>
+**rework ambigous metafunctions, e.g.:
+****<tt>Position</tt>, <tt>Difference</tt>, <tt>Size</tt>
+****<tt>Reference</tt>, <tt>Value</tt>, <tt>GetValue</tt>, <tt>Parameter</tt>, ...
+**Fix parameter order in older SeqAn functions. Output comes first, then input.
+**Once the elements-are-containers insanity is gone, we could have <tt>String<unsigned> numbers(10);</tt> to auto-resize container on startup. (holtgrew)
+**Use more <tt>explicit</tt> constructors, educate people about the <tt>explicit</tt> keyword. (holtgrew)
+**Gaps Array and possibly the whole class definition are severely broken. Also see wiki:Seqan2.0/FixGaps
+**For some functions such as <tt>length()</tt>, <tt>atEnd()</tt> etc. const and non-const versions exist. Since constness has a higher precedence than type matching, they have to be specified everywhere in a const and non-const fashion. This leads to code bloat and many subtle errors.
 
-== Use the new C++0x standard ==
-   * Introduce concepts at the source code level (only used in the documentation right now)
-      * Unfortunately the [http://www.generic-programming.org/software/ConceptGCC/ concepts] are not included into the new standard
-      * Instead use metafunctions IsRandomAccessIterator and [http://en.wikipedia.org/wiki/C%2B%2B0x#Static_assertions static asserts] to check for concepts
-   * Use [http://en.wikipedia.org/wiki/C%2B%2B0x#Rvalue_references_and_move_constructors rvalue references] and move constructors, e.g. to avoid time-consuming copying of returned-by-value strings
-   * Use [http://en.wikipedia.org/wiki/C%2B%2B0x#Type_inference decltype] and `auto` to determine a function return type and replace lots of metafunction calls
-   * Use [http://en.wikipedia.org/wiki/C%2B%2B0x#Generalized_constant_expressions const expressions] (g++ >= 4.5) to:
-      * unify `maxValue` and `MaxValue`, `minValue` ...
-      * static const arrays
-      * replace `VALUE` meta-functions by `constexpr` functions
+=== Use the new C++0x standard ===
+**Introduce concepts at the source code level (only used in the documentation right now)
+****Unfortunately the [http://www.generic-programming.org/software/ConceptGCC/ concepts] are not included into the new standard
+****Instead use metafunctions IsRandomAccessIterator and [http://en.wikipedia.org/wiki/C%2B%2B0x#Static_assertions static asserts] to check for concepts
+**Use [http://en.wikipedia.org/wiki/C%2B%2B0x#Rvalue_references_and_move_constructors rvalue references] and move constructors, e.g. to avoid time-consuming copying of returned-by-value strings
+**Use [http://en.wikipedia.org/wiki/C%2B%2B0x#Type_inference decltype] and <tt>auto</tt> to determine a function return type and replace lots of metafunction calls
+**Use [http://en.wikipedia.org/wiki/C%2B%2B0x#Generalized_constant_expressions const expressions] (g++ >= 4.5) to:
+****unify <tt>maxValue</tt> and <tt>MaxValue</tt>, <tt>minValue</tt> ...
+****static const arrays
+****replace <tt>VALUE</tt> meta-functions by <tt>constexpr</tt> functions
+
+
+
+{{TracNotice|{{PAGENAME}}}}

@@ -1,25 +1,30 @@
-= Accessibility Support in Trac =
+
+== Accessibility Support in Trac ==
 
 Not every user has a graphic environment with a mouse or other pointing device. Some users rely on keyboard, alternative keyboard or voice input to navigate links, activate form controls, etc. In Trac, we work to assure users may interact with devices other than a pointing device.
 
-Trac supports accessibility keys for the most common operations. On Windows and Linux platforms, press any of the keys listed below in combination with the `<Alt>` key; on a Mac, use the `<ctrl>` key instead.
+Trac supports accessibility keys for the most common operations. On Windows and Linux platforms, press any of the keys listed below in combination with the <tt><Alt></tt> key; on a Mac, use the <tt><ctrl></tt> key instead.
 
-''Note that when using Internet Explorer on Windows, you need to hit `<Enter>` after having used the access key.''[[BR]]
-''Note that when using Firefox 2.0 on Windows, you need to hit `<Shift> + <Alt> + <Key>`.''
+''Note that when using Internet Explorer on Windows, you need to hit <tt><Enter></tt> after having used the access key.''<br>
+''Note that when using Firefox 2.0 on Windows, you need to hit <tt><Shift> + <Alt> + <Key></tt>.''
 
-== Global Access Keys ==
+=== Global Access Keys ===
 
- * `1` - WikiStart
- * `2` - [wiki:TracTimeline Timeline]
- * `3` - [wiki:TracRoadmap Roadmap]
- * `4` - [wiki:TracSearch Search]
- * `6` - [wiki:TracGuide Trac Guide / Documentation]
- * `7` - [wiki:TracTickets New Ticket]
- * `9` - [/about About Trac]
- * `0` - This page
- * `e` - Edit this page
- * `f` - Search
+*<tt>1</tt> - WikiStart
+*<tt>2</tt> - [[TracTimeline| Timeline]]
+*<tt>3</tt> - [[TracRoadmap| Roadmap]]
+*<tt>4</tt> - [[TracSearch| Search]]
+*<tt>6</tt> - [[TracGuide| Trac Guide / Documentation]]
+*<tt>7</tt> - [[TracTickets| New Ticket]]
+*<tt>9</tt> - [/about About Trac]
+*<tt>0</tt> - This page
+*<tt>e</tt> - Edit this page
+*<tt>f</tt> - Search
 
 
 ----
 See also: TracGuide
+
+
+
+{{TracNotice|{{PAGENAME}}}}

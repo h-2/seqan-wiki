@@ -1,5 +1,6 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
-= Mini Bowtie =
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[Tutorial]] if you need the documentation for the trunk version.'''
+== Mini Bowtie ==
 
 [[TOC]]
 
@@ -10,12 +11,12 @@
  Duration ::
   2h
  Prerequisites ::
-  [wiki:Tutorial/Indices], [wiki:Tutorial/FragmentStore], English language skills
+  [[Tutorial/Indices]], [[Tutorial/FragmentStore]], English language skills
 
-Mini-Bowtie is a very basic read aligner that is inspired by the well known Bowtie program [wiki:Bibliography#Langmead2009 (Langmead, 2009)]. It serves as an example to show that you can write sophisticated programs with SeqAn using few lines of code.
+Mini-Bowtie is a very basic read aligner that is inspired by the well known Bowtie program [[Bibliography#Langmead2009| (Langmead, 2009)]]. It serves as an example to show that you can write sophisticated programs with SeqAn using few lines of code.
 
-== Background ==
-Bowtie is based on the FM index [wiki:Bibliography#FerraginaManzini2001 (P. Ferragina, G. Manzini, 2001)] which uses the Burrows-Wheeler transform (BWT) to search for patterns in a text in {{{O(m)}}} time with {{{m}}} being the pattern length. Furthermore the index only consumes minute space because it can be compressed using favorable features of the BWT.
+=== Background ===
+Bowtie is based on the FM index [[Bibliography#FerraginaManzini2001| (P. Ferragina, G. Manzini, 2001)]] which uses the Burrows-Wheeler transform (BWT) to search for patterns in a text in <tt>O(m)</tt> time with <tt>m</tt> being the pattern length. Furthermore the index only consumes minute space because it can be compressed using favorable features of the BWT.
 
 Since this tutorial serves as an example of SeqAn's functionality, we will not completely re-implement Bowtie. Instead we will concentrate on providing a simple yet functional read mapper. We will start by reading the reference sequence and reads, then search approximately each read in the reference allowing at most one mismatch, and finally write the result into an informative SAM file.
 
@@ -26,9 +27,9 @@ We first search each read in the forward index by allowing one mismatch only in 
 Then we reverse each read and search it in the backward index, again by allowing one mismatch only in the second half of the read.
 The advantage of a two phase search will become clear in the following.
 
-{{{#!InfoBox
+<pre>#InfoBox
 The FM index implicitly represent a prefix trie of a text. Searching on the FM index is performed backwards, starting with the last character of the pattern and working its way to the first.
-}}}
+</pre>
 
 In the first search phase we search backwards the right half of the read without mismatches. If we succeed, in the second phase we continue backwards allowing one mismatch in the left half.
 The whole procedure is based on a depth-first traversal on the prefix trie of the reference. Trie’s edges are labeled with single characters and each path following some edges spells a substring of the reference.
@@ -46,12 +47,12 @@ So far we have found all locations of a read having at most one mismatch in its 
 In order to find also all locations having at most one mismatch in the right half, we simply reverse the reference and the read and repeat the procedure from above. 
 Note that we only reverse but do not complement the reference or the reads.
 
-=== Assignment 1 ===
-{{{#!AssignmentBox
+==== Assignment 1 ====
+<pre>#AssignmentBox
 
  Type :: Application
  Objective :: Copy the code below and rearrange the rows such that they give a functional order.
-{{{#!cpp
+<pre>#cpp
 // ==========================================================================
 //                                mini_bowtie
 // ==========================================================================
@@ -89,8 +90,8 @@ int main(int argc, char *argv[])
                   << "USAGE: mini_bowtie GENOME.fasta READS.fasta OUT.sam" << std::endl;
     }
     if (argc < 3) {
-    if (!loadContigs(fragStore, argv[1])) return 1;
-    if (!loadReads(fragStore, argv[2])) return 1;
+    if (loadContigs(fragStore, argv[1])) return 1;
+    if (loadReads(fragStore, argv[2])) return 1;
     clear(fmIndex);
     clear(fmIndex);
     StringSet<TString> text;
@@ -109,83 +110,83 @@ int main(int argc, char *argv[])
     return 0;
     return 1;
 }
-}}}
+</pre>
  Hint ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 We make use of the seqan:Class.FragmentStore. 
 While we can access the pattern/reads as if using a seqan:Class.StringSet, we need to create a seqan:CLass.StringSet of the contigs, because in the seqan:Class.FragmentStore the contigs are not stored in a seqan:Class.StringSet.
-}}}
+</pre>
  Hint ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 The correct order of the comments is:
-{{{#!cpp
+<pre>#cpp
     // reading the command line arguments
     // declaration and initialization of the fragment store
     // combining the contigs of the reference into one string set
     // forward search
     // reversing the sequences for backward search
     // backward search
-}}}
-}}}
+</pre>
+</pre>
  Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/mini_bowtie/solution1.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
 Now that we have the backbone of our program we can start to implement the fundamental part, the search routine.
-The ```search``` function requires two input arguments, namely the iterator used to traverse the FM index of the reference sequence and the string set containing the reads.
+The <tt><tt><tt>search</tt></tt></tt> function requires two input arguments, namely the iterator used to traverse the FM index of the reference sequence and the string set containing the reads.
 
-The ```search``` function iterates over the reads and searches them in the already mentioned two phase fashion.
+The <tt><tt><tt>search</tt></tt></tt> function iterates over the reads and searches them in the already mentioned two phase fashion.
 In the first phase the right half of the pattern is searched exactly. 
 The second phase is more involved and will be discussed after the second assignment.
 
-=== Assignment 2 ===
-{{{#!AssignmentBox
+==== Assignment 2 ====
+<pre>#AssignmentBox
 
  Type :: Application
  Objective :: Expand the solution to the last assignment by implementing the backbone of the search routine. The backbone should consist of function definition, an outer loop traversing the pattern (using a standard iterator) and the first step of the search, namely the exact search of the right pattern half.
  Hint ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 The template function header could look like this:
-{{{#!cpp
+<pre>#cpp
 template <typename TIter, typename TStringSet>
 void search(TIter & it, TStringSet const & pattern)
-}}}
-}}}
+</pre>
+</pre>
  Hint ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 You can obtain the correct iterator type using the metafunction seqan:Metafunction.Iterator.
-{{{#!cpp
+<pre>#cpp
 typedef typename Iterator<TStringSet const, Standard>::Type TPatternIter;
-}}}
-}}}
+</pre>
+</pre>
  Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/mini_bowtie/solution2.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
 At this point we need to implement the most critical part of the our program, which is the second step of the search phase.
 In our case this step works as follows:
 
-Assume that we have already found a path in the trie representing the pattern from position ```i``` to (```m``` - 1) with m being the pattern length and ```i``` < ```m```/ 2.
-Then we substitute the character of the pattern at position ```i``` - 1 with every character of the alphabet and search for the remaining characters exact. We repeat those two steps until we processed every character of the pattern.
+Assume that we have already found a path in the trie representing the pattern from position <tt><tt><tt>i</tt></tt><tt> to (</tt><tt><tt>m</tt></tt><tt> - 1) with m being the pattern length and </tt><tt><tt>i</tt></tt><tt> < </tt><tt><tt>m</tt></tt></tt>/ 2.
+Then we substitute the character of the pattern at position <tt><tt><tt>i</tt></tt></tt> - 1 with every character of the alphabet and search for the remaining characters exact. We repeat those two steps until we processed every character of the pattern.
 
 The corresponding pseudo code could look like this:
-{{{#!cpp 
+<pre>#cpp 
 unsigned startApproxSearch = length(pattern) / 2;
 for i = startApproxSearch to 0
 {
@@ -202,53 +203,53 @@ for i = startApproxSearch to 0
     }
     goDown correct character
 }
-}}}
+</pre>
 
-=== Assignment 3 ===
-{{{#!AssignmentBox
+==== Assignment 3 ====
+<pre>#AssignmentBox
 
  Type :: Application
  Objective :: Include the pseudo code from above into the search function.
  Hint ::
   Make a copy of the iterator before following the path of the substituted character. Doing so saves time and keeps the code simple because you do not need to use seqan:Function.goUp.
  Hint ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 seqan:Function.goDown returns a boolean indicating if a path exists or not. In addition, you do not need to go through the steps of the pseudo code if the second pattern half was not found!
-}}}
+</pre>
  Hint ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 seqan:Metafunction.MinValue returns the lowest value of an alphabet, while seqan:Metafunction.ValueSize returns the number of different values of a data type.
-}}}
+</pre>
 
  Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/mini_bowtie/solution3.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
 So far so good.
 But there is a slight mistake. 
 While substituting we also substitute the character in the pattern with itself. 
 Therefore we find locations of exact matches multiple times.
 
-=== Assignment 4 ===
-{{{#!AssignmentBox
+==== Assignment 4 ====
+<pre>#AssignmentBox
 
  Type :: Application
  Objective :: Adjust the code to cope with the problem mentioned above.
  Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/mini_bowtie/solution4.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
 So this is already the fundamental part of our program.
 What's left to do is to write the result into a SAM file.
@@ -256,8 +257,8 @@ In order to do so, we make use of the seqan:Class.FragmentStore.
 Everything we need to do is to fill the seqan:Memvar.FragmentStore#alignedReadStore which is a member of the seqan:Class.FragmentStore.
 This is very easy, because we only need to append a new value of type seqan:Memfunc.AlignedReadStoreElement#AlignedReadStoreElement specifying the match id, the pattern id, the id of the contig, as well as the begin and end position of the match in the reference.
 
-An ```addMatchToStore``` function could look like this:
-{{{#!cpp
+An <tt><tt><tt>addMatchToStore</tt></tt></tt> function could look like this:
+<pre>#cpp
 template <typename TStore, typename TIter, typename TPatternIt>
 void addMatchToStore(TStore & fragStore, TPatternIt const & patternIt, TIter const & localIt)
 {
@@ -272,7 +273,7 @@ void addMatchToStore(TStore & fragStore, TPatternIt const & patternIt, TIter con
         appendValue(fragStore.alignedReadStore, match);
     }
 }
-}}}
+</pre>
 
 One could think we are done now. 
 Unfortunately we are not.
@@ -280,29 +281,29 @@ There are two problems.
 Recall, that in the second search phase we reverse the text and pattern, therefore we messed up start and end positions in the original reference.
 Furthermore we found exact matches twice, once in the forward index and once in the reversed index.
 
-=== Assignment 5 ===
-{{{#!AssignmentBox
+==== Assignment 5 ====
+<pre>#AssignmentBox
 
  Type :: Application
  Objective :: Include the following two lines into your code:
-{{{#!cpp
+<pre>#cpp
 struct ForwardTag {};
 struct ReverseTag {};
-}}}
-  and write a second ```addMatchToStore``` function that is called when we search in the reversed reference. In addition, make all necessary changes to the code such that exact matches are only added ones.
+</pre>
+  and write a second <tt><tt><tt>addMatchToStore</tt></tt></tt> function that is called when we search in the reversed reference. In addition, make all necessary changes to the code such that exact matches are only added ones.
  Hint ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
   The metafunction seqan:Metafunction.IsSameType can be used to determine whether two types are equal or not.
-}}}
+</pre>
  Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/mini_bowtie/mini_bowtie.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
 Done? 
 Not quite.
@@ -310,13 +311,17 @@ Not quite.
 We need to copy the following four lines of code into our code in order to write the correct result in the SAM file.
 Calling the reverse function is necessary because an alignment must be computed for every match to be written into the SAM file. 
 
-{{{#!cpp
+<pre>#cpp
 reverse(text);
 reverse(fragStore.readSeqStore);
 std::ofstream samFile(argv[3], std::ios_base::out);
 write(samFile, fragStore, Sam());
-}}}
+</pre>
 
-== Submit a  Comment ==
+=== Submit a  Comment ===
 If you found a mistake, or have suggestions about an improvement of this page press:
 [/newticket?component=Documentation&description=Tutorial+Enhancement+for+page+http://trac.seqan.de/wiki/Tutorial/Template&type=enhancement submit your comment]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

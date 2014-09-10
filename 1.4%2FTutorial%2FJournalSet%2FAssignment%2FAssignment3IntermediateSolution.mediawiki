@@ -1,5 +1,6 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
-= Assignment 3: Intermediate Solution =
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[Tutorial]] if you need the documentation for the trunk version.'''
+== Assignment 3: Intermediate Solution ==
 
 Include the necessary headers.
 
@@ -22,7 +23,7 @@ Implementing the backbone of the search.
 
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/data_journaling/solution_online_search_assignment3.cpp, fragment=searchPattern)]]
 
-Implement the `laodAndJoin` method.
+Implement the <tt>laodAndJoin</tt> method.
 
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/data_journaling/solution_online_search_assignment3.cpp, fragment=loadAndJoin)]]
 
@@ -40,8 +41,8 @@ Printing the hits of the journaled sequences.
 
 And here is the result.
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 Search for: GTGGT:
 Hit in reference  at 311: GTGGT	644: GTGGT	
@@ -51,4 +52,8 @@ Hit in sequence 2 at 311: GTGGT
 Hit in sequence 3 at 327: GTGGT	
 Hit in sequence 4 at 317: GTGGT	
 Hit in sequence 5 at 320: GTGGT	
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

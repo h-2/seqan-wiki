@@ -1,17 +1,18 @@
-= Assignment 1 =
 
-== Task ==
+== Assignment 1 ==
+
+=== Task ===
 
 Write a program that constructs an index of the seqan:Class.StringSet "tobeornottobe", "thebeeonthecomb", "beingjohnmalkovich" and outputs the strings corresponding to suffix tree nodes in postorder DFS.
 
-== Solution ==
+=== Solution ===
 
-First we have to create a seqan:Class.StringSet of seqan:Shortcut.CharString (shortcut for {{{String<char>}}}) and append the 3 strings to it.
+First we have to create a seqan:Class.StringSet of seqan:Shortcut.CharString (shortcut for <tt>String<char></tt>) and append the 3 strings to it.
 This could also be done by using seqan:Function.resize and seqan:Function.assignValue.
 The first template argument of the index class has to be adapted and is now a StringSet.
 [[Include(source:trunk/core/demos/tutorial/index/index_assignment1.cpp, fragment=initialization)]]
 
-To switch to postorder DFS we have two change the specialization tag of {{{ParentLinks}}} from {{{Preorder}}} to {{{Postorder}}}.
+To switch to postorder DFS we have two change the specialization tag of <tt>ParentLinks</tt> from <tt>Preorder</tt> to <tt>Postorder</tt>.
 Please note that the seqan:"Spec.TopDown Iterator" always starts in the root node, which is the last postorder DFS node.
 Therefore, the iterator has to be set explicitly to the first DFS node via seqan:Function.goBegin.
 [[Include(source:trunk/core/demos/tutorial/index/index_assignment1.cpp, fragment=iteration1)]]
@@ -21,8 +22,8 @@ The BottomUp Iterator automatically starts in the first DFS node as it supports 
 [[Include(source:trunk/core/demos/tutorial/index/index_assignment1.cpp, fragment=iteration2)]]
 
 Program output:
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 alkovich
 beeonthecomb
@@ -80,4 +81,8 @@ ttobe
 t
 vich
 </pre>
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

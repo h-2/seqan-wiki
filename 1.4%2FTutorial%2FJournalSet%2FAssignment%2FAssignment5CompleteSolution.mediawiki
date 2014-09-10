@@ -1,7 +1,8 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
-= Assignment 5: Complete Solution =
 
-Now we want to replace the brute force methods with some cool pattern matching algorithms. Therefor we include the header `seqan/finder.h`.
+'''Note: this page documents the 1.4 version of SeqAn, see [[Tutorial]] if you need the documentation for the trunk version.'''
+== Assignment 5: Complete Solution ==
+
+Now we want to replace the brute force methods with some cool pattern matching algorithms. Therefor we include the header <tt>seqan/finder.h</tt>.
 
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/data_journaling/solution_online_search_finder.cpp, fragment=include)]]
 
@@ -18,11 +19,11 @@ Of course we don't need to change anything for the original nodes.
 
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/data_journaling/solution_online_search_finder.cpp, fragment=findInOriginalNode)]]
 
-Also the function `findPatternInJournalString` remains the same.
+Also the function <tt>findPatternInJournalString</tt> remains the same.
 
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/data_journaling/solution_online_search_finder.cpp, fragment=findPatternInJournalString)]]
 
-We will switch to the Finder concept for the function `findPatternInReference` too. 
+We will switch to the Finder concept for the function <tt>findPatternInReference</tt> too. 
 This is done quickly, since we have the basis already laid down in the previous functions.
 
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/data_journaling/solution_online_search_finder.cpp, fragment=findPatternInReference)]]
@@ -41,8 +42,8 @@ and finally print the results.
 
 And here is the result using the Finder and Pattern concept of SeqAn.
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 Search for: GTGGT:
 Hit in reference  at 311: GTGGT	644: GTGGT	
@@ -52,4 +53,8 @@ Hit in sequence 2 at 311: GTGGT	507: GTGGT
 Hit in sequence 3 at 327: GTGGT	
 Hit in sequence 4 at 307: GTGGT	312: GTGGT	317: GTGGT	
 Hit in sequence 5 at 0: GTGGT	320: GTGGT	986: GTGGT
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

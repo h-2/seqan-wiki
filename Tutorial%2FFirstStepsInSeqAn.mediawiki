@@ -1,4 +1,5 @@
-= A First Example =
+
+== A First Example ==
 
 [[TOC()]]
 
@@ -16,66 +17,66 @@ However, to really leverage the power of SeqAn you will have to learn C++.
 There are many tutorials on C++, for example [http://www.cplusplus.com/doc/tutorial/ the tutorial at cplusplus.com].
 
 This tutorial will walk you through a simple example program that highlights the things that are most prominently different from the libraries that many SeqAn newcomers are used to:
-   * extensive usage of C++ templates, 
-   * generic programming using templates, 
-   * using references instead of pointers in most places, 
-   * ...
+**extensive usage of C++ templates, 
+**generic programming using templates, 
+**using references instead of pointers in most places, 
+**...
 
-== Running Example ==
+=== Running Example ===
 
 Our example program will do a pattern search of a short query sequence in a long database sequence.
 As the score, we will compute the number of equal characters at each position.
 
 The following figure shows an example:
 
-{{{
+<pre>
 score:    101 ...        ... 801 ...
 text:     This is an awesome tutorial to get to know SeqAn!
 pattern:  tutorial           tutorial
            tutorial           tutorial
             ...                ...
                             
-}}}
+</pre>
 
-The first position has a score of 1, because the {{{i}}} in the pattern matches the {{{i}}} in {{{is}}}.
+The first position has a score of 1, because the <tt>i</tt> in the pattern matches the <tt>i</tt> in <tt>is</tt>.
 This is only a toy example for explanatory reasons and we ignore any more advanced implementations. 
 
 In SeqAn the program could look like this (we will explain every line of code shortly):
 
 [[Include(source:trunk/extras/demos/tutorial/first_steps/basic_code.cpp, fragment=all)]]
 
-Whenever we use SeqAn classes or functions we have to explicitly write the namespace qualifier `seqan::` in front of the class name or function.
-This can be circumvented if we include the line `using namespace seqan;` at the top of the working example.
+Whenever we use SeqAn classes or functions we have to explicitly write the namespace qualifier <tt>seqan::</tt> in front of the class name or function.
+This can be circumvented if we include the line <tt>using namespace seqan;</tt> at the top of the working example.
 However, during this tutorial we will not do this, such that SeqAn classes and functions can be recognized more easily.
 
-{{{#!comment
-{{{#!InfoBox
+<pre>#comment
+<pre>#InfoBox
 '''In-Depth Information:''' Argument-Dependent Name Lookup (Koenig Lookup)
 
-Using the namespace prefix `seqan::` is not really necessary in all places.
+Using the namespace prefix <tt>seqan::</tt> is not really necessary in all places.
 In many cases, the Koenig lookup rule in C++ for functions makes this unnecessary.
 Consider the following, compiling, example.
 
-{{{#!cpp
+<pre>#cpp
 seqan::String<char> s = "example";
 unsigned i = length(s);
-}}}
+</pre>
 
-Here, the function `length` does not have a namespace prefix.
+Here, the function <tt>length</tt> does not have a namespace prefix.
 The code compiles nevertheless.
-The compiler automatically looks for a function `length` in the namespace of its arguments.
-}}}
-}}}
+The compiler automatically looks for a function <tt>length</tt> in the namespace of its arguments.
+</pre>
+</pre>
 
-Note that we follow the rules for variable, function, and class names as outlined in the [wiki:StyleGuide/Cpp SeqAn style guide].
+Note that we follow the rules for variable, function, and class names as outlined in the [[StyleGuide/Cpp| SeqAn style guide]].
 For example: (1) variables and functions use lower case, (2) struct, enum and classes use PascalCase, (3) metafunctions start with a capital letter, and (4) metafunction values are UPPERCASE.
 
-{{{#!comment
+<pre>#comment
 This will be explained later in "The SeqAn Style Guide" box.
-}}}
+</pre>
 
-=== Assignment 1 ===
-{{{#!AssignmentBox
+==== Assignment 1 ====
+<pre>#AssignmentBox
  Type ::
  Review
  Objective :: 
@@ -85,21 +86,21 @@ This will be explained later in "The SeqAn Style Guide" box.
  Solution :: 
   Click ''more...''
 
-{{{#!FoldOut
+<pre>#FoldOut
 ----
 [[Include(source:trunk/extras/demos/tutorial/first_steps/solution_1.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
-== SeqAn and Templates ==
+=== SeqAn and Templates ===
 
 Let us now have a detailed look at the program.
 
-We first include the IOStreams library that we need to print to the screen and the SeqAn's ```file.h``` as well as ```sequence.h``` module from the SeqAn library that provides SeqAn [dox:String String].
+We first include the IOStreams library that we need to print to the screen and the SeqAn's <tt><tt><tt>file.h</tt></tt><tt> as well as </tt><tt><tt>sequence.h</tt></tt></tt> module from the SeqAn library that provides SeqAn [dox:String String].
 
 [[Include(source:trunk/extras/demos/tutorial/first_steps/basic_code_detailed.cpp, fragment=includes)]]
 
-The [dox:String String class] is one of the most fundamental classes in SeqAn, which comes as no surprise since SeqAn is used to analyse sequences (there is an extra tutorial for SeqAn [wiki:Tutorial/Sequences sequences] and [wiki:Tutorial/Alphabets alphabets]).
+The [dox:String String class] is one of the most fundamental classes in SeqAn, which comes as no surprise since SeqAn is used to analyse sequences (there is an extra tutorial for SeqAn [[Tutorial/Sequences| sequences]] and [[Tutorial/Alphabets| alphabets]]).
 
 In contrast to the popular string classes of Java or C++, SeqAn provides different string implementations and different alphabets for its strings.
 There is one string implementation that stores characters in memory, just like normal C++ strings.
@@ -127,14 +128,14 @@ Therefore, instead of writing '''string.resize(newLength)''' we use '''resize(st
 
 [[Include(source:trunk/extras/demos/tutorial/first_steps/basic_code_detailed.cpp, fragment=resize)]]
 
-{{{#!InfoBox
+<pre>#InfoBox
 '''Information:''' Global function interfaces.
 
 SeqAn uses '''global interfaces''' for its data types/classes.
-Generally, you have to use `function(variable)` instead of `variable.function()`.
+Generally, you have to use <tt>function(variable)</tt> instead of <tt>variable.function()</tt>.
 
 This has the advantage that we can extend the interface of a type outside of its definition.
-For example, we can provide a `length()` function for STL containers `std::string<T>` and `std::vector<T>` outside their class files.
+For example, we can provide a <tt>length()</tt> function for STL containers <tt>std::string<T></tt> and <tt>std::vector<T></tt> outside their class files.
 We can use such global functions to make one data type have the same interface as a second.
 This is called '''adaption'''.
 
@@ -142,7 +143,7 @@ Additionally, we can use one function definition for several data types.
 For example, the alignment algorithms in SeqAn are written such that we can compute alignments using any [dox:String String] with any alphabet:
 There are more than 5 [dox:String String] variants in SeqAn and more than 8 built-in alphabets.
 Thus, one implementation can be used for more than 40 different data types!
-}}}
+</pre>
 
 After the string initializations it is now time for the similarity computation.
 In this toy example we simply take the pattern and shift it over the text from left to right.
@@ -153,20 +154,20 @@ We implement this using two loops; the outer one iterates over the given text an
 [[Include(source:trunk/extras/demos/tutorial/first_steps/basic_code_detailed.cpp, fragment=similarity)]]
 
 There are two things worth mentioning here:
-(1) SeqAn containers or strings start at position 0 and (2) you will notice that we use `++variable` instead of `variable++` wherever possible.
-The reason is that `++variable` is slightly faster than its alternative, since the alternative needs to make a copy of itself before returning the result.
+(1) SeqAn containers or strings start at position 0 and (2) you will notice that we use <tt>++variable</tt> instead of <tt>variable++</tt> wherever possible.
+The reason is that <tt>++variable</tt> is slightly faster than its alternative, since the alternative needs to make a copy of itself before returning the result.
 
-In the last step we simply print the result that we stored in the variable ```score``` on screen.
+In the last step we simply print the result that we stored in the variable <tt><tt><tt>score</tt></tt></tt> on screen.
 This gives the similarity of the pattern to the string at each position.
 
 [[Include(source:trunk/extras/demos/tutorial/first_steps/basic_code_detailed.cpp, fragment=print)]]
 
-== Code Encapsulation ==
+=== Code Encapsulation ===
 
 At this point, we have already created a working solution!
 However, in order to make it easier to maintain and reuse parts of the code we need to export them into functions. 
 In this example the interesting piece of code is the similarity computation, which consists of an outer and inner loop.
-We encapsulate the outer loop in function `computeScore` and the inner loop in function `computeLocalScore` as can be seen in the following code.
+We encapsulate the outer loop in function <tt>computeScore</tt> and the inner loop in function <tt>computeLocalScore</tt> as can be seen in the following code.
 
 [[Include(source:trunk/extras/demos/tutorial/first_steps/code_encapsulation.cpp, fragment=all)]]
 
@@ -174,154 +175,154 @@ The function computeScore() now contains the fundamental part of the code and ca
 The input arguments are two strings. 
 One is the pattern itself and one is a substring of the text. 
 In order to obtain the substring we can use the function [dox:SegmentableConcept#infix infix] implemented in SeqAn.  
-The function call `infix(text, i, j)` generates a substring equal to `text[i ... j - 1]`, e.g. `infix(text, 1, 5)` equals "ello", where `text` is "Hello World".
+The function call <tt>infix(text, i, j)</tt> generates a substring equal to <tt>text[i ... j - 1]</tt>, e.g. <tt>infix(text, 1, 5)</tt> equals "ello", where <tt>text</tt> is "Hello World".
 To be more precise, infix() generates a [dox:InfixSegment Infix] which can be used as a string, but is implemented using pointers such that no copying is necessary and running time and memory is saved.
 
 
-=== Assignment 2 ===
-{{{#!AssignmentBox
+==== Assignment 2 ====
+<pre>#AssignmentBox
  Type ::
  Review
  Objective :: 
   Replace the code in your current file by the code above and encapsulate the print instructions.
  Hint ::
   The function head should look like this:
-{{{#!cpp
+<pre>#cpp
 void print(seqan::String<int> score)
-}}}
+</pre>
  Solution :: 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:trunk/extras/demos/tutorial/first_steps/solution_2.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
-== The Role of References in SeqAn ==
+=== The Role of References in SeqAn ===
 
-Let us now have a closer look at the signature of `computeScore()`.
+Let us now have a closer look at the signature of <tt>computeScore()</tt>.
 
 Both the text and the pattern are passed ''by value''.
 This means that both the text and the pattern are copied when the function is called, which consumes twice the memory.
 This can become a real bottleneck since copying longer sequences is very memory and time consuming, think of the human genome, for example.
 
 Instead of copying we could use '''references'''.
-A reference in C++ is created using an ampersand sign (`&`) and creates an alias to the referenced value.
+A reference in C++ is created using an ampersand sign (<tt>&</tt>) and creates an alias to the referenced value.
 Basically, a reference is a pointer to an object which can be used just like the referenced object itself.
 This means that when you change something in the reference you also change the original object it came from.
 But there is a solution to circumvent this modification problem as well, namely the word '''const'''.
-A `const` object cannot be modified.
+A <tt>const</tt> object cannot be modified.
 
-{{{#!InfoBox
+<pre>#InfoBox
 If an object does not need to be modified make it an nonmodifiably object using the keyword 'const'.
 This makes it impossible to ''unwillingly'' change objects, which can be really hard to debug. 
 Therefore it is recommended to use it as often as possible.
-}}}
+</pre>
 
 Therefore we change the signature of computeScore to:
 
-{{{#!cpp
+<pre>#cpp
 seqan::String<int> computeScore(seqan::String<char> const & text, seqan::String<char> const & pattern)
-}}}
+</pre>
 
-Reading from right to left the function expects two `references` to `const objects` of type `String` of `char`.
+Reading from right to left the function expects two <tt>references</tt> to <tt>const objects</tt> of type <tt>String</tt> of <tt>char</tt>.
 
-=== Assignment 3 ===
-{{{#!AssignmentBox
+==== Assignment 3 ====
+<pre>#AssignmentBox
  Type ::
  Review
  Objective :: 
   Adjust your current code to be more memory and time efficient by using references in the function header.
  Hint ::
-  The function head for `computeLocalScore` should look like this:
-{{{
-#!FoldOut
+  The function head for <tt>computeLocalScore</tt> should look like this:
+<pre>
+#FoldOut
 ----
-{{{#!cpp
+<pre>#cpp
 void computeLocalScore(seqan::String<char> const & subText, seqan::String<char> const & pattern)
-}}}
-}}}
+</pre>
+</pre>
  Solution :: 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:trunk/extras/demos/tutorial/first_steps/solution_3.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
-== Generic and Reusable Code ==
+=== Generic and Reusable Code ===
 
 As mentioned earlier, there is another issue:
-The function computeScore only works for Strings having the alphabet `char`. 
-If we wanted to use it for `Dna` or `AminoAcid` strings then we would have to reimplement it even though the only difference is the signature of the function.
-All used functions inside `computeScore` can already handle the other datatypes.
+The function computeScore only works for Strings having the alphabet <tt>char</tt>. 
+If we wanted to use it for <tt>Dna</tt> or <tt>AminoAcid</tt> strings then we would have to reimplement it even though the only difference is the signature of the function.
+All used functions inside <tt>computeScore</tt> can already handle the other datatypes.
 
 The more appropriate solution is a generic design using templates, as often used in the SeqAn library.
-Instead of specifying the input arguments to be references of strings of `char`s we could use references of template arguments as shown in the following lines:
+Instead of specifying the input arguments to be references of strings of <tt>char</tt>s we could use references of template arguments as shown in the following lines:
 
-{{{#!cpp
+<pre>#cpp
 template <typename TText, typename TPattern>
 seqan::String<int> computeScore(TText const & text, TPattern const & pattern)
-}}}
+</pre>
 
-The first line above specifies that we create a template function with two template arguments `TText` and `TPattern.`
+The first line above specifies that we create a template function with two template arguments <tt>TText</tt> and <tt>TPattern.</tt>
 At compile time the template arguments are then replace with the correct types. 
 If this line was missing the compiler would expect that there are types TText and TPattern with definitions.
 
 Now the function signature is better in terms of memory consumption, time efficiency, and generality.
 
-{{{#!comment
-{{{#!InfoBox
+<pre>#comment
+<pre>#InfoBox
 '''Information:''' The SeqAn Style Guide
 
-The [wiki:StyleGuide/Cpp SeqAn style guide] gives rules for formatting and structuring C++ code as well as naming conventions.
+The [[StyleGuide/Cpp| SeqAn style guide]] gives rules for formatting and structuring C++ code as well as naming conventions.
 Such rules make the code more consistent, easier to read, and also easier to use.
 
- 1. '''Naming Scheme'''.
-    Variable and function names are written in `lowerCamelCase`, type names are written in `UpperCamelCase`.
-    Constants and enum values are written in `UPPER_CASE`.
+#'''Naming Scheme'''.
+    Variable and function names are written in <tt>lowerCamelCase</tt>, type names are written in <tt>UpperCamelCase</tt>.
+    Constants and enum values are written in <tt>UPPER_CASE</tt>.
     Template variable names always start with 'T'.
- 1. '''Function Parameter Order'''.
+#'''Function Parameter Order'''.
     The order is (1) output, (2) non-const input (e.g. file handles), (3) input, (4) tags.
-    Output and non-const input can be modified, the rest is left untouched and either passed by copy or by const-reference (`const &`).
- 1. '''Global Functions'''.
+    Output and non-const input can be modified, the rest is left untouched and either passed by copy or by const-reference (<tt>const &</tt>).
+#'''Global Functions'''.
     With the exception of constructors and a few operators that have to be defined in-class, the interfaces in SeqAn use global functions.
- 1. '''No Exceptions'''.
+#'''No Exceptions'''.
     The SeqAn interfaces do not throw any exceptions.
 
 While we are trying to make the interfaces consistent with our style guide, some functions have incorrect parameter order.
 This will change in the near future to be more in line with the style guide.
-}}}
-}}}
+</pre>
+</pre>
 
 
-=== Assignment 4 ===
-{{{#!AssignmentBox
+==== Assignment 4 ====
+<pre>#AssignmentBox
  Type ::
   Review
  Objective :: 
-  Generalize the `computeLocalScore` function in your file. 
+  Generalize the <tt>computeLocalScore</tt> function in your file. 
  Solution :: 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:trunk/extras/demos/tutorial/first_steps/solution_4.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
-== From Object-Oriented Programming to SeqAn ==
+=== From Object-Oriented Programming to SeqAn ===
 
 There is another huge advantage of using templates:
 We can specialize a function without touching the existing function. 
-In our working example it might be more appropriate to treat `AminoAcid` sequences differently.
+In our working example it might be more appropriate to treat <tt>AminoAcid</tt> sequences differently.
 As you probably know, there is a similarity relation on amino acids:
 Certain amino acids are more similar to each other, than others. 
 Therefore we want to score different kinds of mismatches differently.
-In order to take this into consideration we simple write a `computeLocalScore()` function for `AminoAcid` strings.
+In order to take this into consideration we simple write a <tt>computeLocalScore()</tt> function for <tt>AminoAcid</tt> strings.
 In the future whenever 'computerScore' is called always the version above is used unless the second argument is of type String<AminoAcid>.
 Note that the second template argument was removed since we are using the specific type String-AminoAcid.
 
-{{{#!cpp
+<pre>#cpp
 template <typename TText>
 int computeLocalScore(TText const & subText, seqan::String<seqan::AminoAcid> const & pattern)
 {
@@ -331,24 +332,24 @@ int computeLocalScore(TText const & subText, seqan::String<seqan::AminoAcid> con
     
     return localScore;
 }
-}}}
+</pre>
 
-In order to score a mismatch we use the function `score()` from the SeqAn library.
+In order to score a mismatch we use the function <tt>score()</tt> from the SeqAn library.
 Note that we use the [dox:Blosum62 Blosum62] matrix as a similarity measure. 
 When looking into the documentation of [dox:Score#score score] you will notice that the score function requires a argument of type [dox:Score Score]. 
 This object tells the function how to compare two letters and there are several types of scoring schemes available in SeqAn (of course, you can extend this with your own).
 In addition, because they are so frequently used there are shortcuts as well. 
-For example [dox:Blosum62 Blosum62] is really a '''shortcut''' for `Score<int, ScoreMatrix<AminoAcid, Blosum62_> >`, which is obviously very helpful. 
-Other shortcuts are `DnaString` for `String<Dna>` ([wiki:Tutorial/Sequences sequence tutorial]), `CharString` for `String<char>`, ...
+For example [dox:Blosum62 Blosum62] is really a '''shortcut''' for <tt>Score<int, ScoreMatrix<AminoAcid, Blosum62_> ></tt>, which is obviously very helpful. 
+Other shortcuts are <tt>DnaString</tt> for <tt>String<Dna></tt> ([[Tutorial/Sequences| sequence tutorial]]), <tt>CharString</tt> for <tt>String<char></tt>, ...
 
-{{{#!InfoBox
+<pre>#InfoBox
 '''In-Depth Information:''' Template Subclassing
 
 The main idea of template subclassing is to exploit the C++ template matching mechanism.
-For example, in the following code, the function calls (1) and (3) will call the function `myFunction()` in variant (A) while the function call (2) will call variant (B).
+For example, in the following code, the function calls (1) and (3) will call the function <tt>myFunction()</tt> in variant (A) while the function call (2) will call variant (B).
 
-{{{
-#!cpp
+<pre>
+#cpp
 struct SpecA;
 struct SpecB;
 struct SpecC;
@@ -374,61 +375,61 @@ int main()
     myFunction(b);            // calls (B)
     myFunction(c);            // calls (A)
 }
-}}}
+</pre>
 
-For a detailed description and more examples see the tutorial [wiki:Tutorial/TemplateSubclassing Template Subclassing].
-}}}
+For a detailed description and more examples see the tutorial [[Tutorial/TemplateSubclassing| Template Subclassing]].
+</pre>
 
-=== Assignment 5 ===
-{{{#!AssignmentBox
+==== Assignment 5 ====
+<pre>#AssignmentBox
  Type ::
   Application
  Objective :: 
-  Provide a generic print function which is used when the input type is not `String<int>`. 
+  Provide a generic print function which is used when the input type is not <tt>String<int></tt>. 
  Hint ::
   Keep your current implementation and add a second function. Don't forget to make both template functions. Include '''seqan/score.h''' as well.
  Solution :: 
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:trunk/extras/demos/tutorial/first_steps/solution_5.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
-== Tags in SeqAn ==
+=== Tags in SeqAn ===
 
 Sometimes you will see something like this:
-{{{#!cpp
+<pre>#cpp
 globalAlignment(align, seqan::MyersHirschberg())
-}}}
+</pre>
 
-Having a closer look you will notice that there is a default constructor call (```MyersHirschberg()```) within a function call.
+Having a closer look you will notice that there is a default constructor call (<tt><tt><tt>MyersHirschberg()</tt></tt></tt>) within a function call.
 Using this mechanism one can specify which function to call at compile time.
-The ```MyersHirschberg()``` is only a tag to determine which specialisation of the ```globalAligment``` function to call.
+The <tt><tt><tt>MyersHirschberg()</tt></tt><tt> is only a tag to determine which specialisation of the </tt><tt><tt>globalAligment</tt></tt></tt> function to call.
 
-{{{#!FoldOut
+<pre>#FoldOut
 If you want more information on tags click on more otherwise you are now ready to explore SeqAn in more detail and continue with one of the other tutorials. 
 ----
 There is another use case of templates and function specialization. 
 
-This might be useful in a `print()` function, for example.
+This might be useful in a <tt>print()</tt> function, for example.
 In some scenarios, we only want to print the position where the maximal similarity between pattern and text is found.
 In other cases, we might want to print the similarities of all positions.
 In SeqAn, we use '''tag-based dispatching''' to realize this.
 Here, the type of the '''tag''' holds the specialization information.
 
-{{{#!InfoBox
+<pre>#InfoBox
 '''Information:''' Tag-Based Dispatching
 
-You will often see '''tags''' in SeqAn code, e.g. `Standard()`.
+You will often see '''tags''' in SeqAn code, e.g. <tt>Standard()</tt>.
 These are parameters to functions that are passed as const-references.
 They are not passed for their values but for their type only.
-This way, we can select different specializations at '''compile time''' in a way that plays nicely together with metafunctions, template specializations, and an advanced technique called [wiki:Tutorial/BasicTechniques metaprogramming].
+This way, we can select different specializations at '''compile time''' in a way that plays nicely together with metafunctions, template specializations, and an advanced technique called [[Tutorial/BasicTechniques| metaprogramming]].
 
 Consider the following example:
 
-{{{
-#!cpp
+<pre>
+#cpp
 struct TagA {};
 struct TagB {};
 
@@ -441,15 +442,15 @@ int main()
     myFunction(TagB());  // (4)
     return 0;
 }
-}}}
+</pre>
 
-The function call in line (3) will call `myFunction()` in the variant in line (1).
-The function call in line (4) will call `myFunction()` in the variant in line (2).
-}}}
+The function call in line (3) will call <tt>myFunction()</tt> in the variant in line (1).
+The function call in line (4) will call <tt>myFunction()</tt> in the variant in line (2).
+</pre>
 
-The code for the two different `print()` functions mentioned above could look like this:
+The code for the two different <tt>print()</tt> functions mentioned above could look like this:
 
-{{{#!cpp
+<pre>#cpp
 #include <iostream>
 #include <seqan/sequence.h>
 #include <seqan/score.h>
@@ -486,13 +487,13 @@ void print(TText const & score, MaxOnly const & /*tag*/)
         std::cout << output[i] << " ";
     std::cout << std::endl;
 }
-}}}
+</pre>
 
-If we call `print()` with something different than `MaxOnly` then we print all the positions with their similarity, because the generic template function accepts anything as the template argument. 
-On the other hand, if we call print with `MaxOnly` only the positions with the maximum similarity as well as the maximal similarity will be shown.
+If we call <tt>print()</tt> with something different than <tt>MaxOnly</tt> then we print all the positions with their similarity, because the generic template function accepts anything as the template argument. 
+On the other hand, if we call print with <tt>MaxOnly</tt> only the positions with the maximum similarity as well as the maximal similarity will be shown.
 
-=== Assignment 6 ===
-{{{#!AssignmentBox
+==== Assignment 6 ====
+<pre>#AssignmentBox
  Type ::
   Review
  Objective :: 
@@ -500,19 +501,19 @@ On the other hand, if we call print with `MaxOnly` only the positions with the m
  Hints ::
   SeqAn provides a data type seqan:Class.Pair.  
  Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:trunk/extras/demos/tutorial/first_steps/solution_6.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
-Obviously this is only a toy example in which we could have named the two `print()` functions differently. 
+Obviously this is only a toy example in which we could have named the two <tt>print()</tt> functions differently. 
 However, often this is not the case when the programs become more complex.
 Because SeqAn is very generic we do not know the datatypes of template functions in advance. 
-This would pose a problem because the function call of function `b()` in function `a()` may depend on the data types of the template arguments of function `a()`.
+This would pose a problem because the function call of function <tt>b()</tt> in function <tt>a()</tt> may depend on the data types of the template arguments of function <tt>a()</tt>.
 
-== The Final Result ==
+=== The Final Result ===
 
 Don't worry if you have not fully understood the last section.
 If you have - perfect.
@@ -524,6 +525,10 @@ Below you find the complete code for our example with the corresponding output.
 
 [[Include(source:trunk/extras/demos/tutorial/first_steps/final_result.cpp, fragment=result)]]
 
-=== Submit a  comment ===
+==== Submit a  comment ====
 If you found a mistake, or have suggestions about an improvement of this page press:
 [/newticket?component=Documentation&description=Tutorial+Enhancement+for+page+http://trac.seqan.de/wiki/Tutorial/Sequences&type=enhancement submit your comment]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

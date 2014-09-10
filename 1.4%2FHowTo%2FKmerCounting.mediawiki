@@ -1,6 +1,11 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:HowTo] if you need the documentation for the trunk version.'''
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[HowTo]] if you need the documentation for the trunk version.'''
 Assume you are given a set of human NGS reads containing  for example a couple of million Illumina reads.
 To get a feeling about how good the quality is, and whether a read is repetitive or not, you might want to count how often a k-mer in the genome occurs in your input
 data set and also in what read.
 
 blab bla use include command
+
+
+
+{{TracNotice|{{PAGENAME}}}}

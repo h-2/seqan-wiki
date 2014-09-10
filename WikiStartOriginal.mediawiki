@@ -1,4 +1,5 @@
-= Welcome to Trac 0.10.3 =
+
+== Welcome to Trac 0.10.3 ==
 
 Trac is a '''minimalistic''' approach to '''web-based''' management of
 '''software projects'''. Its goal is to simplify effective tracking and handling of software issues, enhancements and overall progress.
@@ -16,26 +17,30 @@ web-browser. Simply click on the "Edit this page" link at the bottom
 of the page. WikiFormatting will give you a detailed description of
 available Wiki formatting commands.
 
-"[wiki:TracAdmin trac-admin] ''yourenvdir'' initenv" created
+"[[TracAdmin| trac-admin]] ''yourenvdir'' initenv" created
 a new Trac environment, containing a default set of wiki pages and some sample
 data. This newly created environment also contains 
-[wiki:TracGuide documentation] to help you get started with your project.
+[[TracGuide| documentation]] to help you get started with your project.
 
-You can use [wiki:TracAdmin trac-admin] to configure
+You can use [[TracAdmin| trac-admin]] to configure
 [http://trac.edgewall.org/ Trac] to better fit your project, especially in
 regard to ''components'', ''versions'' and ''milestones''. 
 
 
 TracGuide is a good place to start.
 
-Enjoy! [[BR]]
+Enjoy! <br>
 ''The Trac Team''
 
-== Starting Points ==
+=== Starting Points ===
 
- * TracGuide --  Built-in Documentation
- * [http://trac.edgewall.org/ The Trac project] -- Trac Open Source Project
- * [http://trac.edgewall.org/wiki/TracFaq Trac FAQ] -- Frequently Asked Questions
- * TracSupport --  Trac Support
+*TracGuide --  Built-in Documentation
+*[http://trac.edgewall.org/ The Trac project] -- Trac Open Source Project
+*[http://trac.edgewall.org/wiki/TracFaq Trac FAQ] -- Frequently Asked Questions
+*TracSupport --  Trac Support
 
 For a complete list of local wiki pages, see TitleIndex.
+
+
+
+{{TracNotice|{{PAGENAME}}}}

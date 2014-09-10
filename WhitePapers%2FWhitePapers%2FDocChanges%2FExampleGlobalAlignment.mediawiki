@@ -1,147 +1,152 @@
-{{{#!html
-<small>Global Function</small>
-}}}
 
-= globalAlignment =
+<pre>#html
+<small>Global Function</small>
+</pre>
+
+== globalAlignment ==
 
 Computes the best global pairwise alignment.
 
-{{{#!cpp
+<pre>#cpp
 TScoreValue globalAlignment(align,          scoringScheme, [alignConfig,] [lowerDiag, upperDiag,] [algorithmTag])
 TScoreValue globalAlignment(gapsH, gapsV,   scoringScheme, [alignConfig,] [lowerDiag, upperDiag,] [algorithmTag])
 TScoreValue globalAlignment(frags, strings, scoringScheme, [alignConfig,] [lowerDiag, upperDiag,] [algorithmTag])
 TScoreValue globalAlignment(alignmentGraph, scoringScheme, [alignConfig,] [lowerDiag, upperDiag,] [algorithmTag])
-}}}
+</pre>
 
-== Parameters ==
+=== Parameters ===
 
-{{{#!td valign=top
-`align`
-}}}
-{{{#!td valign=top
-`TAlign`
-}}}
-{{{#!td valign=top
+<pre>#td valign=top
+<tt>align</tt>
+</pre>
+<pre>#td valign=top
+<tt>TAlign</tt>
+</pre>
+<pre>#td valign=top
 An [# Align] object with two rows that contains the sequences and is used to write the resulting alignment to.
 Must be an instance of the [# Align] class.
-}}}
+</pre>
 |----------------
-{{{#!td valign=top
-`gapsH`
-}}}
-{{{#!td valign=top
-`TGaps`
-}}}
-{{{#!td valign=top
+<pre>#td valign=top
+<tt>gapsH</tt>
+</pre>
+<pre>#td valign=top
+<tt>TGaps</tt>
+</pre>
+<pre>#td valign=top
 A [# Gaps] object with the first sequence, used for the horizontal direction in the DP matrix.
-The resulting gaps for the sequence will be inserted into `gapsH`.
+The resulting gaps for the sequence will be inserted into <tt>gapsH</tt>.
 Must be an instance of the [# Gaps] class.
-}}}
+</pre>
 |----------------
-{{{#!td valign=top
-`gapsV`
-}}}
-{{{#!td valign=top
-`TGaps`
-}}}
-{{{#!td valign=top
+<pre>#td valign=top
+<tt>gapsV</tt>
+</pre>
+<pre>#td valign=top
+<tt>TGaps</tt>
+</pre>
+<pre>#td valign=top
 A [# Gaps] object with the first sequence, used for the vertical direction in the DP matrix.
-The resulting gaps for the sequence will be inserted into `gapsV`.
+The resulting gaps for the sequence will be inserted into <tt>gapsV</tt>.
 Must be an instance of the [# Gaps] class.
-}}}
+</pre>
 |----------------
-{{{#!td valign=top
-`frags`
-}}}
-{{{#!td valign=top
-`TFragments`
-}}}
-{{{#!td valign=top
+<pre>#td valign=top
+<tt>frags</tt>
+</pre>
+<pre>#td valign=top
+<tt>TFragments</tt>
+</pre>
+<pre>#td valign=top
 A [# String] of [# Fragment] object for storing the alignment.
 Must be a specialization of the [# String] class and have [# Fragment] values.
-}}}
+</pre>
 |----------------
-{{{#!td valign=top
-`strings`
-}}}
-{{{#!td valign=top
-`TStrings`
-}}}
-{{{#!td valign=top
+<pre>#td valign=top
+<tt>strings</tt>
+</pre>
+<pre>#td valign=top
+<tt>TStrings</tt>
+</pre>
+<pre>#td valign=top
 A [# StringSet] of two [# String] values.
 The first entry will be used as the horizontal sequence, the second entry as the vertical sequence.
 Must be an instance of the [# StringSet] class and contain [# String] values.
-}}}
+</pre>
 |----------------
-{{{#!td valign=top
-`alignmentGraph`
-}}}
-{{{#!td valign=top
-`TGraph`
-}}}
-{{{#!td valign=top
+<pre>#td valign=top
+<tt>alignmentGraph</tt>
+</pre>
+<pre>#td valign=top
+<tt>TGraph</tt>
+</pre>
+<pre>#td valign=top
 An [# Alignment Graph] object that contains the two sequences and will be used to store the resulting alignment.
 Must be an instance of the [# Alignment Graph] class.
-}}}
+</pre>
 |----------------
-{{{#!td valign=top
-`scoringScheme`
-}}}
-{{{#!td valign=top
-`TScore`
-}}}
-{{{#!td valign=top
+<pre>#td valign=top
+<tt>scoringScheme</tt>
+</pre>
+<pre>#td valign=top
+<tt>TScore</tt>
+</pre>
+<pre>#td valign=top
 The scoring scheme to use for scoring alignment of pairs and gaps score information.
 Must be an instance of the [# Score] class.
-}}}
+</pre>
 |----------------
-{{{#!td valign=top
-`alignConfig`
-}}}
-{{{#!td valign=top
-`TAlignConfig`
-}}}
-{{{#!td valign=top
+<pre>#td valign=top
+<tt>alignConfig</tt>
+</pre>
+<pre>#td valign=top
+<tt>TAlignConfig</tt>
+</pre>
+<pre>#td valign=top
 Configuration for the scoring of alignments.
 Must be an instance of the [# AlignConfig] class.
-Defaults to computing a global alignment (`AlignConfig<true, true, true, true>`).
-}}}
+Defaults to computing a global alignment (<tt>AlignConfig<true, true, true, true></tt>).
+</pre>
 |----------------
-{{{#!td valign=top
-`lowerDiag`
-}}}
-{{{#!td valign=top
-`int`
-}}}
-{{{#!td valign=top
+<pre>#td valign=top
+<tt>lowerDiag</tt>
+</pre>
+<pre>#td valign=top
+<tt>int</tt>
+</pre>
+<pre>#td valign=top
 Index of lower diagonal.
-The middle diagonal has index `0`, the i-th diagonal above the middle diagonal has index `-i`, the i-th diagonal below has index `i`.
+The middle diagonal has index <tt>0</tt>, the i-th diagonal above the middle diagonal has index <tt>-i</tt>, the i-th diagonal below has index <tt>i</tt>.
 If no diagonals are given, a whole DP alignment is computed.
-}}}
+</pre>
 |----------------
-{{{#!td valign=top
-`upperDiag`
-}}}
-{{{#!td valign=top
-`int`
-}}}
-{{{#!td valign=top
+<pre>#td valign=top
+<tt>upperDiag</tt>
+</pre>
+<pre>#td valign=top
+<tt>int</tt>
+</pre>
+<pre>#td valign=top
 Index of upper diagonal.
-The middle diagonal has index `0`, the i-th diagonal above the middle diagonal has index `-i`, the i-th diagonal below has index `i`.
+The middle diagonal has index <tt>0</tt>, the i-th diagonal above the middle diagonal has index <tt>-i</tt>, the i-th diagonal below has index <tt>i</tt>.
 If no diagonals are given, a whole DP alignment is computed.
-}}}
+</pre>
 |----------------
 
-== Return Values ==
+=== Return Values ===
 
-{{{#!td valign=top
-`TScoreValue `
-}}}
-{{{#!td valign=top
+<pre>#td valign=top
+<tt>TScoreValue </tt>
+</pre>
+<pre>#td valign=top
 The score of the resulting alignment.
-Has type `Value<TScore>::Type`.
-}}}
+Has type <tt>Value<TScore>::Type</tt>.
+</pre>
 
-== See Also ==
+=== See Also ===
 
 [# localAlignment]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

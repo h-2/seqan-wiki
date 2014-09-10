@@ -1,11 +1,12 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
-= How To Read Tutorials =
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[Tutorial]] if you need the documentation for the trunk version.'''
+== How To Read Tutorials ==
 
 [[TOC()]]
 
 This tutorial explains how to read tutorials and the used typographic conventions.
 
-== General Tutorial Structure ==
+=== General Tutorial Structure ===
 
 A tutorial starts with a section that gives some meta information about the tutorial:
 
@@ -26,16 +27,16 @@ Mostly, it makes sense to read them sequentially but you might also try to jump 
 The last section in all tutorials is '''Further Steps''' that lists suggestions for how to continue after completing the tutorial.
 At the bottom of the page, there also is a link to send us suggestions if you have any.
 
-== Typographic Conventions ==
+=== Typographic Conventions ===
 
- * GUI elements are shown in ''italic'', e.g. a menu point is described by ''Start -> All Programs -> Accessories -> Command Prompt''.
- * File names are written in `typewriter text`.
- * Where appropriate we use [http://en.wikipedia.org/wiki/Hyperlink links], e.g. to the documentation: seqan:Class.ArgumentParser.
+*GUI elements are shown in ''italic'', e.g. a menu point is described by ''Start -> All Programs -> Accessories -> Command Prompt''.
+*File names are written in <tt>typewriter text</tt>.
+*Where appropriate we use [http://en.wikipedia.org/wiki/Hyperlink links], e.g. to the documentation: seqan:Class.ArgumentParser.
 
-Source code is usually written with highlighting in blocks as follows but you might also see small snippets such as `int main(int, char const **)` using typewriter font.
+Source code is usually written with highlighting in blocks as follows but you might also see small snippets such as <tt>int main(int, char const **)</tt> using typewriter font.
 
-{{{
-#!cpp
+<pre>
+#cpp
 #include <iostream>
 
 int main(int argc, char const ** argv)
@@ -44,24 +45,24 @@ int main(int argc, char const ** argv)
 
     return 0;
 }
-}}}
+</pre>
 
-== Command Line Output ==
+=== Command Line Output ===
 
 Sometimes, we show some command line output, for example
 
-{{{#!ShellBox
+<pre>#ShellBox
 # ls
 build	   CMakeLists.txt  docs   extras   misc    sandbox
 CHANGELOG  core		   docs2  LICENSE  README  util
-}}}
+</pre>
 
 Lines starting with a hash show the command line where the user types in the command.
 
 Generally, we do not give full paths to the binary.
-For example, if we just compiled the example application `core/demos/graph_algo_bfs.cpp` and call it, the shell would use `graph_algo_bfs` instead of `./core/demos/graph_algo_bfs` in the call.
+For example, if we just compiled the example application <tt>core/demos/graph_algo_bfs.cpp</tt> and call it, the shell would use <tt>graph_algo_bfs</tt> instead of <tt>./core/demos/graph_algo_bfs</tt> in the call.
 
-{{{#!ShellBox
+<pre>#ShellBox
 # graph_algo_bfs 
 Adjacency list:
 0 -> 4,1,
@@ -69,52 +70,52 @@ Adjacency list:
 2 -> 3,6,5,
 3 -> 7,6,2,
 ...
-}}}
+</pre>
 
 In the Getting Started tutorial, the command line usage is more complex than in the rest of the tutorials (which focus on C++, not on work on the command line).
 Here, we will give additional information such as the current working directory.
 
 For example, a Mac/Linux shell output could look as follows.
-The name of the current directory is given before the `#`:
+The name of the current directory is given before the <tt>#</tt>:
 
-{{{#!ShellBox
+<pre>#ShellBox
 username # cd Development
 Development # cd /var/log
 log # ls
-}}}
+</pre>
 
 For Windows command line prompts, we will give the full to the current working directory.
 
-{{{#!ShellBox
+<pre>#ShellBox
 C:\Users\username> cd C:\
 C:\> mkdir Development
 C:\> cd Development
 C:\Development> dir
-}}}
+</pre>
 
 
-== Boxes ==
+=== Boxes ===
 
 Throughout the tutorial, you will find the following boxes.
 
-{{{#!WarningBox
+<pre>#WarningBox
 '''Warning:''' Warning Box Title
 
 This is a box with a warning.
 It is used rarely, mainly to indicate that there exists a known issue at the place the box is located at.
-}}}
+</pre>
 
-{{{#!ImportantBox
+<pre>#ImportantBox
 This is a box with a very important message.
-}}}
+</pre>
 
-{{{#!InfoBox
+<pre>#InfoBox
 '''Information:''' Information Box Title
 
 This box contains additional, in-depth information that you might want to refer back to in the future.
-}}}
+</pre>
 
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 '''Assignment X:''' This is an assignment.
 
 Solve the tasks in the assignments to intensify your learning of SeqAn.
@@ -133,18 +134,22 @@ Solve the tasks in the assignments to intensify your learning of SeqAn.
  Hints ::
   Some tasks contain additional hints.
 
-{{{#!FoldOut
+<pre>#FoldOut
 ----
 You found the hidden solution!
-}}}
-}}}
+</pre>
+</pre>
 
-== Further Steps ==
+=== Further Steps ===
 
- * Go to the [wiki:Tutorial Tutorial Table Of Contents]
+*Go to the [[Tutorial| Tutorial Table Of Contents]]
 
 
 ''' Submit a  comment'''
 
 If you found a mistake or have suggestions about an improvement of this page press:
 [/newticket?component=Documentation&description=Tutorial+Enhancement+for+page+http://trac.seqan.de/wiki/Tutorial/HowToReadTutorials&type=enhancement submit your comment].
+
+
+
+{{TracNotice|{{PAGENAME}}}}

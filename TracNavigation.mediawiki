@@ -1,46 +1,57 @@
-= Trac Navigation =
+
+== Trac Navigation ==
 
 Starting with Trac 0.11, it is now possible to customize the main and meta navigation entries in some basic ways.
 
-The new `[mainnav]` and `[metanav]` configuration sections can now be used to customize the text and link used for the navigation items, or even to disable them.
+The new <tt>[mainnav]</tt> and <tt>[metanav]</tt> configuration sections can now be used to customize the text and link used for the navigation items, or even to disable them.
 
-=== `[mainnav]` #mainnav-bar
-`[mainnav]` corresponds to the '''main navigation bar''', the one containing entries such as ''Wiki'', ''Timeline'', ''Roadmap'', ''Browse Source'' and so on. This navigation bar is meant to access the default page of the main modules enabled in Trac and accessible for the current user.
+=== <tt>[mainnav]</tt> #mainnav-bar
+<tt>[mainnav]</tt> corresponds to the '''main navigation bar''', the one containing entries such as ''Wiki'', ''Timeline'', ''Roadmap'', ''Browse Source'' and so on. This navigation bar is meant to access the default page of the main modules enabled in Trac and accessible for the current user.
 
 
 ** [=#Example Example] ** 
 
-In the following example, we rename the link to the Wiki start "Home", and hide the "!Help/Guide" link. 
+In the following example, we rename the link to the Wiki start "Home", and hide the "Help/Guide" link. 
 We also make the "View Tickets" entry link to a specific report.
 
 Relevant excerpt from the TracIni:
-{{{
+<pre>
 [mainnav]
 wiki.label = Home
 tickets.href = /report/24
-}}}
+</pre>
 
-=== `[metanav]` #metanav-bar
-`[metanav]` corresponds to the '''meta navigation bar''', by default positioned above the main navigation bar and below the ''Search'' box. It contains the ''Log in'', ''Logout'', ''!Help/Guide'' etc. entries. This navigation bar is meant to access some global information about the Trac project and the current user.
+=== <tt>[metanav]</tt> #metanav-bar
+<tt>[metanav]</tt> corresponds to the '''meta navigation bar''', by default positioned above the main navigation bar and below the ''Search'' box. It contains the ''Log in'', ''Logout'', ''Help/Guide'' etc. entries. This navigation bar is meant to access some global information about the Trac project and the current user.
 
-There is one special entry in the  `[metanav]` section: `logout.redirect` is the page the user sees after hitting the logout button. 
+There is one special entry in the  <tt>[metanav]</tt> section: <tt>logout.redirect</tt> is the page the user sees after hitting the logout button. 
 [[comment(see also #Trac3808)]]
 
 ** Example ** 
 
-{{{
+<pre>
 [metanav]
 help = disabled
 logout.redirect = wiki/Logout
-}}}
+</pre>
 
 
 === Notes
-Possible URL formats (for `.href` or `.redirect`):
-|| '''config''' || '''redirect to''' ||
-|| `wiki/Logout` || `/projects/env/wiki/Logout` ||
-|| `http://hostname/` || `http://hostname/` ||
-|| `/projects` || `/projects` ||
+Possible URL formats (for <tt>.href</tt> or <tt>.redirect</tt>):
+{| border=1 class="simple"
+! '''config''' 
+! '''redirect to''' 
+|- 
+|  <tt>wiki/Logout</tt> 
+|  <tt>/projects/env/wiki/Logout</tt> 
+|- 
+|  <tt>http://hostname/</tt> 
+|  <tt>http://hostname/</tt> 
+|- 
+|  <tt>/projects</tt> 
+|  <tt>/projects</tt> 
+|}
+
 
 
 Note that it is still not possible to customize the '''contextual navigation bar''', i.e. the one usually placed below the main navigation bar.
@@ -48,3 +59,7 @@ Note that it is still not possible to customize the '''contextual navigation bar
 
 ----
 See also: TracInterfaceCustomization, and the [http://trac-hacks.org/wiki/NavAddPlugin TracHacks:NavAddPlugin] or [http://trac-hacks.org/wiki/MenusPlugin TracHacks:MenusPlugin] (still needed for adding entries)
+
+
+
+{{TracNotice|{{PAGENAME}}}}

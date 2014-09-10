@@ -1,13 +1,14 @@
-[[TOC]]
-= Fragment Store =
 
-== Overview ==
+[[TOC]]
+== Fragment Store ==
+
+=== Overview ===
 
 The [dox:FragmentStore FragmentStore] is a data structure specifically designed for read mapping, genome assembly or gene annotation.
 These tasks typically require lots of data structures that are related to each other like:
-   * reads, mate-pairs, reference genome
-   * pairwise alignments
-   * genome annotation 
+**reads, mate-pairs, reference genome
+**pairwise alignments
+**genome annotation 
 
 The Fragment Store subsumes all these data structures in an easy to use interface.
 It represents a multiple alignment of millions of reads or mate-pairs against a reference genome consisting of multiple contigs.
@@ -22,15 +23,17 @@ Each name store is a [dox:StringSet StringSet] that stores the element name at t
 All stores are present in the Fragment Store and empty if unused.
 The concrete types, e.g. the position types or read/contig alphabet, can be easily changed by defining a custom config struct which is a template parameter of the Fragment Store class.
 
-== Multiple Read Alignment ==
+=== Multiple Read Alignment ===
 
 The Fragment Store can represent a multiple read alignment, i.e. is an alignment between the contigs and the set of reads, where one read can be aligned at zero, one or multiple positions of a contig.
 In the multiple alignment the contig is represented by one line with gaps (-) and the remaining lines are to reads or read segments with gaps aligned to the contig.
 The following figure shows one contig (blue line at the top) and multiple reads aligned to it arranged as stairs (reads in lower-case align to the reverse strand):
 
-|| 
-{{{
-#!html
+{| border=1 class="simple"
+|}
+
+<pre>
+#html
 <pre class="wiki" style="font-size:10px;">
 <span style="color:darkblue">TGAAAACTATATTTATGCTATTCAGTTCTAAATATAGAAATTGAAACAGCTGTGTTTAGTGCCTTTGTTCA-----ACCCCCTTGCAACAACCTTGAGAACCCCAGGGAATTTGTCAATGTCAGGGAAGGAGCATTTTGTCAGTTACCAAATGTGTTTATTACCAG
 </span>TGAAAACTATATT ATGCTATTCAGTTCTAAATATAGAAATTGAAACAG  GTGTTTAGTGCCTTTGTTCA-----ACCCCCTTGCAACAAC      aaccccagggaatttgtcaatgtcagggaaggagc ttttgtcagttaccaaatgtgtttattaccag
@@ -52,53 +55,60 @@ TGAAAACTATATTTATGCTATTCAGTTCTAAAT                                               
            tttacgctattcagtactaaatatagaaattgaaa                                              CTTGAGAACCCCAGGGAATTTGTCAATGTCAGGGA    GCATTTTGTCAGTTACCAAATGTGTTTATTACCAG
             ttatgctattcagttctaaatatagaaattgaaac                                                          gggaatttgtcaatgtcagggaaggagcattttgt AGTTACCAAATGTGTTTATTACCAG
 </pre>
-}}} 
-||
-|| '''Figure 1:''' Multiple read alignment ||
+</pre> 
+{| border=1 class="simple"
+|- 
+|  '''Figure 1:''' Multiple read alignment 
+|}
+
 
 The following figure shows which tables represent the multiple read alignment:
 
-|| [[Image(source:trunk/docs2/images/FragmentStore.png, 600px)]] ||
-|| '''Figure 2:''' Stores used to represent a multiple read alignment ||
+{| border=1 class="simple"
+! [[Image(source:trunk/docs2/images/FragmentStore.png, 600px)]] 
+|- 
+|  '''Figure 2:''' Stores used to represent a multiple read alignment 
+|}
+
 
 The main table is the [dox:FragmentStore#alignedReadStore alignedReadStore] which stores [dox:AlignedReadStoreElement AlignedReadStoreElements].
-Each entry is an alignment of a read ({{{readId}}}) and a contig ({{{contigId}}}).
-Introduced gaps are stored as a string of gap anchors in the {{{gaps}}} member of the alignedReadStore entry and the contigStore entry.
-The begin and end positions of the alignment are given by the {{{beginPos}}} and {{{endPos}}} members which are 0-based positions on the forward strand in gap space, i.e. positions in the gapped contig sequence.
-If the read is aligned to the reverse strand it holds {{{endPos}}} < {{{beginPos}}}. 
+Each entry is an alignment of a read (<tt>readId</tt>) and a contig (<tt>contigId</tt>).
+Introduced gaps are stored as a string of gap anchors in the <tt>gaps</tt> member of the alignedReadStore entry and the contigStore entry.
+The begin and end positions of the alignment are given by the <tt>beginPos</tt> and <tt>endPos</tt> members which are 0-based positions on the forward strand in gap space, i.e. positions in the gapped contig sequence.
+If the read is aligned to the reverse strand it holds <tt>endPos</tt> < <tt>beginPos</tt>. 
 However, the gaps are always related to the forward strand.
-Additional information, e.g. the number of errors, an alignment score or additional alignment tags, are stored in the tables [dox:FragmentStore#alignQualityStore alignQualityStore] and [dox:FragmentStore#alignedReadTagStore alignedReadTagStore] at position {{{id}}}, where {{{id}}} is a unique id of the [dox:AlignedReadStoreElement AlignedReadStoreElement].
-Paired-end or mate pair alignments are represented by two entries in the [dox:FragmentStore#alignedReadStore alignedReadStore] that have the same {{{pairMatchId}}} value (unequal to {{{INVALID_ID}}}).
-For orphaned read alignments holds {{{pairMatchId == INVALID_ID}}}.
+Additional information, e.g. the number of errors, an alignment score or additional alignment tags, are stored in the tables [dox:FragmentStore#alignQualityStore alignQualityStore] and [dox:FragmentStore#alignedReadTagStore alignedReadTagStore] at position <tt>id</tt>, where <tt>id</tt> is a unique id of the [dox:AlignedReadStoreElement AlignedReadStoreElement].
+Paired-end or mate pair alignments are represented by two entries in the [dox:FragmentStore#alignedReadStore alignedReadStore] that have the same <tt>pairMatchId</tt> value (unequal to <tt>INVALID_ID</tt>).
+For orphaned read alignments holds <tt>pairMatchId == INVALID_ID</tt>.
 
-{{{
+<pre>
        012345556789  sequence space
        012345678901       gap space
 contig ACCAC--GTTTG
  read1   ACACGGT        [2-9[
  read2     ACGGTT-G     [4-12[
-}}}
+</pre>
 
 The [dox:FragmentStore#alignedReadStore alignedReadStore] is the only store where the id (alignId in the figure) of an element is not implicitly given by its position.
 The reason for this is that it is necessary in many cases to rearrange the elements of the alignedReadStore, e.g. increasingly by (contigId,beginPos), by readId or pairMatchId.
 This can be done by [dox:sortAlignedReads sortAlignedReads].
 If it is necessary to address an element by its id, the elements must be sorted by id first.
 In the case that ids are not contiguously increasing, e.g. because some elements where removed, they must be renamed by a prior call of [dox:FragmentStore#compactAlignedReads compactAlignedReads].
-Analogously the function [dox:FragmentStore#compactPairMatchIds compactPairMatchIds] renames {{{pairMatchId}}} values contiguously and replaces values that occur in only one alignment by {{{INVALID_ID}}}.
+Analogously the function [dox:FragmentStore#compactPairMatchIds compactPairMatchIds] renames <tt>pairMatchId</tt> values contiguously and replaces values that occur in only one alignment by <tt>INVALID_ID</tt>.
 
-=== Display Aligned Reads ===
+==== Display Aligned Reads ====
 
 The multiple read alignment can be displayed in text form or in a scalable graphics format (SVG).
 Therefore first a stairs layout of the reads must be computed via [dox:AlignedReadLayout#layoutAlignment layoutAlignment] and stored in an [dox:AlignedReadLayout AlignedReadLayout].
-The function [dox:AlignedReadLayout#printAlignment printAlignment] can then be used to output a window (beginPos,endPos,firstLine,lastLine) of the read alignment against a contig either to a stream or `SVGFile`.
+The function [dox:AlignedReadLayout#printAlignment printAlignment] can then be used to output a window (beginPos,endPos,firstLine,lastLine) of the read alignment against a contig either to a stream or <tt>SVGFile</tt>.
 The following small example demonstrates how to first load two contigs from a Fasta file and then import a read alignment given in SAM format:
 [[Include(source:trunk/core/demos/tutorial/store/store_diplay_aligned_reads.cpp, fragment=includes)]]
 
 Then we create a stairs layout of the aligned reads and output a window from gapped position 0 to 150 and line 0 to 36 of the multiple alignments below contig 1 to standard out:
 [[Include(source:trunk/core/demos/tutorial/store/store_diplay_aligned_reads.cpp, fragment=ascii)]]
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray;font-size:8px;">
 TTCAAATGAACTTCTGTAATTGAAAAATTCATTTAAGAAATTACAAAATATAGTTGAAAGCTCTAACAATAGACTAAACCAAGCAGAAGAAAGAGGTTCAGAACTTGAAGACAAGTCTCTTATGAATTAACCCAGTCAGACAAAAATAAA
 TTCAAATGAACTTCTGTAATTGAAAAATTCATTTAA  AATTACAAAATATAGTTGAAAGCTCTAACAATAGA   AACCAAGCAGAAGAAAGAGGTTCAGAACTTGAAGA  AGTCTCTTATGAATTAACCCAGTCAGACAAAAATA A
@@ -138,15 +148,19 @@ ttcaaatgaacttctgtaattgaaaaattcattta GAAATTACAAAATATAGTTGAAAGCTCTAACAATAG    AACC
                                                                    AATAGACTAAACCAAGCAGAAGAAAGAGGTTCAGA
                                                                    AATAGACTAAACCAAGCAGAAGAAAGAGGTTCAGA
 </pre>
-}}}
+</pre>
 
 The same window can also be exported as a scalable vector graphic in SVG format (supported by Browsers, Inkscape; see original file [source:trunk/docs2/images/ReadLayout.svg link]):
 [[Include(source:trunk/core/demos/tutorial/store/store_diplay_aligned_reads.cpp, fragment=svg)]]
 
-|| [[Image(source:trunk/docs2/images/ReadLayout.png, 700px)]] ||
-|| '''Figure 3:''' SVG export of a multiple read alignment ||
+{| border=1 class="simple"
+! [[Image(source:trunk/docs2/images/ReadLayout.png, 700px)]] 
+|- 
+|  '''Figure 3:''' SVG export of a multiple read alignment 
+|}
 
-=== Accessing Pairwise Alignments ===
+
+==== Accessing Pairwise Alignments ====
 
 In the next step, we want to access several pairwise alignments between reads and contig segments.
 Therefore we first need to get the associated types that the Fragment Store uses to store contig and read sequences and gaps.
@@ -164,8 +178,8 @@ After that we output both alignment rows.
  ''Hint'' :: The [dox:Gaps Gaps] contains two [dox:Holder Holder] references to the sequence and the inserted gaps. In our example these Holders are dependent and changes made to the Gaps object like the insertion/deletion of gaps would immediatly be persistent in the Fragment Store.
 [[Include(source:trunk/core/demos/tutorial/store/store_access_aligned_reads.cpp, fragment=output)]]
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 ALIGNMENT 140
 	contig 0:	CTGTGTTTAGTGCCTTTGTTCA-----ACCCCCTTGCAAC     	[266..306[
@@ -187,36 +201,44 @@ ALIGNMENT 156
 	contig 0:	CCCCCTTGCAACAACCTTGAGAACCCCAGGGAATT     	[294..329[
 	read 165:	CCCCCTTGCAACAACCTTGAGAACCCCAGGGAATT
 </pre>
-}}}
+</pre>
 
 ==== Assignments ====
 
- ''Task 1'' :: Modify the example above, such that reads that align to the reverse strand are displayed in lower-case letters.[[br]]
+ ''Task 1'' :: Modify the example above, such that reads that align to the reverse strand are displayed in lower-case letters.<br>
  ''Difficulty'' :: 1
- ''Hint'' :: The Dna alphabet used in the fragment store doesn't support lower-case letters. You have to use a string of chars for readSeq.[[br]]
- ''Solution'' :: can be found [wiki:Tutorial/FragmentStore/Assignment1 here]
+ ''Hint'' :: The Dna alphabet used in the fragment store doesn't support lower-case letters. You have to use a string of chars for readSeq.<br>
+ ''Solution'' :: can be found [[Tutorial/FragmentStore/Assignment1| here]]
 
-== Gene Annotation ==
+=== Gene Annotation ===
 
 Annotations are represented as a tree that at least contains a root node where all annotations of children or grandchildren of.
 A typical annotation tree looks as follows:
 
-|| [[Image(source:trunk/docs2/images/AnnotationTree.png, 400px)]] ||
-|| '''Figure 4:''' Annotation tree example ||
+{| border=1 class="simple"
+! [[Image(source:trunk/docs2/images/AnnotationTree.png, 400px)]] 
+|- 
+|  '''Figure 4:''' Annotation tree example 
+|}
+
 
 The following figure shows which tables represent the annotation tree:
 
-|| [[Image(source:trunk/docs2/images/AnnotationStore.png, 600px)]] ||
-|| '''Figure 5:''' Stores involved in gene annotation ||
+{| border=1 class="simple"
+! [[Image(source:trunk/docs2/images/AnnotationStore.png, 600px)]] 
+|- 
+|  '''Figure 5:''' Stores involved in gene annotation 
+|}
 
-=== Traversing the Annotation Tree ===
+
+==== Traversing the Annotation Tree ====
 
 The annotation tree can be traversed and accessed with the [dox:AnnotationTreeIterator AnnotationTree Iterator] annotation tree iterator].
-A new iterator can be created with [dox:ContainerConcept#begin begin] given a reference to the [dox:FragmentStore FragmentStore] and the tag `AnnotationTree`:
-{{{#!cpp
+A new iterator can be created with [dox:ContainerConcept#begin begin] given a reference to the [dox:FragmentStore FragmentStore] and the tag <tt>AnnotationTree</tt>:
+<pre>#cpp
 Iterator<FragmentStore<>, AnnotationTree<> >::Type it;
 it = begin(store, AnnotationTree<>());
-}}}
+</pre>
 It starts at the root node and can be moved to adjacent tree nodes with the functions [dox:AnnotationTreeIterator#goDown goDown], [dox:AnnotationTreeIterator#goUp goUp], and [dox:AnnotationTreeIterator#goRight goRight].
 These functions return a boolean value that indicates whether the iterator could be moved.
 The functions [dox:AnnotationTreeIterator#isLeaf isLeaf], [dox:AnnotationTreeIterator#isRoot isRoot], [dox:AnnotationTreeIterator#isLastLastChild isLastChild] return the same boolean without moving the iterator.
@@ -226,7 +248,7 @@ If the iterator should not be moved but a new iterator at an adjacent nodes is r
 The AnnotationTree iterator supports a preorder DFS traversal and therefore can also be used in typical begin-end loops with the functions [dox:RootedRandomAccessIteratorConcept#goBegin goBegin] (== [dox:AnnotationTreeIterator#goRoot goRoot]), [dox:RootedRandomAccessIteratorConcept#goEnd goEnd], [dox:InputIteratorConcept#goNext goNext], [dox:RootedIteratorConcept#atBegin atBegin], [dox:RootedIteratorConcept#atEnd atEnd].
 During a preorder DFS, the descent into subtree can be skipped by [dox:AnnotationTreeIterator#goNextRight goNextRight], or [dox:AnnotationTreeIterator#goNextUp goNextUp] which proceeds with the next sibling or returns to the parent node and proceeds with the next node in preorder DFS.
 
-=== Accessing the Annotation Tree ===
+==== Accessing the Annotation Tree ====
 
 To access or modify the node an iterator points at, the iterator returns the node's annotationId by the [dox:IteratorAssociatedTypesConcept#value value] function (== operator*).
 With the annotationId the corresponding entry in the annotationStore could be modified manually or by using convenience functions.
@@ -244,19 +266,39 @@ All three functions return an iterator to the newly created node.
 
 The following tables summarizes the functions provided by the AnnotationTree iterator:
 
-|| '''Function''' || '''Description''' ||
-|| getAnnotation, value || Return annotation object/id of current node ||
-|| [get|set]Name, [get|set]Type || Access name or type of current annotation object ||
-|| clearValues, [get|set]ValueByKey || Access associated values ||
-|| goBegin, goEnd, atBegin, atEnd || Go to or test for begin/end of DFS traversal ||
-|| goNext, goNextRight, goNextUp || go next, skip subtree or siblings during DFS traversal ||
-|| goRoot, goUp, goDown, goRight || Navigate through annotation tree ||
-|| create[Left|Right]Child, createSibling || Create new annotation nodes ||
-|| isRoot, isLeaf || Test for root/leaf node ||
+{| border=1 class="simple"
+! '''Function''' 
+! '''Description''' 
+|- 
+|  getAnnotation, value 
+|  Return annotation object/id of current node 
+|- 
+|  [get/set]Name, [get|set]Type 
+|  Access name or type of current annotation object 
+|- 
+|  clearValues, [get/set]ValueByKey 
+|  Access associated values 
+|- 
+|  goBegin, goEnd, atBegin, atEnd 
+|  Go to or test for begin/end of DFS traversal 
+|- 
+|  goNext, goNextRight, goNextUp 
+|  go next, skip subtree or siblings during DFS traversal 
+|- 
+|  goRoot, goUp, goDown, goRight 
+|  Navigate through annotation tree 
+|- 
+|  create[Left/Right]Child, createSibling 
+|  Create new annotation nodes 
+|- 
+|  isRoot, isLeaf 
+|  Test for root/leaf node 
+|}
 
-== File I/O ==
 
-=== Reads and Contigs ===
+=== File I/O ===
+
+==== Reads and Contigs ====
 
 To efficiently load reads, use the function [dox:FragmentStore#loadReads loadReads] which auto-detects the file format, supporting Fasta, Fastq, QSeq and Raw (see [dox:AutoSeqFormat AutoSeqFormat]), and uses memory mapping to efficiently load millions of reads, their names and quality values.
 If not only one but two file names are given, [dox:FragmentStore#loadReads loadReads] loads mate pairs or paired-end reads stored in two separate files.
@@ -265,24 +307,24 @@ The function internally uses [dox:FragmentStore#appendRead appendRead] or [dox:F
 
 Contigs can be loaded with the function [dox:FragmentStore#loadContigs loadContigs].
 The function loads all contigs given in a single file or multiple files given a single file name or a [dox:StringSet StringSet] of file names.
-The function has an additional boolean parameter {{{loadSeqs}}} to load immediately load the contig sequence or if {{{false}}} load the sequence later with [dox:loadContig loadContig] to save memory, given the corresponding {{{contigId}}}.
+The function has an additional boolean parameter <tt>loadSeqs</tt> to load immediately load the contig sequence or if <tt>false</tt> load the sequence later with [dox:loadContig loadContig] to save memory, given the corresponding <tt>contigId</tt>.
 If the contig is accessed by multiple instances/threads the functions [dox:FragmentStore#lockContig lockContig] and [dox:FragmentStore#unlockContig unlockContig] can be used to ensure that the contig is loaded and release it after use.
 The function [dox:FragmentStore#unlockAndFreeContig unlockAndFreeContig] can be used to clear the contig sequence and save memory if the contig is not locked by any instance.
 
 To write all contigs to an open output stream use [dox:FragmentStore#writeContigs writeContigs].
 
-=== Multiple Read Alignments ===
+==== Multiple Read Alignments ====
 
 A multiple read alignment can be loaded from an open input stream with:
-{{{#!cpp
+<pre>#cpp
 read(file, store, Sam());    // reads a SAM file
 read(file, store, Amos());   // reads a file in the AMOS assembler format
-}}}
+</pre>
 and written to an open output stream with:
-{{{#!cpp
+<pre>#cpp
 write(file, store, Sam());   // writes a SAM file
 write(file, store, Amos());  // writes a file in the AMOS assembler format
-}}}
+</pre>
 As SAM supports a multiple read alignment (with padding operations in the CIGAR string) but does not enforce its use.
 That means that a typical SAM file represents a set of pairwise (not multiple) alignments.
 To convert all the pairwise alignments into a multiple alignments of all reads, [dox:FragmentStore#read read] internally calls the function [dox:FragmentStore#convertPairWiseToGlobalAlignment convertPairWiseToGlobalAlignment].
@@ -291,13 +333,13 @@ Contigs can be loaded at any time.
 If they are not loaded before reading a SAM file, empty sequences are created with the names referred in the SAM file.
 A subsequent call of [dox:FragmentStore#loadContigs loadContigs] would load the sequences of these contigs, if they have the same identifier in the contig file.
 
-=== Annotations ===
+==== Annotations ====
 
 A annotation file can be read from an open input stream with:
-{{{#!cpp
+<pre>#cpp
 read(file, store, Gff());    // reads a GFF or GTF file
 read(file, store, Ucsc());   // reads a 'knownGene.txt' or 'knownIsoforms.txt' file
-}}}
+</pre>
 
 The GFF-reader is also able to detect and read GTF files.
 As the kownGene.txt and knownIsoforms.txt files are two seperate files used by the UCSC Genome Browser, they must be read by two consecutive calls of [dox:FragmentStore#read read] (first knownGene.txt then knownIsoforms.txt).
@@ -306,46 +348,120 @@ In that case empty contigs are created in the contigStore with names given in th
 A subsequent call of [dox:FragmentStore#loadContigs loadContigs] would load the sequences of these contigs, if they have the same identifier in the contig file.
 
 To write an annotation to an open output stream use:
-{{{#!cpp
+<pre>#cpp
 write(file, store, Gff());   // writes a GFF file
 write(file, store, Gtf());   // writes a GTF file
-}}}
+</pre>
 
 Please note, that UCSC files cannot be written due to limitations of the file format.
 
-== Stores == 
+=== Stores === 
 The Fragment Store consists of the following tables:
 
-=== Read Stores ===
+==== Read Stores ====
 
-|| '''Store''' || '''Description''' || '''Details''' ||
-|| [dox:FragmentStore#readStore readStore] || Reads || String that maps from {{{readId}}} to {{{matePairId}}} ||
-|| [dox:FragmentStore#readSeqStore readSeqStore] || Read sequences || String that maps from {{{readId}}} to {{{readSeq}}} ||
-|| [dox:FragmentStore#matePairStore matePairStore] || Mate-pairs / pairs of reads || String that maps from {{{matePairId}}} to {{{<readId[2], libId>}}} ||
-|| [dox:FragmentStore#libraryStore libraryStore] || Mate-pair libraries || String that maps from {{{libId}}} to {{{<mean, std>}}} ||
+{| border=1 class="simple"
+! '''Store''' 
+! '''Description''' 
+! '''Details''' 
+|- 
+|  [dox:FragmentStore#readStore readStore] 
+|  Reads 
+|  String that maps from <tt>readId</tt> to <tt>matePairId</tt> 
+|- 
+|  [dox:FragmentStore#readSeqStore readSeqStore] 
+|  Read sequences 
+|  String that maps from <tt>readId</tt> to <tt>readSeq</tt> 
+|- 
+|  [dox:FragmentStore#matePairStore matePairStore] 
+|  Mate-pairs / pairs of reads 
+|  String that maps from <tt>matePairId</tt> to <tt><readId[2], libId></tt> 
+|- 
+|  [dox:FragmentStore#libraryStore libraryStore] 
+|  Mate-pair libraries 
+|  String that maps from <tt>libId</tt> to <tt><mean, std></tt> 
+|}
 
-=== Contig Stores ===
 
-|| '''Store''' || '''Description''' || '''Details''' ||
-|| [dox:FragmentStore#contigStore contigStore] || Contig sequences with gaps || String that maps from {{{contigId}}} to {{{<contigSeq, contigGaps, contigFileId>}}} ||
-|| [dox:FragmentStore#contigFileStore contigFileStore] || Stores information how to load contigs on-demand || String that maps from {{{contigFileId}}} to {{{<fileName, firstContigId>}}} ||
+==== Contig Stores ====
 
-=== Read Alignment Stores  ===
-|| '''Store''' || '''Description''' || '''Details''' ||
-|| [dox:FragmentStore#alignedReadStore alignedReadStore] || Alignments of reads against contigs || String that stores {{{<alignId, readId, contigId, pairMatchId, beginPos, endPos, gaps>}}} ||
-|| [dox:FragmentStore#alignedReadTagStore alignedReadTagStore] || Additional alignment tags (used in SAM) || String that maps from {{{alignId}}} to {{{alignTag}}} ||
-|| [dox:FragmentStore#alignQualityStore alignQualityStore] || Mapping quality of read alignments || String that maps from {{{alignId}}} to {{{<pairScore, score, errors>}}} ||
+{| border=1 class="simple"
+! '''Store''' 
+! '''Description''' 
+! '''Details''' 
+|- 
+|  [dox:FragmentStore#contigStore contigStore] 
+|  Contig sequences with gaps 
+|  String that maps from <tt>contigId</tt> to <tt><contigSeq, contigGaps, contigFileId></tt> 
+|- 
+|  [dox:FragmentStore#contigFileStore contigFileStore] 
+|  Stores information how to load contigs on-demand 
+|  String that maps from <tt>contigFileId</tt> to <tt><fileName, firstContigId></tt> 
+|}
 
-=== Annotation Stores ===
 
-|| '''Store''' || '''Description''' || '''Details''' ||
-|| [dox:FragmentStore#annotationStore annotationStore] || Annotations of contig regions || String that maps from {{{annoId}}} to {{{<contigId, typeId, beginPos, endPos, parentId, lastChildId, nextSiblingId, values>}}} ||
+==== Read Alignment Stores  ====
+{| border=1 class="simple"
+! '''Store''' 
+! '''Description''' 
+! '''Details''' 
+|- 
+|  [dox:FragmentStore#alignedReadStore alignedReadStore] 
+|  Alignments of reads against contigs 
+|  String that stores <tt><alignId, readId, contigId, pairMatchId, beginPos, endPos, gaps></tt> 
+|- 
+|  [dox:FragmentStore#alignedReadTagStore alignedReadTagStore] 
+|  Additional alignment tags (used in SAM) 
+|  String that maps from <tt>alignId</tt> to <tt>alignTag</tt> 
+|- 
+|  [dox:FragmentStore#alignQualityStore alignQualityStore] 
+|  Mapping quality of read alignments 
+|  String that maps from <tt>alignId</tt> to <tt><pairScore, score, errors></tt> 
+|}
 
-=== Name Stores ===
 
-|| '''Store''' || '''Description''' || '''Details''' ||
-|| [dox:FragmentStore#annotationNameStore annotationNameStore] || Annotation names || String that maps from {{{annoId}}} to {{{annoName}}} ||
-|| [dox:FragmentStore#readNameStore readNameStore] || Read identifiers (Fasta ID) || String that maps from {{{readId}}} to {{{readName}}} ||
-|| [dox:FragmentStore#contigNameStore contigNameStore] || Contig identifiers (Fasta ID) || String that maps from {{{contigId}}} to {{{contigName}}} ||
-|| [dox:FragmentStore#matePairNameStore matePairNameStore] || Mate-pair identifiers || String that maps from {{{contigId}}} to {{{contigName}}} ||
-|| [dox:FragmentStore#libraryNameStore libraryNameStore] || Mate-pair library identifiers || String that maps from {{{libId}}} to {{{libName}}} ||
+==== Annotation Stores ====
+
+{| border=1 class="simple"
+! '''Store''' 
+! '''Description''' 
+! '''Details''' 
+|- 
+|  [dox:FragmentStore#annotationStore annotationStore] 
+|  Annotations of contig regions 
+|  String that maps from <tt>annoId</tt> to <tt><contigId, typeId, beginPos, endPos, parentId, lastChildId, nextSiblingId, values></tt> 
+|}
+
+
+==== Name Stores ====
+
+{| border=1 class="simple"
+! '''Store''' 
+! '''Description''' 
+! '''Details''' 
+|- 
+|  [dox:FragmentStore#annotationNameStore annotationNameStore] 
+|  Annotation names 
+|  String that maps from <tt>annoId</tt> to <tt>annoName</tt> 
+|- 
+|  [dox:FragmentStore#readNameStore readNameStore] 
+|  Read identifiers (Fasta ID) 
+|  String that maps from <tt>readId</tt> to <tt>readName</tt> 
+|- 
+|  [dox:FragmentStore#contigNameStore contigNameStore] 
+|  Contig identifiers (Fasta ID) 
+|  String that maps from <tt>contigId</tt> to <tt>contigName</tt> 
+|- 
+|  [dox:FragmentStore#matePairNameStore matePairNameStore] 
+|  Mate-pair identifiers 
+|  String that maps from <tt>contigId</tt> to <tt>contigName</tt> 
+|- 
+|  [dox:FragmentStore#libraryNameStore libraryNameStore] 
+|  Mate-pair library identifiers 
+|  String that maps from <tt>libId</tt> to <tt>libName</tt> 
+|}
+
+
+
+
+{{TracNotice|{{PAGENAME}}}}

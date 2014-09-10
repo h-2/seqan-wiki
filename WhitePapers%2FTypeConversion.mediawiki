@@ -1,4 +1,5 @@
-= Type Conversion In !SeqAn =
+
+== Type Conversion In SeqAn ==
 
 '''This page is work in progress! '''
 
@@ -7,28 +8,28 @@ This section is about alphabet characters, i.e. '''conversion of sequence elemen
 C++ provides facilities for implicit type conversion on the language level through conversion operators and non-explicit constructors.
 They are useful but there are some drawbacks.
 First, if we want to convert a type A into a type B, which type should provide the conversion faicility.
-Should A provide an `operator B` or should B have a copy constructor with parameter typed `A const &`?
-Second, what if we want to provide a type conversion but not change either class, for example if we want to extend !SeqAn?
+Should A provide an <tt>operator B</tt> or should B have a copy constructor with parameter typed <tt>A const &</tt>?
+Second, what if we want to provide a type conversion but not change either class, for example if we want to extend SeqAn?
 
 Again, the solution comes in the form of global functions.
-!SeqAn provides the function [seqan:Function.convert `convert<Target>(Source const &)`] that provides this functionality.
+SeqAn provides the function [seqan:Function.convert <tt>convert<Target>(Source const &)</tt>] that provides this functionality.
 By introducing new implementations, we can provide new type conversions.
 
-== The Functions convert, convertImpl and Metafunction Convert ==
+=== The Functions convert, convertImpl and Metafunction Convert ===
 
 There is one caveat, however:
-seqan:Function.convert only is a forward to `convertImpl(Convert<Source, Target> const &, Source const &)`.
-The reason for this is that the type `Target` cannot be inferred from the parameters but has to be given explicitely.
-Function specialization through template parameters (i.e. not through function parameters) is discouraged in !SeqAn.
+seqan:Function.convert only is a forward to <tt>convertImpl(Convert<Source, Target> const &, Source const &)</tt>.
+The reason for this is that the type <tt>Target</tt> cannot be inferred from the parameters but has to be given explicitely.
+Function specialization through template parameters (i.e. not through function parameters) is discouraged in SeqAn.
 
 TODO(holtgrew): Ask David why this is the case.
 
-`Convert<TSource, TTarget>` is a metafunction that returns the target type of the conversion.
+<tt>Convert<TSource, TTarget></tt> is a metafunction that returns the target type of the conversion.
 
-The default implementation of `convertImpl` is in ''basic/basic_converter.h'':
+The default implementation of <tt>convertImpl</tt> is in ''basic/basic_converter.h'':
 
-{{{
-#!cpp
+<pre>
+#cpp
 template <typename TTarget, typename T, typename TSource>
 inline typename Convert<TTarget, TSource>::Type
 convertImpl(Convert<TTarget, T> const,
@@ -36,23 +37,23 @@ convertImpl(Convert<TTarget, T> const,
 {
 	  return source;
 }
-}}}
+</pre>
 
 TODO(holtgrew): Why is this specialized so funnily?
 
-This implementation returns the parameter `source` without any explicit conversion.
-This means that `source` will be '''implicitely''' converted into `Convert<TTarget, TSource>::Type`, the result type of the conversion from TSource to TTarget.
+This implementation returns the parameter <tt>source</tt> without any explicit conversion.
+This means that <tt>source</tt> will be '''implicitely''' converted into <tt>Convert<TTarget, TSource>::Type</tt>, the result type of the conversion from TSource to TTarget.
 
 Note that the conversion type from TSource to TTarget can be overwritten to give another type than TTarget.
-This means that in the call `convertImpl(Convert<TTarget, TSource>, source)`, `source` would be first implicitely cast to `Convert<TTarget, TSource>::Type` when returning from `convertImpl` and then again implicitely cast to TTarget.
+This means that in the call <tt>convertImpl(Convert<TTarget, TSource>, source)</tt>, <tt>source</tt> would be first implicitely cast to <tt>Convert<TTarget, TSource>::Type</tt> when returning from <tt>convertImpl</tt> and then again implicitely cast to TTarget.
 
-== Specializations ==
+=== Specializations ===
 
-The module ''basic'' provides some specializations of `convertImpl`.
-First, it provides implementations for !SimpleTypes which defers the conversion implementation to seqan:Function.assign (which internally uses lookup tables for type conversions):
+The module ''basic'' provides some specializations of <tt>convertImpl</tt>.
+First, it provides implementations for SimpleTypes which defers the conversion implementation to seqan:Function.assign (which internally uses lookup tables for type conversions):
 
-{{{
-#!cpp
+<pre>
+#cpp
 template <typename TTarget, typename T, typename TSourceValue, typename TSourceSpec>
 inline typename _RemoveConst<TTarget>::Type
 convertImpl(Convert<TTarget, T> const,
@@ -62,19 +63,23 @@ convertImpl(Convert<TTarget, T> const,
 	assign(target_, source_);
 	return target_;
 }
-}}}
+</pre>
 
 TODO(holtgrew): Document the interal workings of assign().
 
 Second, it provides an implementation for profile alphabet characters.
 This function returns the character with the highest count (consensus character).
 
-TODO(holtgrew): Why is the gap symbol directly built into !ProfileType?
+TODO(holtgrew): Why is the gap symbol directly built into ProfileType?
 
-The module ''modifier'' provides specializations of `convertImpl`, too.
+The module ''modifier'' provides specializations of <tt>convertImpl</tt>, too.
 The default implementation delegates to the function of the underlying type.
 
 There also is an implementation for the alphabet expansion that are based on lookup tables.
 The special case of conversion from an alphabet with an underlying simple type to the same simple type and the reverse conversion is implemented without a table lookup.
 
 TODO(holtgrew): Why is assign() not overloaded for modified alphabets? Does this work at all?
+
+
+
+{{TracNotice|{{PAGENAME}}}}

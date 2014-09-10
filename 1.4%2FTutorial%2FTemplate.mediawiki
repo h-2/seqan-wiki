@@ -1,10 +1,15 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
-= Tutorial Template =
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[Tutorial]] if you need the documentation for the trunk version.'''
+== Tutorial Template ==
 
 [[TOC]]
 
-||= Meta Information =||= Example =||
-{{{#!td valign=top width=300
+{| border=1 class="simple"
+!= Meta Information =
+!= Example =
+|}
+
+<pre>#td valign=top width=300
  Learning Objective ::
   Describe the learning objective in your own words.
  Difficulty ::
@@ -14,8 +19,8 @@
   If you expect more than 90 minutes please '''split your tutorial up''' into multiple ones.
  Prerequisites ::
   A list of absolved tutorials and other requirements you expect your reader to fulfill.
-}}}
-{{{#!td valign=top width=300
+</pre>
+<pre>#td valign=top width=300
  Learning Objective ::
   You will be able to write a tutorial that meets our quality standards.
  Difficulty ::
@@ -23,17 +28,17 @@
  Duration ::
   1h
  Prerequisites ::
-  [wiki:Tutorial/Basics], [wiki:Tutorial/MotifFinding], English language skills
-}}}
+  [[Tutorial/Basics]], [[Tutorial/MotifFinding]], English language skills
+</pre>
 
- {{{ #!ImportantBox
+ <pre> #ImportantBox
 Please only use this template in conjunction with the [HowTo/WriteTutorials How To: Write Tutorials].
- }}}
+ </pre>
 
-This is the place where introductory need to be in given.[[BR]]
+This is the place where introductory need to be in given.<br>
 e.g. "This page constitutes the template for all future SeqAn tutorials".
 
-It is accompanied by the [wiki:HowTo/WriteTutorials How To: Write Tutorials] guide and gives an example of what a template should look like and what it is supposed to contain.
+It is accompanied by the [[HowTo/WriteTutorials| How To: Write Tutorials]] guide and gives an example of what a template should look like and what it is supposed to contain.
 
 Use this and optional further paragraphs to give the following information:
    - What is this tutorial about?
@@ -41,13 +46,13 @@ Use this and optional further paragraphs to give the following information:
    - What are the communicated information used for?
    - What can the reader expect to know after having absolved the tutorial?
 
-{{{
-#!WarningBox
-This is a warning message.[[BR]]
+<pre>
+#WarningBox
+This is a warning message.<br>
 Here you can inform users about important bugs or other relevant issues. The content (and thereby the box itself) are always of '''temporary''' nature and should '''only be used thriftily'''.
-}}}
+</pre>
 
-== Section ==
+=== Section ===
 
 Use this and optional further paragraphs to give the following information:
    - What is this section about?
@@ -59,125 +64,133 @@ Try to adopt the reader's perspective and imagine - based on your target group a
 The mental model can be described as an imagination of the interaction of central concepts.
 Use a '''simple language''' and try to support the reader in developing a mental model that fits best to your topic.
 
-{{{#!InfoBox
+<pre>#InfoBox
 '''Information:''' What are InfoBoxes for?
 
 An InfoBox ist useful to give information that are '''optional''' and thus don't need to be read.
 Typical information are '''further details''' that support the understanding but are too distinct to be put in a normal paragraph.
 
 In this example you could tell the reader more about didactics and give him some useful links.
-}}}
+</pre>
 
-{{{#!ImportantBox
+<pre>#ImportantBox
 '''Important:''' What are ImportantBoxes for?
 
 These boxes contain information that '''should be kept in mind''' since the described phenomenon is very likely to be encountered by the reader again and again when working with SeqAn.
 
 In contrast to the CautionBox this box type is of '''permanent''' nature and the given information are valid for a long time.
-}}}
+</pre>
 
 If you give code examples tell the reader what he can see and what is crucial to your snippet.
-Link all classes and other resources to the SeqAn documentation system by using `seqan:"[Concept].[Name]"` (e.g. seqan:"Class.String").
-In order to include code snippets use `[[Include(source:tags/seqan-1.4.0/PATH, fragment=FRAGMENT)]]` where `PATH` (e.g. `extras/demos/tutorial/find_motif_pms1.cpp`) locates the source code file in the subversion repository and `FRAGMENT` (e.g. `search`) the segment to include in the tutorial. 
+Link all classes and other resources to the SeqAn documentation system by using <tt>seqan:"[Concept].[Name]"</tt> (e.g. seqan:"Class.String").
+In order to include code snippets use <tt>[[Include(source:tags/seqan-1.4.0/PATH, fragment=FRAGMENT)]]</tt> where <tt>PATH</tt> (e.g. <tt>extras/demos/tutorial/find_motif_pms1.cpp</tt>) locates the source code file in the subversion repository and <tt>FRAGMENT</tt> (e.g. <tt>search</tt>) the segment to include in the tutorial. 
 
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/find_motif_pms1.cpp, fragment=search)]]
 
 If possible also include what output it generated by given code in the console. Here is one example:
 
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 0: ACAG
 1: AGCC
 2: CCAG
 3: GCAG
 4: TCAG
-}}}
+</pre>
 
 Now that you gave an overview of important concepts of your topic let the user play with it!
 Formulate '''small assignments''' to allow the reader to fortify his newly acquainted knowledge.
 
-=== Assignment 1 ===
-{{{#!AssignmentBox
+==== Assignment 1 ====
+<pre>#AssignmentBox
 
-||= Meta Information =||= Example =||
-{{{#!td valign=top width=300
+{| border=1 class="simple"
+!= Meta Information =
+!= Example =
+|}
+
+<pre>#td valign=top width=300
  Type ::
   [Review, Application, Transfer]
   Note that your readers will be in different phases of learning. For the sake of simplicity we restrict ourselves to the following three levels:
-   1. knowledge fortification (mainly through repetition, optionally with slight variations)
-   1. supervised problem solving (finely grained step-by-step assignment with at least one hint and the interim solution per step)
-   1. knowledge transfer (problem solving in a related problem domain / class)
+##knowledge fortification (mainly through repetition, optionally with slight variations)
+##supervised problem solving (finely grained step-by-step assignment with at least one hint and the interim solution per step)
+##knowledge transfer (problem solving in a related problem domain / class)
  Objective ::
   Assignment description.
  Hints :: 
   ...
  Solution ::
   Link to the complete solution.
-}}}
-{{{#!td valign=top width=300
+</pre>
+<pre>#td valign=top width=300
  Type :: Application
  Objective :: Output all symbols a given alphabet can have. The output should look like this:
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 0: ACAG
 1: AGCC
 2: CCAG
 3: GCAG
 4: TCAG
-}}}
+</pre>
  Hints ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 Hints go here...
-}}}
+</pre>
  Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 Solution itself or a link to the solution go here...
-}}}
-}}}
+</pre>
+</pre>
 
 
 This part of the assignment is to give partial solutions.
 A partial solution starts with a sentence of what this step is about and gives the lines of code that are needed to implement this step.
 
-{{{#!FoldOut
+<pre>#FoldOut
 ==== Solution Step 1 ====
 ----
 The given sequences are of alphabet .... Therefore you have to .... 
 
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/find_motif_pms1.cpp, fragment=includes)]]
-}}}
+</pre>
 
-{{{#!FoldOut
+<pre>#FoldOut
 ==== Solution Step 2 ====
 ----
 The given sequences are of alphabet .... Therefore you have to .... 
 
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/find_motif_pms1.cpp, fragment=typedefs)]]
-}}}
+</pre>
 
-}}}
+</pre>
 
 
-=== Assignment 2 ===
+==== Assignment 2 ====
 
 see assignment 1
 
-== Section ==
+=== Section ===
 
 see section 1
 
-=== Assignment 3 ===
+==== Assignment 3 ====
 
 see assignment 1
 
-=== Assignment 4 ===
+==== Assignment 4 ====
 
 see assignment 1
 
-== Submit a  Comment ==
+=== Submit a  Comment ===
 If you found a mistake, or have suggestions about an improvement of this page press:
 [/newticket?component=Documentation&description=Tutorial+Enhancement+for+page+http://trac.seqan.de/wiki/Tutorial/Template&type=enhancement submit your comment]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

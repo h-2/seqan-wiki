@@ -1,13 +1,14 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[Tutorial]] if you need the documentation for the trunk version.'''
 [[TOC]]
-= Pattern Matching =
+== Pattern Matching ==
 
 This tutorial is about searching a known string or seqan:Class.StringSet (''needle'') in another string or seqan:Class.StringSet (''haystack'').
 The searching can be exact or approximate.
 The latter allows for errors, which are either only mismatches or also indels.
 Additionally there are filtration algorithms which return potential matches, i.e. haystack segments possibly containing a pattern match.
 All searching is done by calling the function seqan:Function.find, which takes at least two arguments:
- 1. A seqan:Class.Finder that stores all necessary information about the haystack and the last found position of the needle within the haystack.
+#A seqan:Class.Finder that stores all necessary information about the haystack and the last found position of the needle within the haystack.
  2. A seqan:Class.Pattern that stores all information about the needle.
 Some variants of find support further arguments.
 The seqan:Class.Finder and seqan:Class.Pattern classes expect the underlying haystack and needle types as first template arguments.
@@ -16,59 +17,89 @@ In addition, a second template argument specifies the search algorithm.
 Each call of seqan:Function.find finds only one match (or potential match) of the needle within the haystack. 
 The seqan:Class.Finder can be asked for the begin and end position of the last found match.
 The seqan:Class.Pattern can be asked for the number of the found sequence if the needle is a seqan:Class.StringSet.
-Subsequent calls of find can be used to find more occurrences of the needle, until no more occurrences can be found and find returns `false`.
+Subsequent calls of find can be used to find more occurrences of the needle, until no more occurrences can be found and find returns <tt>false</tt>.
 
 In general, search algorithms can be divided into algorithms that preprocess the needle (online search) or preprocess the haystack (index search).
 
-== Online Search ==
+=== Online Search ===
 For all online search algorithms, the seqan:Class.Finder is an iterator that scans over the haystack.
 The seqan:Class.Pattern is a search algorithm dependent data structure preprocessed from the needle.
 The second template argument of the seqan:Class.Pattern selects the search algorithm.
 
-=== Exact Search ===
-The following code snippet illustrates the usage of online search algorithms in SeqAn using the example of the Hoorspool ([wiki:Bibliography#Horspool1980 Horspool, 1980]) algorithm.
-We begin by creating two strings of type `char` containing the haystack and the needle.
+==== Exact Search ====
+The following code snippet illustrates the usage of online search algorithms in SeqAn using the example of the Hoorspool ([[Bibliography#Horspool1980| Horspool, 1980]]) algorithm.
+We begin by creating two strings of type <tt>char</tt> containing the haystack and the needle.
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/find/find_exact.cpp, fragment=initialization)]]
 We then create seqan:Class.Finder and seqan:Class.Pattern objects of these strings and choose seqan:Spec.Horspool as the specialization in the second template argument of seqan:Class.Pattern.
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/find/find_exact.cpp, fragment=output)]]
 
 Program output:
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 [2,4)   mo
 [12,14) mo
 [17,19) mo
 </pre>
-}}}
+</pre>
 
 Currently the following exact online algorithms for searching a single sequence are implemented in Seqan:
 
-|| '''Specialization''' || '''Description''' ||
-|| seqan:"Spec.Simple Finder" || Brute force algorithm ||
-|| seqan:Spec.Horspool || Horspool's algorithm ([wiki:Bibliography#Horspool1980 Horspool, 1980]) ||
-|| seqan:Spec.Bfam || Backward Factor Automaton Matching ||
-|| seqan:Spec.BndmAlgo || Backward Nondeterministic DAWG Matching ||
-|| seqan:Spec.ShiftAnd || Exact string matching using bit parallelism ||
-|| seqan:Spec.ShiftOr || Exact string matching using bit parallelism ||
+{| border=1 class="simple"
+! '''Specialization''' 
+! '''Description''' 
+|- 
+|  seqan:"Spec.Simple Finder" 
+|  Brute force algorithm 
+|- 
+|  seqan:Spec.Horspool 
+|  Horspool's algorithm ([[Bibliography#Horspool1980| Horspool, 1980]]) 
+|- 
+|  seqan:Spec.Bfam 
+|  Backward Factor Automaton Matching 
+|- 
+|  seqan:Spec.BndmAlgo 
+|  Backward Nondeterministic DAWG Matching 
+|- 
+|  seqan:Spec.ShiftAnd 
+|  Exact string matching using bit parallelism 
+|- 
+|  seqan:Spec.ShiftOr 
+|  Exact string matching using bit parallelism 
+|}
+
 
 ... and for multiple sequences:
 
-|| '''Specialization''' || '''Description''' ||
-|| seqan:Spec.WuManber || Extension of seqan:Spec.Horspool ||
-|| seqan:Spec.MultiBfam || Multiple version of seqan:Spec.Bfam, uses an automaton of reversed needles ||
-|| seqan:Spec.SetHorspool || Another extension of seqan:Spec.Horspool using a trie of reversed needles ||
-|| seqan:Spec.AhoCorasick || Uses a trie with suffix links to scan through the haystack ([wiki:Bibliography#AhoCorasick1975 Aho, Corasick, 1975]) ||
-|| seqan:Spec.MultipleShiftAnd || Extension of seqan:Spec.ShiftAnd, should only be used if the sum of needle lengths doesn't exceed the machine word size ||
+{| border=1 class="simple"
+! '''Specialization''' 
+! '''Description''' 
+|- 
+|  seqan:Spec.WuManber 
+|  Extension of seqan:Spec.Horspool 
+|- 
+|  seqan:Spec.MultiBfam 
+|  Multiple version of seqan:Spec.Bfam, uses an automaton of reversed needles 
+|- 
+|  seqan:Spec.SetHorspool 
+|  Another extension of seqan:Spec.Horspool using a trie of reversed needles 
+|- 
+|  seqan:Spec.AhoCorasick 
+|  Uses a trie with suffix links to scan through the haystack ([[Bibliography#AhoCorasick1975| Aho, Corasick, 1975]]) 
+|- 
+|  seqan:Spec.MultipleShiftAnd 
+|  Extension of seqan:Spec.ShiftAnd, should only be used if the sum of needle lengths doesn't exceed the machine word size 
+|}
+
 
 ==== Assignments ====
 
  ''Task 1'' :: Become acquainted with online search algorithms for multiple sequences and search "Simon, send more money!" simultaneously for "mo", "send", "more".
- For every match output the begin and end position in the haystack and which needle has been found.[[br]]
+ For every match output the begin and end position in the haystack and which needle has been found.<br>
  ''Difficulty'' :: 2
- ''Solution'' :: can be found [wiki:Tutorial/PatternMatching/Assignment1 here].
+ ''Solution'' :: can be found [[Tutorial/PatternMatching/Assignment1| here]].
 
-=== Approximate Search ===
+==== Approximate Search ====
 
 The approximate search can be used to find segments in the haystack that are similar to a needle allowing errors, such as mismatches or indels. 
 Note that if only mismatches are allowed, the difference of the end and begin position of a match is the length of the found needle. 
@@ -90,8 +121,8 @@ We then output all begin and end positions and the corresponding haystack segmen
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/find/find_approx.cpp, fragment=output)]]
 
 Program output:
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 [2,4)   mo
 [12,14) mo
@@ -102,22 +133,34 @@ Program output:
 [17,19) mo
 [17,21) mone
 </pre>
-}}}
+</pre>
 
-|| '''Specialization''' || '''Description''' ||
-|| seqan:Spec.DPSearch || Dynamic programming algorithm for many kinds of scoring scheme ||
-|| seqan:Spec.Myers || A fast bit-parallel DP algorithm for edit distance ([wiki:Bibliography#Myers1999 Myers 1999], [wiki:Bibliography#Ukkonen1985 Ukkonen 1985]) ||
-|| seqan:Spec.Pex || A (hierarchical) filter based on the pigeonhole principle ([wiki:Bibliography#Baeza-YatesNavarro1999 Baeza-Yates, Navarro, 1999]) ||
-|| seqan:Spec.AbndmAlgo || Approximate Backward Nondeterministic DAWG Matching, adaption of seqan:Spec.BndmAlgo ||
+{| border=1 class="simple"
+! '''Specialization''' 
+! '''Description''' 
+|- 
+|  seqan:Spec.DPSearch 
+|  Dynamic programming algorithm for many kinds of scoring scheme 
+|- 
+|  seqan:Spec.Myers 
+|  A fast bit-parallel DP algorithm for edit distance ([[Bibliography#Myers1999| Myers 1999]], [[Bibliography#Ukkonen1985| Ukkonen 1985]]) 
+|- 
+|  seqan:Spec.Pex 
+|  A (hierarchical) filter based on the pigeonhole principle ([[Bibliography#Baeza-YatesNavarro1999| Baeza-Yates, Navarro, 1999]]) 
+|- 
+|  seqan:Spec.AbndmAlgo 
+|  Approximate Backward Nondeterministic DAWG Matching, adaption of seqan:Spec.BndmAlgo 
+|}
+
 
 ==== Assignments ====
 
- ''Task 2'' :: Modify the example above to search with the seqan:Spec.Myers algorithm for matches of "more" with an edit distance of at most 2.[[br]]
+ ''Task 2'' :: Modify the example above to search with the seqan:Spec.Myers algorithm for matches of "more" with an edit distance of at most 2.<br>
  ''Difficulty'' :: 1
- ''Solution'' :: can be found [wiki:Tutorial/PatternMatching/Assignment2 here].
+ ''Solution'' :: can be found [[Tutorial/PatternMatching/Assignment2| here]].
 
-== Index Search ==
-=== Exact Search ===
+=== Index Search ===
+==== Exact Search ====
 For the index based search the seqan:Class.Finder needs to be specialized with an seqan:Class.Index of the haystack in the first template argument.
 The index itself requires two template arguments, the haystack type and a index specialization.
 In contrast, since the needle is not preprocessed the second template argument of the seqan:Class.Pattern has to be omitted.
@@ -131,15 +174,15 @@ Please note that an seqan:Class.Index based seqan:Class.Finder has to be reset w
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/find/find_index.cpp, fragment=output_short)]]
 
 Program output:
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 [11,13)	be
 [2,4)	be
 [11,13)	be
 [2,4)	be
 </pre>
-}}}
+</pre>
 
 All indices also support seqan:Class.StringSet texts and can therefore be used to search multiple haystacks as the following example shows.
 We simply exchange the seqan:Shortcut.CharString of the haystack with a seqan:Class.StringSet of seqan:ShortCut.CharString and append some strings to it.
@@ -147,37 +190,51 @@ The rest of the program remains unchanged.
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/find/find_index_multiple.cpp, fragment=initialization)]]
 
 Program output:
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 [< 0 , 11 >,< 0 , 13 >)	be
 [< 1 , 3 >,< 1 , 5 >)	be
 [< 2 , 0 >,< 2 , 2 >)	be
 [< 0 , 2 >,< 0 , 4 >)	be
 </pre>
-}}}
+</pre>
 
 The following index specializations support the seqan:Class.Finder interface as described above.
-|| '''Specialization''' || '''Description''' ||
-|| seqan:Spec.IndexEsa || Enhanced suffix array based index. Supports arbitrary needles. ||
-|| seqan:Spec.IndexQGram || q-gram index. Needle mustn't exceed the size of the q-gram. ||
-|| seqan:Spec.OpenAddressing || q-gram index with open addressing. Supports larger q-grams. Needle and q-gram must have the same size. ||
+{| border=1 class="simple"
+! '''Specialization''' 
+! '''Description''' 
+|- 
+|  seqan:Spec.IndexEsa 
+|  Enhanced suffix array based index. Supports arbitrary needles. 
+|- 
+|  seqan:Spec.IndexQGram 
+|  q-gram index. Needle mustn't exceed the size of the q-gram. 
+|- 
+|  seqan:Spec.OpenAddressing 
+|  q-gram index with open addressing. Supports larger q-grams. Needle and q-gram must have the same size. 
+|}
 
-Besides the seqan:Function.find interface there is another interface for indices using suffix tree iterators to search exact needle occurrences described in the [wiki:Tutorial/Indices#Example1 index tutorial].
+
+Besides the seqan:Function.find interface there is another interface for indices using suffix tree iterators to search exact needle occurrences described in the [[Tutorial/Indices#Example1| index tutorial]].
 
 ==== Assignments ====
 
- ''Task 3'' :: Modify the example above to search with an seqan:Spec.OpenAddressing q-gram index for matches of "tobe" in "tobeornottobe".[[br]]
+ ''Task 3'' :: Modify the example above to search with an seqan:Spec.OpenAddressing q-gram index for matches of "tobe" in "tobeornottobe".<br>
  ''Difficulty'' :: 2
- ''Solution'' :: can be found [wiki:Tutorial/PatternMatching/Assignment3 here].
+ ''Solution'' :: can be found [[Tutorial/PatternMatching/Assignment3| here]].
 
-=== Approximate Filtration ===
+==== Approximate Filtration ====
 Currently there are no indices directly supporting an approximate search.
 But nevertheless, there are approximate search filters available that can be used to filter out regions of the haystack that do not contain an approximate match, see seqan:Spec.Swift.
 The regions found by these filters potentially contain a match and must be verified afterwards.
 seqan:Function.beginPosition, seqan:Function.endPosition and seqan:Function.infix can be used to return the boundaries or sequence of such a potential match.
-For more details on using filters, see the [wiki:HowTo/FilterSimilarSequences Swift howto].
+For more details on using filters, see the [[HowTo/FilterSimilarSequences| Swift howto]].
 
-=== Submit a  comment ===
+==== Submit a  comment ====
 If you found a mistake, or have suggestions about an improvement of this page press:
 [/newticket?component=Documentation&description=Tutorial+Enhancement+for+page+http://trac.seqan.de/wiki/Tutorial/PatternMatching&type=enhancement submit your comment]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

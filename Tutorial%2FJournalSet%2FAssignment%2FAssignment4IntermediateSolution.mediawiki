@@ -1,4 +1,5 @@
-= Assignment 4: Complete Solution =
+
+== Assignment 4: Complete Solution ==
 
 Include the necessary headers.
 
@@ -42,8 +43,8 @@ Reporting the identified hits.
 
 And here is the result.
 
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 Search for: GTGGT:
 Hit in reference  at 311: GTGGT	644: GTGGT	
@@ -53,5 +54,9 @@ Hit in sequence 2 at 311: GTGGT	507: GTGGT
 Hit in sequence 3 at 327: GTGGT	
 Hit in sequence 4 at 307: GTGGT	312: GTGGT	317: GTGGT	
 Hit in sequence 5 at 0: GTGGT	320: GTGGT	986: GTGGT
-}}}
+</pre>
 
+
+
+
+{{TracNotice|{{PAGENAME}}}}

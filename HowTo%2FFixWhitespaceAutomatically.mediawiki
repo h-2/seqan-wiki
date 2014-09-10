@@ -1,22 +1,23 @@
-= How To: Fix Whitespace Automatically =
 
-This page describes how to use [http://universalindent.sourceforge.net/ Universal Indent GUI] and [http://uncrustify.sourceforge.net/ Uncrustify] to automatically fix whitespace such that code resembles the [wiki:StyleGuide/Cpp C++ Style Guide] more closely.
+== How To: Fix Whitespace Automatically ==
 
- * Uncrustify is a command line program that is given a style definition and a source file and reformats the source file according to the configuration.
- * Universal Indent GUI is a graphical front-end to Uncrustify with life preview that allows to manipulate the configuration and immediately see the results.
+This page describes how to use [http://universalindent.sourceforge.net/ Universal Indent GUI] and [http://uncrustify.sourceforge.net/ Uncrustify] to automatically fix whitespace such that code resembles the [[StyleGuide/Cpp| C++ Style Guide]] more closely.
 
-{{{#!WarningBox
+*Uncrustify is a command line program that is given a style definition and a source file and reformats the source file according to the configuration.
+*Universal Indent GUI is a graphical front-end to Uncrustify with life preview that allows to manipulate the configuration and immediately see the results.
+
+<pre>#WarningBox
 At the moment, our ''uncrustify.cfg'' is still work in progress.
 Always check the result before applying the changes to the original file.
-}}}
+</pre>
 
-== Installing Universal Indent GUI ==
+=== Installing Universal Indent GUI ===
 
 This one is pretty easy.
 On Ubuntu and other Linux systems, you can use the package management system to install the GUI and the reformatting programs.
 The [http://sourceforge.net/projects/universalindent/files/uigui/ Universal Indent GUI download page] has binaries for Mac Os X and Windows.
 
-== Preview with Universal Indent GUI ==
+=== Preview with Universal Indent GUI ===
 
 When started, the program will present you with a window like the following.
 
@@ -43,28 +44,32 @@ The settings on the left panel allow us to tweak the style to our liking.
 Any changes can be stored by selecting "Indenter" -> "Load Indenter Config File" in the program menu.
 The source can also be stored, using "File" -> "Save Source File" and "File" -> "Save Source File As...".
 
-== Using The Command Line ==
+=== Using The Command Line ===
 
 Uncrustify can also be used via the command line.
 This is best done after a rough visual verification that the uncrustify.cfg yields works for your sources using the Universal Indenter UI.
 
 Work on single file:
 
-{{{
+<pre>
 $ uncrustify -c ${CHECKOUT}/misc/uncrustify.cfg --replace -f path/to/file.cpp
-}}}
+</pre>
 
 Batch work:
 
-{{{
+<pre>
 $ find path/to -name '*.cpp' > list.txt
 $ uncrustify -c ${CHECKOUT}/misc/uncrustify.cfg --replace -F list.txt
-}}}
+</pre>
 
-== Automatically fix whitespaces in Xcode ==
+=== Automatically fix whitespaces in Xcode ===
 
 Uncrustify can also be used directly from Xcode. With Xcode 4 Apple introduced so called "Behaviors" that can be executed using for instance keyboard shortcuts. To use uncrustify you can add a new behavior in the Xcode Preferences (tab Behaviors) and select "''Run''". Here you add the attached ruby script. 
 
 [[Image(Xcode - Behavior.png, 400px)]]
 
 '''Note:''' The script does '''not''' uncrustify the currently opened source file but all source files that were changed in your current svn checkout. Xcode does not provide the information which source file is currently opened.
+
+
+
+{{TracNotice|{{PAGENAME}}}}

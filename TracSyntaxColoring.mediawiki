@@ -1,20 +1,21 @@
-= Syntax Coloring of Source Code =
+
+== Syntax Coloring of Source Code ==
 Trac supports language-specific syntax highlighting of source code within wiki formatted text in [WikiProcessors#CodeHighlightingSupport wiki processors] blocks and in the [TracBrowser repository browser].
 
 To do this, Trac uses external libraries with support for a great number of programming languages.
 
 Currently Trac supports syntax coloring using one or more of the following packages:
 
- * [http://pygments.pocoo.org/ Pygments], by far the preferred system, as it covers a wide range of programming languages and other structured texts and is actively supported
- * [http://www.codento.com/people/mtr/genscript/ GNU Enscript], commonly available on Unix but somewhat unsupported on Windows
- * [http://silvercity.sourceforge.net/ SilverCity], legacy system, some versions can be [http://trac.edgewall.org/wiki/TracFaq#why-is-my-css-code-not-being-highlighted-even-though-i-have-silvercity-installed problematic]
+*[http://pygments.pocoo.org/ Pygments], by far the preferred system, as it covers a wide range of programming languages and other structured texts and is actively supported
+*[http://www.codento.com/people/mtr/genscript/ GNU Enscript], commonly available on Unix but somewhat unsupported on Windows
+*[http://silvercity.sourceforge.net/ SilverCity], legacy system, some versions can be [http://trac.edgewall.org/wiki/TracFaq#why-is-my-css-code-not-being-highlighted-even-though-i-have-silvercity-installed problematic]
 
 
 To activate syntax coloring, simply install either one (or more) of these packages (see [#ExtraSoftware] section below).
 If none of these packages is available, Trac will display the data as plain text. 
 
 
-=== About Pygments ===
+==== About Pygments ====
 
 Starting with trac 0.11 [http://pygments.org/ pygments] will be the new default highlighter. It's a highlighting library implemented in pure python, very fast, easy to extend and [http://pygments.org/docs/ well documented].
 
@@ -23,7 +24,7 @@ The Pygments default style can specified in the [TracIni#mimeviewer-section mime
 It's very likely that the list below is outdated because the list of supported pygments lexers is growing weekly. Just have a look at the page of [http://pygments.org/docs/lexers/ supported lexers] on the pygments webpage.
 
 
-== Syntax Coloring Support ==
+=== Syntax Coloring Support ===
 
 === Known MIME Types
 
@@ -34,56 +35,258 @@ It's very likely that the list below is outdated because the list of supported p
 
 This list is only indicative.
 
-||                 ||= !SilverCity   =||= Enscript      =||= Pygments =||
-|| Ada             ||                 ||  ✓              ||     ||
-|| Asm             ||                 ||  ✓              ||     ||
-|| Apache Conf     ||                 ||                 ||  ✓  ||
-|| ASP             ||  ✓              ||  ✓              ||     ||
-|| C               ||  ✓              ||  ✓              ||  ✓  ||
-|| C#              ||                 ||  ✓ ^[#a1 (1)]^  ||  ✓  ||
-|| C++             ||  ✓              ||  ✓              ||  ✓  ||
-|| Java            ||  ✓ ^[#a2 (2)]^  ||  ✓              ||  ✓  ||
-|| Awk             ||                 ||  ✓              ||     ||
-|| Boo             ||                 ||                 ||  ✓  ||
-|| CSS             ||  ✓              ||                 ||  ✓  ||
-|| Python Doctests ||                 ||                 ||  ✓  ||
-|| Diff            ||                 ||  ✓              ||  ✓  ||
-|| Eiffel          ||                 ||  ✓              ||     ||
-|| Elisp           ||                 ||  ✓              ||     ||
-|| Fortran         ||                 ||  ✓ ^[#a1 (1)]^  ||  ✓  ||
-|| Haskell         ||                 ||  ✓              ||  ✓  ||
-|| Genshi          ||                 ||                 ||  ✓  ||
-|| HTML            ||  ✓              ||  ✓              ||  ✓  ||
-|| IDL             ||                 ||  ✓              ||     ||
-|| INI             ||                 ||                 ||  ✓  ||
-|| Javascript      ||  ✓              ||  ✓              ||  ✓  ||
-|| Lua             ||                 ||                 ||  ✓  ||
-|| m4              ||                 ||  ✓              ||     ||
-|| Makefile        ||                 ||  ✓              ||  ✓  ||
-|| Mako            ||                 ||                 ||  ✓  ||
-|| Matlab ^[#a3 (3)]^  ||             ||  ✓              ||  ✓  ||
-|| Mygthy          ||                 ||                 ||  ✓  ||
-|| Objective-C     ||                 ||  ✓              ||  ✓  ||
-|| OCaml           ||                 ||                 ||  ✓  ||
-|| Pascal          ||                 ||  ✓              ||  ✓  ||
-|| Perl            ||  ✓              ||  ✓              ||  ✓  ||
-|| PHP             ||  ✓              ||                 ||  ✓  ||
-|| PSP             ||  ✓              ||                 ||     ||
-|| Pyrex           ||                 ||  ✓              ||     ||
-|| Python          ||  ✓              ||  ✓              ||  ✓  ||
-|| Ruby            ||  ✓              ||  ✓ ^[#a1 (1)]^  ||  ✓  ||
-|| Scheme          ||                 ||  ✓              ||  ✓  ||
-|| Shell           ||                 ||  ✓              ||  ✓  ||
-|| Smarty          ||                 ||                 ||  ✓  ||
-|| SQL             ||  ✓              ||  ✓              ||  ✓  ||
-|| Troff           ||                 ||  ✓              ||  ✓  ||
-|| TCL             ||                 ||  ✓              ||     ||
-|| Tex             ||                 ||  ✓              ||  ✓  ||
-|| Verilog         ||  ✓ ^[#a2 (2)]^  ||  ✓              ||     ||
-|| VHDL            ||                 ||  ✓              ||     ||
-|| Visual Basic    ||                 ||  ✓              ||  ✓  ||
-|| VRML            ||                 ||  ✓              ||     ||
-|| XML             ||  ✓              ||                 ||  ✓  ||
+{| border=1 class="simple"
+!                 
+!= SilverCity   =
+!= Enscript      =
+!= Pygments =
+|- 
+|  Ada             
+|                  
+|   ✓              
+|      
+|- 
+|  Asm             
+|                  
+|   ✓              
+|      
+|- 
+|  Apache Conf     
+|                  
+|                  
+|   ✓  
+|- 
+|  ASP             
+|   ✓              
+|   ✓              
+|      
+|- 
+|  C               
+|   ✓              
+|   ✓              
+|   ✓  
+|- 
+|  C#              
+|                  
+|   ✓ <sup>[#a1 (1)]</sup>  
+|   ✓  
+|- 
+|  C++             
+|   ✓              
+|   ✓              
+|   ✓  
+|- 
+|  Java            
+|   ✓ <sup>[#a2 (2)]</sup>  
+|   ✓              
+|   ✓  
+|- 
+|  Awk             
+|                  
+|   ✓              
+|      
+|- 
+|  Boo             
+|                  
+|                  
+|   ✓  
+|- 
+|  CSS             
+|   ✓              
+|                  
+|   ✓  
+|- 
+|  Python Doctests 
+|                  
+|                  
+|   ✓  
+|- 
+|  Diff            
+|                  
+|   ✓              
+|   ✓  
+|- 
+|  Eiffel          
+|                  
+|   ✓              
+|      
+|- 
+|  Elisp           
+|                  
+|   ✓              
+|      
+|- 
+|  Fortran         
+|                  
+|   ✓ <sup>[#a1 (1)]</sup>  
+|   ✓  
+|- 
+|  Haskell         
+|                  
+|   ✓              
+|   ✓  
+|- 
+|  Genshi          
+|                  
+|                  
+|   ✓  
+|- 
+|  HTML            
+|   ✓              
+|   ✓              
+|   ✓  
+|- 
+|  IDL             
+|                  
+|   ✓              
+|      
+|- 
+|  INI             
+|                  
+|                  
+|   ✓  
+|- 
+|  Javascript      
+|   ✓              
+|   ✓              
+|   ✓  
+|- 
+|  Lua             
+|                  
+|                  
+|   ✓  
+|- 
+|  m4              
+|                  
+|   ✓              
+|      
+|- 
+|  Makefile        
+|                  
+|   ✓              
+|   ✓  
+|- 
+|  Mako            
+|                  
+|                  
+|   ✓  
+|- 
+|  Matlab <sup>[#a3 (3)]</sup>  
+|              
+|   ✓              
+|   ✓  
+|- 
+|  Mygthy          
+|                  
+|                  
+|   ✓  
+|- 
+|  Objective-C     
+|                  
+|   ✓              
+|   ✓  
+|- 
+|  OCaml           
+|                  
+|                  
+|   ✓  
+|- 
+|  Pascal          
+|                  
+|   ✓              
+|   ✓  
+|- 
+|  Perl            
+|   ✓              
+|   ✓              
+|   ✓  
+|- 
+|  PHP             
+|   ✓              
+|                  
+|   ✓  
+|- 
+|  PSP             
+|   ✓              
+|                  
+|      
+|- 
+|  Pyrex           
+|                  
+|   ✓              
+|      
+|- 
+|  Python          
+|   ✓              
+|   ✓              
+|   ✓  
+|- 
+|  Ruby            
+|   ✓              
+|   ✓ <sup>[#a1 (1)]</sup>  
+|   ✓  
+|- 
+|  Scheme          
+|                  
+|   ✓              
+|   ✓  
+|- 
+|  Shell           
+|                  
+|   ✓              
+|   ✓  
+|- 
+|  Smarty          
+|                  
+|                  
+|   ✓  
+|- 
+|  SQL             
+|   ✓              
+|   ✓              
+|   ✓  
+|- 
+|  Troff           
+|                  
+|   ✓              
+|   ✓  
+|- 
+|  TCL             
+|                  
+|   ✓              
+|      
+|- 
+|  Tex             
+|                  
+|   ✓              
+|   ✓  
+|- 
+|  Verilog         
+|   ✓ <sup>[#a2 (2)]</sup>  
+|   ✓              
+|      
+|- 
+|  VHDL            
+|                  
+|   ✓              
+|      
+|- 
+|  Visual Basic    
+|                  
+|   ✓              
+|   ✓  
+|- 
+|  VRML            
+|                  
+|   ✓              
+|      
+|- 
+|  XML             
+|   ✓              
+|                  
+|   ✓  
+|}
+
 
 
 
@@ -94,13 +297,17 @@ This list is only indicative.
 
 ''[=#a2 (2)] since Silvercity 0.9.7 released on 2006-11-23
 
-''[=#a3 (3)] By default `.m` files are considered Objective-C files. In order to treat `.m` files as MATLAB files, add "text/matlab:m" to the "mime_map" setting in the [wiki:TracIni#mimeviewer-section "[mimeviewer] section of trac.ini"].
+''[=#a3 (3)] By default <tt>.m</tt> files are considered Objective-C files. In order to treat <tt>.m</tt> files as MATLAB files, add "text/matlab:m" to the "mime_map" setting in the [[TracIni#mimeviewer-section| "[mimeviewer]] section of trac.ini"].
 
-== Extra Software ==
- * GNU Enscript -- http://directory.fsf.org/GNU/enscript.html
- * GNU Enscript for Windows -- http://gnuwin32.sourceforge.net/packages/enscript.htm
- * !SilverCity -- http://silvercity.sf.net/
- * Pygments -- http://pygments.org/
+=== Extra Software ===
+*GNU Enscript -- http://directory.fsf.org/GNU/enscript.html
+*GNU Enscript for Windows -- http://gnuwin32.sourceforge.net/packages/enscript.htm
+*SilverCity -- http://silvercity.sf.net/
+*Pygments -- http://pygments.org/
 
 ----
 See also: WikiProcessors, WikiFormatting, TracWiki, TracBrowser
+
+
+
+{{TracNotice|{{PAGENAME}}}}

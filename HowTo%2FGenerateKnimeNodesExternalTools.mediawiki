@@ -1,7 +1,8 @@
-= How To: Generate KNIME Nodes for External Tools =
+
+== How To: Generate KNIME Nodes for External Tools ==
 [[TOC()]]
 
-== Prerequisites ==
+=== Prerequisites ===
 
  KNIME SDK ::
   You can download it from the [http://www.knime.org/downloads/overview KNIME Download Site].
@@ -14,29 +15,29 @@
   On Linux and Mac, you should be able to install it through your package manager.
   For Windows, see the [http://ant.apache.org/bindownload.cgi Apache Ant Downloads] (note that samtools does not work on Windows so you will not be able to follow through with this tutorial on Windows).
 
-== Running Example ==
+=== Running Example ===
 
 We will adapt some functions from the [http://samtools.sf.net samtools] package to KNIME:
 
  BamToSam ::
-  This tool will execute `samtools view -o ${OUT} ${IN}`.
+  This tool will execute <tt>samtools view -o ${OUT} ${IN}</tt>.
  SamToBAm ::
-  This tool will execute `samtools view -Sb -o ${OUT} ${IN}`.
+  This tool will execute <tt>samtools view -Sb -o ${OUT} ${IN}</tt>.
  SortBam ::
-  This tool will execute `samtools sort -f -o ${OUT} ${IN}`.
+  This tool will execute <tt>samtools sort -f -o ${OUT} ${IN}</tt>.
 
-{{{#!InfoBox
-The `-f` flag is required for the integration of samtools without a  wrapper, since it would append `.bam` to `${OUT}` for getting the output name.
+<pre>#InfoBox
+The <tt>-f</tt> flag is required for the integration of samtools without a  wrapper, since it would append <tt>.bam</tt> to <tt>${OUT}</tt> for getting the output name.
 However, only the current trunk version from the [https://github.com/samtools/samtools samtools GitHub project] supports this flag.
-}}}
+</pre>
 
-== Preparation: Building samtools and Downloading GenericKnimeNodes ==
+=== Preparation: Building samtools and Downloading GenericKnimeNodes ===
 
 As mentioned above, we have to build the current trunk version of samtools for the sort_bam tool to work.
 The following shell commands download the current samtools trunk from GitHub and build samtools.
 We will work in a new directory ''knime_samtools'' (we will assume that the directory is directly in your ''$HOME'' for the rest of the tutorial.
 
-{{{#!ShellBox
+<pre>#ShellBox
 knime_samtools # git clone https://github.com/samtools/samtools
 ...
 knime_samtools # cd samtools
@@ -46,15 +47,15 @@ samtools # ls -l samtools
 -rwxr-xr-x 1 user group 1952339 May  7 16:36 samtools
 samtools # cd ..
 knime_samtools #
-}}}
+</pre>
 
 Then, we need to download GenericKnimeNodes:
 
-{{{#!ShellBox
+<pre>#ShellBox
 knime_samtools # git clone git://github.com/genericworkflownodes/GenericKnimeNodes.git
-}}}
+</pre>
 
-== Preparation: Installing KNIME File Handling ==
+=== Preparation: Installing KNIME File Handling ===
 
 We need to install support for file handling nodes in KNIME.
 For this, open the window for installing Eclipse plugins; in the program's main menu: [[MenuTrace(Help,Install New Software...)]].
@@ -65,14 +66,14 @@ When done, Eclipse must be restarted.
 
 [[Image(GwnInstallFileHandlingNodes.png, width=400, align=center)]]
 
-== Overview ==
+=== Overview ===
 
 KNIME nodes are shipped as Eclipse plugins.
 The '''GenericKnimeNodes''' (GWN) package provides the infrastructure to automatically generate such nodes from the description of their command line.
 The description of the command line is kept in XML files called Common Tool Descriptor (CTD) files.
 The input of the GWN package is a directory tree with the following structure:
 
-{{{
+<pre>
 plugin_dir
   │
   ├── plugin.properties
@@ -88,7 +89,7 @@ plugin_dir
   ├── LICENSE (Licensing information of the project)
   │
   └── COPYRIGHT (Copyright information of the project)
-}}}
+</pre>
 
  plugin.properties ::
   File with the plugin configuration.
@@ -99,7 +100,7 @@ plugin_dir
  payload ::
   ZIP archives with the binaries are located here.
   This directory has to be present even if the directory is empty.
-  Also, you need a file ''binaries.ini'' in this directory which can be empty or cotain environment variable definitions as `name=value` lines.
+  Also, you need a file ''binaries.ini'' in this directory which can be empty or cotain environment variable definitions as <tt>name=value</tt> lines.
  icons ::
   Some icons:
   A file ''category.png'' (15x15 px) for categories in the KNIME tool tree.
@@ -118,28 +119,28 @@ The following picture illustrates the process.
 
 [[Image(PluginWorkflow.png, align=center)]]
 
-== Obtaining the Demo Workflow Plugin Directory ==
+=== Obtaining the Demo Workflow Plugin Directory ===
 
 Please download the file attachment:workflow_plugin_dir.zip and look around in the archive.
-Also have a look into `binaries_*_*.zip` files in ''payload''.
+Also have a look into <tt>binaries_*_*.zip</tt> files in ''payload''.
 The structure of this ZIP file is explained below in [#AnatomyofaPluginDirectory Anatomy of a Plugin Directory].
 
-== Creating an Exclipse Plugin from the Plugin Directory ==
+=== Creating an Exclipse Plugin from the Plugin Directory ===
 
 The next step is to use GKN to create an Eclipse plugin from the workflow plugin directory.
 For this, change to the directory GenericKnimeNodes that we cloned using git earlier.
 We then execute ant and pass the variables ''knime.sdk'' with the path to the KNIME SDK that you downloaded earlier and ''plugin.dir'' with the path of our plugin directory.
 
-{{{#!ShellBox
+<pre>#ShellBox
 knime_samtools # cd GenericKnimeNodes
 GenericKnimeNodes # ant -Dknime.sdk=${HOME}/eclipse_knime_2.8.0 \
                       -Dplugin.dir=$HOME/knime_samtools/workflow_plugin_dir
-}}}
+</pre>
 
 This generates an Eclipse plugin with wrapper classes for our nodes.
 The generated files are within the ''generated_plugin'' directory of the directory ''GenericKnimeNodes''.
 
-== Importing the Generated Projects into Eclipse ==
+=== Importing the Generated Projects into Eclipse ===
 
 In the main menu [[MenuTrace(File,Import...)]].
 In the [[MenuTrace(Import)]] window, select [[MenuTrace(General, Existing Project Into Workspace)]]
@@ -161,16 +162,16 @@ Now, the packages of the GKN classes and your plugin show up in the left [[MenuT
 
 [[Image(GwnImportDone.png, width=400, align=center)]]
 
-{{{#!InfoBox
-'''Information:''' Synchronizing `ant` build result with Eclipse.
+<pre>#InfoBox
+'''Information:''' Synchronizing <tt>ant</tt> build result with Eclipse.
 
 Since the code generation happens outside of Eclipse, there are often problems caused by Eclipse not recognizing updates in generated ''.java'' files.
-After each call to `ant`, you should clean all built files in all projects by selecting the menu entries [[MenuTrace(Project,Clean...)]], selecting [[MenuTrace(Clean all projects)]], and then clicking [[MenuTrace(OK)]].
+After each call to <tt>ant</tt>, you should clean all built files in all projects by selecting the menu entries [[MenuTrace(Project,Clean...)]], selecting [[MenuTrace(Clean all projects)]], and then clicking [[MenuTrace(OK)]].
 
 Then, select all projects in the [[MenuTrace(Package Explorer)]], right-click and select [[MenuTrace(Refresh)]].
-}}}
+</pre>
 
-== Launching Eclipse with our Nodes ==
+=== Launching Eclipse with our Nodes ===
 
 Finally, we have to launch KNIME with our plugin.
 We have to create a run configuration for this.
@@ -190,17 +191,17 @@ Here is an example KNIME workflow with the nodes that we just created.
 
 [[Image(SamWorkflow.png, align=center)]]
 
-== Anatomy of a Plugin Directory ==
+=== Anatomy of a Plugin Directory ===
 
 You can download a ZIP archive of the resulting project [attachment:workflow_plugin_dir.zip from the attached file workflow_plugin_dir.zip].
 We will ignore the contents of ''icons'', ''DESCRIPTION'', ''LICENSE'', and ''COPYRIGHT'' here.
 You can see all relevant details by inspecting the ZIP archive.
 
-=== The file plugin.properties ===
+==== The file plugin.properties ====
 
 The content of the file plugin.properties is as follows:
 
-{{{
+<pre>
 # the package of the plugin
 pluginPackage=net.sf.samtools
 
@@ -215,7 +216,7 @@ nodeRepositoyRoot=community
 
 executor=com.genericworkflownodes.knime.execution.impl.LocalToolExecutor
 commandGenerator=com.genericworkflownodes.knime.execution.impl.CLICommandGenerator
-}}}
+</pre>
 
 When creating your own plugin directory, you only have to update the first three properties:
 
@@ -226,26 +227,26 @@ When creating your own plugin directory, you only have to update the first three
  pluginVersion ::
   Version of the Eclipse plugin.
 
-=== The file descriptors/mime.types ===
+==== The file descriptors/mime.types ====
 
 The contents of the file is as shown below.
 Each line contains the definition of a [http://en.wikipedia.org/wiki/Internet_media_type MIME type].
 The name of the mime type is followed (separated by a space) by the file extensions associated with the file type.
-There may be no ambiguous mappings, i.e. giving the extension for both `application/x-fasta` and `application/x-fastq`.
+There may be no ambiguous mappings, i.e. giving the extension for both <tt>application/x-fasta</tt> and <tt>application/x-fastq</tt>.
 
-{{{
+<pre>
 application/x-fasta fa fasta
 application/x-fastq fq fastq
 application/x-sam sam
 application/x-bam bam
-}}}
+</pre>
 
-=== The file descriptors/samtools_sort_bam.ctd ===
+==== The file descriptors/samtools_sort_bam.ctd ====
 
 This file descripes the SortBam tool for sorting BAM files.
 We do not describe the files ''descriptors/samtools_sam_to_bam.ctd'' and ''descriptors/samtools_bam_to_sam.ctd'' in the same detail as you can interpolate from here.
 
-{{{#!xml
+<pre>#xml
 <?xml version="1.0" encoding="UTF-8"?>
 <tool name="SortBam" version="0.1.17" category="SAM and BAM"
       docurl="http://samtools.sourceforge.net/samtools.shtml">
@@ -283,7 +284,7 @@ We do not describe the files ''descriptors/samtools_sam_to_bam.ctd'' and ''descr
         </NODE>
     </PARAMETERS>
 </tool>
-}}}
+</pre>
 
 Here is a description of the tags and the attributes:
 
@@ -304,7 +305,7 @@ Here is a description of the tags and the attributes:
   /tool/docurl ::
     URL to the tool's documentation.
   /tool/cli ::
-    Container for the `<clielement>` tags.
+    Container for the <tt><clielement></tt> tags.
     These tags describe the command line options and arguments of the tool.
     The command line options and arguments can be mapped to parameters which are configurable through the UI.
     The parameters are stored in '''/tool/PARAMETERS'''
@@ -312,20 +313,20 @@ Here is a description of the tags and the attributes:
     There is one entry for each command line argument and option.
   /tool/cli/clielement@optionIdentifier ::
     The identifier of the option on the command line.
-    For example, for the `-l` option of `ls`, this is `-l`.
+    For example, for the <tt>-l</tt> option of <tt>ls</tt>, this is <tt>-l</tt>.
   /tool/cli/clielement@isList ::
     Whether or not the parameter is a list and multiple values are possible.
-    One of `true` and `false`.
+    One of <tt>true</tt> and <tt>false</tt>.
   /tool/cli/clielement/mapping ::
     Provides the mapping between a CLI element and a PARAMETER.
   /tool/cli/clielement/mapping@referenceName ::
     The path of the parameter.
-    The parameters `<ITEM>`s in '''/tool/PARAMETERS''' are stored in nested `<NODE>` tags and this gives the path to the specific parameter.
+    The parameters <tt><ITEM></tt>s in '''/tool/PARAMETERS''' are stored in nested <tt><NODE></tt> tags and this gives the path to the specific parameter.
   /tool/PARAMETERS ::
-    Container for the `<NODE>` and `<ITEM>` tags.
-    The `<PARAMETERS>` tag is in a diferent namespace and provides its own XSI.
+    Container for the <tt><NODE></tt> and <tt><ITEM></tt> tags.
+    The <tt><PARAMETERS></tt> tag is in a diferent namespace and provides its own XSI.
   /tool/PARAMETERS@version ::
-    Format version of the `<PARAMETERS>` section.
+    Format version of the <tt><PARAMETERS></tt> section.
   /tool/PARAMETERS/.../NODE ::
     A node in the parameter tree.
     You can use such nodes to organize the parameters in a hierarchical fashion.
@@ -344,49 +345,49 @@ Here is a description of the tags and the attributes:
     When a default value is given, it is passed to the program, regardless of whether the user touched the default value or not.
   /tool/PARAMETERS/.../ITEM@type ::
     Type of the parameter.
-    Can be one of `string`, `int`, `double`, `input-file`, `output-path`, `input-prefix`, or `output-prefix`.
-    Booleans are encoded as `string` with the `restrictions` attribute set to `"true,false"`.
+    Can be one of <tt>string</tt>, <tt>int</tt>, <tt>double</tt>, <tt>input-file</tt>, <tt>output-path</tt>, <tt>input-prefix</tt>, or <tt>output-prefix</tt>.
+    Booleans are encoded as <tt>string</tt> with the <tt>restrictions</tt> attribute set to <tt>"true,false"</tt>.
   /tool/PARAMETERS/.../ITEM@required ::
     Boolean that states whether the parameter is required or not.
   /tool/PARAMETERS/.../ITEM@description ::
     Documentation for the user.
   /tool/PARAMETERS/.../ITEM@supported_formats ::
     A list of supported file formats.
-    Example: `"*.bam,*.sam"`.
+    Example: <tt>"*.bam,*.sam"</tt>.
   /tool/PARAMETERS/.../ITEM@restrictions ::
-    In case of `int` or `double` types, the restrictions have the form `min:`, `:max`, `min:max` and give the smallest and/or largest number a value can have.
-    In the case of `string` types, restrictions gives the list of allowed values, e.g. `one,two,three`.
-    If the type is `string` and the restriction field equals `"true,false"`, then the parameter is a boolean and set in case `true` is selected in the GUI.
-    A good example for this would be the `-l` flag of the `ls` program.
+    In case of <tt>int</tt> or <tt>double</tt> types, the restrictions have the form <tt>min:</tt>, <tt>:max</tt>, <tt>min:max</tt> and give the smallest and/or largest number a value can have.
+    In the case of <tt>string</tt> types, restrictions gives the list of allowed values, e.g. <tt>one,two,three</tt>.
+    If the type is <tt>string</tt> and the restriction field equals <tt>"true,false"</tt>, then the parameter is a boolean and set in case <tt>true</tt> is selected in the GUI.
+    A good example for this would be the <tt>-l</tt> flag of the <tt>ls</tt> program.
 
-{{{#!InfoBox
-If a `<clielement>` does provides an empty `optionIdentifier` then it is a positional argument without a flag (examples for parameters with flags are `-n 1`, `--number 1`).
+<pre>#InfoBox
+If a <tt><clielement></tt> does provides an empty <tt>optionIdentifier</tt> then it is a positional argument without a flag (examples for parameters with flags are <tt>-n 1</tt>, <tt>--number 1</tt>).
 
-If a `<clielement>` does not provide a `<mapping>` then it is passed regardless of whether has been configured or not.
-}}}
+If a <tt><clielement></tt> does not provide a <tt><mapping></tt> then it is passed regardless of whether has been configured or not.
+</pre>
 
-The `samtools_sort_bam` tool from above does not provide any configurable options but only two arguments.
-These are by convention called `argument-0` and `argument-1` but could have any name.
+The <tt>samtools_sort_bam</tt> tool from above does not provide any configurable options but only two arguments.
+These are by convention called <tt>argument-0</tt> and <tt>argument-1</tt> but could have any name.
 
-Also, we always call the program with `view -f` as the first two command line arguments since we do not provide a mapping for these arguments.
+Also, we always call the program with <tt>view -f</tt> as the first two command line arguments since we do not provide a mapping for these arguments.
 
-=== The directory payload ===
+==== The directory payload ====
 
-The directory `payload` contains ZIP files with the executable tool binaries.
+The directory <tt>payload</tt> contains ZIP files with the executable tool binaries.
 There is one ZIP file for each platform (Linux, Windows, and Mac Os X) and each architecture (32 bit and 64 bit).
-The names of the files are `binaries_${plat}_${arch}.zip` where `${plat}` is one of `lnx`, `win`, or `mac`, and `${arch}` is one of `32` and `64`.
+The names of the files are <tt>binaries_${plat}_${arch}.zip</tt> where <tt>${plat}</tt> is one of <tt>lnx</tt>, <tt>win</tt>, or <tt>mac</tt>, and <tt>${arch}</tt> is one of <tt>32</tt> and <tt>64</tt>.
 
-Each ZIP file contains a directory `/bin` which is used as the search path for the binary given by `<executableName>`.
-Also, it provides an INI file `/binaries.ini` which can be used to define environment variables to set before executing any tools.
+Each ZIP file contains a directory <tt>/bin</tt> which is used as the search path for the binary given by <tt><executableName></tt>.
+Also, it provides an INI file <tt>/binaries.ini</tt> which can be used to define environment variables to set before executing any tools.
 
-The ZIP file can also provide other files in directories such as `/share`.
+The ZIP file can also provide other files in directories such as <tt>/share</tt>.
 
-== Generating KNIME Nodes for SeqAn Apps ==
+=== Generating KNIME Nodes for SeqAn Apps ===
 
-You can generate a workflow plugin directory for the SeqAn apps using the `prepare_workflow_plugin` target.
+You can generate a workflow plugin directory for the SeqAn apps using the <tt>prepare_workflow_plugin</tt> target.
 Then, you can generate the Knime Nodes/Eclipse plugins as described above using ant.
 
-{{{#!ShellBox
+<pre>#ShellBox
 ~ # svn co http://svn.seqan.de/seqan/trunk seqan-trunk
 ~ # mkdir -p seqan-trunk-build/release
 ~ # seqan-trunk-build/release
@@ -395,4 +396,8 @@ release # make prepare_workflow_plugin
 release # cd ~/knime_samtools/GenericKnimeNodes
 GenericKnimeNodes # ant -Dknime.sdk=${HOME}/eclipse_knime_2.8.0 \
                       -Dplugin.dir=$HOME/seqan-trunk-build/release/workflow_plugin_dir
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

@@ -1,12 +1,13 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:BuildManual] if you need the documentation for the trunk version.'''
-= Using the FindSeqAn CMake Module =
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[BuildManual]] if you need the documentation for the trunk version.'''
+== Using the FindSeqAn CMake Module ==
 
 [[TOC()]]
 
-== Overview ==
+=== Overview ===
 
 [http://cmake.org/ CMake] is a cross-platform build system generator.
-That is, you describe the different executables and binaries and their dependencies `CMakeLists.txt` files.
+That is, you describe the different executables and binaries and their dependencies <tt>CMakeLists.txt</tt> files.
 Then, CMake generates build systems from this, for example in the form of Makefiles or Visual Studio projects.
 
 This article will not describe how to use CMake in general but only how to use SeqAn easily from within CMake projects.
@@ -15,105 +16,105 @@ SeqAn ships with such a module in [source:tags/seqan-1.4.0/util/cmake/FindSeqAn.
 
 This article describes how to use this module.
 
-== Input / Output of the FindSeqAn Module ==
+=== Input / Output of the FindSeqAn Module ===
 
-As with all other modules, you have to make the file `FindSeqAn.cmake` available as a CMake module, either by putting it into the same directory as the `CMakeLists.txt` that you are using it from or by adding the path to the file `FindSeqAn.cmake` to the variable `CMAKE_MODULE_PATH`.
+As with all other modules, you have to make the file <tt>FindSeqAn.cmake</tt> available as a CMake module, either by putting it into the same directory as the <tt>CMakeLists.txt</tt> that you are using it from or by adding the path to the file <tt>FindSeqAn.cmake</tt> to the variable <tt>CMAKE_MODULE_PATH</tt>.
 
-Then, you can use it as follows (the argument `REQUIRED` is optional):
+Then, you can use it as follows (the argument <tt>REQUIRED</tt> is optional):
 
-{{{#!sh
+<pre>#sh
 find_package (SeqAn REQUIRED)
-}}}
+</pre>
 
-=== Input ===
+==== Input ====
 
 SeqAn is somewhat special as a library since it has some optional dependencies.
 Certain features in SeqAn can be enabled or disabled, depending on whether the dependencies could be found.
 
-You can set the dependencies to search for with the variable `SEQAN_FIND_DEPENDENCIES` (which is a list).
+You can set the dependencies to search for with the variable <tt>SEQAN_FIND_DEPENDENCIES</tt> (which is a list).
 For example:
 
-{{{#!sh
+<pre>#sh
 set (SEQAN_FIND_DEPENDENCIES ZLIB BZip2)
 find_package (SeqAn)
-}}}
+</pre>
 
-Note that `FindSeqAn.cmake` itself will not search for its dependencies with the argument `REQUIRED`.
-Rather, it will set the variables `SEQAN_HAS_*` and add corresponding definitions to `SEQAN_DEFINIONS` (see below).
+Note that <tt>FindSeqAn.cmake</tt> itself will not search for its dependencies with the argument <tt>REQUIRED</tt>.
+Rather, it will set the variables <tt>SEQAN_HAS_*</tt> and add corresponding definitions to <tt>SEQAN_DEFINIONS</tt> (see below).
 
 Currently, you can specify the following dependencies:
 
- `ALL` ::
+ <tt>ALL</tt> ::
    Enable all dependencies.
- `DEFAULT` ::
+ <tt>DEFAULT</tt> ::
    Enable default dependencies (zlib, OpenMP if available)
- `NONE` ::
+ <tt>NONE</tt> ::
    Disable all dependencies.
- `ZLIB` ::
+ <tt>ZLIB</tt> ::
    zlib compression library
- `BZip2` ::
+ <tt>BZip2</tt> ::
    libbz2 compression library
- `OpenMP` ::
+ <tt>OpenMP</tt> ::
    OpenMP language extensions to C/C++
- `CUDA` ::
+ <tt>CUDA</tt> ::
    CUDA language extensions to C/C++
 
-If you want `FindSeqAn.cmake` to expect the SeqAn build system layout then set the variable `SEQAN_USE_SEQAN_BUILD_SYSTEM` to `TRUE`.
-In this case, it will try to locate the library parts from `core` and `extras`.
+If you want <tt>FindSeqAn.cmake</tt> to expect the SeqAn build system layout then set the variable <tt>SEQAN_USE_SEQAN_BUILD_SYSTEM</tt> to <tt>TRUE</tt>.
+In this case, it will try to locate the library parts from <tt>core</tt> and <tt>extras</tt>.
 
-== Output ==
+=== Output ===
 
-The call to `find_package(SeqAn)` will set the following variables:
+The call to <tt>find_package(SeqAn)</tt> will set the following variables:
 
- `SEQAN_FOUND` ::
+ <tt>SEQAN_FOUND</tt> ::
    Indicate whether SeqAn was found.
 
 Variables indicating whether dependencies were found:
 
- `SEQAN_HAS_ZLIB` ::
-   `TRUE` if zlib was found.
- `SEQAN_HAS_BZIP2` ::
-   `TRUE` if libbz2 was found.
- `SEQAN_HAS_OPENMP` ::
-   `TRUE` if OpenMP was found.
- `SEQAN_HAS_CUDA` ::
-   `TRUE` if CUDA was found.
+ <tt>SEQAN_HAS_ZLIB</tt> ::
+   <tt>TRUE</tt> if zlib was found.
+ <tt>SEQAN_HAS_BZIP2</tt> ::
+   <tt>TRUE</tt> if libbz2 was found.
+ <tt>SEQAN_HAS_OPENMP</tt> ::
+   <tt>TRUE</tt> if OpenMP was found.
+ <tt>SEQAN_HAS_CUDA</tt> ::
+   <tt>TRUE</tt> if CUDA was found.
 
-Variables to be passed to `include_directories()`, `target_link_directories()`, and `add_definitions()` in your `CMakeLists.txt`:
+Variables to be passed to <tt>include_directories()</tt>, <tt>target_link_directories()</tt>, and <tt>add_definitions()</tt> in your <tt>CMakeLists.txt</tt>:
 
- `SEQAN_INCLUDE_DIRS` ::
+ <tt>SEQAN_INCLUDE_DIRS</tt> ::
    A list of include directories.
- `SEQAN_LIBRARIES` ::
+ <tt>SEQAN_LIBRARIES</tt> ::
    A list of libraries to link against.
- `SEQAN_DEFINITIONS` ::
+ <tt>SEQAN_DEFINITIONS</tt> ::
    A list of definitions to be passted to the compiler.
 
 Required additions to C++ compiler flags are in the following variable:
 
- `SEQAN_CXX_FLAGS` ::
+ <tt>SEQAN_CXX_FLAGS</tt> ::
    C++ Compiler flags to add.
 
 The following variables give the version of the SeqAn library, its major, minor, and the patch version part of the version string.
 
- `SEQAN_VERSION_STRING` ::
-   Concatenated version string, `${SEQAN_VERSION_MAJOR}.${SEQAN_VERSION_MINOR}.${SEQAN_VERSION_PATCH}`.
- `SEQAN_VERSION_MAJOR` ::
+ <tt>SEQAN_VERSION_STRING</tt> ::
+   Concatenated version string, <tt>${SEQAN_VERSION_MAJOR}.${SEQAN_VERSION_MINOR}.${SEQAN_VERSION_PATCH}</tt>.
+ <tt>SEQAN_VERSION_MAJOR</tt> ::
    Major version.
- `SEQAN_VERSION_MINOR` ::
+ <tt>SEQAN_VERSION_MINOR</tt> ::
    Minor version.
- `SEQAN_VERSION_PATCH` ::
+ <tt>SEQAN_VERSION_PATCH</tt> ::
    Patch-level version.
 
 The following flag defines whether this is a trunk version and the version given by the variables above is meant to be used as the previously released version.
 
- `SEQAN_VERSION_DEVELOPMENT` ::
+ <tt>SEQAN_VERSION_DEVELOPMENT</tt> ::
    Whether or not this is a pre-release version.
 
-== Example ==
+=== Example ===
 
-Below you can find a minimal example `CMakeLists.txt` file that uses the `FindSeqAn.cmake`.
+Below you can find a minimal example <tt>CMakeLists.txt</tt> file that uses the <tt>FindSeqAn.cmake</tt>.
 
-{{{#!sh
+<pre>#sh
 cmake_minimum_required (VERSION 2.8.2)
 project (core_apps_dfi)
 
@@ -141,4 +142,8 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${SEQAN_CXX_FLAGS}")
 # Add executable and link against SeqAn dependencies.
 add_executable (app app.cpp)
 target_link_libraries (dfi ${SEQAN_LIBRARIES})
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

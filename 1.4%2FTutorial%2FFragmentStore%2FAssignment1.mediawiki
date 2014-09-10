@@ -1,12 +1,13 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
-= Task 1: Fragment Store =
 
-== Task == 
+'''Note: this page documents the 1.4 version of SeqAn, see [[Tutorial]] if you need the documentation for the trunk version.'''
+== Task 1: Fragment Store ==
+
+=== Task === 
 Modify the example that output pairwise alignments of aligned reads, such that reads that align to the reverse strand are displayed in lower-case letters.
 
-== Solution ==
+=== Solution ===
 
-As we copy the read sequence, it suffices to change the type of the target string readSeq and the sequence type of the read seqan:Class.Gaps object into CharString, i.e. a seqan:Class.String of {{{char}}}.
+As we copy the read sequence, it suffices to change the type of the target string readSeq and the sequence type of the read seqan:Class.Gaps object into CharString, i.e. a seqan:Class.String of <tt>char</tt>.
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/store/store_access_aligned_reads2.cpp, fragment=typedefs)]]
 
 Then we not only need to reverse-complement readSeq if the read aligns to the reverse strand (endPos<beginPos) but also need to convert its letters into lower-case.
@@ -14,8 +15,8 @@ Therefor SeqAn provides the function seqan:Function.toLower. Alternatively, we c
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/store/store_access_aligned_reads2.cpp, fragment=output)]]
 
 Running this program results in the following output:
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 ALIGNMENT 140
 	contig 0:	CTGTGTTTAGTGCCTTTGTTCA-----ACCCCCTTGCAAC     	[266..306[
@@ -36,4 +37,8 @@ ALIGNMENT 152
 ALIGNMENT 156
 	contig 0:	CCCCCTTGCAACAACCTTGAGAACCCCAGGGAATT     	[294..329[
 	read 165:	cccccttgcaacaaccttgagaaccccagggaatt
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

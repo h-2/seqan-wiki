@@ -1,36 +1,41 @@
-{{{
-#!comment
+
+<pre>
+#comment
 BEGIN versionized-build-manual-section
-}}}
-{{{#!html
+</pre>
+<pre>#html
 <div id="notice" class="system-message">
 This build manual use the SeqAn version <b>1.4</b> version.
 You can find the trunk version <a href="/wiki/BuildManual">here</a>.
 </div>
-}}}
-{{{
-#!comment
+</pre>
+<pre>
+#comment
 END versionized-build-manual-section
-}}}
+</pre>
 
-= SeqAn Build Manual =
+== SeqAn Build Manual ==
 
 This manual contains information about building SeqAn applications both integrating SeqAn into your own build system and using the SeqAn build system.
 
-== Using the SeqAn Build System ==
+=== Using the SeqAn Build System ===
 
-[wiki:BuildManual/UsingTheSeqAnBuildSystem Using the SeqAn Build System].
+[[BuildManual/UsingTheSeqAnBuildSystem| Using the SeqAn Build System]].
 This article describes how to use the SeqAn build system for development and packaging.
 Using the SeqAn build system is the most convenient way of getting started.
 The SeqAn build system is also described in the Getting Started tutorial.
 
-== Integration with your own Build System ==
+=== Integration with your own Build System ===
 
-[wiki:BuildManual/IntegrationWithYourOwnBuildSystem Integration with your own Build System].
+[[BuildManual/IntegrationWithYourOwnBuildSystem| Integration with your own Build System]].
 This article explains how to build your SeqAn application if you already have your own build system in place.
 Read this if you want to use plain Makefiles or Visual Studio projects.
 
-== FindSeqAn CMake Module ==
+=== FindSeqAn CMake Module ===
 
-[wiki:BuildManual/UsingFindSeqAnCMakeModule Using the FindSeqAn CMake Module].
+[[BuildManual/UsingFindSeqAnCMakeModule| Using the FindSeqAn CMake Module]].
 If you want to roll your own CMake-based build system then you can use the FindSeqAn module for the easy integration of SeqAn in your project as any other library.
+
+
+
+{{TracNotice|{{PAGENAME}}}}

@@ -1,6 +1,11 @@
+
 Notes and comments about SeqAn taken while the stay at Illumina
 
-  * RazerS3  had a bug in mate pair mode. David fixed it.
-  * It is hard to find out how to fill a q-gram index once it is created. (For example for 1) create it 2) set the stepSize 3) assign a stringSet.)  It is irritating to have functions createIndex and indexCreate which both cannot be used to do that.
+**RazerS3  had a bug in mate pair mode. David fixed it.
+**It is hard to find out how to fill a q-gram index once it is created. (For example for 1) create it 2) set the stepSize 3) assign a stringSet.)  It is irritating to have functions createIndex and indexCreate which both cannot be used to do that.
 
 
+
+
+
+{{TracNotice|{{PAGENAME}}}}

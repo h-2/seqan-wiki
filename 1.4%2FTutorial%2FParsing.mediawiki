@@ -1,5 +1,6 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
-= Parsing =
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[Tutorial]] if you need the documentation for the trunk version.'''
+== Parsing ==
 [[TOC()]]
 
  Learning Objective ::
@@ -10,96 +11,108 @@
  Duration ::
   40 min
  Prerequisites ::
-  Tutorial [wiki:Tutorial/InputOutputOverview Input / Output Overview],
-  Tutorial [wiki:Tutorial/LexicalCasting Lexical Casting],
+  Tutorial [[Tutorial/InputOutputOverview| Input / Output Overview]],
+  Tutorial [[Tutorial/LexicalCasting| Lexical Casting]],
   Knowledge about formal languages and EBNF is useful.
 
 In this tutorial, you will learn how to use the seqan:Class.RecordReader functions to easily create parsers for structured text file formats.
 We will first give a quick example for parsing a simple TSV format.
-Then, single-pass parsing will be explained (which is the most important variant) and the interface of the seqan:Class.RecordReader class and the `skip*()` and `read*()` functions will be described.
+Then, single-pass parsing will be explained (which is the most important variant) and the interface of the seqan:Class.RecordReader class and the <tt>skip*()</tt> and <tt>read*()</tt> functions will be described.
 This is followed by extensive examples on parsing the GFF and BLAST tabular format and an example on how to parse the non-linear Newick format for phylogenetic trees.
 The tutorial closes with an explanation of how to write double-pass I/O code and in which situations it is useful to do so.
 
-{{{#!comment
-{{{#!WarningBox
+<pre>#comment
+<pre>#WarningBox
 '''Caution''':
 This tutorial and the described library contents are currently in '''beta state'''.
 They might change in the future.
 In this case, notice will be given.
-}}}
-}}}
+</pre>
+</pre>
 
-== A First Example ==
+=== A First Example ===
 
 Let us start off with a quick first example.
 The following program reads a two-column TSV file from the standard input.
 The first column contains keys, the second one contains values.
-The program prints the data as `${key} -> ${value}` to stdout.
+The program prints the data as <tt>${key} -> ${value}</tt> to stdout.
 
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/parsing/example1.cpp)]]
 
 As you can see, using the seqan:Class.RecordReader is straightforward.
-First, we construct the seqan:Class.RecordReader to wrap `std::cin` as also described in the [wiki:Tutorial/InputOutputOverview I/O Overview] tutorial.
+First, we construct the seqan:Class.RecordReader to wrap <tt>std::cin</tt> as also described in the [[Tutorial/InputOutputOverview| I/O Overview]] tutorial.
 
 Each iteration of the loop loads one record/line from standard input and writes out the record.
-We use `atEnd()` to check whether we are at the end of the file and loop.
-The function `readUntilChar()` reads the characters from the underlying file into a buffer `key` until a given character occurs, here the character is `'\t'`.
-The reader will not copy the tabulator into `key` and stop on the character.
-The function `goNext()` can be used to go to the next character in the current file.
-The call to the function `readLine()` copies the data into `value` until the end of line, skipping the end-of-line marker (`'\n'` or `'\r\n'`) and does not copy the end-of-line marker to the `value`.
+We use <tt>atEnd()</tt> to check whether we are at the end of the file and loop.
+The function <tt>readUntilChar()</tt> reads the characters from the underlying file into a buffer <tt>key</tt> until a given character occurs, here the character is <tt>'\t'</tt>.
+The reader will not copy the tabulator into <tt>key</tt> and stop on the character.
+The function <tt>goNext()</tt> can be used to go to the next character in the current file.
+The call to the function <tt>readLine()</tt> copies the data into <tt>value</tt> until the end of line, skipping the end-of-line marker (<tt>'\n'</tt> or <tt>'\r\n'</tt>) and does not copy the end-of-line marker to the <tt>value</tt>.
 Finally, we print the key/value pair to stdout.
 
-{{{#!AssignmentBox
+<pre>#AssignmentBox
 '''Assignment 1:''' Reading CSV instead of TSV.
  Type ::
   Review
  Objective ::
-  Modify the example above to use a comma (`','`) instead of a tab character for separating columns.
+  Modify the example above to use a comma (<tt>','</tt>) instead of a tab character for separating columns.
  Hint ::
   Yes, it is very easy.
  Solution ::
   Click ''more...'' to see the solution.
 
-{{{#!FoldOut
+<pre>#FoldOut
 ----
 [[Include(source:/trunk/extras/demos/tutorial/parsing/solution1.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
-== The Single-Pass `RecordReader` Class Interface ==
+=== The Single-Pass <tt>RecordReader</tt> Class Interface ===
 
 Single-pass record readers can simply be seen and used as an abstraction of streams:
 Read the file character-wise, from beginning to the end.
 
 The low-level API for the single-pass reader is as follows:
 
-|| '''Function''' || '''Description''' ||
-|| seqan:Function.atEnd || Return `true` if the reader is at the end of the file, `false` otherwise. ||
-|| seqan:Function.goNext || Advance reader in file, return `true` if at end of file, `false` otherwise. ||
-|| seqan:Function.value || Return the character the reader points to at the moment. ||
-|| seqan:Function.RecordReader#resultCode || Return `int` with I/O status. 0 for no error, non-0 value for error when reading. ||
+{| border=1 class="simple"
+! '''Function''' 
+! '''Description''' 
+|- 
+|  seqan:Function.atEnd 
+|  Return <tt>true</tt> if the reader is at the end of the file, <tt>false</tt> otherwise. 
+|- 
+|  seqan:Function.goNext 
+|  Advance reader in file, return <tt>true</tt> if at end of file, <tt>false</tt> otherwise. 
+|- 
+|  seqan:Function.value 
+|  Return the character the reader points to at the moment. 
+|- 
+|  seqan:Function.RecordReader#resultCode 
+|  Return <tt>int</tt> with I/O status. 0 for no error, non-0 value for error when reading. 
+|}
+
 
 The following program shows another example of single-pass I/O.
 We read a text file line-by-line and append the results to a seqan:Class.String of [seqan:Shortcut.CharString CharStrings].
 
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/parsing/reader_single_demo.cpp)]]
 
-== Character Classes and the `read*` and `skip*` Functions ==
+=== Character Classes and the <tt>read*</tt> and <tt>skip*</tt> Functions ===
 
-=== Character Classes And `is*` ===
+==== Character Classes And <tt>is*</tt> ====
 
 In SeqAn, the same character classes are used as in the POSIX standard.
 See [http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/ctype.h.html this list of character classes] for a comprehensive list and description.
 
 For example:
 
-{{{#!cpp
+<pre>#cpp
 printf("isdigit('a') == %d\n", isdigit('a'));  // => "isdigit('a') == 0"
 printf("isdigit('0') == %d\n", isdigit('0'));  // => "isdigit('0') == 0"
 printf("isblank(' ') == %d\n", isdigit(' '));  // => "isdigit(' ') == 0"
-}}}
+</pre>
 
-=== The `read*` And `skip*` Functions ===
+==== The <tt>read*</tt> And <tt>skip*</tt> Functions ====
 
 The parsing functionality in SeqAn built on top of the seqan:Concept.StreamConcept concept and seqan:Class.RecordReader class is optimized for reading Bioinformatics text file formats.
 
@@ -114,60 +127,112 @@ In Bioinformatics, files having multiple GB are not uncommon, e.g. NGS data or t
 
 Thus, in SeqAn, the files are parsed "on the fly" as they are read.
 Using compiler nomenclauture, bioinformatics parsers often only have to be [http://en.wikipedia.org/wiki/Tokenizing tokenizers].
-Making writing such simple parsers easy is the main aim of the `read*` and `skip*` functions in SeqAn.
+Making writing such simple parsers easy is the main aim of the <tt>read*</tt> and <tt>skip*</tt> functions in SeqAn.
 NB: By using [seqan:"Spec.Char Array Stream" Char Array Streams], you can also use the parsing infrastructure on in-memory data.
 
 For each considered class of characters, there often is a read and a skip function.
 There are two big types of classes:
-White-listing/inclusion (`read*X*`) of certain characters and black-listing/exclusion (`readUntil*X*`) of certain characters.
+White-listing/inclusion (<tt>read*X*</tt>) of certain characters and black-listing/exclusion (<tt>readUntil*X*</tt>) of certain characters.
 The inclusion functions stop after the last read/included character, the exclusion functions stop on the first excluded/not read character.
 
 Most functions have the following interface.
-Note that all functions only '''append''' to the `buffer` argument, so you have to call seqan:Function.clear yourself.
+Note that all functions only '''append''' to the <tt>buffer</tt> argument, so you have to call seqan:Function.clear yourself.
 This facilitates optimized reading into seqan:Spec.ConcatDirect StringSets.
 
-{{{#!cpp
+<pre>#cpp
 int readUntilXXX (TBuffer & buffer, RecordReader<TStream, TPass> & reader);
 int readXXX      (TBuffer & buffer, RecordReader<TStream, TPass> & reader);
 int skipUntilXXX (RecordReader<TStream, TPass> & reader);
 int skipXXX      (RecordReader<TStream, TPass> & reader);
-}}}
+</pre>
 
 The following functions are available:
 
-|| '''Function''' || '''Description''' ||
-|| seqan:Function.readDigits || Read digit characters. ||
-|| seqan:Function.readDna5IgnoringWhitespaces || Read DNA 5 characters, ignore whitespace. ||
-|| seqan:Function.readLetters || Read letter characters. ||
-|| seqan:Function.readLine || Read whole line, line break is not written into buffer. ||
-|| seqan:Function.readLineStripTrailingBlanks || Read whole line, trailing blanks are not written into buffer. ||
-|| seqan:Function.readNChars || Read a fixed number of characters. ||
-|| seqan:Function.readNCharsIgnoringWhitespace || Read a fixed number of characters, whitespace is not written into the buffer. ||
-|| seqan:Function.readUntilBlank || Read until a blank character occurs. ||
-|| seqan:Function.readUntilChar || Read until the given character occurs. ||
-|| seqan:Function.readUntilWhitespace || Read until a whitespace character occurs. ||
-|| seqan:Function.skipBlanks || Skip blank characters. ||
-|| seqan:Function.skipChar || Skip one given character. ||
-|| seqan:Function.skipLine || Skip from the current position to the end of the line. ||
-|| seqan:Function.skipNChars || Skip a fixed number of characters. ||
-|| seqan:Function.skipNCharsIgnoringWhitespace || Skip a fixed number of characters, ignore whitespace. ||
-|| seqan:Function.skipUntilBlank || Skip until a blank character occurs. ||
-|| seqan:Function.skipUntilChar || Skip until a certain character occurs ||
-|| seqan:Function.skipUntilGraph || Skip until a graph character occurs. ||
-|| seqan:Function.skipUntilLineBeginsWithChar || Skip until a line begins with a certain character. ||
-|| seqan:Function.skipUntilLineBeginsWithOneCharOfStr || Skip until a line begins with one character of a given string/list. ||
-|| seqan:Function.skipUntilLineBeginsWithStr || Skip until a line begins with a certain string. ||
-|| seqan:Function.skipUntilString || Skip until a certain string is found. ||
-|| seqan:Function.skipUntilWhitespace || Skip until a whitespace character is found. ||
-|| seqan:Function.skipWhitespaces || Skip until a non-whitespace character is found. ||
+{| border=1 class="simple"
+! '''Function''' 
+! '''Description''' 
+|- 
+|  seqan:Function.readDigits 
+|  Read digit characters. 
+|- 
+|  seqan:Function.readDna5IgnoringWhitespaces 
+|  Read DNA 5 characters, ignore whitespace. 
+|- 
+|  seqan:Function.readLetters 
+|  Read letter characters. 
+|- 
+|  seqan:Function.readLine 
+|  Read whole line, line break is not written into buffer. 
+|- 
+|  seqan:Function.readLineStripTrailingBlanks 
+|  Read whole line, trailing blanks are not written into buffer. 
+|- 
+|  seqan:Function.readNChars 
+|  Read a fixed number of characters. 
+|- 
+|  seqan:Function.readNCharsIgnoringWhitespace 
+|  Read a fixed number of characters, whitespace is not written into the buffer. 
+|- 
+|  seqan:Function.readUntilBlank 
+|  Read until a blank character occurs. 
+|- 
+|  seqan:Function.readUntilChar 
+|  Read until the given character occurs. 
+|- 
+|  seqan:Function.readUntilWhitespace 
+|  Read until a whitespace character occurs. 
+|- 
+|  seqan:Function.skipBlanks 
+|  Skip blank characters. 
+|- 
+|  seqan:Function.skipChar 
+|  Skip one given character. 
+|- 
+|  seqan:Function.skipLine 
+|  Skip from the current position to the end of the line. 
+|- 
+|  seqan:Function.skipNChars 
+|  Skip a fixed number of characters. 
+|- 
+|  seqan:Function.skipNCharsIgnoringWhitespace 
+|  Skip a fixed number of characters, ignore whitespace. 
+|- 
+|  seqan:Function.skipUntilBlank 
+|  Skip until a blank character occurs. 
+|- 
+|  seqan:Function.skipUntilChar 
+|  Skip until a certain character occurs 
+|- 
+|  seqan:Function.skipUntilGraph 
+|  Skip until a graph character occurs. 
+|- 
+|  seqan:Function.skipUntilLineBeginsWithChar 
+|  Skip until a line begins with a certain character. 
+|- 
+|  seqan:Function.skipUntilLineBeginsWithOneCharOfStr 
+|  Skip until a line begins with one character of a given string/list. 
+|- 
+|  seqan:Function.skipUntilLineBeginsWithStr 
+|  Skip until a line begins with a certain string. 
+|- 
+|  seqan:Function.skipUntilString 
+|  Skip until a certain string is found. 
+|- 
+|  seqan:Function.skipUntilWhitespace 
+|  Skip until a whitespace character is found. 
+|- 
+|  seqan:Function.skipWhitespaces 
+|  Skip until a non-whitespace character is found. 
+|}
+
 
 In the following example, we read the first two fields of a TSV file from stdin and dump them to stdout.
 
-{{{#!cpp
+<pre>#cpp
 seqan::RecordReader<std::istream, seqan::SinglePass<> > reader(std::cin);
 seqan::CharString buffer;
 
-while (!atEnd(reader))
+while (atEnd(reader))
 {
     clear(buffer);
     int res = readUntilChar(buffer, reader, '\t');
@@ -188,31 +253,35 @@ while (!atEnd(reader))
     if (res != 0 && res != seqan::EOF_BEFORE_SUCCESS)
         return 1;
 }
-}}}
+</pre>
 
-=== Writing Your Own `read*` and `skip*` Functions ===
+==== Writing Your Own <tt>read*</tt> and <tt>skip*</tt> Functions ====
 
 Writing your own reading/skipping function is easy.
 As an example, we write functions for reading and skipping the characters from the set ''{x, y, z}''.
-The functions follow the same pattern and use the functions `_readHelper()` and `_skipHelper()`.
+The functions follow the same pattern and use the functions <tt>_readHelper()</tt> and <tt>_skipHelper()</tt>.
 
-These functions read/skip characters as long as a specific overload of the predicate function `_charCompare()` (in the `seqan` namespace) returns `true`.
-The `_charCompare()` function gets two parameters:
-The character to test and a tag for selecting the specific `_charCompare()` overload.
-The caracter to test is of type `int`.
-The tag is defined by you as a developer and the tag given to `_charCompare()` is the same as given to `_readHelper()` and `_skipHelper()`.
+These functions read/skip characters as long as a specific overload of the predicate function <tt>_charCompare()</tt> (in the <tt>seqan</tt> namespace) returns <tt>true</tt>.
+The <tt>_charCompare()</tt> function gets two parameters:
+The character to test and a tag for selecting the specific <tt>_charCompare()</tt> overload.
+The caracter to test is of type <tt>int</tt>.
+The tag is defined by you as a developer and the tag given to <tt>_charCompare()</tt> is the same as given to <tt>_readHelper()</tt> and <tt>_skipHelper()</tt>.
 
-For good examples, you can look at the file [source:tags/seqan-1.4.0/core/include/seqan/stream/tokenize.h tokenize.h] to see how the rest of the `read*` and `skip*` functions from above are implemented.
+For good examples, you can look at the file [source:tags/seqan-1.4.0/core/include/seqan/stream/tokenize.h tokenize.h] to see how the rest of the <tt>read*</tt> and <tt>skip*</tt> functions from above are implemented.
 
-{{{
-#!cpp
+<pre>
+#cpp
 struct Xyz_;
 typedef seqan::Tag<Xyz_> Xyz;
 
 inline int
 _charCompare(int const c, Xyz const & /* tag*/)
 {
-    return c == 'x' || c == 'y' || c == 'z';
+{| border=1 class="simple"
+! c == 'y' 
+! c == 'z';
+|}
+
 }
 
 template <typename TStream, typename TPass, typename TBuffer>
@@ -242,21 +311,21 @@ skipUntilXyz(seqan::RecordReader<TStream, TPass> & reader)
 {
     return seqan::_skipHelper(reader, Xyz(), true);
 }
-}}}
+</pre>
 
 ==== Assignments ====
 
-{{{#!AssignmentBox
-'''Assignment 2:''' Writing `readHexNumber()`.
+<pre>#AssignmentBox
+'''Assignment 2:''' Writing <tt>readHexNumber()</tt>.
  Type ::
   Review
  Objective ::
   Write your own read and skip routines for hexadecimal numbers.
-  Such numbers can only contain digits `0-9` and the characters `a-f` and `A-F`.
+  Such numbers can only contain digits <tt>0-9</tt> and the characters <tt>a-f</tt> and <tt>A-F</tt>.
  Solution ::
   Click ''more...'' to see the solution.
 
-{{{#!FoldOut
+<pre>#FoldOut
 ----
 The following program reads from stdin as long as the input forms a valid hexadecimal number.
 Note that you can send an end-of-file character to your application by pressing [[MenuTrace(Ctrl)]]+[[MenuTrace(D)]]).
@@ -264,9 +333,9 @@ Note that you can send an end-of-file character to your application by pressing 
 [[Include(source:/trunk/extras/demos/tutorial/parsing/solution2.cpp)]]
 
 An example session.
-The [[MenuTrace(Ctrl)]]+[[MenuTrace(D)]] is shown as `^D`.
+The [[MenuTrace(Ctrl)]]+[[MenuTrace(D)]] is shown as <tt>^D</tt>.
 
-{{{#!ShellBox
+<pre>#ShellBox
 # tutorial_parsing_solution2
 foo
 10
@@ -276,68 +345,68 @@ RECOGNIZED f
 RECOGNIZED 10
 RECOGNIZED 20
 RECOGNIZED 2a
-}}}
-}}}
-}}}
+</pre>
+</pre>
+</pre>
 
-{{{#!AssignmentBox
-'''Assignment 3:''' Writing `readPunctuation()`.
+<pre>#AssignmentBox
+'''Assignment 3:''' Writing <tt>readPunctuation()</tt>.
  Type ::
   Review
  Objective ::
-  Modify the example above to read a sequence of punctuation characters in a function called `readPunctuation()`.
+  Modify the example above to read a sequence of punctuation characters in a function called <tt>readPunctuation()</tt>.
  Hint ::
-  You can use the function `ispunct()`.
+  You can use the function <tt>ispunct()</tt>.
  Solution ::
   Click ''more...'' to see the solution.
 
-{{{#!FoldOut
+<pre>#FoldOut
 ----
 [[Include(source:/trunk/extras/demos/tutorial/parsing/solution3.cpp)]]
 
 An example session.
-The [[MenuTrace(Ctrl)]]+[[MenuTrace(D)]] is shown as `^D`.
+The [[MenuTrace(Ctrl)]]+[[MenuTrace(D)]] is shown as <tt>^D</tt>.
 
-{{{#!ShellBox
+<pre>#ShellBox
 ...
-!!asdf
+asdf
 !!@#%%^
 RECOGNIZED ...
 RECOGNIZED !!
 RECOGNIZED !!@#%%^
-}}}
-}}}
-}}}
+</pre>
+</pre>
+</pre>
 
-== File Parsing Practice ==
+=== File Parsing Practice ===
 
 This section will walk you through a parser for GFF, tabular BLAST output, and the Newick tree format.
 
-=== Common Patterns ===
+==== Common Patterns ====
 
-In order to support a new file format, you usually (1) introduce a `struct` type for storing records, (2) create tags for the file type and the records, and (3) provide overloads of the functions `nextIs()` and `readRecord()`.
+In order to support a new file format, you usually (1) introduce a <tt>struct</tt> type for storing records, (2) create tags for the file type and the records, and (3) provide overloads of the functions <tt>nextIs()</tt> and <tt>readRecord()</tt>.
 For example, for the GFF format, we
 
- * create a `struct GffRecord` (1)
- * create the tag `Gff` (2)
- * create overloads of `nextIs` and `readRecord` for `Gff` (3).
+*create a <tt>struct GffRecord</tt> (1)
+*create the tag <tt>Gff</tt> (2)
+*create overloads of <tt>nextIs</tt> and <tt>readRecord</tt> for <tt>Gff</tt> (3).
 
-=== A Simple GFF2 Parser ===
+==== A Simple GFF2 Parser ====
 
 We will implement a simple parser for the [http://www.sanger.ac.uk/resources/software/gff/spec.html GFF file format version 2].
-For the sake of simplicity, will not implement parsing of `##` and will read the whole ''attributes'' field as one and not subdivide it further.
+For the sake of simplicity, will not implement parsing of <tt>##</tt> and will read the whole ''attributes'' field as one and not subdivide it further.
 Here, GFF2 files are TSV files with the following fields.
 
-{{{
+<pre>
 <seqname> <source> <feature> <start> <end> <score> <strand> <frame> [attributes] [comments]
-}}}
+</pre>
 
 The following example ([source:tags/seqan-1.4.0/extras/demos/tutorial/parsing/parse_gff2.cpp full source]) shows a GFF2 parser.
 First, include the necessary headers.
 
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/parsing/parse_gff2.cpp, fragment=includes)]]
 
-Then, define `Gff2` tag and record struct.
+Then, define <tt>Gff2</tt> tag and record struct.
 
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/parsing/parse_gff2.cpp, fragment=tags-structs)]]
 
@@ -358,7 +427,7 @@ In the end, we dump some of the information we just read.
 
 Let's look at an example run of the program.
 
-{{{#!ShellBox
+<pre>#ShellBox
 # cat extras/demos/tutorial/parsing /gff2_example.txt
 IV     curated  mRNA   5506800 5508917 . + .   Transcript B0273.1; Note "Zn-Finger"
 IV     curated  5'UTR  5506800 5508999 . + .   Transcript B0273.1
@@ -375,22 +444,22 @@ IV	+	0	5506382
 IV	+	0	5506660
 IV	+	0	5506852
 IV	+	0	5508917
-}}}
+</pre>
 
-=== Newick Tree Parsing (Recursion Example) ===
+==== Newick Tree Parsing (Recursion Example) ====
 
 The newick tree format is used for encoding phylogenetic trees (see [http://evolution.genetics.washington.edu/phylip/newick_doc.html Newick Tree Format Standard] for a formal specification).
 We will write a parser that reads Newick forest files (without allowing for comments).
 
 Here is an example for the Newick format:
 
-{{{
+<pre>
 (((One:0.2,Two:0.3):0.3,(Three:0.5,Four:0.3):0.2):0.3,Five:0.7):0.0;
-}}}
+</pre>
 
 A file with this content encodes the following tree:
 
-{{{
+<pre>
            +-+ One
         +--+
         |  +--+ Two
@@ -400,11 +469,11 @@ A file with this content encodes the following tree:
      |    +--+ Four
      +
      +------+ Five
-}}}
+</pre>
 
 And here is the grammar of the Newick format in EBNF.
 
-{{{
+<pre>
 forest        = tree+;
 tree          = node, ";";
 node          = children, label?, distance?
@@ -416,7 +485,7 @@ distance      = ":", number;
 quoted-list   = "'", (qchar escaped-quote)*, "'";
 escaped-quote = "''";
 unquoted-list = uqchar;
-}}}
+</pre>
 
 The following demo shows the parsers, code to dump the tree from the internal data structures and a small driver program for the routines.
 
@@ -424,11 +493,11 @@ First, the necessary includes.
 
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/parsing/parse_newick.cpp, fragment=includes)]]
 
-Then, we define a `Newick` tag and a struct for branch labels.
+Then, we define a <tt>Newick</tt> tag and a struct for branch labels.
 
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/parsing/parse_newick.cpp, fragment=tags-structs)]]
 
-In a next step, we write a `readFloatLiteral()` helper function that is reusable.
+In a next step, we write a <tt>readFloatLiteral()</tt> helper function that is reusable.
 
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/parsing/parse_newick.cpp, fragment=read-float)]]
 
@@ -442,7 +511,7 @@ The code for dumping a Newick forest is also quite simple, if lengthy because of
 
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/parsing/parse_newick.cpp, fragment=writing)]]
 
-Finally, the `main()` routine.
+Finally, the <tt>main()</tt> routine.
 
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/parsing/parse_newick.cpp, fragment=main)]]
 
@@ -450,26 +519,26 @@ Let's look at an example run.
 Note that the children in SeqAn trees do not have a specific order and the Newick format does not introduce any normalized order.
 In the written result, the order of the children has changed.
 
-{{{#!ShellBox
+<pre>#ShellBox
 # cat extras/demos/tutorial/parsing/newick_example.txt
 (a,('Darwin''s Bulldog (Huxley)',c):-1.92e19)'The ''Root''':5;
 ((a_node,
   'another node',
   bird:0.3134)higher_node:4.5,
  c):1.03e10;
-((,,),(,(,,,),));
+((<sub>),(,(</sub>,),));
 # tutorial_parse_newick extras/demos/tutorial/parsing/newick_example.txt
 ((c,'Darwin''s Bulldog (Huxley)'):-1.92e+19,a)'The ''Root''':5;
 (c,(bird:0.3134,'another node',a_node)higher_node:4.5):1.03e+10;
-((,(,,,),),(,,));
-}}}
+((,(<sub>,),),(</sub>));
+</pre>
 
-=== Parsing Tabular BLAST ===
+==== Parsing Tabular BLAST ====
 
-The program ''BLASTN'' can be given an `-outfmt` parameter that makes it generate tabular output.
+The program ''BLASTN'' can be given an <tt>-outfmt</tt> parameter that makes it generate tabular output.
 This output is quite easy to parse (much easier than the human-readable BLAST reports) and looks as follows:
 
-{{{#!ShellBox
+<pre>#ShellBox
 # blastn -subject NC_001405.fasta -query NC_001460.fasta -outfmt 7 > blast_example.txt
 # cat blast_example.txt
 # BLASTN 2.2.25+
@@ -481,7 +550,7 @@ gi|9626621|ref|NC_001460.1|	gi|9626158|ref|NC_001405.1|	81.13	408	66	11	17730	18
 gi|9626621|ref|NC_001460.1|	gi|9626158|ref|NC_001405.1|	81.63	98	12	6	383	476	433	528	9e-15	76.8
 gi|9626621|ref|NC_001460.1|	gi|9626158|ref|NC_001405.1|	76.27	118	22	6	25147	25261	26644	26758	3e-09	58.4
 # BLAST processed 1 queries
-}}}
+</pre>
 
 The following example program takes the name of such a blastn output, reads it into record data structures and then prints it out in a different format again.
 To do this, we will first implement a record-reading API that allows streaming through the file.
@@ -493,12 +562,12 @@ It starts with including the required headers.
 
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/parsing/parse_blastn.cpp, fragment=includes)]]
 
-Then, we define a record for the file format `BlastnTab` and tabs for the comment and alignment record types.
+Then, we define a record for the file format <tt>BlastnTab</tt> and tabs for the comment and alignment record types.
 
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/parsing/parse_blastn.cpp, fragment=tags)]]
 
 Next, we define a record type.
-Note that this record type is very specialized to the `blastn -outfmt 7` format.
+Note that this record type is very specialized to the <tt>blastn -outfmt 7</tt> format.
 When writing I/O code for multiple format for similar data, you might want to consider writing one record type for all of them.
 See the (upcoming, TODO) SAM record I/O for the implementation of one record type for the SAM and then BAM format.
 
@@ -506,11 +575,11 @@ We also create a simple function to dump the record to a stream.
 
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/parsing/parse_blastn.cpp, fragment=record)]]
 
-Then, we define seqan:Function.RecordReader#nextIs functions for the `BlastnTabComment` and `BlastnTabAlignment` tags, and their represented record types.
+Then, we define seqan:Function.RecordReader#nextIs functions for the <tt>BlastnTabComment</tt> and <tt>BlastnTabAlignment</tt> tags, and their represented record types.
 
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/parsing/parse_blastn.cpp, fragment=next-is)]]
 
-Then, we implement a record-reading API on top of the `skip*` and `read*` functions.
+Then, we implement a record-reading API on top of the <tt>skip*</tt> and <tt>read*</tt> functions.
 Note that the error handling bloats up the number of required lines but is necessary.
 
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/parsing/parse_blastn.cpp, fragment=read-record)]]
@@ -520,14 +589,14 @@ This function turns out to be fairly simple.
 
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/parsing/parse_blastn.cpp, fragment=batch-read)]]
 
-In the `main()` routine, we can then simply open a `std::fstream`, create a seqan:Class.RecordReader.
+In the <tt>main()</tt> routine, we can then simply open a <tt>std::fstream</tt>, create a seqan:Class.RecordReader.
 Then, use the batch-reading API to read the whole file into main memory and write it to ''stdout'' again.
 
 [[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/parsing/parse_blastn.cpp, fragment=main)]]
 
 The program's output looks as follow:
 
-{{{#!ShellBox
+<pre>#ShellBox
 # ./extras/demos/tutorial/parsing/tutorial_parse_blastn ../../extras/demos/tutorial/parsing/blast_example.txt 
 query name: gi|9626621|ref|NC_001460.1|
 subject name: gi|9626158|ref|NC_001405.1|
@@ -567,16 +636,24 @@ subject begin: 26644
 subject end: 26758
 evalue: 3e-09
 bit score: 58.4
-}}}
+</pre>
 
-== Double-Pass I/O Using the `RecordReader` ==
+=== Double-Pass I/O Using the <tt>RecordReader</tt> ===
 
 The seqan:"Spec.Double-Pass RecordReader" reader's API extends the function described above for the seqan:"Spec.Single-Pass RecordReader".
 It provides the following additional global interface functions:
 
-|| '''Function''' || '''Description''' ||
-|| seqan:Function.startFirstPass || Start first pass of reading. ||
-|| seqan:Function.startSecondPass || Second pass of reading. ||
+{| border=1 class="simple"
+! '''Function''' 
+! '''Description''' 
+|- 
+|  seqan:Function.startFirstPass 
+|  Start first pass of reading. 
+|- 
+|  seqan:Function.startSecondPass 
+|  Second pass of reading. 
+|}
+
 
 It is used as follows:
 For each section of the file that is to be read in the next step (one or multiple records), you first call seqan:Function.startFirstPass.
@@ -606,11 +683,15 @@ A good '''rule of thumb''' is:
 ''If you need to read a whole large file into main memory (e.g. NGS read set or a genome) and it is uncompressed then use a double-pass record reader with a memory mapped string.
 Otherwise, use single-pass I/O.''
 
-== Next Steps ==
+=== Next Steps ===
 
- * Continue with the [wiki:Tutorial remaining tutorials].
+*Continue with the [[Tutorial| remaining tutorials]].
 
-=== Submit a Comment ===
+==== Submit a Comment ====
 
 If you found a mistake, or have suggestions about an improvement of this page:
 [/newticket?component=Documentation&description=Tutorial+Enhancement+for+page+http://trac.seqan.de/wiki/Tutorial/Parsing&type=enhancement submit your comment]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

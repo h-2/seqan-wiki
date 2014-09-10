@@ -1,33 +1,38 @@
-= How To: Profile Programs =
+
+== How To: Profile Programs ==
 [[TOC()]]
 
-== Linux Perf Tools (Linux) ==
+=== Linux Perf Tools (Linux) ===
 
- * https://perf.wiki.kernel.org/
- * Requires `echo '-1' > /proc/sys/kernel/perf_event_paranoid` as root.
+*https://perf.wiki.kernel.org/
+*Requires <tt>echo '-1' > /proc/sys/kernel/perf_event_paranoid</tt> as root.
 
 Useful commands:
 
- * `perf top` - display `top`-like display but on function granularity
- * `perf record PROGRAM` - execute PROGRAM with profiling
- * `perf report PROGRAM` - display report for PROGRAM
+*<tt>perf top</tt> - display <tt>top</tt>-like display but on function granularity
+*<tt>perf record PROGRAM</tt> - execute PROGRAM with profiling
+*<tt>perf report PROGRAM</tt> - display report for PROGRAM
 
-== Google Perftools (Linux, Mac Os X) ==
+=== Google Perftools (Linux, Mac Os X) ===
 
- * Download and install http://code.google.com/p/gperftools/ (also available through Ubuntu/Debian packages)
- * Compile your program with debug symbols (you probably want to enable optimization as well).
+*Download and install http://code.google.com/p/gperftools/ (also available through Ubuntu/Debian packages)
+*Compile your program with debug symbols (you probably want to enable optimization as well).
 
-{{{
+<pre>
 # Tell the profiler where to write its output.
 export CPUPROFILE=${OUT}
 LD_PRELOAD="/usr/lib/libprofiler.so.0" ${PROGRAM} ${COMMAND_LINE}
 google-pprof ${PROGRAM} ${OUT}
-}}}
+</pre>
 
 Interesting commands:
 
- * `gv`/`web` - display weighted call graph in gv or in your browser
- * `top`/`topX` - display top 10/X hitters
- * `disasm NAME` - disassemble functions matching NAME
+*<tt>gv</tt>/<tt>web</tt> - display weighted call graph in gv or in your browser
+*<tt>top</tt>/<tt>topX</tt> - display top 10/X hitters
+*<tt>disasm NAME</tt> - disassemble functions matching NAME
 
-== Instruments (Mac Os X) ==
+=== Instruments (Mac Os X) ===
+
+
+
+{{TracNotice|{{PAGENAME}}}}

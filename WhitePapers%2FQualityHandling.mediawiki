@@ -1,24 +1,25 @@
-= Quality Handling in SeqAn =
+
+== Quality Handling in SeqAn ==
 
 Generally, a ''quality'' value can be attached to each base, that gives the probability that a base call is incorrect.
 The probability, a value between 0 and 1, is mapped to an integer.
 The type of mapping and set of possible values is format dependent.
 
-== Quality Variants ==
+=== Quality Variants ===
 
 There are two variants to scaling the probabilities:
 
  '''Phred scale''' ::
   Simple log scale.
-  Given the error probability `p`, the scaled value is `Q = -10 log10(p)`
+  Given the error probability <tt>p</tt>, the scaled value is <tt>Q = -10 log10(p)</tt>
  '''Solexa scale''' ::
   Log-odds scale.
-  Given the error probability `p`, the scaled value is `Q = -10 log10(p / (1 - p))`.
+  Given the error probability <tt>p</tt>, the scaled value is <tt>Q = -10 log10(p / (1 - p))</tt>.
 
-For high qualities (small `p`), both scales are asymptotically the same.
+For high qualities (small <tt>p</tt>), both scales are asymptotically the same.
 Solexa scaled qualities can be negative.
 
-== ASCII Mappings ==
+=== ASCII Mappings ===
 
 Scaled qualities are floored and truncated to a mapping-dependent interval.
 The resulting quality is then mapped to ASCII by adding an offset.
@@ -26,7 +27,7 @@ This is 33 for Phred and 64 for results from the Illumina pipelines.
 
 The [http://en.wikipedia.org/wiki/FASTQ_format Wikipedia FASTQ article] has a nice picture.
 
-{{{
+<pre>
   SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS.....................................................
   ..........................XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX......................
   ...............................IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII......................
@@ -41,9 +42,9 @@ The [http://en.wikipedia.org/wiki/FASTQ_format Wikipedia FASTQ article] has a ni
  J - Illumina 1.5+ Phred+64,  raw reads typically (3, 40)
     with 0=unused, 1=unused, 2=Read Segment Quality Control Indicator (bold) 
     (Note: See discussion above).
-}}}
+</pre>
 
-== Guessing Quality Scale ==
+=== Guessing Quality Scale ===
 
 FastQC simply looks at all qualities (a sample would also be possible, I guess) and based on the smallest seen quality, guesses the format.
 A more advanced way would be to also look at the largest quality to check for errors.
@@ -51,15 +52,19 @@ A faster way would be stream over the data, looking at the smallest and largest 
 
 Finally, one would have to look at a wide range of FASTQ files to check the code for reliability, maybe sometimes higher qualities are created, too.
 
-== Test Data ==
+=== Test Data ===
 
 The article [http://nar.oxfordjournals.org/content/38/6/1767.abstract The Sanger FASTQ file format for sequences with quality scores, and the Solexa/Illumina FASTQ variants] has various example files in its supplemental material.
 
-== Resources ==
+=== Resources ===
 
- * [http://nar.oxfordjournals.org/content/38/6/1767.abstract The Sanger FASTQ file format for sequences with quality scores, and the Solexa/Illumina FASTQ variants]; NAR article.
- * [http://maq.sourceforge.net/qual.shtml Understanding Qualities] from Heng Li, the author of maq and bwa.
- * [http://en.wikipedia.org/wiki/FASTQ_format Wikipedia on the FASTQ format]
- * [http://www.biopython.org/wiki/SeqIO Biopython Sequence Formats]
- * [https://github.com/biopython/biopython/blob/master/Bio/SeqIO/QualityIO.py BioPython's Quality I/O code]
- * [http://www.bioinformatics.bbsrc.ac.uk/projects/download.html#fastqc FastQC can guess the file format in a simple way.]
+*[http://nar.oxfordjournals.org/content/38/6/1767.abstract The Sanger FASTQ file format for sequences with quality scores, and the Solexa/Illumina FASTQ variants]; NAR article.
+*[http://maq.sourceforge.net/qual.shtml Understanding Qualities] from Heng Li, the author of maq and bwa.
+*[http://en.wikipedia.org/wiki/FASTQ_format Wikipedia on the FASTQ format]
+*[http://www.biopython.org/wiki/SeqIO Biopython Sequence Formats]
+*[https://github.com/biopython/biopython/blob/master/Bio/SeqIO/QualityIO.py BioPython's Quality I/O code]
+*[http://www.bioinformatics.bbsrc.ac.uk/projects/download.html#fastqc FastQC can guess the file format in a simple way.]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

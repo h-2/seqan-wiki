@@ -1,3 +1,4 @@
+
 In order to change the JRE to be used by KNIME go to Eclipse [[MenuTrace(Preferences)]] and select the [[MenuTrace(Java)]] menu.
 
 [[Image(Preferences.png, width=400, align=center)]]
@@ -25,3 +26,7 @@ No select [[MenuTrace(Java Compiler)]] and select the correct JRE at the [[MenuT
 If you run the project now KNIME should start without problems.
 
 
+
+
+
+{{TracNotice|{{PAGENAME}}}}

@@ -1,9 +1,10 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
-= Randomness =
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[Tutorial]] if you need the documentation for the trunk version.'''
+== Randomness ==
 [[TOC]]
 
  Learning Objective ::
-  In this tutorial, you will get a short walk-through of SeqAn's module `random`.
+  In this tutorial, you will get a short walk-through of SeqAn's module <tt>random</tt>.
   The module contains code for generating random numbers in various distributions.
  Difficulty ::
   Basic
@@ -13,15 +14,15 @@
   Tutorial Basics,
   Tutorial Sequences
 
-This tutorial explains how to use the module `random`.
-`random` primarily provides the two classes seqan:Class.Rng ('''R'''andom '''N'''umber '''G'''enerator) and seqan:Class.Pdf ('''P'''robability '''D'''ensity '''F'''unctions).
+This tutorial explains how to use the module <tt>random</tt>.
+<tt>random</tt> primarily provides the two classes seqan:Class.Rng ('''R'''andom '''N'''umber '''G'''enerator) and seqan:Class.Pdf ('''P'''robability '''D'''ensity '''F'''unctions).
 
-{{{#!comment
-At the moment, !SeqAn provides the `Mersenne Twister` pseudorandom number generator.
+<pre>#comment
+At the moment, SeqAn provides the <tt>Mersenne Twister</tt> pseudorandom number generator.
 You have to specialize seqan:Class.Rng as seqan:"Spec.Mersenne Twister Rng" to access this random generator. The class seqan:Class.Pdf is used to set probability distribution functions. These functions are available through a specialization of seqan:Class.Pdf. There are three different probability distribution functions available: seqan:"Spec.Log-Normal Pdf", seqan:"Spec.Normal Pdf" and seqan:"Spec.Uniform Pdf".
-}}}
+</pre>
 
-== Random Number Generation ==
+=== Random Number Generation ===
 
 Instances of the class seqan:Class.Rng are responsible for random number generation.
 Currently, SeqAn provides only one specialization, the seqan:"Spec.Mersenne Twister Rng".
@@ -30,7 +31,7 @@ These 32-bit numbers are then used by the seqan:Class.Pdf specializations to gen
 
 The full example can be found in the file [source:tags/seqan-1.4.0/core/demos/tutorial/random/random_examples.cpp random_examples.cpp].
 
-First, we include the header `<seqan/random.h>` to get access to the module's functionality.
+First, we include the header <tt><seqan/random.h></tt> to get access to the module's functionality.
 
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/random/random_examples.cpp, fragment=header)]]
 
@@ -41,11 +42,11 @@ Finally, function seqan:Function.pickRandomNumber picks a random number from a s
 
 The output of this fragment is:
 
-{{{#!ShellBox
+<pre>#ShellBox
 pickRandomNumber(rng) == 1608637542
-}}}
+</pre>
 
-seqan:"Spec.Mersenne Twister Rng" generates 32-bit `unsigned` numbers.
+seqan:"Spec.Mersenne Twister Rng" generates 32-bit <tt>unsigned</tt> numbers.
 However, you should not rely on any specific type and use seqan:Metafunction.Value metafunction instead.
 
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/random/random_examples.cpp, fragment=random-number-generation-metafunction-value)]]
@@ -58,11 +59,11 @@ Note, for uniform distributions the range of values is given as a closed interva
 
 The output of this fragment is:
 
-{{{#!ShellBox
+<pre>#ShellBox
 pickRandomNumber(rng, uniformDouble) == 0.950714
 pickRandomNumber(rng, uniformInt) == 27
 pickRandomNumber(rng, normal) == 0.419823
-}}}
+</pre>
 
 Also note that you can initialize the seqan:"Spec.Log-Normal Pdf" either with mean and standard deviation of the log-normal distribution or the underlying normal distribution.
 By default, you initialize it with the mean and standard deviation (mu and sigma) of the underlying normal distribution.
@@ -72,13 +73,13 @@ Use the tags [seqan:"Tag.Lognormal Construction" MuSigma] and [seqan:"Tag.Lognor
 
 The output of this fragment is:
 
-{{{#!ShellBox
+<pre>#ShellBox
 pickRandomNumber(rng, logNormal) == 1.22431
 pickRandomNumber(rng, logNormal2) == 2.78004
 pickRandomNumber(rng, logNormal3) == 0.00155248
-}}}
+</pre>
 
-== Shuffling ==
+=== Shuffling ===
 
 The function seqan:Function.shuffle allows to shuffle a container, given a random number generator:
 
@@ -86,11 +87,15 @@ The function seqan:Function.shuffle allows to shuffle a container, given a rando
 
 The output of this fragment is:
 
-{{{#!ShellBox
-shuffle("Hello World!") == o!reWlloHld
-}}}
+<pre>#ShellBox
+shuffle("Hello World!") == oreWlloHld
+</pre>
 
-== Submit a  comment ==
+=== Submit a  comment ===
 
 If you found a mistake, or have suggestions about an improvement of this page press:
 [/newticket?component=Documentation&description=Tutorial+Enhancement+for+page+http://trac.seqan.de/wiki/Tutorial/Randomness&type=enhancement submit your comment].
+
+
+
+{{TracNotice|{{PAGENAME}}}}

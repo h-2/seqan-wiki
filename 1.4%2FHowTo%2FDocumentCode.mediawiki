@@ -1,5 +1,6 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:HowTo] if you need the documentation for the trunk version.'''
-= How To: Document Code =
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[HowTo]] if you need the documentation for the trunk version.'''
+== How To: Document Code ==
 
 [[TOC]]
 
@@ -8,8 +9,8 @@ Well-documented modules are ''sequence'' and ''basic', for example.
 
 We will document the =IntervalAndCargo= class:
 
-{{{
-#!cpp
+<pre>
+#cpp
 template <typename TValue = int, typename TCargo = int>
 class IntervalAndCargo
 {
@@ -24,11 +25,11 @@ public:
 SEQAN_CHECKPOINT
 	  }
 };
-}}}
+</pre>
 
 Make sure you also comment any member functions!
 
-== Classes ==
+=== Classes ===
 
 First, we have to document the IntervalAndCargo class.
 Otherwise, it will not appear in the documentation.
@@ -38,8 +39,8 @@ DDDoc itself does not enforce you to place it there, it does not read the C++ co
 
 Note that the lines beginning with dots have to be placed at the beginning of the lines.
 
-{{{
-#!cpp
+<pre>
+#cpp
 /**
 .Class.IntervalAndCargo:
 ..cat:Miscellaneous
@@ -53,7 +54,7 @@ Note that the lines beginning with dots have to be placed at the beginning of th
 ...metafunction:Metafunction.Cargo
 ..include:seqan/refinement.h
 */
-}}}
+</pre>
 
 Note that this text fragment is a tree: The strings ".<string>" represent nodes.
 So ".ClassIntervalAndCargo" is a top level node.
@@ -71,7 +72,7 @@ The labels have the following meaning (See =dddoc_docu.txt= for a comprehensive 
  metafunction :: Documentation path to Metafunction to retrieve the template parameter from the type.
  include :: Name of the file to include to have access to this class.
 
-== Member Functions (TODO) ==
+=== Member Functions (TODO) ===
 
 Now, we have to document the member functions of the class.
 
@@ -80,8 +81,8 @@ In SeqAn, we use top level functions, so generally, our classes only have constr
 In this case, the construtor is an example of an overloaded function, i.e. there are multiple functions with the same name but different signatures.
 We start out with the documentation of the first constructor.
 
-{{{
-#!cpp
+<pre>
+#cpp
 /**
 .Memfunc.IntervalAndCargo#IntervalAndCargo:
 ..class:Class.IntervalAndCargo
@@ -91,7 +92,7 @@ We start out with the documentation of the first constructor.
 ..param.i2:The last element in the interval of type TValue.
 ..param.cargo:The cargo value of type TCargo.
 */
-}}}
+</pre>
 
 The keys have the following meaning (again, ''dddoc_docu.txt'') has a comprehensive list.
 
@@ -100,12 +101,12 @@ The keys have the following meaning (again, ''dddoc_docu.txt'') has a comprehens
  signature :: The signature to print in documentation.
  param.<name> :: Description of the parameter <name>.
 
-== Functions (TODO) ==
+=== Functions (TODO) ===
 
 There are also some functions defined on the IntervalAndCargo class:
 
-{{{
-#!cpp
+<pre>
+#cpp
 template <typename TValue, typename TCargo>
 TValue &
 leftBoundary(IntervalAndCargo<TValue, TCargo> & interval)
@@ -121,12 +122,12 @@ rightBoundary(IntervalAndCargo<TValue, TCargo> & interval)
 SEQAN_CHECKPOINT
 	   return interval.i2;
 }
-}}}
+</pre>
 
 We document them as follows:
 
-{{{
-#!cpp
+<pre>
+#cpp
 /**
 .Function.leftBoundary:
 ..cat:Miscellaneous
@@ -139,10 +140,10 @@ We document them as follows:
 ..see:Function.rightBoundary
 ..see:Function.getRightBoundary
 */
-}}}
+</pre>
 and
-{{{
-#!cpp
+<pre>
+#cpp
 /**
 .Function.rightBoundary:
 ..cat:Miscellaneous
@@ -155,22 +156,22 @@ and
 ..see:Function.leftBoundary
 ..see:Function.getLeftBoundary
 */
-}}}
+</pre>
 
 We use the following new keys
 
  returns :: Description of the returend value.
  see :: A link to a page under "See Also".
 
-== Tags (TODO) ==
+=== Tags (TODO) ===
 
-== Metafunctions ==
+=== Metafunctions ===
 
 We also define the Metafunctions =Value= and =Cargo= for the IntervalAndCargo class.
 We tell dddoc that they can also be used for IntervalAndCargo:
 
-{{{
-#!cpp
+<pre>
+#cpp
 ///.Metafunction.Value.param.T.type:Class.IntervalAndCargo
 template <typename TValue, typename TCargo>
 struct Value<IntervalAndCargo<TValue, TCargo> >
@@ -185,15 +186,15 @@ struct Cargo<IntervalAndCargo<TValue, TCargo> >
 {
 	   typedef TCargo Type;
 };
-}}}
+</pre>
 
-== Example Code ==
+=== Example Code ===
 
-In order to simplify the usage of !SeqAn we provide short code samples. As a rule of thump, the code snippets should be short and include only necessary information.
+In order to simplify the usage of SeqAn we provide short code samples. As a rule of thump, the code snippets should be short and include only necessary information.
 
 
-{{{
-#!cpp
+<pre>
+#cpp
 /**
 .Function.goDown
 ..signature:bool goDown(iterator)
@@ -206,31 +207,35 @@ it = begin(waveletTreeStructure); // go to root node
 
 goDown(it); // go to left child of root node
 */
-}}}
+</pre>
 
-In addition, we provide links to example pages that contain a functional program using the function we document. The example pages are located in `xxx/demos`, where xxx=core or xxx=extras, and can be included with the code word `demfor`. For example,
+In addition, we provide links to example pages that contain a functional program using the function we document. The example pages are located in <tt>xxx/demos</tt>, where xxx=core or xxx=extras, and can be included with the code word <tt>demfor</tt>. For example,
 
-{{{
+<pre>
 .Demo.Global Alignments:
 ..cat:Basics
 ..order:Alignments 1
 ..summary:Computing an optimal global alignment between two sequences.
 ..file:../core/demos/alignment.cpp
 ..demofor:Function.globalAlignment
-}}}
+</pre>
 
-creates a example page for global alignments, where the code is contained in `alignment.cpp` and the html pages describing the function `globalAlignment` has a link to the demo page.
+creates a example page for global alignments, where the code is contained in <tt>alignment.cpp</tt> and the html pages describing the function <tt>globalAlignment</tt> has a link to the demo page.
 
-== Building The API Documentation ==
+=== Building The API Documentation ===
 
 Building the API documentation for the current trunk is easy:
 
- 1. Check out the current trunk of SeqAn.
- 2. `cd docs`
- 3. `./make.sh` or `make.bat`
+#Check out the current trunk of SeqAn.
+ 2. <tt>cd docs</tt>
+ 3. <tt>./make.sh</tt> or <tt>make.bat</tt>
 
-== Remarks ==
+=== Remarks ===
 
 If you want to include your sandbox, step 3 becomes
 
-3. `./make.sh {path to sandbox}` or `make.bat {path to sandbox}`
+3. <tt>./make.sh {path to sandbox}</tt> or <tt>make.bat {path to sandbox}</tt>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

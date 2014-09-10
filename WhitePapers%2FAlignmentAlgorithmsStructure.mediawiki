@@ -1,93 +1,97 @@
-= Alignment Algorithms Structure =
+
+== Alignment Algorithms Structure ==
 
 [[TOC()]]
 
-|| '''THIS IS WORK IN PROGRESS''' ||
+{| border=1 class="simple"
+! '''THIS IS WORK IN PROGRESS''' 
+|}
+
 
 This page describes the new structure of the pairwise dp-algorithms of the Align module. Goal of this project was the unification of the standard dp-alignment  algorithms to a single - kind of a core -  alignment, which works for every sort of pairwise alignment, excluding specialized implementations such as for the Myers-Bitvector algorithm or the Hirschberg algorithm. 
 The new implementation supports various kinds of extension points in order to add new features to an alignment while other unrelated features are still valid and supported even for the new feature. 
 
-== Overview of the Implementation ==
+=== Overview of the Implementation ===
 
 The main achievement of the refactoring of the alignment module (referring to the algorithms)  is the unified core function computing the alignments. So far every alignment profile, e.g., Neeldeman-Wunsch, Gotoh, Smith-Waterman, etc., was written in its own isolated function which enormously increased the efforts to maintain the code and reduced the flexibility to add features or components to existing algorithms. In the new implementation we only differ between three main function calls. That is a function to compute the unbanded alignments, a function to compute the banded alignments and a function to compute the special form of an banded alignment when the upper diagonal equals the lower diagonal (Hamming distance).
 
-=== The Unbanded Alignment ===
+==== The Unbanded Alignment ====
 
 The computation of the unbanded alignment is divided into three parts. In the following, we refer to a track as the part iterated over by the inner loop (in case of column wise navigation a track is equivalent to a column, in case of a row wise navigation a track would be equivalent to a row). First, we compute the initial track. Afterwards, we continue with all inner tracks of the dp matrix, and in the end, we compute the final track separately. This is because all three types have a special property that is different from the other track types. Each track itself is further divided into three parts, namely the first cell, the inner cell and the last cell, corresponding to the initial row, all inner rows and the last row of a typical dp matrix. This partition of the dp matrix allows us to easily change the behavior of different cells according to the chosen dp profile at compile time. See dp_meta_info.h to learn about the different meta objects that manage the characteristics of each cell of a particular track type.
 
-=== The Banded Alignment ===
+==== The Banded Alignment ====
 
 In the banded alignment, we generally divide the dp matrix into the same partition as for the unbanded alignment. The only difference is that we additionally add a specific information of how the current track is located within the dp matrix. Since we only consider a band, we do not necessarily span over the full matrix size for a particular track. We distinguish between the locations: PartialColumnTop,
 PartialColumnMiddle, PartialColumnBottom and FullColumn (which is the default location for unbanded alignments). Note that we associated them with the "column" name, since we only support column wise navigation at the moment.
 Each location of the column implies a different composition of the cells contained within a particular track. Thus, we are able to set different recursion directions and tracing information for each cell independent from the runtime. The only difference is that the outer for-loop (iterating over the tracks) is split up into three loops. The first loop then only iterates over these tracks that are located at the top of the matrix. The second for-loop iterates over the tracks that either are of type PartialColumnMiddle or FullColumn (wide bands, where the upper diagonal begins behind the track where the lower diagonal crosses the last row of the dp matrix). And the last for-loop iterates over the tail of the band which is located at the PartialColumnBottom.
 
-===  The Hamming Distance ===
+====  The Hamming Distance ====
 
 In the special case where upper diagonal equals lower diagonal we only have to parse one diagonal of the matrix so we have a special implementation for that, though it works for all dp profiles.
 
-=== Restrictions ===
+==== Restrictions ====
 
-At the moment we have implemented a restriction such that not all bands are accepted. If the dp profile consists of the standard global alignment algorithm (NeedlemanWunsch or Gotoh), the band is required to go through the sink and the source of the dp matrix. If this is not given the alignment algorithm is aborted and the score `MinValue<TScoreValue>::VALUE` is returned. The output would be an empty alignment.
+At the moment we have implemented a restriction such that not all bands are accepted. If the dp profile consists of the standard global alignment algorithm (NeedlemanWunsch or Gotoh), the band is required to go through the sink and the source of the dp matrix. If this is not given the alignment algorithm is aborted and the score <tt>MinValue<TScoreValue>::VALUE</tt> is returned. The output would be an empty alignment.
 
-== Controlling Alignment Features ==
+=== Controlling Alignment Features ===
 
 There are different ways to control the features of an alignment. A feature is called everything that adds a special behaviour to the simple dp algorithm. 
 
 [[Image(AlignModuleOverview1.png, 720px)]]
 
-The flow chart above depicts the process of setting up the meta-level for the alignment algorithms when calling the global alignment interfaces. The global alignment interfaces redirect the request to the function `_setupAndRunAlingment` in which all the necessary configurations for the alignment to perform are selected. 
+The flow chart above depicts the process of setting up the meta-level for the alignment algorithms when calling the global alignment interfaces. The global alignment interfaces redirect the request to the function <tt>_setupAndRunAlingment</tt> in which all the necessary configurations for the alignment to perform are selected. 
 
-=== Nature of the Alignment ===
+==== Nature of the Alignment ====
 
-In general, we differentiate between global and local alignments. Each global and local alignment can be further specified to request a special behavior. In order to do so one just specializes the first parameter of the `DPProfile_` object as seen in the graphic.
-At the moment we support standard global alignments, standard local alignments and all kind of overlap alignments. Note, that we adapted the AlignConfig structure since first, its name is irritating, and the order of the matrix specifier is some how unnatural (We replaced the order of `<T1, T2, T4, T3>`  to `<T1, T2, T3, T4>` namely `FirstRow`, `FirstColumn`, `LastRow`, `LastColumn`).
+In general, we differentiate between global and local alignments. Each global and local alignment can be further specified to request a special behavior. In order to do so one just specializes the first parameter of the <tt>DPProfile_</tt> object as seen in the graphic.
+At the moment we support standard global alignments, standard local alignments and all kind of overlap alignments. Note, that we adapted the AlignConfig structure since first, its name is irritating, and the order of the matrix specifier is some how unnatural (We replaced the order of <tt><T1, T2, T4, T3></tt>  to <tt><T1, T2, T3, T4></tt> namely <tt>FirstRow</tt>, <tt>FirstColumn</tt>, <tt>LastRow</tt>, <tt>LastColumn</tt>).
 
-=== Gap Costs ===
+==== Gap Costs ====
 
-Another detail of the new module is the selection of the gap function, which is also now part of the compile time configuration, such that whenever a new version of an alignment algorithm is implemented it would automatically work for both gap functions (linear gaps and affine gaps). The selection of the proper gap function depends only on the `ScoreMatrix` object. If `gapOpen == gapExtend`, we choose linear gap costs over affine gap costs independent of the algorithm tag (`NeedlemanWunsch` or `Gotoh`) and vice versa.
+Another detail of the new module is the selection of the gap function, which is also now part of the compile time configuration, such that whenever a new version of an alignment algorithm is implemented it would automatically work for both gap functions (linear gaps and affine gaps). The selection of the proper gap function depends only on the <tt>ScoreMatrix</tt> object. If <tt>gapOpen == gapExtend</tt>, we choose linear gap costs over affine gap costs independent of the algorithm tag (<tt>NeedlemanWunsch</tt> or <tt>Gotoh</tt>) and vice versa.
 
-=== Traceback ===
+==== Traceback ====
 
-The traceback is now implemented as a single function that is used by all alignment profiles. Here, we prefer the diagonal direction before the vertical before the horizontal direction. All tracebacks are first stored within the `String<TraceSegment>` object and afterwards, when the traceback is finished, adapted to its given target object such as Align, Graph, Fragments, etc.
-If the traceback is disabled as it is for the `globalAlignmentScore` functions, the traceback is simply never called and also the traceback matrix will never be generated. 
+The traceback is now implemented as a single function that is used by all alignment profiles. Here, we prefer the diagonal direction before the vertical before the horizontal direction. All tracebacks are first stored within the <tt>String<TraceSegment></tt> object and afterwards, when the traceback is finished, adapted to its given target object such as Align, Graph, Fragments, etc.
+If the traceback is disabled as it is for the <tt>globalAlignmentScore</tt> functions, the traceback is simply never called and also the traceback matrix will never be generated. 
 
-=== Band ===
+==== Band ====
 
-If the banded versions of the algorithm is used, then we generate the `DPBand_<BandOn>(lowerDiagonal, upperDiagonal)` object and initialize it according to the given borders of the band. If the unbanded algorithms are called we select the `DPBand_<BandOff>()` specialization, which takes no arguments. 
+If the banded versions of the algorithm is used, then we generate the <tt>DPBand_<BandOn>(lowerDiagonal, upperDiagonal)</tt> object and initialize it according to the given borders of the band. If the unbanded algorithms are called we select the <tt>DPBand_<BandOff>()</tt> specialization, which takes no arguments. 
 
-== Implementation of Algorithmic Components ==
+=== Implementation of Algorithmic Components ===
 
 [[Image(AlignModuleOverview2.png, 720px)]]
 
-The flow chart above depicts the general structure of the `_computeAlingment` function which shows how the alignment continues after the `DPProfile_` was set up.
+The flow chart above depicts the general structure of the <tt>_computeAlingment</tt> function which shows how the alignment continues after the <tt>DPProfile_</tt> was set up.
 
-=== Alignment Matrices ===
+==== Alignment Matrices ====
 
-Before the actual alignment is computed, we first have to define the corresponding data structures to store the score and trace information. There are two `DPMatrix_` types available: The `FullDPMatrix` and the `SparseDPMatrix`. The `FullDPMatrix` is always selected for the traceback. For the score matrix we can choose the correct matrix specialization from the meta-function `DefaultScoreMatrixSpec_` which by default returns the `SparseDPMatrix` specialization. Furthermore, the type of the dp score matrix value is the `DPCell_` object whose parameters are the `TScoreValue` of the given `ScoreMatrix` and the gap cost function which determine the structure of a particular cell.
+Before the actual alignment is computed, we first have to define the corresponding data structures to store the score and trace information. There are two <tt>DPMatrix_</tt> types available: The <tt>FullDPMatrix</tt> and the <tt>SparseDPMatrix</tt>. The <tt>FullDPMatrix</tt> is always selected for the traceback. For the score matrix we can choose the correct matrix specialization from the meta-function <tt>DefaultScoreMatrixSpec_</tt> which by default returns the <tt>SparseDPMatrix</tt> specialization. Furthermore, the type of the dp score matrix value is the <tt>DPCell_</tt> object whose parameters are the <tt>TScoreValue</tt> of the given <tt>ScoreMatrix</tt> and the gap cost function which determine the structure of a particular cell.
 
-=== Navigation ===
+==== Navigation ====
 
 Another feature of the new alignment module is the usage of navigators to parse through the different types of dp matrices. It is possible to change the behaviour of how to parse through the dp matrix to a certain degree. At the moment, we only support column wise navigation for full and sparse score matrices and for full traceback matrices. The navigators for the score matrix support interfaces to directly receive the values of the three neighbouring cells of the active cell. 
 
 The implementation of the traceback navigator depends on whether the traceback is enabled or not. We always create a navigator for the dp matrix but it is never actually called when the traceback is disabled. Also, the traceback matrix is never actually initialized if the traceback is disabled.
 
-=== Tracing ===
+==== Tracing ====
 
-We use now an object called `DPScout` to keep track of the maximal score. As the name already suggests does this object scout for the best value among the values the scout should look at. The behavior of the scout can be easily overloaded so it is possible to look for different optimal values while the underlying algorithms remain unchanged. 
-In order to do this, one has to specify the space the scout hast to observe. This can be either only the cell `M(n,m)` of the matrix in case of a global alignment. It can also be the last row, or last column, and also the complete dp matrix if it is a local alignment. 
-At the moment, the scout only supports the scouting of the first best value. But it can be easily overloaded to search for all `k` best values or all best values with score `s`, or all the best values for each row of the dp-matrix.
-For the banded chain alignment, we overloaded the scout such that it recognizes all values that have an optimal score, which can be `>= 1` values. 
+We use now an object called <tt>DPScout</tt> to keep track of the maximal score. As the name already suggests does this object scout for the best value among the values the scout should look at. The behavior of the scout can be easily overloaded so it is possible to look for different optimal values while the underlying algorithms remain unchanged. 
+In order to do this, one has to specify the space the scout hast to observe. This can be either only the cell <tt>M(n,m)</tt> of the matrix in case of a global alignment. It can also be the last row, or last column, and also the complete dp matrix if it is a local alignment. 
+At the moment, the scout only supports the scouting of the first best value. But it can be easily overloaded to search for all <tt>k</tt> best values or all best values with score <tt>s</tt>, or all the best values for each row of the dp-matrix.
+For the banded chain alignment, we overloaded the scout such that it recognizes all values that have an optimal score, which can be <tt>>= 1</tt> values. 
 
-To specify the observation space, one has to overload the meta-objects in `dp_meta_info.h`. In the general case, we only support the standard algorithms: `Needleman-Wunsch`, `Gotoh`, `Smith-Waterman`, `Waterman-Eggert`. 
-You can look into the file `banded_chain_alignment_meta_info.h` in the `seeds2`module to see how one could overload this meta-objects to implement the correct behaviour for the wanted alignment.
+To specify the observation space, one has to overload the meta-objects in <tt>dp_meta_info.h</tt>. In the general case, we only support the standard algorithms: <tt>Needleman-Wunsch</tt>, <tt>Gotoh</tt>, <tt>Smith-Waterman</tt>, <tt>Waterman-Eggert</tt>. 
+You can look into the file <tt>banded_chain_alignment_meta_info.h</tt> in the <tt>seeds2</tt>module to see how one could overload this meta-objects to implement the correct behaviour for the wanted alignment.
 
-== The Meta-Profile ==
+=== The Meta-Profile ===
 
 [[Image(Screen Shot 2012-12-06 at 5.20.19 PM.png, 720px)]]
 
 In the following, we list the current features, where they are implemented and how they can be extended by own specializations.
 
-== Overview of the Module ==
+=== Overview of the Module ===
 
 '''Where to find the new implementation?'''
 
@@ -96,7 +100,7 @@ There is a new class of headers in the align module which all begin with the pre
 In general the new implementation consists of a bunch of new types that are only used internally, some advanced meta-objects to select and configure the
 profile of an alignment and some internally used global functions to separate different components of an alignment module. The following sections give a short description of the several new structures, where they can be find and their general purpose. Afterwards, we describe how they interact to produce a correct alignment.
 
-=== Types ===
+==== Types ====
 
 Internally used classes.
 
@@ -159,7 +163,7 @@ The TraceSegments are used as a common interface to store traced segments. The t
 
 ''dp_trace_segment.h''
 
-=== Meta-Objects ===
+==== Meta-Objects ====
 
 The meta-objects are kind of a high-level meta-description of the alignment profile and the composition of the alignment algorithm and all its related objects. It is used to specify on a meta-level how each cell of a dp-matrix is computed and which cells of the global dp-grid are
 traced. These information strongly dependent on the chosen dp profile. The purpose and the structure of the ''DPProfile'' and of the ''DPMetaInfo'' are explained in detail in the following section.
@@ -194,7 +198,7 @@ The CellDescriptor is used to differentiate between the first cell of a column, 
 ''dp_meta_info.h''
 
 
-=== Global Functions ===
+==== Global Functions ====
 
 ==== Setting Up a Pairwise Alignment ====
 
@@ -246,16 +250,16 @@ This file implements the adaption algorithms to transform the trace segments int
 
 ''dp_traceback_adaptor.h''
 
-== Current Conflicts with other Modules/Apps ==
+=== Current Conflicts with other Modules/Apps ===
 
 Consensus score does not work properly since it requires the sequences and the positions within the sequences. But in the current state we use iterators over the sequences and only pass the value of the current iterator to the score function. 
 
-'''Solution''' Refactor common interface for `score`, `scoreGapOpenHorizontal`, `scoreGapOpenVertical`, `scoreGapExtendHorizontal` and `scoreGapExtendVertical` to use SequenceEntryForScore:
+'''Solution''' Refactor common interface for <tt>score</tt>, <tt>scoreGapOpenHorizontal</tt>, <tt>scoreGapOpenVertical</tt>, <tt>scoreGapExtendHorizontal</tt> and <tt>scoreGapExtendVertical</tt> to use SequenceEntryForScore:
 
 Then, the following code:
 
-{{{
-#!cpp
+<pre>
+#cpp
 template <typename TScoreValue, typename TScoreSpec, typename TValueH, typename TValueV>
 score(Score<TScoreValue, TScoreSpec> const & score, 
       TValueH const & left,
@@ -276,12 +280,12 @@ score(Score<TValue, ConsensusScore> const & me,
 {
 	return me.consensus_set[pos1 * (ValueSize<typename Value<TSeq1>::Type>::VALUE) + seq2[pos2].count[0]];
 }
-}}}
+</pre>
 
 changes to:
 
-{{{
-#!cpp
+<pre>
+#cpp
 template <typename TScoreValue, typename TScoreSpec, typename TSeqHEntry, typename TSeqVEntry>
 inline TScoreValue 
 score(Score<TScoreValue, TScoreSpec> const & score, 
@@ -301,12 +305,16 @@ score(Score<TScoreValue, ConsensusScore> const & score,
 {
     return me.consensus_set[position(seqHEntry) * (ValueSize<typename Value<TSeqH>::Type>::VALUE) + value(seqVEntry).count[0]];
 }
-}}}
+</pre>
 
 
-== Future State ==
+=== Future State ===
 
- * Adapt Waterman-Eggert algorithm.
- * Support Streaming SIMD Extension (instruction set to exploit 256 bit registers in a SIMD fashion) 
- * Adapt seqan::t-coffee library to work on new alignment module.
- * Adapt all applications relying on the alignment module.
+*Adapt Waterman-Eggert algorithm.
+*Support Streaming SIMD Extension (instruction set to exploit 256 bit registers in a SIMD fashion) 
+*Adapt seqan::t-coffee library to work on new alignment module.
+*Adapt all applications relying on the alignment module.
+
+
+
+{{TracNotice|{{PAGENAME}}}}

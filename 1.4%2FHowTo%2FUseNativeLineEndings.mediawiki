@@ -1,5 +1,6 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:HowTo] if you need the documentation for the trunk version.'''
-= How To: Use Native Line Endings =
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[HowTo]] if you need the documentation for the trunk version.'''
+== How To: Use Native Line Endings ==
 
 In order to minimize conflicts, we have assigned the Subversion property ''svn:eol-style'' to all text files in the SeqAn repository.
 If you are a SeqAn developer, you should set this property for all new text files (including source files).
@@ -10,8 +11,12 @@ Usually, these files are located in ''~/.subversion/config'' or ''C:\Documents a
 
 More information can be found in the [http://svnbook.red-bean.com/en/1.1/ch07s02.html Chapter "Advanced Topics" in the Subversion Manual].
 
-== Copy And Paste Me ==
+=== Copy And Paste Me ===
 
 For your copy-and-paste convenience, you can also find this file's contents below.
 
 [[Include(source:/trunk/misc/svn-eol-style.txt)]]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

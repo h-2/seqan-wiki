@@ -1,38 +1,43 @@
-{{{#!html
+
+<pre>#html
 <small>Function</small>
-}}}
+</pre>
 
-= SequenceConcept # length =
+== SequenceConcept # length ==
 
-{{{#!html
+<pre>#html
 <small>Part of the interface of the Concept <a href="#">SequenceConcept</a></small>
-}}}
+</pre>
 
-{{{#!cpp
+<pre>#cpp
 TSize length(sequence)
-}}}
+</pre>
 
 Returns the number of items in a container.
 
-== Parameters ==
+=== Parameters ===
 
-{{{#!td valign=top
-`TSequence`
-}}}
-{{{#!td valign=top
-`sequence`
-}}}
-{{{#!td valign=top
+<pre>#td valign=top
+<tt>TSequence</tt>
+</pre>
+<pre>#td valign=top
+<tt>sequence</tt>
+</pre>
+<pre>#td valign=top
 The sequence to query.
-`TSequence` must fulfill the concept [# SequenceConcept].
-}}}
+<tt>TSequence</tt> must fulfill the concept [# SequenceConcept].
+</pre>
 
-== Return Values ==
+=== Return Values ===
 
-{{{#!td valign=top
-`TSize`
-}}}
-{{{#!td valign=top
+<pre>#td valign=top
+<tt>TSize</tt>
+</pre>
+<pre>#td valign=top
 The length of the sequence.
-`TSize` is the [# Size] type of `TSequence` (`Size<TSequence>::Type`)
-}}}
+<tt>TSize</tt> is the [# Size] type of <tt>TSequence</tt> (<tt>Size<TSequence>::Type</tt>)
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

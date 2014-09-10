@@ -1,9 +1,10 @@
-= Task 3: compute suboptimal alignments =
 
-== Task ==
-1. Write a program which computes the 3 best local alignments of the two seqan:Spec.AminoAcid sequences "PNCFDAKQRTASRPL" and "CFDKQKNNRTATRDTA" using the following scoring parameters: match = 3, mismatch = -2, gapopen = -5, gapextension = -1. 
+== Task 3: compute suboptimal alignments ==
 
-== Solution ==
+=== Task ===
+#Write a program which computes the 3 best local alignments of the two seqan:Spec.AminoAcid sequences "PNCFDAKQRTASRPL" and "CFDKQKNNRTATRDTA" using the following scoring parameters: match = 3, mismatch = -2, gapopen = -5, gapextension = -1. 
+
+=== Solution ===
 The usual includes:
 [[Include(source:trunk/core/demos/tutorial/alignments/alignment_pairwise_local_assignment1.cpp, fragment=main)]]
 
@@ -14,20 +15,28 @@ Computing the three best alignments with the desired scoring parameters:
 [[Include(source:trunk/core/demos/tutorial/alignments/alignment_pairwise_local_assignment1.cpp, fragment=ali)]]
 
 The output:
-{{{
-#!html
+<pre>
+#html
 <pre class="wiki" style="background-color:black;color:lightgray">
 Score = 21
       0     .    :
         CFDAKQ---RTASR
-        ||| ||   ||| |
+{| border=1 class="simple"
+!/ 
+!   
+!/ |
+|}
+
         CFD-KQKNNRTATR
 
 
 Score = 8
       0     .
         AKQR-TA
-        |  | ||
+{| border=1 class="simple"
+!
+|}
+
         AT-RDTA
 
 
@@ -36,4 +45,8 @@ Score = 5
         D-A
         | |
         DTA
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

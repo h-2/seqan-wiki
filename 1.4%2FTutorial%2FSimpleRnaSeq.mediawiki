@@ -1,5 +1,6 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
-= Simple RNA-Seq Tutorial =
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[Tutorial]] if you need the documentation for the trunk version.'''
+== Simple RNA-Seq Tutorial ==
 
 [[TOC]]
 
@@ -10,7 +11,7 @@
  Duration ::
   2h
  Prerequisites ::
-  [wiki:Tutorial/AnnotationStore] or [wiki:Tutorial/FragmentStore] and optionally experiences with OpenMP.
+  [[Tutorial/AnnotationStore]] or [[Tutorial/FragmentStore]] and optionally experiences with OpenMP.
 
 RNA-Seq refers to high-throughput sequencing of cDNA in order to get information about the RNA molecules available in a sample.
 Knowing the sequence and abundance of mRNA allows to determine the (differential) expression of genes, to detect alternative splicing variants, or to annotate yet unknown genes.
@@ -22,18 +23,18 @@ Albeit its simplicity, this example can be seen as a starting point for more com
 
 You will learn how to use the seqan:Class.FragmentStore to access gene annotations and alignments and how to use the seqan:Class.IntervalTree to efficiently determine which genes overlap a read alignment.
 
-== Introduction to the used Data Structures ==
+=== Introduction to the used Data Structures ===
 
 This section introduces the seqan:Class.FragmentStore and the seqan:Class.IntervalTree, which are the fundamental data structures used in this tutorial to represent annotations and read alignments and to efficiently find overlaps between them.
 You may skip one or both subsections if you are already familiar with one or both data structures.
 
-=== Fragment Store ===
+==== Fragment Store ====
 
 The seqan:Class.FragmentStore is a data structure specifically designed for read mapping, genome assembly or gene annotation.
 These tasks typically require lots of data structures that are related to each other like:
-   * reads, mate-pairs, reference genome
-   * pairwise alignments
-   * genome annotation 
+**reads, mate-pairs, reference genome
+**pairwise alignments
+**genome annotation 
 
 The Fragment Store subsumes all these data structures in an easy to use interface.
 It represents a multiple alignment of millions of reads or mate-pairs against a reference genome consisting of multiple contigs.
@@ -48,18 +49,22 @@ Each name store is a seqan:Class.StringSet that stores the element name at the p
 All stores are present in the Fragment Store and empty if unused.
 The concrete types, e.g. the position types or read/contig alphabet, can be easily changed by defining a custom config struct which is a template parameter of the Fragment Store class.
 
-=== Annotation Tree ===
+==== Annotation Tree ====
 
 Annotations are represented as a tree that at least contains a root node where all annotations are children or grandchildren of. 
 A typical annotation tree looks as follows:
 
-|| [[Image(source:tags/seqan-1.4.0/docs2/images/AnnotationTree.png, 400px)]] ||
-|| Annotation tree example ||
+{| border=1 class="simple"
+! [[Image(source:tags/seqan-1.4.0/docs2/images/AnnotationTree.png, 400px)]] 
+|- 
+|  Annotation tree example 
+|}
+
 
 In the Fragment Store the tree is represented by seqan:Memvar.FragmentStore#annotationStore, seqan:Memvar.FragmentStore#annotationTypeStore, seqan:Memvar.FragmentStore#annotationKeyStore, and others.
 Instead of accessing these tables directly, the seqan:"Spec.AnnotationTree Iterator" provides a high-level interface to traverse and access the annotation tree.
 
-=== Interval Tree ===
+==== Interval Tree ====
 
 The seqan:Class.IntervalTree is a data structure that stores one-dimensional intervals in a balanced tree and efficiently answers [http://en.wikipedia.org/wiki/Range_query range queries].
 A range query is an operation that returns all tree intervals that overlap a given query point or interval.
@@ -69,52 +74,52 @@ Interval tree nodes are objects of the seqan:Class.IntervalAndCargo class and co
 To construct the tree on a set of given interval nodes use the function seqan:Function.createIntervalTree.
 The functions seqan:Function.addInterval and seqan:Function.removeInterval should only be used if the interval tree needs to be changed dynamically (as they not yet balance the tree).
 
-== Import Alignments and Gene Annotations from File ==
+=== Import Alignments and Gene Annotations from File ===
 
-At first, our application should create an empty `FragmentStore` object into which we import a gene annotation file and a file with RNA-Seq alignments.
-An empty `FragmentStore` can simply be created with:
-{{{#!cpp
+At first, our application should create an empty <tt>FragmentStore</tt> object into which we import a gene annotation file and a file with RNA-Seq alignments.
+An empty <tt>FragmentStore</tt> can simply be created with:
+<pre>#cpp
 FragmentStore<> store;
-}}}
-Files can be read from disk with the function seqan:Function.read that expects an open stream (e.g. a STL [http://www.cplusplus.com/reference/iostream/ifstream ifstream]), a `FragmentStore`object, and a seqan:"Tag.File Format" tag.
-The contents of different files can be loaded with subsequent calls of `read`.
+</pre>
+Files can be read from disk with the function seqan:Function.read that expects an open stream (e.g. a STL [http://www.cplusplus.com/reference/iostream/ifstream ifstream]), a <tt>FragmentStore</tt>object, and a seqan:"Tag.File Format" tag.
+The contents of different files can be loaded with subsequent calls of <tt>read</tt>.
 As we want the user to specify the files via command line, our application will parse them using the seqan:Class.ArgumentParser and store them in an option object. 
 
-In your first assignment you need to complete a given code template and implement a function that loads a SAM file and a GTF file into the `FragmentStore`.
+In your first assignment you need to complete a given code template and implement a function that loads a SAM file and a GTF file into the <tt>FragmentStore</tt>.
 
-=== Assignment 1 ===
-{{{#!AssignmentBox
+==== Assignment 1 ====
+<pre>#AssignmentBox
 
  Type :: Application
- Objective :: Use the code template in [source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_assignment1.cpp genequant_assignment1.cpp] (or unfold more...) and implement the function `loadFiles` to load the annotation and alignment files. Use the file paths given in the options object and report an error if the files could not be opened. 
-{{{
-#!FoldOut
+ Objective :: Use the code template in [source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_assignment1.cpp genequant_assignment1.cpp] (or unfold more...) and implement the function <tt>loadFiles</tt> to load the annotation and alignment files. Use the file paths given in the options object and report an error if the files could not be opened. 
+<pre>
+#FoldOut
 ----
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_assignment1.cpp)]]
-}}}
+</pre>
  Hint ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 Open STL [http://www.cplusplus.com/reference/iostream/ifstream std::ifstream] objects and use the function seqan:Function.read with a SAM or GTF seqan:"Tag.File Format" tag.
-}}}
+</pre>
  Hint ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
-[http://www.cplusplus.com/reference/iostream/ifstream/open ifstream::open] requires the file path to be given as a C-style string ({{{const char *}}}).
+[http://www.cplusplus.com/reference/iostream/ifstream/open ifstream::open] requires the file path to be given as a C-style string (<tt>const char *</tt>).
 Use [http://www.cplusplus.com/reference/string/string/c_str string::c_str] to convert the option strings into C-style strings.
-The function seqan:Function.read expects a stream, a seqan:Class.FragmentStore and a seqan:"Tag.File Format" tag, i.e. `Sam()` or `Gtf()`.
-}}}
+The function seqan:Function.read expects a stream, a seqan:Class.FragmentStore and a seqan:"Tag.File Format" tag, i.e. <tt>Sam()</tt> or <tt>Gtf()</tt>.
+</pre>
  Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_solution1.cpp, fragment=solution)]]
-}}}
-}}}
+</pre>
+</pre>
 
-== Extract Gene Intervals ==
+=== Extract Gene Intervals ===
 
 Now that the Fragment Store contains the whole annotation tree, we want to traverse the genes and extract the genomic ranges they span.
 In the annotation tree, genes are (the only) children of the root node.
@@ -122,200 +127,200 @@ To efficiently retrieve the genes that overlap read alignments later, we want to
 To construct an interval tree, we first need to collect seqan:Class.IntervalAndCargo objects in a string and pass them to seqan:Function.createIntervalTree.
 See the [source:tags/seqan-1.4.0/core/demos/interval_tree.cpp interval tree demo] for more details.
 As cargo we use the gene's annotation id to later retrieve all gene specific information.
-The strings of `IntervalAndCargo` objects should be grouped by `contigId` and stored in an (outer) string of strings.
+The strings of <tt>IntervalAndCargo</tt> objects should be grouped by <tt>contigId</tt> and stored in an (outer) string of strings.
 For the sake of simplicity we don't differ between genes on the forward or reverse strand and instead always consider the corresponding intervals on the forward strand.
 
-To define this string of strings of `IntervalAndCargo` objects, we first need to determine the types used to represent an annotation.
+To define this string of strings of <tt>IntervalAndCargo</tt> objects, we first need to determine the types used to represent an annotation.
 All annotations are stored in the seqan:Memvar.FragmentStore#annotationStore which is a Fragment Store member and whose type is seqan:Typedef.FragmentStore#TAnnotationStore.
 The value type of the annotation store is the class seqan:Class.AnnotationStoreElement.
 Its member typedefs seqan:Typedef.AnnotationStoreElement#TPos and seqan:Typedef.AnnotationStoreElement#TId define the types it uses to represent a genomic position or the annotation or contig id:
-{{{#!cpp
+<pre>#cpp
 typedef FragmentStore<> TStore;
 typedef Value<TStore::TAnnotationStore>::Type TAnnotation;
 typedef TAnnotation::TId TId;
 typedef TAnnotation::TId TPos;
 typedef IntervalAndCargo<TPos, TId> TInterval;
-}}}
+</pre>
 The string of strings of intervals can now be defined as:
-{{{#!cpp
+<pre>#cpp
 String<String<TInterval> > intervals;
-}}}
+</pre>
 
 In your second assignment you should use an [seqan:"Spec.AnnotationTree Iterator" annotation tree iterator] to traverse all genes in the annotation tree.
-For each gene, determine its genomic range (projected to the forward strand) and add a new `TInterval` object to the `intervals[contigId]` string, where `contigId` is the id of the contig containing that gene.
+For each gene, determine its genomic range (projected to the forward strand) and add a new <tt>TInterval</tt> object to the <tt>intervals[contigId]</tt> string, where <tt>contigId</tt> is the id of the contig containing that gene.
 
-=== Assignment 2 ===
-{{{#!AssignmentBox
+==== Assignment 2 ====
+<pre>#AssignmentBox
 
  Type :: Application
- Objective :: Use the code template in [source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_assignment2.cpp genequant_assignment2.cpp] or extend your code as shown below (unfold more...). Implement the function `extractGeneIntervals` that should extract genes from the annotation tree (see seqan:"Spec.AnnotationTree Iterator") and create strings of seqan:Class.IntervalAndCargo objects - one for each config - that contains the interval on the forward contig strand and the gene's annotation id.
-{{{
-#!FoldOut
+ Objective :: Use the code template in [source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_assignment2.cpp genequant_assignment2.cpp] or extend your code as shown below (unfold more...). Implement the function <tt>extractGeneIntervals</tt> that should extract genes from the annotation tree (see seqan:"Spec.AnnotationTree Iterator") and create strings of seqan:Class.IntervalAndCargo objects - one for each config - that contains the interval on the forward contig strand and the gene's annotation id.
+<pre>
+#FoldOut
 ----
 Extend the definitions:
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_assignment2.cpp, fragment=definitions)]]
 Add a function:
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_assignment2.cpp, fragment=yourcode)]]
-Extend the `main` function:
+Extend the <tt>main</tt> function:
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_assignment2.cpp, fragment=main)]]
 and
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_assignment2.cpp, fragment=main2)]]
-}}}
+</pre>
  Hint ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 You can assume that all genes are children of the root node, i.e. create an seqan:"Spec.AnnotationTree Iterator", [seqan:"Function.AnnotationTree Iterator#goDown" go down] to the first gene and [seqan:"Function.AnnotationTree Iterator#goRight" go right] to visit all other genes.
 Use seqan:Function.getAnnotation to access the gene annotation and seqan:Function.value to get the annotation id.
-}}}
+</pre>
  Hint ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
-Make sure that you append seqan:Class.IntervalAndCargo objects, where `i1` < `i2` holds, as opposed to annotations where `beginPos` > `endPos` is possible.
-Remember to ensure that `intervals` is of appropriate size, e.g. with
-{{{#!cpp
+Make sure that you append seqan:Class.IntervalAndCargo objects, where <tt>i1</tt> < <tt>i2</tt> holds, as opposed to annotations where <tt>beginPos</tt> > <tt>endPos</tt> is possible.
+Remember to ensure that <tt>intervals</tt> is of appropriate size, e.g. with
+<pre>#cpp
 resize(intervals, length(store.contigStore));
-}}}
-Use seqan:Function.appendValue to add a new `TInverval` object to the inner string, see [seqan:Memfunc.IntervalAndCargo#IntervalAndCargo IntervalAndCargo constructor] for the constructor.
-}}}
+</pre>
+Use seqan:Function.appendValue to add a new <tt>TInverval</tt> object to the inner string, see [seqan:Memfunc.IntervalAndCargo#IntervalAndCargo IntervalAndCargo constructor] for the constructor.
+</pre>
  Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_solution2.cpp, fragment=solution)]]
-}}}
-}}}
+</pre>
+</pre>
 
 
 
-== Construct Interval Trees ==
+=== Construct Interval Trees ===
 
 With the strings of gene intervals - one for each contig - we now can construct interval trees.
 Therefore, we specialize an seqan:Class.IntervalTree with the same position and cargo types as used for the seqan:Class.IntervalAndCargo objects.
 As we need an interval tree for each contig, we instantiate a string of interval trees:
-{{{#!cpp
+<pre>#cpp
 typedef IntervalTree<TPos, TId> TIntervalTree;
 String<TIntervalTree> intervalTrees;
-}}}
+</pre>
 
 Your third assignment is to implement a function that constructs the interval trees for all contigs given the string of interval strings.
 
-=== Assignment 3 ===
-{{{#!AssignmentBox
+==== Assignment 3 ====
+<pre>#AssignmentBox
 
  Type :: Application
- Objective :: Use the code template in [source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_assignment3.cpp genequant_assignment3.cpp] or extend your code as shown below (unfold more...). Implement the function {{{constructIntervalTrees}}} that uses the interval strings to construct for each contig an interval tree. '''Optional:''' Use OpenMP to parallelize the construction over the contigs, see seqan:Macro.SEQAN_OMP_PRAGMA.
-{{{
-#!FoldOut
+ Objective :: Use the code template in [source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_assignment3.cpp genequant_assignment3.cpp] or extend your code as shown below (unfold more...). Implement the function <tt>constructIntervalTrees</tt> that uses the interval strings to construct for each contig an interval tree. '''Optional:''' Use OpenMP to parallelize the construction over the contigs, see seqan:Macro.SEQAN_OMP_PRAGMA.
+<pre>
+#FoldOut
 ----
 Extend the definitions:
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_assignment3.cpp, fragment=definitions)]]
 Add a function:
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_assignment3.cpp, fragment=yourcode)]]
-Extend the {{{main}}} function:
+Extend the <tt>main</tt> function:
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_assignment3.cpp, fragment=main)]]
 and
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_assignment3.cpp, fragment=main2)]]
-}}}
+</pre>
  Hint ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 First, resize the string of interval trees accordingly:
-{{{#!cpp
+<pre>#cpp
 resize(intervalTrees, length(intervals));
-}}}
-}}}
+</pre>
+</pre>
  Hint ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 Use the function seqan:Function.createIntervalTree.
 '''Optional:''' Construct the trees in parallel over all contigs with an OpenMP parallel for-loop, see [http://developers.sun.com/solaris/articles/openmp.html here] for more information about OpenMP.
-}}}
+</pre>
  Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_solution3.cpp, fragment=solution)]]
-}}}
-}}}
+</pre>
+</pre>
 
-== Compute Gene Coverage ==
+=== Compute Gene Coverage ===
 
 To determine gene expression levels, we first need to compute the read coverage, i.e. the total number of reads overlapping a gene.
 Therefore we use a string of counters addressed by the annotation id.
-{{{#!cpp
+<pre>#cpp
 String<unsigned> readsPerGene;
-}}}
+</pre>
 For each read alignment we want to determine the overlapping genes by conducting a range query via seqan:Function.findIntervals and then increment their counters by 1.
 To address the counter of a gene, we use its annotation id stored as cargo in the interval tree.
 
 Read alignments are stored in the seqan:Memvar.FragmentStore#alignedReadStore, a string of seqan:Class.AlignedReadStoreElement objects.
 Their actual type can simply be determined as follows:
-{{{#!cpp
+<pre>#cpp
 typedef Value<TStore::TAlignedReadStore>::Type TAlignedRead;
-}}}
+</pre>
 Given the seqan:Memvar.AlignedReadStoreElement#contigId, seqan:Memvar.AlignedReadStoreElement#beginPos, and seqan:Memvar.AlignedReadStoreElement#endPos we will retrieve the annotation ids of overlapping genes from the corresponding interval tree.
 
 Your fourth assignment is to implement the count function that performs all the above described steps.
 Optionally, use OpenMP to parallelize the counting.
 
-=== Assignment 4 ===
-{{{#!AssignmentBox
+==== Assignment 4 ====
+<pre>#AssignmentBox
 
  Type :: Application
- Objective :: Use the code template in [source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_assignment4.cpp genequant_assignment4.cpp] or extend your code as shown below (unfold more...). Implement the function `countReadsPerGene` that counts for each gene the number of overlapping reads. Therefore determine for each seqan:Class.AlignedReadStoreElement begin and end positions (on forward strand) of the alignment and increment the `readsPerGene` counter for each overlapping gene. '''Optional:''' Use OpenMP to parallelize the function, see seqan:Macro.SEQAN_OMP_PRAGMA.
-{{{
-#!FoldOut
+ Objective :: Use the code template in [source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_assignment4.cpp genequant_assignment4.cpp] or extend your code as shown below (unfold more...). Implement the function <tt>countReadsPerGene</tt> that counts for each gene the number of overlapping reads. Therefore determine for each seqan:Class.AlignedReadStoreElement begin and end positions (on forward strand) of the alignment and increment the <tt>readsPerGene</tt> counter for each overlapping gene. '''Optional:''' Use OpenMP to parallelize the function, see seqan:Macro.SEQAN_OMP_PRAGMA.
+<pre>
+#FoldOut
 ----
 Extend the definitions:
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_assignment4.cpp, fragment=definitions)]]
 Add a function:
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_assignment4.cpp, fragment=yourcode)]]
-Extend the {{{main}}} function:
+Extend the <tt>main</tt> function:
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_assignment4.cpp, fragment=main)]]
 and
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_assignment4.cpp, fragment=main2)]]
-}}}
+</pre>
  Hint ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 First, resize and zero the string of counters accordingly:
-{{{#!cpp
+<pre>#cpp
 resize(readsPerGene, length(store.annotationStore), 0);
-}}}
-Make sure that you search with seqan:Function.findIntervals where `query_begin` < `query_end` holds, as opposed to read alignments where `beginPos` > `endPos` is possible.
-}}}
+</pre>
+Make sure that you search with seqan:Function.findIntervals where <tt>query_begin</tt> < <tt>query_end</tt> holds, as opposed to read alignments where <tt>beginPos</tt> > <tt>endPos</tt> is possible.
+</pre>
  Hint ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 The result of a range query is a string of annotation ids given to seqan:Function.findIntervals by-reference:
-{{{#!cpp
+<pre>#cpp
 String<TId> result;
-}}}
-Reuse the result string for multiple queries (of the same thread, use `private(result)` for OpenMP).
+</pre>
+Reuse the result string for multiple queries (of the same thread, use <tt>private(result)</tt> for OpenMP).
 
-{{{#!comment 
+<pre>#comment 
 The length of the read of the i-th read alignment is:
-{{{#!cpp
+<pre>#cpp
 length(store.readSeqStore[store.alignedReadStore[i].readId])
-}}}
-}}}
-}}}
+</pre>
+</pre>
+</pre>
  Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_solution4.cpp, fragment=solution)]]
-}}}
-}}}
+</pre>
+</pre>
 
 
-== Output RPKM Values ==
+=== Output RPKM Values ===
 
 In the final step, we want to output the gene expression levels in a normalized measure.
 We therefore use '''RPKM''' values, i.e. the number of '''r'''eads '''p'''er '''k'''ilobase of exon model per '''m'''illion mapped reads (1).
@@ -328,8 +333,8 @@ Your final assignment is to output the RPKM value for genes with a read counter 
 To compute the exon length of the gene (maximal exon length of all mRNA) use an seqan:"Spec.AnnotationTree Iterator" and iterate over all mRNA (children of the gene) and all exons (children of mRNA).
 For the number of total mapped reads simply use the number of alignments in the seqan:Memvar.FragmentStore#alignedReadStore.
 Output the gene names and their RPKM values separated by tabs as follows:
-{{{
-#!ShellBox
+<pre>
+#ShellBox
 #gene name	        RPKM value
 ENSMUSG00000053211	5932.12
 ENSMUSG00000069053	10540.1
@@ -350,53 +355,57 @@ ENSMUSG00000069031	37564.2
 ENSMUSG00000071960	34984
 ENSMUSG00000091987	37056.3
 ENSMUSG00000090600	2310.18
-}}}
+</pre>
 
 Download and decompress the attached mouse annotation ([raw-attachment:Mus_musculus.NCBIM37.61.gtf.zip Mus_musculus.NCBIM37.61.gtf.zip]) and the alignment file of RNA-Seq reads aligned to chromosome Y ([raw-attachment:sim40mio_onlyY.sam.zip sim40mio_onlyY.sam.zip]).
 Test your program and compare your output with the output above.
 
-=== Assignment 5 ===
-{{{#!AssignmentBox
+==== Assignment 5 ====
+<pre>#AssignmentBox
 
  Type :: Application
- Objective :: Use the code template in [source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_assignment5.cpp genequant_assignment5.cpp] or extend your code as shown below (unfold more...). Implement the function `outputGeneCoverage` that outputs for each expressed gene the gene name and the expression level as RPKM as tab-separated values.
-{{{
-#!FoldOut
+ Objective :: Use the code template in [source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_assignment5.cpp genequant_assignment5.cpp] or extend your code as shown below (unfold more...). Implement the function <tt>outputGeneCoverage</tt> that outputs for each expressed gene the gene name and the expression level as RPKM as tab-separated values.
+<pre>
+#FoldOut
 ----
 Add a function:
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_assignment5.cpp, fragment=yourcode)]]
-Extend the {{{main}}} function:
+Extend the <tt>main</tt> function:
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_assignment5.cpp, fragment=main)]]
-}}}
+</pre>
  Hint ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 To compute the maximal exon length use three nested loops: (1) enumerate all genes, (2) enumerate all mRNA of the gene, and (3) enumerate all exons of the mRNA and sum up their lengths.
-}}}
+</pre>
  Hint ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 Remember that exons are not the only children of mRNA. 
-}}}
+</pre>
  Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/rnaseq/genequant_solution5.cpp, fragment=solution)]]
-}}}
-}}}
+</pre>
+</pre>
 
-== References ==
-   1. Mortazavi, A., Williams, B., McCue, K., Schaeffer, L., & Wold, B. (2008). ''Mapping and quantifying mammalian transcriptomes by RNA-Seq''. Nature Methods, 5(7), 621–628.
+=== References ===
+##Mortazavi, A., Williams, B., McCue, K., Schaeffer, L., & Wold, B. (2008). ''Mapping and quantifying mammalian transcriptomes by RNA-Seq''. Nature Methods, 5(7), 621–628.
 
-== Next Steps ==
+=== Next Steps ===
 
- * Read the [wiki:Tutorial/BasicSamBamIO SAM I/O Tutorial] and change your program to stream a SAM file instead of loading it as a whole
- * Change the program such that it attaches the RPKM value as a key-value pair (see seqan:Function.assignValueByKey) to the annotation of each gene and output a GFF file.
- * Continue with the [wiki:Tutorial rest of the tutorials].
+*Read the [[Tutorial/BasicSamBamIO| SAM I/O Tutorial]] and change your program to stream a SAM file instead of loading it as a whole
+*Change the program such that it attaches the RPKM value as a key-value pair (see seqan:Function.assignValueByKey) to the annotation of each gene and output a GFF file.
+*Continue with the [[Tutorial| rest of the tutorials]].
 
-== Submit a  Comment ==
+=== Submit a  Comment ===
 If you found a mistake, or have suggestions about an improvement of this page press:
 [/newticket?component=Documentation&description=Tutorial+Enhancement+for+page+http://trac.seqan.de/wiki/Tutorial/Template&type=enhancement submit your comment]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

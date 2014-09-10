@@ -1,60 +1,219 @@
-= Switch to New Argument Parser =
+
+== Switch to New Argument Parser ==
 Here we summarize the migration status of all apps and assign tasks. If you miss an app, please add it here.
-'''The apps should be adapted till next Wednesday Oct 24th.'''[[BR]]
+'''The apps should be adapted till next Wednesday Oct 24th.'''<br>
 Adapting one app should only take up to 1 hour - depending on the app.
 For more information please read the tutorial here: https://trac.seqan.de/wiki/WhitePapers/ArgumentParserMigration
  
 
-||= Developer =||= Application =||= done? =||
-|| Manuel || ALF || YES ||
-|| David || DFI || YES ||
-|| Manuel || Mason || YES ||
-|| Anne-Katrin || MicroRazerS || YES ||
-|| Anne-Katrin  || IndelSimulator || YES ||
-|| Sabrina || Insegt || YES ||
-|| René || PairAlign || YES ||
-|| David || ParamChooser ||  ||
-|| Jialu Hu || SGIP || YES ||
-|| Marcel  || PISAtoolbox ||  ||
-|| Manuel || Rabema || YES ||
-|| David || RazerS || YES ||
-|| David || RazerS 2 || YES ||
-|| David || RazerS 3 || YES ||
-||  || ~~ReadAnalyzer~~ ||  ||
-|| Stephan || RepSep || YES ||
-|| René || SeqAn::T-Coffee || YES ||
-|| Manuel || SAK || YES ||
-|| Jochen || SeqCons || YES  ||
-|| Sabrina || SnpStore ||  ||
-|| Anne-Katrin  || SplazerS || YES  ||
-|| Birte || Stellar || YES ||
-|| Manuel || TreeRecon || YES ||
-|| Anne-Katrin  || VariantComp || YES ||
+{| border=1 class="simple"
+!= Developer =
+!= Application =
+!= done? =
+|- 
+|  Manuel 
+|  ALF 
+|  YES 
+|- 
+|  David 
+|  DFI 
+|  YES 
+|- 
+|  Manuel 
+|  Mason 
+|  YES 
+|- 
+|  Anne-Katrin 
+|  MicroRazerS 
+|  YES 
+|- 
+|  Anne-Katrin  
+|  IndelSimulator 
+|  YES 
+|- 
+|  Sabrina 
+|  Insegt 
+|  YES 
+|- 
+|  René 
+|  PairAlign 
+|  YES 
+|- 
+|  David 
+|  ParamChooser 
+|   
+|- 
+|  Jialu Hu 
+|  SGIP 
+|  YES 
+|- 
+|  Marcel  
+|  PISAtoolbox 
+|   
+|- 
+|  Manuel 
+|  Rabema 
+|  YES 
+|- 
+|  David 
+|  RazerS 
+|  YES 
+|- 
+|  David 
+|  RazerS 2 
+|  YES 
+|- 
+|  David 
+|  RazerS 3 
+|  YES 
+|- 
+|   
+|  <s>ReadAnalyzer</s> 
+|   
+|- 
+|  Stephan 
+|  RepSep 
+|  YES 
+|- 
+|  René 
+|  SeqAn::T-Coffee 
+|  YES 
+|- 
+|  Manuel 
+|  SAK 
+|  YES 
+|- 
+|  Jochen 
+|  SeqCons 
+|  YES  
+|- 
+|  Sabrina 
+|  SnpStore 
+|   
+|- 
+|  Anne-Katrin  
+|  SplazerS 
+|  YES  
+|- 
+|  Birte 
+|  Stellar 
+|  YES 
+|- 
+|  Manuel 
+|  TreeRecon 
+|  YES 
+|- 
+|  Anne-Katrin  
+|  VariantComp 
+|  YES 
+|}
 
-= Prepare apps to be used in KNIME =
 
-||= Developer =||= Application =||= done? =||
-|| Manuel || ALF || YES ||
-|| David || DFI || YES ||
-|| Manuel || Mason || ||
-|| Jochen || MicroRazerS || ||
-|| Jochen || IndelSimulator || ||
-|| Sabrina || Insegt || ||
-|| René || PairAlign ||  ||
-|| || ~~SGIP~~ || ||
-|| Marcel  || PISAtoolbox ||  ||
-|| Manuel || Rabema || YES ||
-|| David || RazerS || YES ||
-|| David || RazerS 2 || YES ||
-|| David || RazerS 3 || YES ||
-||  || ~~ReadAnalyzer~~ ||  ||
-|| Stephan || RepSep || ||
-|| Knut || SeqAn::T-Coffee || YES  ||
-|| Manuel || SAK || YES ||
-|| Jochen || SeqCons || YES ||
-|| Sabrina || SnpStore ||  ||
-||  || SplazerS ||  ||
-|| Birte || Stellar || YES ||
-|| Manuel || TreeRecon || YES ||
-||  || VariantComp || ||
-|| David || Fiona || YES ||
+== Prepare apps to be used in KNIME ==
+
+{| border=1 class="simple"
+!= Developer =
+!= Application =
+!= done? =
+|- 
+|  Manuel 
+|  ALF 
+|  YES 
+|- 
+|  David 
+|  DFI 
+|  YES 
+|- 
+|  Manuel 
+|  Mason 
+|  
+|- 
+|  Jochen 
+|  MicroRazerS 
+|  
+|- 
+|  Jochen 
+|  IndelSimulator 
+|  
+|- 
+|  Sabrina 
+|  Insegt 
+|  
+|- 
+|  René 
+|  PairAlign 
+|   
+|- 
+|  
+|  <s>SGIP</s> 
+|  
+|- 
+|  Marcel  
+|  PISAtoolbox 
+|   
+|- 
+|  Manuel 
+|  Rabema 
+|  YES 
+|- 
+|  David 
+|  RazerS 
+|  YES 
+|- 
+|  David 
+|  RazerS 2 
+|  YES 
+|- 
+|  David 
+|  RazerS 3 
+|  YES 
+|- 
+|   
+|  <s>ReadAnalyzer</s> 
+|   
+|- 
+|  Stephan 
+|  RepSep 
+|  
+|- 
+|  Knut 
+|  SeqAn::T-Coffee 
+|  YES  
+|- 
+|  Manuel 
+|  SAK 
+|  YES 
+|- 
+|  Jochen 
+|  SeqCons 
+|  YES 
+|- 
+|  Sabrina 
+|  SnpStore 
+|   
+|- 
+|   
+|  SplazerS 
+|   
+|- 
+|  Birte 
+|  Stellar 
+|  YES 
+|- 
+|  Manuel 
+|  TreeRecon 
+|  YES 
+|- 
+|   
+|  VariantComp 
+|  
+|- 
+|  David 
+|  Fiona 
+|  YES 
+|}
+
+
+
+
+{{TracNotice|{{PAGENAME}}}}

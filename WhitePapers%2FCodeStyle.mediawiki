@@ -1,53 +1,54 @@
-= Style Guide Decisions =
 
-This has been superseded with [wiki:StyleGuide/Cpp SeqAn C++ Style Guide].
+== Style Guide Decisions ==
 
-{{{
-#!comment
+This has been superseded with [[StyleGuide/Cpp| SeqAn C++ Style Guide]].
+
+<pre>
+#comment
 [[TOC()]]
 
-== Naming Schemes ==
+=== Naming Schemes ===
 
 I think we agreed on most of the naming schemes at the last retreat.
 This is more of a reminder.
 
 In the following, "SA" is a two-char abbreviation (for "suffix array"), "LCP" is a three-char abbreviation (for "longest common prefix").
 
-=== File Names ===
+==== File Names ====
 
 File names are lower case, different words are separated by underscores:
 
- * ''index/find_swift.h''
- * ''find_motif/motif_finder_base.h''
+*''index/find_swift.h''
+*''find_motif/motif_finder_base.h''
 
-=== Macros ===
+==== Macros ====
 
 Macros are all upper case. Individual words separated by an underline.
 
-{{{
-#!cpp
+<pre>
+#cpp
 #define SEQAN_MY_MACRO x
 #define SEQAN_SA_VALUE y
 #define SEQAN_LCP_TABLE z
-}}}
+</pre>
 
-=== Structs / Classes ===
+==== Structs / Classes ====
 
 Structs and classes are in Camel Case notation (each beginning  of a word/abbreviation is capitalized).
 
-{{{
-#!cpp
+<pre>
+#cpp
 struct MyStruct;
 struct SAValue;
 struct LcpTable;
-}}}
+</pre>
 
-=== Metafunctions ===
+==== Metafunctions ====
 
-Same as structs and classes, boolean types with `TypeStyle` constants with `CONSTANT_STYLE`.
+Same as structs and classes, boolean types with <tt>TypeStyle</tt> constants with <tt>CONSTANT_STYLE</tt>.
 
-{{{
-#!cpp
+<pre>
+#cpp
 struct MyStruct
 {
   typedef True Value;
@@ -57,14 +58,14 @@ struct MyStruct
 
 struct SAValue;
 struct LcpTable;
-}}}
+</pre>
 
-=== Functions ===
+==== Functions ====
 
 Internal functions are preceded with an underline and start with a lowercase letter.
 
-{{{
-#!cpp
+<pre>
+#cpp
 void _internalFunction();
 void publicFunction();
 void _publicFunctionFirstHelper();
@@ -75,12 +76,12 @@ int saValue();
 int lcpValue();
 int getSAValue();
 int getLcpValue();
-}}}
+</pre>
 
-=== Variables ===
+==== Variables ====
 
-{{{
-#!cpp
+<pre>
+#cpp
 int i;
 char * myString;
 char * myLongName;
@@ -89,11 +90,11 @@ int saValue;
 int lcpValue;
 int mySAValue;
 int myLcpValue;
-}}}
+</pre>
 
-== Formatting ==
+=== Formatting ===
 
-=== Line Length ===
+==== Line Length ====
 
 Too long lines make code hard to read, wrapping code by semantic is not supported by all editors.
 Too short lines waste space on modern screens.
@@ -110,37 +111,37 @@ Classic terminal width.
 
 Let the editor handle this.
 
-=== Exceptions To Line Length ===
+==== Exceptions To Line Length ====
 
 ==== A: Manuel's proposal (Manuel, Knut, Birte, Enrico, Dave) ====
 
- * DDDoc comments can be longer because dddoc might interpret whitespace inside lines.
- * TODO commands can be longer so the whole line is seen when grepping for TODO, should also be better for tools like Eclipse that can extract inline TODO comments.
- * Include guards (`#ifndef PATH_TO_HEADER_H_`) can be longer if the paths are longer.
+*DDDoc comments can be longer because dddoc might interpret whitespace inside lines.
+*TODO commands can be longer so the whole line is seen when grepping for TODO, should also be better for tools like Eclipse that can extract inline TODO comments.
+*Include guards (<tt>#ifndef PATH_TO_HEADER_H_</tt>) can be longer if the paths are longer.
 
 ==== B: Changes to A ====
 
 ==== C: None ====
 
-=== Non-ASCII Characters ===
+==== Non-ASCII Characters ====
 
 All files should be in UTF-8 coding.
 It can be good to avoid Non-ASCII characters since editors and terminals might have problems with them.
 
 ==== A: Avoid Non-ASCII  ====
 
- * Make all files UTF-8, avoid non-ASCII characters nevertheless.
- * In strings, use UTF-8 coding, for example, "\xEF\xBB\xBF" is the Unicode zero-width no-break space character, which would be invisible if included in the source as straight UTF-8.
- * In comments, use ss instead of ß, "a instead of ä etc.
+*Make all files UTF-8, avoid non-ASCII characters nevertheless.
+*In strings, use UTF-8 coding, for example, "\xEF\xBB\xBF" is the Unicode zero-width no-break space character, which would be invisible if included in the source as straight UTF-8.
+*In comments, use ss instead of ß, "a instead of ä etc.
 
 ==== B: Changes to A (Manuel, Birte, AK, Dave, Knut) ====
- * Same as A except ae instead of ä
+*Same as A except ae instead of ä
 
 ==== C: Don't Care/No Limitation ====
 
- * Everything is allowed.
+*Everything is allowed.
 
-=== Spaces Vs. Tabs ===
+==== Spaces Vs. Tabs ====
 
 This can lead to lengthy discussions.
 We once agreed that we wanted to have indentation of width 4.
@@ -149,41 +150,41 @@ So, if tabs are allowed, they should have a width of 4.
 ==== A: No Tabs (Manuel, Enrico) ====
 
 There can be problems when indenting in for loops, for example.
-Consider the following (`-->|` is a tab, `_` is a space):
+Consider the following (<tt>-->|</tt> is a tab, <tt>_</tt> is a space):
 
-{{{
-#!cpp
+<pre>
+#cpp
 for (int i = 0, j = 0, k = 0, ...;
-_____cond1 && cond2 &&; ++i)
+<u>_</u>cond1 && cond2 &&; ++i)
 {
   // ...
 }
-}}}
+</pre>
 
 Here, indentation can happen up to match the previous line.
 Mixing tabs and spaces works, too.
 However, since tabs are not shown in the editor, people might indent a file with mixed tabs and spaces with spaces if they are free to mix tabs and spaces.
 
-{{{
-#!cpp
+<pre>
+#cpp
 for (int i = 0, j = 0, k = 0, ...;
 -->|_cond1 && cond2 &&; ++i)
 {
   // ...
 }
-}}}
+</pre>
 
 Pure tabs for indentation cannot indent up to match the previous line.
 
-{{{
-#!cpp
+<pre>
+#cpp
 // EITHER
 for (int i = 0, j = 0, k = 0, ...;
 -->|cond1 && cond2 &&; ++i);
 // OR
 for (int i = 0, j = 0, k = 0, ...;
 -->|-->|cond1 && cond2 &&; ++i);
-}}}
+</pre>
 
 ==== B: Use Tabs and mix with spaces ====
 
@@ -191,13 +192,13 @@ for (int i = 0, j = 0, k = 0, ...;
 
 ==== D: Don't Care/No Limitation (Birte, AK, Dave, Knut) ====
 
-=== Indentation ===
+==== Indentation ====
 
 We want to have an indentation width of 4, tabs/spaces not decided yet.
 
 Namespaces are not indented, this only wastes horizontal space since all library code would be indented by one level.
 
-=== Trailing: Whitespace ===
+==== Trailing: Whitespace ====
 
 ==== A: Not allowed (Manuel, Knut, Birte, Enrico, Dave) ====
 
@@ -206,14 +207,14 @@ Anything that cannot be seen can lead to "trash changes" in the SVN when somebod
 
 ==== B: Allowed ====
 
-=== Inline Comments ===
+==== Inline Comments ====
 
-{{{
-#!cpp
+<pre>
+#cpp
 int x;// no space
 int y; // one space
 int z;  // two spaces
-}}}
+</pre>
 
 ==== A: Should be separated by two spaces ====
 
@@ -225,29 +226,29 @@ Makes them easier to pick out.
 
 ==== D: Should be separated by at least two spaces (Manuel, Knut, Birte) ====
 
-{{{
-#!comment
-#!cpp
+<pre>
+#comment
+#cpp
 int x;      // many  space
 int ylong;  // two space
 int z;      // many spaces
-}}}
+</pre>
 
 
 ==== E: Don't care ====
 
-=== Brace Position ===
+==== Brace Position ====
 
 ==== A: Manuel's Proposal (Manuel, Birte) ====
 
- * Namespace braces are inlined
- * Function, struct, class braces go to the next line.
- * All others stay inline.
- * Braces in if/then/else are '''either''' there for all cases '''or''' for none.
- * Wrap long conditional lines to the paranthesis.
+*Namespace braces are inlined
+*Function, struct, class braces go to the next line.
+*All others stay inline.
+*Braces in if/then/else are '''either''' there for all cases '''or''' for none.
+*Wrap long conditional lines to the paranthesis.
 
-{{{
-#!cpp
+<pre>
+#cpp
 namespace seqan {
 
 class MyStruct
@@ -267,8 +268,19 @@ void foo(MyStruct & s)
 
     if (bar2(s)) {
         // ...
-    } else if (a || b || c || d || ... ||
-               x || y || z) {
+{| border=1 class="simple"
+! b 
+! c 
+! d 
+! ... 
+!
+|}
+
+{| border=1 class="simple"
+! y 
+! z) {
+|}
+
         
     } else {
         // ...
@@ -292,12 +304,12 @@ void foo(MyStruct & s)
 }
 
 }  // namespace seqan
-}}}
+</pre>
 
-=== B: Braces always on new line (Knut, Enrico, Dave) ===
+==== B: Braces always on new line (Knut, Enrico, Dave) ====
 
-{{{
-#!cpp
+<pre>
+#cpp
 namespace seqan {
 
 class MyStruct
@@ -322,8 +334,19 @@ void foo(MyStruct & s)
     } 
     else 
     {
-        if (a || b || c || d || ... ||
-               x || y || z) 
+{| border=1 class="simple"
+! b 
+! c 
+! d 
+! ... 
+!
+|}
+
+{| border=1 class="simple"
+! y 
+! z)
+|}
+
         {
         
         } 
@@ -343,64 +366,72 @@ void foo(MyStruct & s)
         
     } while (false);
 
-}}}
+</pre>
 
 ==== C: Other ====
 
-=== Conditionals, Loops ===
+==== Conditionals, Loops ====
 
 ==== A: Manuel's Proposal (Manuel, Knut, Birte, Enrico, Dave) ====
 
-There is one space after the `for`/`while` keyword.
+There is one space after the <tt>for</tt>/<tt>while</tt> keyword.
 There is no space inside the parantheses.
 There is one space after a semicolon.
 There is one space before an opening/closing brace and the preceding/following stuff.
 
-{{{
-#!cpp
+<pre>
+#cpp
 for (int i = 0; i < 10; ++i) {
     // ...
 }
 
-while (a == b || c == e) {
+{| border=1 class="simple"
+! c == e) {
+|}
+
     // ...
 }
 
 do {
     // ...
 } while (x == 0;)
-}}}
+</pre>
 
 ==== B: Other ====
 
-=== Expressions ===
+==== Expressions ====
 
 ==== A: Manuel's Proposal (Knut, Birte, Enrico, Dave) ====
 
 Binary expressions are surrounded by one space.
 Unary expressions are preceded by one space.
 
-{{{
-#!cpp
-if (a == b || c == d || e == f || !x) {
+<pre>
+#cpp
+{| border=1 class="simple"
+! c == d 
+! e == f 
+! x) {
+|}
+
     // ...
 }
 
-bool y = !x;
+bool y = x;
 unsigned i = ~j;
-}}}
+</pre>
 
 ==== B: Other ====
 
-=== Return Type in Functions ===
+==== Return Type in Functions ====
 
 ==== A: Manuels' Proposal (Manuel, Knut, Birte, Enrico, Dave) ====
 
 If a function definition is short, everything is on the same line.
 Otherwise, split.
 
-{{{
-#!cpp
+<pre>
+#cpp
 int foo();
 
 template <typename TString>
@@ -409,19 +440,19 @@ anotherFunction(TString const & foo, TString const & bar, /*...*/)
 {
     // ...
 }
-}}}
+</pre>
 
 ==== B: Other ====
 
-=== `inline` in functions ===
+==== <tt>inline</tt> in functions ====
 
 ==== A: Manuel's Proposal (Manuel) ====
 
 If a function definition is short, everything is on the same line.
 Otherwise, split.
 
-{{{
-#!cpp
+<pre>
+#cpp
 inline int foo();
 
 template <typename TString>
@@ -431,15 +462,15 @@ anotherFunction(TString const & foo, TString const & bar, /*...*/)
 {
     // ...
 }
-}}}
+</pre>
 
-==== B: `inline` and return type (Birte, AK, Enrico, Dave, Knut) ====
+==== B: <tt>inline</tt> and return type (Birte, AK, Enrico, Dave, Knut) ====
 
 If a function definition is short, everything is on the same line.
-Otherwise put `inline` and return type in the same line.
+Otherwise put <tt>inline</tt> and return type in the same line.
 
-{{{
-#!cpp
+<pre>
+#cpp
 inline int foo();
 
 template <typename TString>
@@ -448,11 +479,11 @@ anotherFunction(TString const & foo, TString const & bar, /*...*/)
 {
     // ...
 }
-}}}
+</pre>
 
 ==== C: Other ====
 
-=== Function Argument List ===
+==== Function Argument List ====
 
 ==== A: Manuel's Proposal ====
 
@@ -460,8 +491,8 @@ If it fits in one line, keep in one line.
 Otherwise, wrap at the paranthesis.
 For very long function names and parameter lines, break after opening bracket, indent by one level and keep each argument on a separate line.
 
-{{{
-#!cpp
+<pre>
+#cpp
 template <typename TA, typename TB>
 inline void foo(TA & a, TB & b);
 
@@ -476,14 +507,14 @@ inline void _functionThisIsAVeryVeryLongFunctionNameSinceItsAHelper(
     TC & c,
     TB & d,
     ...);
-}}}
+</pre>
 
 ==== B: Changes to A (Manuel, Knut, Birte, AK, Enrico, Dave) ====
 
 Same as A, but if wrapped, then each argument on a separate line even.
 
-{{{
-#!cpp
+<pre>
+#cpp
 
 template </*...*/>
 inline void foo2(TA & a,
@@ -491,19 +522,19 @@ inline void foo2(TA & a,
                  ...
                  TY & y,
                  TZ & z);
-}}}
+</pre>
 
 
 ==== C: Other ====
 
-=== Function Calls ===
+==== Function Calls ====
 
 ==== A: Manuel's Proposal ====
 
 Similar to Function Argument List Definition above.
 
-{{{
-#!cpp
+<pre>
+#cpp
 foo(a, b);
 
 foo2(a, b, c, ...
@@ -518,7 +549,7 @@ if (x) {
             d);
     }
 }
-}}}
+</pre>
 
 ==== B: Changes to A (Knut, Birte, AK, Enrico, Dave) ====
 
@@ -526,7 +557,7 @@ If wrapped, not necessarily a separate line for each argument.
 
 ==== C: Other ====
 
-=== Constructor Initialization List ===
+==== Constructor Initialization List ====
 
 ==== A: Manuel's Proposal ====
 
@@ -534,8 +565,8 @@ If the whole function prototype fits in one line, keep it in one line.
 Otherwise, put colon on next line, indent one level and put each argument on its own line.
 Align the initialization list.
 
-{{{
-#!cpp
+<pre>
+#cpp
 class Class
 {
     MyClass()
@@ -544,7 +575,7 @@ class Class
           member3(3)
     {}
 };
-}}}
+</pre>
 
 ==== B: More often found in SeqAn ====
 
@@ -552,8 +583,8 @@ If the whole function prototype fits in one line, keep it in one line.
 Otherwise, wrap line after column and put each argument on its own line indented by one level.
 Align the initialization list.
 
-{{{
-#!cpp
+<pre>
+#cpp
 class Class
 {
     MyClass():
@@ -562,14 +593,14 @@ class Class
         member3(3)
     {}
 };
-}}}
+</pre>
 
 ==== C: Modification of B (Manuel, Knut, Birte, Enrico, Dave) ====
 
 Add a space before the colon to make it stand out more clearly.
 
-{{{
-#!cpp
+<pre>
+#cpp
 class Class
 {
     MyClass() :
@@ -578,100 +609,118 @@ class Class
         member3(3)
     {}
 };
-}}}
+</pre>
 
 ==== D: Other ====
 
-=== Visibility Specifier ===
+==== Visibility Specifier ====
 
 ==== A: Manuel's Proposal (Manuel, Knut, Birte, Enrico, Dave) ====
 
-Should go on the same level as the `class` keyword.
+Should go on the same level as the <tt>class</tt> keyword.
 
-{{{
-#!cpp
+<pre>
+#cpp
 class MyStruct
 {
 public:
 protected:
 private:
 };
-}}}
+</pre>
 
 ==== B: Other ====
 
-== Semantics ==
+=== Semantics ===
 
-=== Parameter Ordering ===
+==== Parameter Ordering ====
 
 While not performed consistently throughout SeqAn, most code adheres to the following and was thought up this way by Andreas (iirc what Dave told me).
 
 ==== SeqAn Style ====
 
 First, all target/modified parameters, then all source/const/non-modified parameters.
-If there is only return value which is a builtin type such as `int`, `bool`, or a size/length/position type, it can be returned as the return value of the function itself.
-For multiple return/modified parameters, the idea is that a function call to function `f(t1, t2, ..., s1, s2, s3, ...)` is like `(t1, t2, t3, ...) <- f(s1, s2, s3, ...)`.
+If there is only return value which is a builtin type such as <tt>int</tt>, <tt>bool</tt>, or a size/length/position type, it can be returned as the return value of the function itself.
+For multiple return/modified parameters, the idea is that a function call to function <tt>f(t1, t2, ..., s1, s2, s3, ...)</tt> is like <tt>(t1, t2, t3, ...) <- f(s1, s2, s3, ...)</tt>.
 
-=== Global Variables ===
+==== Global Variables ====
 
 Don't use them. Period.
-What you can do is create a `GlobalState` struct for your applications and pass it to all functions in your program explicitely.
+What you can do is create a <tt>GlobalState</tt> struct for your applications and pass it to all functions in your program explicitely.
 
-== High Level Structure ==
+=== High Level Structure ===
 
-=== Include Guards ===
+==== Include Guards ====
 
-For the `#ifndef X...` guards around headers.
+For the <tt>#ifndef X...</tt> guards around headers.
 
 ==== A: Full Paths (Manuel, Knut, Enrico, Dave) ====
 
-|| '''filename''' || '''preprocessor symbol'''
-|| core/include/seqan/basic/iterator_base.h || `CORE_INCLUDE_SEQAN_BASIC_ITERATOR_BASE_H_` ||
+{| border=1 class="simple"
+! '''filename''' 
+! '''preprocessor symbol'''
+|- 
+|  core/include/seqan/basic/iterator_base.h 
+|  <tt>CORE_INCLUDE_SEQAN_BASIC_ITERATOR_BASE_H_</tt> 
+|}
+
 
 Long but (mostly) non-ambiguous mapping between files and symbols.
 Clear distinction between app, demo, test and library headers.
 
-{{{
-#!cpp
+<pre>
+#cpp
 #ifndef CORE_INCLUDE_SEQAN_BASIC_ITERATOR_BASE_H_ 
 #define CORE_INCLUDE_SEQAN_BASIC_ITERATOR_BASE_H_ 
 #endif  // #ifndef CORE_INCLUDE_SEQAN_BASIC_ITERATOR_BASE_H_ 
-}}}
+</pre>
 
 ==== B: Relative Paths ====
 
-|| '''filename''' || '''preprocessor symbol'''
-|| core/include/seqan/basic/iterator_base.h || `BASIC_ITERATOR_BASE_H_` ||
+{| border=1 class="simple"
+! '''filename''' 
+! '''preprocessor symbol'''
+|- 
+|  core/include/seqan/basic/iterator_base.h 
+|  <tt>BASIC_ITERATOR_BASE_H_</tt> 
+|}
+
 
 Short but no distinction between app, test, demo or library headers.
 
-{{{
-#!cpp
+<pre>
+#cpp
 #ifndef SEQAN_BASIC_ITERATOR_BASE_H_ 
 #define SEQAN_BASIC_ITERATOR_BASE_H_ 
 #endif  // #ifndef SEQAN_BASIC_ITERATOR_BASE_H_ 
-}}}
+</pre>
 
 ==== C: Old SeqAn Headers ====
 
-|| '''filename''' || '''preprocessor symbol'''
-|| core/include/seqan/basic/iterator_base.h || `SEQAN_HEADER_ITERATOR_BASE_H` ||
+{| border=1 class="simple"
+! '''filename''' 
+! '''preprocessor symbol'''
+|- 
+|  core/include/seqan/basic/iterator_base.h 
+|  <tt>SEQAN_HEADER_ITERATOR_BASE_H</tt> 
+|}
+
 
 Short but ambiguities if there is a ''module1/header.h'' and a ''module2/header.h''.
 
-{{{
-#!cpp
+<pre>
+#cpp
 #ifndef SEQAN_HEADER_ITERATOR_BASE_H
 #define SEQAN_HEADER_ITERATOR_BASE_H
 #endif  // #ifndef SEQAN_HEADER_ITERATOR_BASE_H
-}}}
+</pre>
 
-=== General File Structure ===
+==== General File Structure ====
 
 ==== A: Manuel's Proposal (Manuel, Knut, Birte, Enrico, Dave) '''UPDATE''' ====
 
-{{{
-#!cpp
+<pre>
+#cpp
 // ==========================================================================
 //                 SeqAn - The Library for Sequence Analysis
 // ==========================================================================
@@ -740,5 +789,9 @@ namespace seqan {
 }  // namespace seqan
 
 #endif  // CORE_INCLUDE_SEQAN_BASIC_ITERATOR_BASE_H_
-}}}
-}}}
+</pre>
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

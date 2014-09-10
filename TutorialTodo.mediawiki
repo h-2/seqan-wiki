@@ -1,1 +1,6 @@
-See [wiki:"HowTo/WriteTutorials"].
+
+See [["HowTo/WriteTutorials"]].
+
+
+
+{{TracNotice|{{PAGENAME}}}}

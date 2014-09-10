@@ -1,22 +1,23 @@
-= How To: Deactivate Warnings Locally =
+
+== How To: Deactivate Warnings Locally ==
 
 [[TOC]]
 
 Compiler warnings often help to find bugs in your code and are useful.
 However, sometimes you cannot fix the code that causes the warnings, for example in:
 
- * Windows system headers
- * external libraries such as Boost
- * STL headers.
+*Windows system headers
+*external libraries such as Boost
+*STL headers.
 
-== FIX Warnings In Your Own Code ==
+=== FIX Warnings In Your Own Code ===
 
 In your own code, you should fix warnings.
 
 The following piece of code results in some common warnings.
 
-{{{
-#!cpp
+<pre>
+#cpp
 #include <cassert>
 #include <iostream>
 
@@ -30,15 +31,15 @@ int main(int argc, char **argv) {
     
     return 0;
 }
-}}}
+</pre>
 
 Compiling the code gives warnings about:
 
- * unused variables and parameters,
- * comparison of signed and unsigned expressions and
- * comparisons that always yield true.
+*unused variables and parameters,
+*comparison of signed and unsigned expressions and
+*comparisons that always yield true.
 
-{{{
+<pre>
 $ g++ -W -Wall -pedantic WarningsDemo.cpp 
 WarningsDemo.cpp: In function ‘int main(int, char**)’:
 WarningsDemo.cpp:8: warning: comparison between signed and unsigned integer expressions
@@ -47,17 +48,17 @@ WarningsDemo.cpp:5: warning: unused variable ‘result’
 WarningsDemo.cpp: At global scope:
 WarningsDemo.cpp:4: warning: unused parameter ‘argc’
 WarningsDemo.cpp:4: warning: unused parameter ‘argv’
-}}}
+</pre>
 
 You can fix the code as follows:
 
- * Either use variables, remove their declarations or get rid of the warning by casting them to void.
- * Make one of the compared values signed or unsigned by using the right type or the postfix "u" for unsigned literals.
-   For example, {{{5u}}} is an {{{unsigned int}}} of value 5 while {{{5}}} is an {{{int}}}.
- * Either use parameters, remove their names from the function or cast them to void.
+*Either use variables, remove their declarations or get rid of the warning by casting them to void.
+*Make one of the compared values signed or unsigned by using the right type or the postfix "u" for unsigned literals.
+   For example, <tt>5u</tt> is an <tt>unsigned int</tt> of value 5 while <tt>5</tt> is an <tt>int</tt>.
+*Either use parameters, remove their names from the function or cast them to void.
 
-{{{
-#!cpp
+<pre>
+#cpp
 #include <cassert>
 #include <iostream>
 
@@ -72,22 +73,22 @@ int main(int, char **) {
     
     return 0;
 }
-}}}
+</pre>
 
-== Suppressing Warnings In GCC ==
+=== Suppressing Warnings In GCC ===
 
 Sadly, there is no way to deactivate warnings locally with GCC.
 You can only deactivate warnings for a whole file using the [http://gcc.gnu.org/onlinedocs/gcc-3.2.2/cpp/System-Headers.html#System%20Headers system headers pragma].
 However, this is not viable if you do not want to edit the offending header yourself.
 
-== Suppressing Warnings in MSVC ==
+=== Suppressing Warnings in MSVC ===
 
-In Visual Studio, you can suppress warnings using {{{#pragma warning}}} as [http://stackoverflow.com/questions/1723572/what-is-the-best-solution-for-suppressing-warning-from-a-ms-include-c4201-in-mms discussed here].
+In Visual Studio, you can suppress warnings using <tt>#pragma warning</tt> as [http://stackoverflow.com/questions/1723572/what-is-the-best-solution-for-suppressing-warning-from-a-ms-include-c4201-in-mms discussed here].
 
 An example:
 
-{{{
-#!cpp
+<pre>
+#cpp
 #ifdef PLATFORM_WINDOWS_VS
 // Disable warning C4522 locally (multiple assignment operators).
 #pragma warning( disable: 4522 )
@@ -99,4 +100,8 @@ An example:
 // Enable warning C4522 again (multiple assignment operators).
 #pragma warning( default: 4522 )
 #endif  // PLATFORM_WINDOWS_VS
-}}}
+</pre>
+
+
+
+{{TracNotice|{{PAGENAME}}}}

@@ -1,29 +1,30 @@
-= Contributing Code =
+
+== Contributing Code ==
 [[TOC()]]
 
 '''THIS IS A DRAFT AND IN PRELIMINARY STATE.'''
 
 There are two ways to contribute to SeqAn: (1) contribute small improvement in the form of patches and (2) contributing new library headers.
 
-== Conditions ==
+=== Conditions ===
 
 There are some conditions to be met when contributing code:
 
- * the code should follow the [wiki:WhitePapers/CodeStyleDraft style guide]
- * the code should be well-tested
- * the code must be BSD licensed or have license that is less restrictive for us (e.g. public domain or you transfer the copyright to us under the BSD license)
+*the code should follow the [[WhitePapers/CodeStyleDraft| style guide]]
+*the code should be well-tested
+*the code must be BSD licensed or have license that is less restrictive for us (e.g. public domain or you transfer the copyright to us under the BSD license)
 
-== Contributing Small Changes Via Patches ==
+=== Contributing Small Changes Via Patches ===
 
 Small changes are often bug fixes or addition of small features.
 You can contact the SeqAn developers or the [https://lists.fu-berlin.de/listinfo/seqan-dev#subscribe SeqAn mailing list] before starting such a change, but mostly posting it ''ad hoc'' is appropriate.
 
- * Write a test highlighting a problem/bug (i.e. the code fails compiling or the test fails) or testing your new functionality.
- * Write your change to the library, demo or app code.
- * Generate a patch using `svn diff`.
- * Create a ticket and append the patch.
+*Write a test highlighting a problem/bug (i.e. the code fails compiling or the test fails) or testing your new functionality.
+*Write your change to the library, demo or app code.
+*Generate a patch using <tt>svn diff</tt>.
+*Create a ticket and append the patch.
 
-== Contributing Larger Packages ==
+=== Contributing Larger Packages ===
 
 Contributing larger packages is more time consuming and requires a bit more planning.
 Virtually all larger contributions start out as a SeqAn sandbox containing apps, modules, and/or tests that are to be contributed to SeqAn.
@@ -32,15 +33,19 @@ Such sandboxes are made available to the SeqAn developer team in Subversion repo
 
 The whole rough process is as follows:
 
- * '''Create a sandbox''' and create your code inside this sandbox so it can be built using CMake.
- * There, you can '''write your code and tests'''.
- * It is probably a good idea to put your sandbox into a [http://svnbook.red-bean.com/ Subversion repository] to versionize your changes.
- * When ready to contribute the code, '''contact a SeqAn developer''' or the [https://lists.fu-berlin.de/listinfo/seqan-dev#subscribe SeqAn mailing list].
- * You make the code available in a '''Subversion repository''' and give us an account with read access (or make it public).
- * The code will be '''reviewed''' (through our [https://reviewboard.seqan.de/ ReviewBoard instance]) for
-  * having an appropriate repository structure,
-  * having good documentation,
-  * maintainability,
-  * conforming to the style guide, and
-  * having tests.
- * After being accepted, the code is added to the SeqAn repository and you get registered as the owner and primary maintainer of the code. We will expect you to maintain the code, i.e. fix bugs etc.
+*'''Create a sandbox''' and create your code inside this sandbox so it can be built using CMake.
+*There, you can '''write your code and tests'''.
+*It is probably a good idea to put your sandbox into a [http://svnbook.red-bean.com/ Subversion repository] to versionize your changes.
+*When ready to contribute the code, '''contact a SeqAn developer''' or the [https://lists.fu-berlin.de/listinfo/seqan-dev#subscribe SeqAn mailing list].
+*You make the code available in a '''Subversion repository''' and give us an account with read access (or make it public).
+*The code will be '''reviewed''' (through our [https://reviewboard.seqan.de/ ReviewBoard instance]) for
+**having an appropriate repository structure,
+**having good documentation,
+**maintainability,
+**conforming to the style guide, and
+**having tests.
+*After being accepted, the code is added to the SeqAn repository and you get registered as the owner and primary maintainer of the code. We will expect you to maintain the code, i.e. fix bugs etc.
+
+
+
+{{TracNotice|{{PAGENAME}}}}

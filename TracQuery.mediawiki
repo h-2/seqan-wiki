@@ -1,16 +1,17 @@
-= Trac Ticket Queries =
+
+== Trac Ticket Queries ==
 [[TracGuideToc]]
 
-In addition to [wiki:TracReports reports], Trac provides support for ''custom ticket queries'', used to display lists of tickets meeting a specified set of criteria. 
+In addition to [[TracReports| reports]], Trac provides support for ''custom ticket queries'', used to display lists of tickets meeting a specified set of criteria. 
 
 To configure and execute a custom query, switch to the ''View Tickets'' module from the navigation bar, and select the ''Custom Query'' link.
 
-== Filters ==
+=== Filters ===
 
 When you first go to the query page the default filter will display tickets relevant to you:
- * If logged in then all open tickets it will display open tickets assigned to you.
- * If not logged in but you have specified a name or email address in the preferences then it will display all open tickets where your email (or name if email not defined) is in the CC list.
- * If not logged and no name/email defined in the preferences then all open issues are displayed.
+*If logged in then all open tickets it will display open tickets assigned to you.
+*If not logged in but you have specified a name or email address in the preferences then it will display all open tickets where your email (or name if email not defined) is in the CC list.
+*If not logged and no name/email defined in the preferences then all open issues are displayed.
 
 Current filters can be removed by clicking the button to the left with the minus sign on the label.  New filters are added from the pulldown lists at the bottom corners of the filters box ('And' conditions on the left, 'Or' conditions on the right).  Filters with either a text box or a pulldown menu of options can be added multiple times to perform an ''or'' of the criteria.
 
@@ -18,77 +19,77 @@ You can use the fields just below the filters box to group the results based on 
 
 Once you've edited your filters click the ''Update'' button to refresh your results.
 
-== Navigating Tickets ==
+=== Navigating Tickets ===
 Clicking on one of the query results will take you to that ticket.  You can navigate through the results by clicking the ''Next Ticket'' or ''Previous Ticket'' links just below the main menu bar, or click the ''Back to Query'' link to return to the query page.  
 
-You can safely edit any of the tickets and continue to navigate through the results using the ''!Next/Previous/Back to Query'' links after saving your results.  When you return to the query ''any tickets which were edited'' will be displayed with italicized text.  If one of the tickets was edited such that [[html(<span style="color: grey">it no longer matches the query criteria </span>)]] the text will also be greyed. Lastly, if '''a new ticket matching the query criteria has been created''', it will be shown in bold. 
+You can safely edit any of the tickets and continue to navigate through the results using the ''Next/Previous/Back to Query'' links after saving your results.  When you return to the query ''any tickets which were edited'' will be displayed with italicized text.  If one of the tickets was edited such that [[html(<span style="color: grey">it no longer matches the query criteria </span>)]] the text will also be greyed. Lastly, if '''a new ticket matching the query criteria has been created''', it will be shown in bold. 
 
 The query results can be refreshed and cleared of these status indicators by clicking the ''Update'' button again.
 
-== Saving Queries ==
+=== Saving Queries ===
 
 Trac allows you to save the query as a named query accessible from the reports module. To save a query ensure that you have ''Updated'' the view and then click the ''Save query'' button displayed beneath the results.
 You can also save references to queries in Wiki content, as described below.
 
 ''Note:'' one way to easily build queries like the ones below, you can build and test the queries in the Custom report module and when ready - click ''Save query''. This will build the query string for you. All you need to do is remove the extra line breaks.
 
-=== Using TracLinks ===
+==== Using TracLinks ====
 
 You may want to save some queries so that you can come back to them later.  You can do this by making a link to the query from any Wiki page.
-{{{
+<pre>
 [query:status=new|assigned|reopened&version=1.0 Active tickets against 1.0]
-}}}
+</pre>
 
 Which is displayed as:
   [query:status=new|assigned|reopened&version=1.0 Active tickets against 1.0]
 
-This uses a very simple query language to specify the criteria (see [wiki:TracQuery#QueryLanguage Query Language]).
+This uses a very simple query language to specify the criteria (see [[TracQuery#QueryLanguage| Query Language]]).
 
-Alternatively, you can copy the query string of a query and paste that into the Wiki link, including the leading `?` character:
-{{{
+Alternatively, you can copy the query string of a query and paste that into the Wiki link, including the leading <tt>?</tt> character:
+<pre>
 [query:?status=new&status=assigned&status=reopened&group=owner Assigned tickets by owner]
-}}}
+</pre>
 
 Which is displayed as:
   [query:?status=new&status=assigned&status=reopened&group=owner Assigned tickets by owner]
 
-=== Using the `[[TicketQuery]]` Macro ===
+==== Using the <tt>[[TicketQuery]]</tt> Macro ====
 
 The [trac:TicketQuery TicketQuery] macro lets you display lists of tickets matching certain criteria anywhere you can use WikiFormatting.
 
 Example:
-{{{
+<pre>
 [[TicketQuery(version=0.6|0.7&resolution=duplicate)]]
-}}}
+</pre>
 
 This is displayed as:
   [[TicketQuery(version=0.6|0.7&resolution=duplicate)]]
 
-Just like the [wiki:TracQuery#UsingTracLinks query: wiki links], the parameter of this macro expects a query string formatted according to the rules of the simple [wiki:TracQuery#QueryLanguage ticket query language].
+Just like the [[TracQuery#UsingTracLinks| query: wiki links]], the parameter of this macro expects a query string formatted according to the rules of the simple [[TracQuery#QueryLanguage| ticket query language]].
 
 A more compact representation without the ticket summaries is also available:
-{{{
+<pre>
 [[TicketQuery(version=0.6|0.7&resolution=duplicate, compact)]]
-}}}
+</pre>
 
 This is displayed as:
   [[TicketQuery(version=0.6|0.7&resolution=duplicate, compact)]]
 
-Finally, if you wish to receive only the number of defects that match the query, use the ``count`` parameter.
+Finally, if you wish to receive only the number of defects that match the query, use the <tt><tt>count</tt></tt> parameter.
 
-{{{
+<pre>
 [[TicketQuery(version=0.6|0.7&resolution=duplicate, count)]]
-}}}
+</pre>
 
 This is displayed as:
   [[TicketQuery(version=0.6|0.7&resolution=duplicate, count)]]
 
-=== Customizing the ''table'' format ===
-You can also customize the columns displayed in the table format (''format=table'') by using ''col=<field>'' - you can specify multiple fields and what order they are displayed by placing pipes (`|`) between the columns like below:
+==== Customizing the ''table'' format ====
+You can also customize the columns displayed in the table format (''format=table'') by using ''col=<field>'' - you can specify multiple fields and what order they are displayed by placing pipes (<tt>|</tt>) between the columns like below:
 
-{{{
+<pre>
 [[TicketQuery(max=3,status=closed,order=id,desc=1,format=table,col=resolution|summary|owner|reporter)]]
-}}}
+</pre>
 
 This is displayed as:
 [[TicketQuery(max=3,status=closed,order=id,desc=1,format=table,col=resolution|summary|owner|reporter)]]
@@ -96,35 +97,69 @@ This is displayed as:
 ==== Full rows ====
 In ''table'' format you can also have full rows by using ''rows=<field>'' like below:
 
-{{{
+<pre>
 [[TicketQuery(max=3,status=closed,order=id,desc=1,format=table,col=resolution|summary|owner|reporter,rows=description)]]
-}}}
+</pre>
 
 This is displayed as:
 [[TicketQuery(max=3,status=closed,order=id,desc=1,format=table,col=resolution|summary|owner|reporter,rows=description)]]
 
 
-=== Query Language ===
+==== Query Language ====
 
-`query:` TracLinks and the `[[TicketQuery]]` macro both use a mini “query language” for specifying query filters. Basically, the filters are separated by ampersands (`&`). Each filter then consists of the ticket field name, an operator, and one or more values. More than one value are separated by a pipe (`|`), meaning that the filter matches any of the values. To include a literal `&` or `|` in a value, escape the character with a backslash (`\`).
+<tt>query:</tt> TracLinks and the <tt>[[TicketQuery]]</tt> macro both use a mini “query language” for specifying query filters. Basically, the filters are separated by ampersands (<tt>&</tt>). Each filter then consists of the ticket field name, an operator, and one or more values. More than one value are separated by a pipe (<tt>|</tt>), meaning that the filter matches any of the values. To include a literal <tt>&</tt> or <tt>|</tt> in a value, escape the character with a backslash (<tt>\</tt>).
 
 The available operators are:
-|| '''`=`''' || the field content exactly matches one of the values ||
-|| '''`~=`''' || the field content contains one or more of the values ||
-|| '''`^=`''' || the field content starts with one of the values ||
-|| '''`$=`''' || the field content ends with one of the values ||
+{| border=1 class="simple"
+! '''<tt>=</tt>''' 
+! the field content exactly matches one of the values 
+|- 
+|  '''<tt>~=</tt>''' 
+|  the field content contains one or more of the values 
+|- 
+|  '''<tt>^=</tt>''' 
+|  the field content starts with one of the values 
+|- 
+|  '''<tt>$=</tt>''' 
+|  the field content ends with one of the values 
+|}
+
 
 All of these operators can also be negated:
-|| '''`!=`''' || the field content matches none of the values ||
-|| '''`!~=`''' || the field content does not contain any of the values ||
-|| '''`!^=`''' || the field content does not start with any of the values ||
-|| '''`!$=`''' || the field content does not end with any of the values ||
+{| border=1 class="simple"
+! '''<tt>!=</tt>''' 
+! the field content matches none of the values 
+|- 
+|  '''<tt>!~=</tt>''' 
+|  the field content does not contain any of the values 
+|- 
+|  '''<tt>!^=</tt>''' 
+|  the field content does not start with any of the values 
+|- 
+|  '''<tt>!$=</tt>''' 
+|  the field content does not end with any of the values 
+|}
 
-The date fields `created` and `modified` can be constrained by using the `=` operator and specifying a value containing two dates separated by two dots (`..`). Either end of the date range can be left empty, meaning that the corresponding end of the range is open. The date parser understands a few natural date specifications like "3 weeks ago", "last month" and "now", as well as Bugzilla-style date specifications like "1d", "2w", "3m" or "4y" for 1 day, 2 weeks, 3 months and 4 years, respectively. Spaces in date specifications can be left out to avoid having to quote the query string. 
-|| '''`created=2007-01-01..2008-01-01`''' || query tickets created in 2007 ||
-|| '''`created=lastmonth..thismonth`''' || query tickets created during the previous month ||
-|| '''`modified=1weekago..`''' || query tickets that have been modified in the last week ||
-|| '''`modified=..30daysago`''' || query tickets that have been inactive for the last 30 days ||
+
+The date fields <tt>created</tt> and <tt>modified</tt> can be constrained by using the <tt>=</tt> operator and specifying a value containing two dates separated by two dots (<tt>..</tt>). Either end of the date range can be left empty, meaning that the corresponding end of the range is open. The date parser understands a few natural date specifications like "3 weeks ago", "last month" and "now", as well as Bugzilla-style date specifications like "1d", "2w", "3m" or "4y" for 1 day, 2 weeks, 3 months and 4 years, respectively. Spaces in date specifications can be left out to avoid having to quote the query string. 
+{| border=1 class="simple"
+! '''<tt>created=2007-01-01..2008-01-01</tt>''' 
+! query tickets created in 2007 
+|- 
+|  '''<tt>created=lastmonth..thismonth</tt>''' 
+|  query tickets created during the previous month 
+|- 
+|  '''<tt>modified=1weekago..</tt>''' 
+|  query tickets that have been modified in the last week 
+|- 
+|  '''<tt>modified=..30daysago</tt>''' 
+|  query tickets that have been inactive for the last 30 days 
+|}
+
 
 ----
 See also: TracTickets, TracReports, TracGuide
+
+
+
+{{TracNotice|{{PAGENAME}}}}

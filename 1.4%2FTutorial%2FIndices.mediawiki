@@ -1,5 +1,6 @@
-'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
-= Tutorial Indices =
+
+'''Note: this page documents the 1.4 version of SeqAn, see [[Tutorial]] if you need the documentation for the trunk version.'''
+== Tutorial Indices ==
 
 [[TOC]]
 
@@ -10,23 +11,39 @@
  Duration ::
   1h
  Prerequisites ::
-  [wiki:Tutorial/Sequences]
+  [[Tutorial/Sequences]]
 
-== Indices in SeqAn ==
+=== Indices in SeqAn ===
 Indices in SeqAn are substring indices, meaning that they allow efficient pattern queries in strings or sets of strings. 
 In contrast to e.g. online-search algorithms that search through the text in O(n), substring indices find a pattern in sublinear time o(n).
 
 You can find the following indices in SeqAn:
 
-|| '''Specialization''' || '''Description''' ||
-|| seqan:Spec.IndexEsa || Enhanced suffix array ([wiki:Bibliography#Abouelhodaetal.2004 Abouelhoda et al., 2004]) ||
-|| seqan:Spec.IndexWotd || Lazy suffix tree, constructed node-by-node on-demand ([wiki:Bibliography#Giegerichetal.2003 Giegerich et al., 2003]) ||
-|| seqan:Spec.IndexDfi || Lazy suffix tree for frequency based string mining ([wiki:Bibliography#WeeseSchulz2008 Weese, Schulz, 2008]) ||
-|| seqan:Spec.IndexQGram || q-gram index ||
-|| [seqan:"Spec.Pizza & Chili Index" PizzaChili] || An adapter for the [http://pizzachili.dcc.uchile.cl/ Pizza & Chili] index API ||
-|| seqan:Spec.FMIndex || Fast and Minute Index  ([wiki:Bibliography#FerraginaManzini2001 Ferragina., Manzini 2001]) ||
+{| border=1 class="simple"
+! '''Specialization''' 
+! '''Description''' 
+|- 
+|  seqan:Spec.IndexEsa 
+|  Enhanced suffix array ([[Bibliography#Abouelhodaetal.2004| Abouelhoda et al., 2004]]) 
+|- 
+|  seqan:Spec.IndexWotd 
+|  Lazy suffix tree, constructed node-by-node on-demand ([[Bibliography#Giegerichetal.2003| Giegerich et al., 2003]]) 
+|- 
+|  seqan:Spec.IndexDfi 
+|  Lazy suffix tree for frequency based string mining ([[Bibliography#WeeseSchulz2008| Weese, Schulz, 2008]]) 
+|- 
+|  seqan:Spec.IndexQGram 
+|  q-gram index 
+|- 
+|  [seqan:"Spec.Pizza & Chili Index" PizzaChili] 
+|  An adapter for the [http://pizzachili.dcc.uchile.cl/ Pizza & Chili] index API 
+|- 
+|  seqan:Spec.FMIndex 
+|  Fast and Minute Index  ([[Bibliography#FerraginaManzini2001| Ferragina., Manzini 2001]]) 
+|}
 
-== Index Constuction ==
+
+=== Index Constuction ===
 
 We will now show how we can create the different indices in SeqAn before we show how they are used for pattern search.
 
@@ -34,34 +51,34 @@ All the mentioned indices belong to the generic seqan:Class.Index class. A SeqAn
 
 Example:
 The following code snippet creates an enhanced suffix array index of a string of type seqan:Spec.Dna5.
-{{{
-#!c++
+<pre>
+#c++
 String<Dna5> genome = "ACGTACGTACGTN";
 Index<String<Dna5>, IndexESA<> > esaIndex(genome); 
-}}} 
+</pre> 
 
 In contrast, the next code snipped creates a FM index over a set of amino acid sequences:
-{{{
-#!c++
+<pre>
+#c++
 StringSet<String<AminoAcid> > protein;
 appendValue(protein,  "VXLAGZ");
 appendValue(protein,  "GKTVXL");
 appendValue(protein,  "XLZ");
 
 Index<StringSet<String<AminoAcid> >, FMIndex> fmIndex(protein); 
-}}}
+</pre>
 
 
-=== Assignment 1 ===
-{{{#!AssignmentBox
+==== Assignment 1 ====
+<pre>#AssignmentBox
 
  Type :: Review 
  Objective :: Copy the code below and 
-  1.  change it to build an seqan:Spec.IndexEsa over a string of type seqan:Spec.Dna,
-  1.  add an seqan:Spec.IndexEsa over a seqan:Class.StringSet of seqan:"Class.String"s of type seqan:Spec.Dna.
+##change it to build an seqan:Spec.IndexEsa over a string of type seqan:Spec.Dna,
+##add an seqan:Spec.IndexEsa over a seqan:Class.StringSet of seqan:"Class.String"s of type seqan:Spec.Dna.
 
-{{{
-#!c++
+<pre>
+#c++
 #include <seqan/sequence.h>
 #include <seqan/index.h>
 
@@ -74,52 +91,52 @@ int main()
 
     return 0;
 }
-}}}
+</pre>
  Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/index/indices_assignment_1.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
-== Index Based Pattern Search (Strings) ==
+=== Index Based Pattern Search (Strings) ===
 
 SeqAn provides two methods for searching for a pattern in index structures.
 One method uses iterators and is similar to traversing search trees or tries.
-The tutorial [wiki:Tutorial/IndicesDraft Index Iterators] explains this method in more detail.
+The tutorial [[Tutorial/IndicesDraft| Index Iterators]] explains this method in more detail.
 In this section you will learn how to find a pattern with the seqan:Class.Finder interface.
 
 The seqan:Class.Finder is an object that stores all necessary information for searching for a pattern using an index.
 The following line of code shows how the seqan:Class.Finder is initialized:
 
-{{{
-#!c++
+<pre>
+#c++
 String<Dna5> genome = "ACGTACGTACGTN";
 Index<String<Dna5>, IndexEsa<> > esaIndex(genome); 
 Finder<Index<String<Dna5>, IndexEsa<> > > esaFinder(esaIndex);
-}}}
+</pre>
 
-After initialization it is possible to use the seqan:Function.find function in order to trigger a search for all occurrences of a given pattern in the underlying seqan:Class.String or seqan:Class.StringSet. In this example, we search for the pattern `ACGT`:
+After initialization it is possible to use the seqan:Function.find function in order to trigger a search for all occurrences of a given pattern in the underlying seqan:Class.String or seqan:Class.StringSet. In this example, we search for the pattern <tt>ACGT</tt>:
 
-{{{
-#!c++
+<pre>
+#c++
 String<Dna5> genome = "ACGTACGTACGTN";
 Index<String<Dna5>, IndexEsa<> > esaIndex(genome); 
 Finder<Index<String<Dna5>, IndexEsa<> > > esaFinder(esaIndex);
 
 find(esaFinder, "ACGT");
-}}}
+</pre>
 
 Calling the function seqan:Function.find invokes the localization of all occurrences of a given pattern. 
-It works by modifying pointers of the `Finder` to tables of the index. 
-For example, the seqan:Class.Finder of `esaIndex` stores two pointers, pointing to the first and last suffix array entry that stores an occurrence of the pattern.
+It works by modifying pointers of the <tt>Finder</tt> to tables of the index. 
+For example, the seqan:Class.Finder of <tt>esaIndex</tt> stores two pointers, pointing to the first and last suffix array entry that stores an occurrence of the pattern.
 
 The return value of the seqan:Function.find function tells us whether or not a given pattern occurs in the text.
 Furthermore, if there are several instances of a pattern, consecutive calls of seqan:Function.find will modify the seqan:Class.Finder such that it points to the next occurrence after each call: 
 
-{{{
-#!c++
+<pre>
+#c++
 #include <seqan/sequence.h>
 #include <seqan/index.h>
 
@@ -135,13 +152,13 @@ int main()
     find(esaFinder, "ACGT"); // second occurrence of "ACGT"
     find(esaFinder, "ACGT"); // third occurrence of "ACGT"
 }
-}}}
+</pre>
 
 The above code is not very useful, since we do not know the locations of the first, second or third pattern occurrence. 
 The function seqan:Function.position will help here. 
-seqan:Function.position called on a finder returns the location of the ``x``th pattern, where ``x`` can be the first, second, or any other occurrence of the pattern.
+seqan:Function.position called on a finder returns the location of the <tt><tt>x</tt><tt>th pattern, where </tt><tt>x</tt></tt> can be the first, second, or any other occurrence of the pattern.
 
-{{{#!c++
+<pre>#c++
 #include <seqan/sequence.h>
 #include <seqan/index.h>
 
@@ -160,47 +177,47 @@ int main()
     find(esaFinder, "ACGT"); // third occurrence of "ACGT"
     position(esaFinder); // -> 8
 }
-}}}
+</pre>
 
-{{{
-#!InfoBox
+<pre>
+#InfoBox
 Indices in SeqAn are build on demand. That means that the index tables are not build when the constructor is called, but when we search for a pattern for the first time.
-}}}
+</pre>
 
-=== Assignment 2 ===
-{{{
-#!AssignmentBox
+==== Assignment 2 ====
+<pre>
+#AssignmentBox
 
  Type :: Application
  Objective :: Write a small program that prints the locations of all occurrences of "TATAA" in "TTATTAAGCGTATAGCCCTATAAATATAA".
  Hints ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
-Use the seqan:Function.find function as the conditional instruction of a `while` loop.
-}}}
+Use the seqan:Function.find function as the conditional instruction of a <tt>while</tt> loop.
+</pre>
  Solution ::
-{{{
-#!FoldOut
+<pre>
+#FoldOut
 ----
 [[Include(source:tags/seqan-1.4.0/core/demos/tutorial/index/indices_assignment_2.cpp)]]
-}}}
-}}}
+</pre>
+</pre>
 
 You might have noticed that we only applied the seqan:Spec.FMIndex and seqan:Spec.IndexEsa in the examples.
-The reason for this is that even though everything stated so far is true for the other indices as well, seqan:Spec.IndexWotd and seqan:Spec.IndexDfi are more usefull when used with iterators as explained in [wiki:Tutorial/IndexIterators Index Iterators] and the seqan:Spec.IndexQGram uses seqan:"Class.Shape"s which is also explained in another tutorial.
+The reason for this is that even though everything stated so far is true for the other indices as well, seqan:Spec.IndexWotd and seqan:Spec.IndexDfi are more usefull when used with iterators as explained in [[Tutorial/IndexIterators| Index Iterators]] and the seqan:Spec.IndexQGram uses seqan:"Class.Shape"s which is also explained in another tutorial.
 
 One last remark is necessary:
-{{{
-#!ImportantBox
+<pre>
+#ImportantBox
 If you search for two different patterns with the same seqan:Class.Finder object, you have to call the seqan:Function.clear function of the finder between the search for the two patterns. Otherwise the behavior is undefined.
-}}}
+</pre>
 
-== Handling Multiple Sequences (StringSets) ==
+=== Handling Multiple Sequences (StringSets) ===
 The previous sections already described how an index of a set of strings can be instantiated.
 A character position of a seqan:Class.StringSet can be one of the following:
 
- 1. A local position (default), i.e. a seqan:Class.Pair (seqNo, seqOfs) where seqNo identifies the string within the seqan:Class.StringSet and the seqOfs identifies the position within this string.
+#A local position (default), i.e. a seqan:Class.Pair (seqNo, seqOfs) where seqNo identifies the string within the seqan:Class.StringSet and the seqOfs identifies the position within this string.
  2. A global position, i.e. a single integer value between 0 and the sum of string lengths minus 1. This integer is the position in the gapless concatenation of all strings in the seqan:Class.StringSet to a single string.
 
 For indices, the meta-function seqan:Metafunction.SAValue determines, which position type (local or global) will be used for internal index tables (suffix array, q-gram array) and what type of position is returned by functions like seqan:Function.position of a seqan:Class.Finder. 
@@ -208,6 +225,10 @@ seqan:Metafunction.SAValue returns a seqan:Class.Pair (local position) by defaul
 If you want to write algorithms for both variants you should use the functions seqan:Function.posLocalize, seqan:Function.posGlobalize, seqan:Function.getSeqNo, and seqan:Function.getSeqOffset.
 
 
-=== Submit a  comment ===
+==== Submit a  comment ====
 If you found a mistake, or have suggestions about an improvement of this page press:
 [/newticket?component=Documentation&description=Tutorial+Enhancement+for+page+http://trac.seqan.de/wiki/Tutorial/Indices&type=enhancement submit your comment]
+
+
+
+{{TracNotice|{{PAGENAME}}}}

@@ -1,35 +1,150 @@
+
 This page contains notes and observations on the file formats written by NCBI blast; where it is not clearly stated otherwise, this is how SeqAn implements the format. Due to a lack of proper standardization it might thus be useful to anyone trying to read or write Blast-compatible files.
 
 NCBI Blast offers many different output formats, we will only cover those implemented by SeqAn.
-||= description                                     =||= blastall   =||= blast*  =||||||||= SeqAn support =||
-||=                                                 =||=  2.2.26    =||= 2.2.26+ =||= BlastFormatFile::          =||= #  =||= writing =||= reading =||
-|| pairwise                                          ||   -m 0       ||-outfmt 0  || PAIRWISE                     ||   0  ||   X       ||           ||
-|| query-anchored showing identities                 ||   -m 1       ||-outfmt 1  || MASTER_SLAVE_IDENT           ||   1  ||           ||           ||
-|| query-anchored no identities                      ||   -m 2       ||-outfmt 2  || MASTER_SLAVE_NO_IDENT        ||   2  ||           ||           ||
-|| flat query-anchored, show identities              ||   -m 3       ||-outfmt 3  || FLAT_MASTER_SLAVE_IDENT      ||   3  ||           ||           ||
-|| flat query-anchored, no identities                ||   -m 4       ||-outfmt 4  || FLAT_MASTER_SLAVE_NO_IDENT   ||   4  ||           ||           ||
-|| query-anchored no identities and blunt ends       ||   -m 5       ||           || MASTER_SLAVE_BLUNT_ENDS      ||   5  ||           ||           ||
-|| flat query-anchored, no identities and blunt ends ||   -m 6       ||           || FLAT_MASTER_SLAVE_BLUNT_ENDS ||   6  ||           ||           ||
-|| XML Blast output                                  ||   -m 7       ||-outfmt 5  || XML                          ||   7  ||           ||           ||
-|| tabular                                           ||   -m 8       ||-outfmt 6  || TABULAR                      ||   8  ||    X      ||     X     ||
-|| tabular with comment lines                        ||   -m 9       ||-outfmt 7  || TABULAR_WITH_HEADER          ||   9  ||    X      ||     X     ||
-|| Text ASN.1                                        ||   -m 10      ||-outfmt 8  || TEXT_ASN1                    ||  10  ||           ||           ||
-|| Binary ASN.1                                      ||   -m 11      ||-outfmt 9  || BIN_ASN1                     ||  11  ||           ||           ||
-|| Comma-separated values                            ||              ||-outfmt 10 || CSV                          ||  12  ||           ||           ||
-|| BLAST archive format (ASN.1)                      ||              ||-outfmt 11 || BLAST_AR_ASN1                ||  13  ||           ||           ||
+{| border=1 class="simple"
+!= description                                     =
+!= blastall   =
+!= blast*  =
+!
+!
+!
+!= SeqAn support =
+|- 
+| =                                                 =
+| =  2.2.26    =
+| = 2.2.26+ =
+| = BlastFormatFile::          =
+| = #  =
+| = writing =
+| = reading =
+|- 
+|  pairwise                                          
+|    -m 0       
+| -outfmt 0  
+|  PAIRWISE                     
+|    0  
+|    X       
+|            
+|- 
+|  query-anchored showing identities                 
+|    -m 1       
+| -outfmt 1  
+|  MASTER_SLAVE_IDENT           
+|    1  
+|            
+|            
+|- 
+|  query-anchored no identities                      
+|    -m 2       
+| -outfmt 2  
+|  MASTER_SLAVE_NO_IDENT        
+|    2  
+|            
+|            
+|- 
+|  flat query-anchored, show identities              
+|    -m 3       
+| -outfmt 3  
+|  FLAT_MASTER_SLAVE_IDENT      
+|    3  
+|            
+|            
+|- 
+|  flat query-anchored, no identities                
+|    -m 4       
+| -outfmt 4  
+|  FLAT_MASTER_SLAVE_NO_IDENT   
+|    4  
+|            
+|            
+|- 
+|  query-anchored no identities and blunt ends       
+|    -m 5       
+|            
+|  MASTER_SLAVE_BLUNT_ENDS      
+|    5  
+|            
+|            
+|- 
+|  flat query-anchored, no identities and blunt ends 
+|    -m 6       
+|            
+|  FLAT_MASTER_SLAVE_BLUNT_ENDS 
+|    6  
+|            
+|            
+|- 
+|  XML Blast output                                  
+|    -m 7       
+| -outfmt 5  
+|  XML                          
+|    7  
+|            
+|            
+|- 
+|  tabular                                           
+|    -m 8       
+| -outfmt 6  
+|  TABULAR                      
+|    8  
+|     X      
+|      X     
+|- 
+|  tabular with comment lines                        
+|    -m 9       
+| -outfmt 7  
+|  TABULAR_WITH_HEADER          
+|    9  
+|     X      
+|      X     
+|- 
+|  Text ASN.1                                        
+|    -m 10      
+| -outfmt 8  
+|  TEXT_ASN1                    
+|   10  
+|            
+|            
+|- 
+|  Binary ASN.1                                      
+|    -m 11      
+| -outfmt 9  
+|  BIN_ASN1                     
+|   11  
+|            
+|            
+|- 
+|  Comma-separated values                            
+|               
+| -outfmt 10 
+|  CSV                          
+|   12  
+|            
+|            
+|- 
+|  BLAST archive format (ASN.1)                      
+|               
+| -outfmt 11 
+|  BLAST_AR_ASN1                
+|   13  
+|            
+|            
+|}
 
-== Tabular formats ==
+
+=== Tabular formats ===
 
 This is the tabular output generated by ''blastall -m8'' (traditional blast suite) or ''blast* -outfmt 6'' (BLAST+ suite). There is also a tabular format with headers, ''blastall -m9'' (traditional blast suite) or ''blast* -outfmt 7'' (BLAST+ suite). It contains additional lines prefixed by "#".
 
-=== general ===
+==== general ====
 
 Each '''file''' contains multiple records. Each '''record''' consists of a single line with tab-seperated '''fields'''.
 Files are usually sorted by QueryId, and within each Query by bit-score/e-value (rank is identical for same query and database).
 
 For the tabular with headers format, each block of records belonging to one query is prefixed by '''header''', so it looks like this:
 
-{{{
+<pre>
 HEADER
  RECORD
  RECORD
@@ -40,33 +155,33 @@ HEADER
 HEADER
 HEADER
 ...
-}}}
+</pre>
 
 => Header for each sequence, 0-n Matchs for each sequence
 
 => Each record is one-line, each Header is multiline
 
-=== concerning the fields ===
+==== concerning the fields ====
 
 The default fields are:
-{{{
+<pre>
 Query id, Subject id, % identity, alignment length,mismatches, gap openings, q. start, q. end, s. start, s. end, e-value, bit score
-}}}
+</pre>
 
 Query id, Subject id,
 
-=== concerning the header ===
+==== concerning the header ====
 
 A Header usually consists of:
 
-{{{
+<pre>
 # Program Tag [e.g BLASTX 2.2.27+ ]
 # Query Id [ID of the query *sequence*]
 # Database Id [note that this is not the name of the sequence in the db, but of
   the database itself, e.g. "nr" -> usually the same for each file]
 # Fields: [Headers of columns]
 # n "hits found"
-}}}
+</pre>
 
 The first three lines are always written.
 The Fields line is always writen by NCBI Blast, but only when hits > 0 by NCBI Blast+.
@@ -81,6 +196,10 @@ A file is considered NCBI Blast+ format, when it has comment line that starts
 with "# BLAST" and ends with "+". In all other cases it is considered
 traditional Blast format.
 
-== Tabular format with Headers ==
+=== Tabular format with Headers ===
 
 This format is identical to 
+
+
+
+{{TracNotice|{{PAGENAME}}}}
