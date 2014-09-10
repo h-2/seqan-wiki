@@ -99,6 +99,7 @@ int main()
 ```html:github:seqan/seqan/master/core/demos/tutorial/index/indices_assignment_1.cpp```
 </pre>
 </pre>
+```html:github:seqan/seqan/master/core/demos/tutorial/index/indices_assignment_1.cpp```
 
 === Index Based Pattern Search (Strings) ===
 
