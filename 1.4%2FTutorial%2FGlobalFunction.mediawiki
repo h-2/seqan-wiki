@@ -1,0 +1,8 @@
+'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
+TODO.
+
+Example to include STL bitset such that they can be used as  a String<bool> in !SeqAn.
+
+=== Submit a  comment ===
+If you found a mistake, or have suggestions about an improvement of this page press:
+[/newticket?component=Documentation&description=Tutorial+Enhancement+for+page+http://trac.seqan.de/wiki/Tutorial/GlobalFunction&type=enhancement submit your comment]

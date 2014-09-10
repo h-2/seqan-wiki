@@ -1,0 +1,959 @@
+== Tags == 
+==== Sequence Lexical ====
+ * TagPrefixLess: 
+  * Specify whether less-than or greather-than comparison is meant.
+ * TagPrefixGreater: 
+  * Specify whether less-than or greather-than comparison is meant.
+
+ * DefaultPrefixOrder: 
+  * default is TagPrefixLess
+
+==== String Base ====
+   * Alloc<TSpec>
+
+==== String Packed ====
+ * Packed
+ * PackedConsts_: 
+  * no discription
+
+==== String Block ====
+ * template<unsigned int SPACE = 4096> struct Block;
+
+== Forwards == 
+==== String Base ====
+   * struct String<TValue, TSpec>
+
+=== Overflow strategies:===
+==== Sequence Interface ====
+   * Insist:No capacity check.
+   * Tight:Same as Tight (exactly the same Tag only with a different name)
+   * Limit:Limit the contents to current capacity.
+   * Exact:Expand as far as needed.
+   * Generous:Expand if needed, get precautionary extra space.
+
+==== String Packed ====
+ * HostIterator
+
+==== String CStyle ====
+ * CStyle
+ * clear(String<TValue, CStyle> & me)
+
+== Metafunctions ==
+==== Sequence Lexical ====
+ * Comparator: 
+  * Type of comparator object
+ * Size
+ * Spec
+
+==== Sequence Interface ====
+ * DefaultOverflowImplicit: 
+  * The default overflow strategy for implicit resize.
+ * DefaultOverflowExplicit: 
+  * The default overflow strategy for explicit resize.
+
+ * IsContiguous: 
+  * Determines whether a container stores its elements in a contiguous array. Has Type as well as VALUE defined.
+
+ * IsSequence: 
+  * Determines whether a container stores its elements in sequential order. Has Type as well as VALUE defined.
+
+ * AllowsFastRandomAccess: 
+  * Determines whether a sequence efficiently supports random access.
+
+==== String Base ====
+   * Spec
+   * Value
+   * IsSequence: Type and VALUE
+
+==== String Alloc ====
+   * DefaultOverflowImplicit = Generous
+   * IsContiguous = True
+
+==== String Packed ====
+ * DefaultOverflowImplicit<String<TValue, Packed<THostspec> > >
+ * DefaultOverflowImplicit<String<TValue, Packed<THostspec> > const>
+ 
+ * DefaultOverflowExplicit<String<TValue, Packed<THostspec> > >
+ * DefaultOverflowExplicit<String<TValue, Packed<THostspec> > const>
+
+ * IsContiguous<String<TValue, Packed<THostspec> > >
+  * Type = false
+  * VALUE = false
+
+ * Host<String<TValue, Packed<THostspec> > >
+ * struct Host<String<TValue, Packed<THostspec> > const>
+  * returns String<unsigned int, THostSpec>
+
+ * GetValue<String<TValue, Packed<THostspec> > >
+ * GetValue<String<TValue, Packed<THostspec> > const>
+  * inheritates from Value
+  * Value is not defined here -> I guess it inheritates from Reference
+  * '''NO DIFFERENCE BETWEEN CONST AND NON CONST''' bad since a proxy is returned all the time
+
+ * Reference<String<TValue, Packed<THostspec> > >
+ * Reference<String<TValue, Packed<THostspec> > const>
+  * '''NO DIFFERENCE BETWEEN CONST AND NON CONST''' bad since a proxy is returned all the time
+ 
+ * Iterator<String<TValue, Packed<THostspec> >, TSpec>
+ * Iterator<String<TValue, Packed<THostspec> > const, TSpec>
+
+ * HostIterator<Iter<TContainer, Packed<THostspec> > >
+ * HostIterator<Iter<TContainer, Packed<THostspec> > const>
+
+ * PackedConsts_
+  * BITS_PER_VALUE
+  * BITS_PER_HOST_VALUE
+  * VALUES_PER_WORD
+  * VALUE_MASK
+  * MAX_BIT_POS
+
+  * toHostLength
+
+ * TempCopy_<String<TValue, Packed<THostspec> > >
+  * this works only, if the copy assignment is done without using TempCopy_.
+
+==== String Block ====
+ * DefaultOverflowImplicit
+
+ * Iterator<String<TValue, Block<SPACE> >, Standard>
+ * Iterator<String<TValue, Block<SPACE> > const, Standard>
+ * Iterator<String<TValue, Block<SPACE> >, Rooted>
+ * Iterator<String<TValue, Block<SPACE> > const, Rooted>
+
+==== String CStyle ====
+ * DefaultOverflowImplicit<String<TValue, CStyle> >
+  * Exact
+ 
+ * IsContiguous< String<TValue, CStyle > >
+  * Type = true, VALUE = true
+
+== Classes ==
+==== Sequence Lexical ====
+   * Lexical<TSpec>
+      * typename Size<Lexical>::Type data_lcp;
+      * char data_compare;
+      * Lexical()
+      * Lexical(TLeft const & left, TRight const & right)
+      * Lexical(Lexical const & other):
+      * Lexical & operator=(Lexical const & other)
+      * ~Lexical() {}
+      * enum{EQUAL = 1, LESS = 2, GREATER = 4, LEFT_IS_PREFIX = 8, RIGHT_IS_PREFIX = 16};
+
+==== String Base ====
+ * TempCopy_: 
+  * struct that basically returns an Alloc String of non const valus
+
+ * ClearSpaceStringBase_<Insist>:
+  * _clearSpace_(T & seq, typename Size<T>::Type size):
+    * calls arrayDestruct and sets the length to size
+  * _clearSpace_(T & seq, typename Size<T>::Type size, typename Size<T>::Type limit): 
+   * calls arrayDestruct and sets the length to size but sets length to limit if limit < size
+  * _clearSpace_(T & seq, typename Size<T>::Type size, typename Size<T>::Type start, typename Size<T>::Type end): 
+   * calls arrayClearSpace and sets the length to size
+  * _clearSpace_(T & seq, typename Size<T>::Type size, typename Size<T>::Type start, typename Size<T>::Type end, typename Size<T>::Type limit):
+   * depending on the relationship between size, start, end and limit arrayDestruct or arrayClearSpace is called and the size set appropriate
+
+ * struct ClearSpaceStringBase_<Limit>
+  * _clearSpace_(T & seq, typename Size<T>::Type size): 
+   * calls _clearSpace
+  * _clearSpace_(T & seq, typename Size<T>::Type size, typename Size<T>::Type limit): 
+   * calls _clearSpace but sets length to limit if limit < size
+  * _clearSpace_(T & seq, typename Size<T>::Type size, typename Size<T>::Type start, typename Size<T>::Type end): 
+   * calls _clearSpace
+  *_clearSpace_(T & seq, typename Size<T>::Type size, typename Size<T>::Type start, typename Size<T>::Type end, typename Size<T>::Type limit):
+   *_clearSpace
+
+ * struct ClearSpaceExpandStringBase_:
+  * _clearSpace_(T & seq, typename Size<T>::Type size): 
+   * calls arrayDestruct, then _rallocateStorage and then _deallocateStorage - '''_deallocateStorage has as its first imput seq, which is used as a tag''' - hard to find!
+  * _clearSpace_(T & seq, typename Size<T>::Type size, typename Size<T>::Type limit): 
+   * calls arrayDestruct, then _rallocateStorage and then _deallocateStorage - '''_deallocateStorage has as its first imput seq, which is used as a tag''' - hard to find!  (sets length to limit if limit < size)
+  * _clearSpace_(T & seq, typename Size<T>::Type size, typename Size<T>::Type start, typename Size<T>::Type end): 
+   * calls _reallocateStorage and then either arrayConstructMove and _deallocateStorage or arrayClearSpace  before setting the length
+  *_clearSpace_(T & seq, typename Size<T>::Type size, typename Size<T>::Type start, typename Size<T>::Type end, typename Size<T>::Type limit):
+   * even more complicated 
+
+ * ClearSpaceStringBase_: ClearSpaceExpandStringBase_<Exact>
+ * ClearSpaceStringBase_<Generous>: ClearSpaceExpandStringBase_<Generous>
+
+ * AssignString_:
+  * assign_(TTarget & target, TSource & source)
+  * assign_(TTarget & target, TSource & source, typename Size<TTarget>::Type limit)
+
+ * AppendString_:
+  * append_(TTarget & target, TSource & source): checks whether or not the capacity is enough -> makes a copy or calls _clearSpace and arrayConstruct
+  * append_(TTarget & target, TSource & source, typename Size<TTarget>::Type limit):
+   * checks whether or not the capacity is enough -> makes a copy or  calls _clearSpace, arrayConstruct, arrayDestruct
+
+ * AppendValueToString_:
+  * appendValue_(T & me, TValue & _value): 
+   * checks whether new storage needs to be allocated - '''there are also some unnecessary checks and there is a TODO concerning the resize function which is not used at all''' 
+
+ * InsertValueToString_:
+  * insertValue_(T & me, TPosition pos, TValue & _value): 
+   * calls resizeSpace(me, 1, pos, pos, TExpand()) and moveValue - '''there is a tmp copy because resizeSpace could invalidate _value???'''
+
+ * ReplaceString_:
+  * replace_(TTarget & target, typename Size<TTarget>::Type pos_begin, typename Size<TTarget>::Type pos_end, TSource & source): 
+   * calls _clearSpace and arrayConstruct or makes a temp copy depending on if source has an objectId and if target and source share the same resources
+  * replace_(TTarget & target, typename Size<TTarget>::Type pos_begin, typename Size<TTarget>::Type pos_end, TSource & source, typename Size<TTarget>::Type limit): 
+   * calls _clearSpace and arrayConstruct or makes a temp copy depending on if source has an objectId and if target and source share the same resources - limit is taken into consideration
+
+ * _Resize_String:
+  * resize_(T & me, typename Size<T>::Type new_length)
+  * resize_T & me, typename Size<T>::Type new_length, TValue const & val):
+   * like the implementation above first it is checked whether whether the length increases or decreases. if increased either reserve or arrayConstruct is called, in the case of decreasing arrayDestruct is called
+
+==== String Alloc ====
+ * class String<TValue, Alloc<TSpec> >:
+  * typename Value<String>::Type * data_begin;
+  * typename Value<String>::Type * data_end;
+  * size_t data_capacity;
+
+  * String(): sets pointer and capacity to 0 - '''SEQAN_ASSERT is useless
+  * String(TSource & source): 
+   * calls assign
+  * String(TSource const & source): 
+   * calls assign
+  * String(String const & source): 
+   * calls assign
+  * String(String & source, Move const &): 
+   * calls assign
+  * String(TSource & source, TSize limit): 
+   * calls move
+  * String(TSource const & source, TSize limit):    
+   * calls assign
+  * String & operator=(TSource const & source): 
+   * calls assign
+  * String & operator=(String const & source): 
+   * calls assign
+  * ~String(): 
+   * calls arrayDestruct -> _deallocateStorage
+
+  * operator[] (TPos pos): calls value
+  * operator[] (TPos pos) const: calls value
+
+==== String Packed ====
+ * String<TValue, Packed<THostspec> >
+  * THost data_host
+  * TSize data_length
+  * String()
+  * String(TSouce & source)
+  * String(TSouce const & source)
+  * String(String const & source)
+  * ~String()
+  * String & operator =(TSource const & source)
+  * String & operator =(String const & source)
+  * typename Reference<String>::Type operator[](TPos pos)
+  * typename Reference<String const>::Type operator[](TPos pos) const
+
+ * Iter<TContainer, Packed<THostspec> >
+  * typename Pointer_<TContainer>::Type data_container;
+  * THostIterator data_iterator;
+  * unsigned char data_bitpos;
+  * Iter()
+  * Iter(typename Parameter_<TContainer>::Type container_)
+  * Iter(typename Parameter_<TContainer>::Type container_, TPosition pos_):
+  * Iter(Iter const & other_):
+  * ~Iter()
+  * Iter const & operator=(Iter const & other_)
+
+ * ClearSpaceStringPacked_
+  * _clearSpace_(T & seq, typename Size<T>::Type size)
+   * calls resize of host and sets length appropriate
+  * _clearSpace_(T & seq, typename Size<T>::Type size, typename Size<T>::Type limit)
+   * calls _clearSpace_ from above
+  *     _clearSpace_(T & seq, typename Size<T>::Type size, typename Size<T>::Type start, typename Size<T>::Type end)
+   * calls _clearSpace_ from above
+  * _clearSpace_(T & seq, typename Size<T>::Type size, typename Size<T>::Type start, typename Size<T>::Type end, typename Size<T>::Type limit)
+   * calls resize and arrayMoveForward or arrayMoveBackward
+
+==== String Block ====
+ * String<TValue, Block<SPACE> >
+   
+  * TBlockTable     blocks;
+  * TBlockIter      blockFirst, blockLast;  
+  * TBlockIter      lastValue;  
+  * TAllocator      alloc;
+
+  * String():
+  * String(TSource const& source)
+  * String(String const & source)
+  * String & operator =(TSource const& source)
+  * String & operator =(String const& _other)
+  * ~String()
+  * operator[] (TPos pos)
+  * operator[] (TPos pos) const
+
+==== String CStyle ====
+ * String <TValue, CStyle >
+  * TValue * data_begin
+  * TValue * data_end
+  * size_t data_size;
+  * static TValue EMPTY_STRING;
+
+  * String()
+  * String(TString & str)
+  * String(TString const & str)
+  * String(String & str)
+  * String(String const & str)
+  * String(TValue * str)
+  * ~String()
+  * String & operator=(TString & str)
+  * String & operator=(TString const & str)
+  * String & operator=(String & str)
+  * String & operator=(String const & str)
+  * operator TValue * ()
+  * operator TValue const * () const
+
+ * AssignStringToStringArray_<TExpand, true>
+  * assign_(String<TValue, CStyle> & target, String<TValue, TSourceSpec> & source)
+   * uses the buffer of source if possible '''but this is wri=wrong because source is not copied and changes to source are also affecting target'''
+  * assign_(String<char, CStyle> & target, String<char, TSourceSpec> & source)
+   * about the same as above
+
+ * AssignStringToStringArray_<TExpand, false>
+  * assign_(String<TValue, CStyle> & target, String<TValue, TSourceSpec> & source)
+   * calls create
+
+ * CreateArrayStringExpand_
+  * create_(TTarget & target, TSource & source)
+   * checks whether target is dependent, the capacity and calls _reallocateStorage and _deallocateStorage if necessary
+  * create_(TTarget & target, TSource & source, TLimit limit)
+   * about same as above
+
+ * CreateArrayString_<Insist>
+  * create_(TTarget & target, TSource & source)
+   * calls _reallocateStorage and assign
+  * create_(TTarget & target, TSource & source, TSize limit)
+   * about the same as above
+
+ * CreateArrayString_<Limit>
+  * create_(TTarget & target, TSource & source)
+   * calls CreateArrayString_<Insist>::create_(target, source, capacity(target));
+  * create_(TTarget & target, TSource & source, TSize & limit)
+   * same as above
+
+ * CreateArrayString_<Exact>: CreateArrayStringExpand_<Exact>
+
+ * CreateArrayString_<Generous>: CreateArrayStringExpand_<Generous>
+
+
+
+
+
+
+== Functions ==
+==== Sequence Lexical ====
+   * compare_(Lexical<TSpec> & lexical, TLeft & left, TRight & right)
+      * sets lexical.data_compare to the corresponding enum value and sets the lcp value as well
+
+   * compare(Lexical<TSpec> & lexical, TLeft const & left, TRight const & right)
+   * compare(Lexical<TSpec> & lexical, TLeftValue const * left, TRight const & right)
+   * compare(Lexical<TSpec> & lexical, TLeftValue const * left, TRightValue const * right)
+   * compare(Lexical<TSpec> & lexical, TLeft const & left, TRightValue const * right)
+      * calls compare_
+      * '''NOTE: the implementations with the pointer as inputs are only because of a VC++ "const arrays" bug
+
+   * isEqual(TLeft const & left, TRight const & right)
+      * '''uses the == operator which therefore hast to be implemented fot TLeft and TRight'''
+   * isEqual(Lexical<TSpec> const & _lex)
+
+   * isNotEqual(TLeft const & left, TRight const & right)
+      * '''uses the != operator which therefore hast to be
+   * isNotEqual(Lexical<TSpec> const & _lex)
+
+   * isLess(TLeft const & left, TRight const & right, Tag<TPrefixOrder> const tag)
+   * isLess(TLeft const & left, TRight const & right)
+      * '''uses the < operator which therefore hast to be
+   * isLess(Lexical<TSpec> const & _lex, TagPrefixLess)
+   * isLess(Lexical<TSpec> const & _lex, TagPrefixGreater)
+   * isLess(Lexical<TSpec> const & _lex)
+
+   * isLessOrEqual
+      * same as isLess
+
+   * isGreater
+      * same as isLess
+
+   * isGreaterOrEqual
+      * same as isLess
+
+   * isPrefix(TLeft const & left, TRight const & right)
+      * calls isPrefix(Lexical<TSpec> const & _lex)
+   * isPrefix(Lexical<TSpec> const & _lex)
+
+   * hasPrefix(TLeft const & left, TRight const & right)
+      * calls hasPrefix(Lexical<TSpec> const & _lex)
+   * hasPrefix(Lexical<TSpec> const & _lex)
+
+   * lcpLength(TLeft const & left, TRight const & right)
+      * calls lcpLength(Lexical<TSpec> const & _lex)
+   * lcpLength(Lexical<TSpec> const & _lex)
+
+==== Sequence Interface ====
+   * getObjectId(T const &): A value that identifies the underlying sequence.
+      * returns end(me, Standard()) -> pointer to the element behind the object
+
+   * getObjectId(T1 const &, T2 const &): Determines whether two sequences share the same resource.
+      * returns getObjectId(obj1) == getObjectId(obj2) -> returns whether two sequences have the same end
+
+   * _beginDefault(T & me, Standard)
+   * _beginDefault(T const & me, Standard)
+      * returns an iterator pointing to the first element
+      * evil: each value is a container of length 1.
+   * _beginDefault(T & me, Rooted)
+   * _beginDefault(T const & me, Rooted)
+      * returns an iterator initialized with the standard iterator
+      * -> evil: each value is a container of length 1.
+
+   * begin(T & me)
+   * begin(T const & me)
+      * returns begin(me, typename DefaultGetIteratorSpec<T>::Type())
+   * begin(TValue const * me, Standard)
+      * only a declaration because of VC++ 2003
+   * begin(T & me, Tag<TSpec> const tag_)
+   * begin(T const & me, Tag<TSpec> const tag_)
+      * returns _beginDefault(...)
+
+  * beginPosition(T & me)
+  * beginPosition(T const & me)
+      * Begin position of object in host.
+      * return 0 by default
+
+   * _endDefault(...)
+      * see _beginDefault()
+      * returns pointer to the element behind the last one
+
+   * end()
+      * see begin()
+      * returns pointer to the element behind the last one
+
+  * beginPosition(T & me)
+  * beginPosition(T const & me)
+      * Begin position of object in host.
+      * return length(me) by default
+
+   * value(T & me, TPos)
+   * value(T const & me, TPos)
+      * returns reference to me by default and does not take TPos into consideration
+
+   * getValue(T & me, TPos)
+   * getValue(T const & me, TPos)
+      * returns a copy the rest is the same as with value
+
+   * front(T & me)
+   * front(T const & me)
+      * returns value(me, 0)
+
+   * back(T & me)
+   * back(T const & me)
+      * returns value(me, length(me) - 1)
+
+   * iter(T & me, TPos pos)
+   * iter(T const & me, TPos pos)
+   * iter(T & me, TPos pos, Tag<TTag> const tag_)
+   * iter(T const & me, TPos pos, Tag<TTag> const tag_)
+      * returns an Iterator to item at given position.
+
+   * assignValue(T & me, TPos pos, TValue const & _value)
+      * assign(value(me, pos), _value);
+
+   * moveValue(T & me, TPos pos, TValue const & _value)
+   * moveValue(T const & me, TPos pos, TValue const & _value)
+      * moveValue changes a value stored in object or the value object points to via move(value(me, pos), _value);
+
+   * length(T const & /*me*/)
+      * returns 1
+
+   * capacity(T const & me)
+      * returns length(me) by default
+
+   * capacity(T const & me)
+      * returns (length == 0)
+
+   * _computeSizeForCapacity(T const & /*me*/, TSize capacity)
+       * returns capacity, but if sizeof(TValue) <= 2, then capacity + 1 is returned
+
+   * computeGenerousCapacity(T const & /*me*/, TSize capacity)
+       * returns 32 if capacity < 32, else capacity + (capacity >> 1)
+
+   * assign(TTarget & target, TSource & source, typename Size<TTarget>::Type limit)
+   * assign(TTarget & target, TSource const & source, typename Size<TTarget>::Type limit)
+   * assign(TTarget const & target, TSource & source, typename Size<TTarget>::Type limit)
+   * assign(TTarget const & target, TSource const & source, typename Size<TTarget>::Type limit)
+       * assign(target, source, limit, typename (needs to be implemented by every data structure)
+
+   * append(TTarget & target, TSource const &)
+   * append(TTarget & target, TSource const & source)
+   * append(TTarget const & target, TSource & source)
+   * append(TTarget const & target, TSource const & source)
+      * append(target, source, typename DefaultOverflowImplicit<TTarget const>::Type());
+   * append(TTarget & target, TSource & source, typename Size<TTarget>::Type limit)
+   * append(TTarget & target, TSource const & source, typename Size<TTarget>::Type limit)
+   * append(TTarget const & target, TSource & source, typename Size<TTarget>::Type limit)
+   * append(TTarget const & target, TSource const & source, typename Size<TTarget>::Type limit)
+       * append(target, source, limit, typename DefaultOverflowImplicit<TTarget const>::Type());
+  
+   * insert(T & me, TPosition pos, TSeq const & insertSeq, Tag<TExpand>)
+   * insert(T const & me, TPosition pos, TSeq const & insertSeq, Tag<TExpand>)
+   * insert(T const & me, TPosition pos, TSeq const & insertSeq)
+      * calls replace
+
+   * insertValue(T const & me, TPosition pos, TValue const & _value)
+      * insertValue(me, pos, _value, typename DefaultOverflowImplicit<T const>::Type());
+
+   * replace(TTarget & target, TPositionBegin pos_begin, TPositionEnd pos_end, TSource & source)
+   * replace(TTarget & target, TPositionBegin pos_begin, TPositionEnd pos_end, TSource const & source)
+   * replace(TTarget const & target, TPositionBegin pos_begin, TPositionEnd pos_end, TSource & source)
+   * replace(TTarget const & target, TPositionBegin pos_begin, TPositionEnd pos_end, TSource const & source)
+      * replace(target, pos_begin, pos_end, source, typename DefaultOverflowImplicit<TTarget const>::Type()) -> '''this musst be implemented'''
+
+   * _capacityReturned(T & me, TSize, Tag<TExpand>)
+      * returns capacity() '''not really useful'''
+   * _capacityReturned(T & me, TSize newCap, Insist)
+      * returns new cewCap
+
+   * reserve(T & me, TSize const & new_capacity, Tag<TExpand> tag)
+      * simply returns _capacityReturned
+         * which returns capacity -> '''nothing happens'''
+   *reserve(T & me, TSize const & new_capacity)
+      * reserve(me, new_capacity, typename DefaultOverflowExplicit<T>::Type()); -> '''there must be an implementation, otherwise the default is called which doesnt do any good'''
+
+   * resize(T & me, TSize new_length)
+   * resize(T & me, TSize new_length, TValue const & val)
+      * calls resize -> '''there must be an implementation'''
+
+   * resizeSpace(T & me, TSize size, TBeginPosition pos_begin, TEndPosition pos_end)
+resizeSpace(T & me, TSize size, TBeginPosition pos_begin, TEndPosition pos_end, TLimit limit)
+      * calls resizeSpace -> '''there must be an implementation'''
+
+   * erase(T & me, TBeginPosition pos, TEndPosition pos_end)
+   * erase(T & me, TPosition pos)
+   * erase(T const & me, TBeginPosition pos, TEndPosition pos_end)
+   * erase(T const & me, TPosition pos)
+      * calls resizeSpace
+      * '''the last two versions are required for segments'''
+
+   * eraseBack(T & me)
+      * calls resize
+
+   * shrinkToFit(T & me)
+      * '''make a copy '''
+      * '''-> swap'''
+
+==== String Base ====
+   * swap(String<TAlphabet, TSpec> & left, String<TAlphabet, TSpec> & right)
+      * creates a copy and then calls move twice
+   
+   * shareResources(String<TValue, TSpec> const & obj1, TValue const & obj2)
+   * shareResources(TValue const & obj1, String<TValue, TSpec> const & obj2)
+      * checks whether begin or end of obj1 are '''both'''' smaller the begin or end of obj2 or vice versa
+
+   * value(String<TValue, TSpec> & me, TPos const & pos)
+   * value(String<TValue, TSpec> const & me, TPos const & pos)
+      * returns a reference to the element at position pos in me
+      * uses begin +pos to do so
+
+   * length(String<TValue, TSpec> const & me)
+      * returns begin - end
+
+   * empty(String<TValue, TSpec> const & me)
+      * checks if begin and end are the same
+
+   * clear(String<TValue, TSpec> & me)
+      * calls arrayDestruct and sets the length to 0
+
+   * _clearSpace(String<TValue, TSpec> & me, TSize size, Tag<TExpand>)
+   * _clearSpace(String<TValue, TSpec> & me, TSize size, TSize limit, Tag<TExpand>)
+   * _clearSpace(String<TValue, TSpec> & me, TSize size, TPosition pos_begin, TPosition pos_end, Tag<TExpand>)
+   * _clearSpace(String<TValue, TSpec> & me, TSize size, TPosition pos_begin, TPosition pos_end, TSize limit, Tag<TExpand>)
+      * calls ClearSpaceStringBase_
+
+   * resizeSpace(String<TValue, TSpec> & me, TSize size, TBeginPosition pos_begin, TEndPosition pos_end, Tag<TExpand> tag)
+   * resizeSpace(String<TValue, TSpec> & me, TSize size, TBeginPosition pos_begin, TEndPosition pos_end, TLimit limit, Tag<TExpand> tag)
+      * first calls _clearSpace and then arrayConstuct
+
+   * assign(String<TTargetValue, TTargetSpec> & target, TSource & source)
+   * assign(String<TTargetValue, TTargetSpec> & target, TSource const & source)
+   * assign(String<TTargetValue, TTargetSpec> & target, TSource const & source, Tag<TExpand>)
+   * assign(String<TTargetValue, TTargetSpec> & target, TSource const & source, TSize limit, Tag<TExpand>
+      * calls AssignString_
+
+   * _moveContiguous(TTarget & target, TSource & source)
+      * depending on size and capacity either arrayMoveForward or arrayMoveBackward is called
+      * if all elements of source fit into one element of target only the begin pointer is changed
+
+   * move(String<TTargetValue, TTargetSpec> & target, TSource & source)
+   * move(String<TTargetValue, TTargetSpec> & target, TSource const & source)
+      * the two implementation call move with DefaultOverflowImplicit
+   * move(String<TTargetValue, TTargetSpec> & target, TSource & source, Tag<TTag> const & tag)
+   * move(String<TTargetValue, TTargetSpec> & target, TSource const & source, Tag<TTag> const & tag)
+      * assign is called
+
+   * _stringCheckForPossibleOverlap(TIter1 const &, TIter2 const &, TSize)
+      * returns always true
+   * _stringCheckForPossibleOverlap(TIter const &it1, TIter const &it2, TSize length)
+      *  return false if [it1,it1+length) and [it2,it2+length) are not overlapping
+      * '''NOTE''': the only difference between the two implementation is that the second one get as input two iterators of the same type
+
+   * append(String<TTargetValue, TTargetSpec> & target, TSource const & source, Tag<TExpand>)
+   * append(String<TTargetValue, TTargetSpec> & target, TSource const & source, typename Size< String<TTargetValue, TTargetSpec> >::Type limit, Tag<TExpand>)
+   * append(String<TTargetValue, TTargetSpec> & target, TSourceValue * source, Tag<TExpand>)
+   * append(String<TTargetValue, TTargetSpec> & target, TSourceValue * source, typename Size< String<TTargetValue, TTargetSpec> >::Type limit, Tag<TExpand>)
+      * all append implementations call AppendString_
+      * '''the last two are only there because of "const array"-bug of VC++'''
+
+   * appendValue(String<TTargetValue, TTargetSpec> & me, TValue const & _value, Tag<TExpand>)
+      * calls AppendValueToString_
+
+   * insertValue(String<TTargetValue, TTargetSpec> & me, TPosition pos, TValue const & _value, Tag<TExpand>)
+      * InsertValueToString_
+
+   * replace(String<TTargetValue, TTargetSpec> & target, TPositionBegin pos_begin, TPositionEnd pos_end, TSource const & source, Tag<TExpand>)
+   * replace(String<TTargetValue, TTargetSpec> & target, TPositionBegin pos_begin, TPositionEnd pos_end, TSource const & source, typename Size< String<TTargetValue, TTargetSpec> >::Type limit, Tag<TExpand>)
+   * replace(String<TTargetValue, TTargetSpec> & target, TPositionBegin pos_begin, TPositionEnd pos_end, TSourceValue const * source, Tag<TExpand>)
+  * replace(String<TTargetValue, TTargetSpec> & target, TPositionBegin pos_begin, TPositionEnd pos_end, TSourceValue const * source, typename Size< String<TTargetValue, TTargetSpec> >::Type limit, Tag<TExpand>)
+      * all functions call ReplaceString_
+      * '''The last two implementations are only there because of const array"-bug of VC++'''
+
+   * _reallocateStorage(String<TValue, TSpec> & me, TSize new_capacity)
+      * simply calls allocateStorage
+   * _reallocateStorage(String<TValue, TSpec> & me, TSize new_capacity, Exact): checks the capacity and calls _reallocateStorage(me, new_capacity) if needed
+   * _reallocateStorage(String<TValue, TSpec> & me, TSize new_capacity, TSize2 limit, Exact)
+      * same as before but limit is taken into consideration
+   * _reallocateStorage(String<TValue, TSpec> & me, TSize new_capacity, Generous)
+      * same as before but the new capacity is computed with computeGenerousCapacity
+   * _reallocateStorage(String<TValue, TSpec> & me, TSize new_capacity, TSize2 limit, Generous)
+      * same as before, but limit is considered
+   * _reallocateStorage(String<TValue, TSpec> &, TSize, Insist)
+   * _reallocateStorage(String<TValue, TSpec> &, TSize, TSize2, Insist)
+   * _reallocateStorage(String<TValue, TSpec> &, TSize, Limit)
+   * _reallocateStorage(String<TValue, TSpec> &, TSize, TSize2, Limit)
+      * The last 4 implementations simply return 0
+
+   * _reserveStorage(String<TValue, TSpec> & /*seq*/, TSize_ /*new_capacity*/, Insist)
+   * _reserveStorage(String<TValue, TSpec> & /*seq*/, TSize_ /*new_capacity*/, Limit)
+      * the last two implementations to exactly nothing
+   * _reserveStorage(String<TValue, TSpec> & seq, TSize_ new_capacity, Tag<TExpand> tag)
+      * if more storage is needed first _reallocateStorage and then arrayConstructCopy, arrayDestruct and _deallocateStorage
+
+   * reserve(String<TValue, TSpec> & seq, TSize_ new_capacity, Tag<TExpand> tag)
+      * simply calls _reserveStorage
+
+   * resize(String<TValue, TSpec> & me, TSize new_length, Tag<TExpand>)
+   * resize(String<TValue, TSpec> & me, TSize new_length, TValue2 const & val, Tag<TExpand>)
+      * _Resize_String is called
+
+   * operator==, !=, <, <=, >, >=
+
+   * operator<<
+      * calls write -> '''bad since file has to be included'''
+
+   * operator>>
+      * calls read -> '''bad since file has to be included'''
+
+==== String Alloc ====
+   * swap(String<TValue, Alloc<TSpec> > & a, String<TValue, Alloc<TSpec> > & b)
+      * class std::swap for all 3 members of the class
+
+   * begin(String<TValue, Alloc<TSpec> > & me, Standard)
+   * begin(String<TValue, Alloc<TSpec> > const & me, Standard)
+      * returns me.data_begin
+
+   * end(String<TValue, Alloc<TSpec> > & me, Standard)
+   * end(String<TValue, Alloc<TSpec> > const & me, Standard)
+      * returns me.data_end
+
+   * capacity(String<TValue, Alloc<TSpec> > const & me)
+   * capacity(String<TValue, Alloc<TSpec> >  & me)
+      * returns me.data_capacity;
+
+   * _setBegin(String<TValue, Alloc<TSpec> > & me, TPtr * new_begin)
+      * Called by Function.move in string_base.h
+
+   * _setLength(String<TValue, Alloc<TSpec> > & me, size_t new_length)
+      * Called in string_base.h
+
+   * _setCapacity(String<TValue, Alloc<TSpec> > & me, size_t new_capacity)
+      * Called in string_base.h
+
+   * _allocateStorage(String<TValue, Alloc<TSpec> > & me, size_t new_capacity)
+      * '''calls allocate -> why not new'''
+
+   * _deallocateStorage(String<TValue, Alloc<TSpec> > & me, TPtr * ptr, size_t capacity)
+      * calls deallocate
+
+   * move(String<TTargetValue, Alloc<TSpec> > & target, String<TSourceValue, Alloc<TSpec> > & source)
+   * move(String<TTargetValue, Alloc<TSpec> > & target, String<TSourceValue, Alloc<TSpec> > const & source)
+      * calls _moveContiguous
+   * move(String<TValue, Alloc<TSpec> > & target, String<TValue, Alloc<TSpec> > & source)
+      * arrayDestruct(target) -> _deallocateStorage(target)
+   * move(String<TValue, Alloc<TSpec> > & target, String<TValue, Alloc<TSpec> > const & source)
+      * calls the previous function
+
+==== String Packed ====
+ * host(String<TValue, Packed<THostspec> > & me)
+ * host(String<TValue, Packed<THostspec> > const & me)
+  * returns me.data_host
+
+ * length(String<TValue, Packed<THostspec> > & me) 
+ * length(String<TValue, Packed<THostspec> > const & me) 
+  * returns me.data_length
+
+ * _setLength( String<TValue, Packed<THostspec> > & me, TSize new_length)
+  * sets me.data_length 
+  * calls _setLength of host string with PackedConsts_<TString>::toHostLength
+
+ * _assignCopyPackedString(TTarget & target, TSource & source, Tag<TTag> const & tag)
+ * _assignCopyPackedString(TTarget & target, TSource & source, TSize limit, Tag<TTag> const & tag)
+  * calls assign of the host and sets me.data_length appropriate
+
+ * assign(String<TValue, Packed<THostspec> > & target, String<TValue, Packed<THostspec> > & source, Tag<TTag> const & tag)
+ * void assign(String<TValue, Packed<THostspec> > & target, String<TValue, Packed<THostspec> > & source, TSize limit, Tag<TTag> const & tag)
+ * void assign(String<TValue, Packed<THostspec> > & target, String<TValue, Packed<THostspec> > const & source, TSize limit, Tag<TTag> const & tag)
+  * calls _assignCopyPackedString
+
+ * getObjectId(String<TValue, Packed<THostspec> > const & me)
+  * returns the object id of the host
+
+ * iter(String<TValue, Packed<THostspec> > & me, TPos pos_, Tag<TTag> const &)
+ * iter(String<TValue, Packed<THostspec> > const & me, TPos pos_, Tag<TTag> const &)
+  * returns TIterator(me, pos_);
+
+ * begin(String<TValue, Packed<THostspec> > & me, Tag<TTag> const & tag_)
+ * begin(String<TValue, Packed<THostspec> > const & me, Tag<TTag> const & tag_)
+  * returns iter at position 0
+
+ *end(String<TValue, Packed<THostspec> > & me, Tag<TTag> const & tag_)
+ * end(String<TValue, Packed<THostspec> > const & me, Tag<TTag> const & tag_)
+  * returns iter at position length(me)
+
+ * value(String<TValue, Packed<THostspec> > & me,  TPos pos)
+ * value(String<TValue, Packed<THostspec> > const & me, TPos pos)
+  * returns *iter(...)
+  * '''No difference between const and no const'''
+
+ * capacity(String<TValue, Packed<THostspec> > const & me)
+
+ * clear(String<TValue, Packed<THostspec> > & me)
+  * clears the host and sets the length
+
+ * _clearSpace(String<TValue, Packed<THostspec> > & me, typename Size< String<TValue, Packed<THostspec> > >::Type size, Tag<TExpand>)
+ * _clearSpace(String<TValue, Packed<THostspec> > & me, typename Size< String<TValue, Packed<THostspec> > >::Type size, typename Size< String<TValue, Packed<THostspec> > >::Type limit, Tag<TExpand>)
+ * _clearSpace(String<TValue, Packed<THostspec> > & me, typename Size< String<TValue, Packed<THostspec> > >::Type size, TPosition pos_begin, TPosition pos_end, Tag<TExpand>)
+ * _clearSpace(String<TValue, Packed<THostspec> > & me, typename Size< String<TValue, Packed<THostspec> > >::Type size, TPosition pos_begin, TPosition pos_end, typename Size< String<TValue, Packed<THostspec> > >::Type limit, Tag<TExpand>)
+  * calls  ClearSpaceStringPacked_<Tag<TExpand> >::_clearSpace_
+
+ * reserve(String<TValue, Packed<TSpec> > & seq, TSize_ new_capacity, Tag<TExpand> tag)
+  * calls reserve of the host
+
+ * container(Iter<TContainer, Packed<THostspec> > & me)
+ * container(Iter<TContainer, Packed<THostspec> > const & me)
+  * returns _toParameter<TContainer>(me.data_container);
+
+ * setContainer(Iter<TContainer, Packed<THostspec> > & me, TContainer2 container_)
+  * sets me.data_container = _toPointer(container_);
+
+ * hostIterator(Iter<TContainer, Packed<THostspec> > & me)
+ * hostIterator(Iter<TContainer, Packed<THostspec> > const & me)
+  * returns me.data_iterator;
+
+ * _bitpos(Iter<TContainer, Packed<THostspec> > & me)
+ * _bitpos(Iter<TContainer, Packed<THostspec> > const & me)
+  * returns me.data_bitpos;
+
+ * position(Iter<TContainer, Packed<THostspec> > const & me)
+
+ * setPosition(Iter<TContainer, Packed<THostspec> > & me, TPosition pos_)
+  * set me.data_bitpos
+
+ * value(Iter<TContainer, Packed<THostspec> > & me)
+ * value(Iter<TContainer, Packed<THostspec> > const & me)
+  * returns typename Reference<Iter<TContainer, Packed<THostspec> > const>::Type(me);
+  * -> returns an proxy
+  * '''No difference between const and non const'''
+
+ * getValue(Iter<TContainer, Packed<THostspec> > & me)
+ * getValue(Iter<TContainer, Packed<THostspec> > const & me)
+  * returs a value -> no proxy
+
+ * _assignValuePackedStringIterator(TIter & me, TValue & _value)
+  * calls _assignValue of the host iterator
+
+ * assignValue(Iter<TContainer, Packed<THostspec> > const & me, TValue const & _value)
+ * assignValue(Iter<TContainer, Packed<THostspec> > & me, TValue const & _value)
+  * calls _assignValuePackedStringIterator
+
+ * moveValue(Iter<TContainer, Packed<THostspec> > & me, TValue const & _value)
+ * moveValue(Iter<TContainer, Packed<THostspec> > const & me, TValue const & _value)
+  * calls assignValue(me, _value);
+
+ * valueConstruct(Iter<TContainer, Packed<THostspec> > const & /*it*/)
+  * does literary nothing
+ * valueConstruct(Iter<TContainer, Packed<THostspec> > const & it, TParam const & param_)
+  * calls assignValue(it...)
+ * valueConstruct(Iter<TContainer, Packed<THostspec> > const & it, TParam const & param_, Move const & /*tag*/)
+  * calls moveValue
+
+ * valueDestruct(Iter<TContainer, Packed<THostspec> > const & /*it*/)
+  * does nothing
+
+ * operator!=, ==, >=. <=, > , <
+
+ * goNext(Iter<TContainer, Packed<THostspec> > & me)
+
+ * goPrevious(Iter<TContainer, Packed<THostspec> > & me)
+
+ * operator+(Iter<TContainer, Packed<THostspec> > const & left, TIntegral const & right)
+ * operator+(TIntegral const & left, Iter<TContainer, Packed<THostspec> > const & right)
+
+ * operator+=(Iter<TContainer, Packed<THostspec> > & left, TIntegral const & right)
+
+ * operator-(Iter<TContainer, Packed<THostspec> > const & left, TIntegral const & right)
+
+ * operator-=(Iter<TContainer, Packed<THostspec> > & left, TIntegral const & right)
+
+ * operator-(Iter<TContainer, Packed<THostspec> > const & left, Iter<TContainer, Packed<THostspec> > const & right)
+
+==== String Block ====
+ * begin(String<TValue, Block<SPACE> > & me, Tag<TSpec> const)
+ * begin(String<TValue, Block<SPACE> > const & me, Tag<TSpec> const)
+  * returns an position iterator at position 0
+
+ * end(String<TValue, Block<SPACE> > & me, Tag<TSpec> const)
+ * end(String<TValue, Block<SPACE> > const & me, Tag<TSpec> const)
+  * returns an position iterator at position length(me)
+
+ * assign(String<TValue, Block<SPACE> >& target, TSource const& source)
+  * calls push for each element of source
+
+ * value(String<TValue, Block<SPACE> >& stack, TPos const pos)
+ * value(String<TValue, Block<SPACE> > const& stack, TPos const pos)
+  * returns value(*(stack.blocks[pos / SPACE]), pos % SPACE);
+
+ * atEnd(Iter<String<TValue, Block<SPACE> >, TIteratorSpec>& it, String<TValue, Block<SPACE> >& container)
+
+ * clear(String<TValue, Block<SPACE> >& me)
+  * calls valueDestruct and deallocate for each entry in the blocks
+
+ * resize(String<TValue, Block<SPACE> > & me, TSize2 new_length, Tag<TExpand>)
+ * resize(String<TValue, Block<SPACE> > & me, TSize2 new_length, Limit)
+  * pushes or pops elements from the blocks
+
+ * reserve(String<TValue, Block<SPACE> > & /*me*/, TSize new_capacity, Tag<TExpand>)
+  * '''is only a dummy - why?'''
+
+ * append(String<TValue, Block<SPACE> >& me, TSource const& source, Tag<TExpand> /*tag*/)
+
+ * appendValue(String<TValue, Block<SPACE> >& me, TVal const& source, Tag<TExpand> tag)
+  * allocates new mem if necessary
+
+ * push(String<TValue, Block<SPACE> >& me, TVal const& source)
+  * calls appendValue
+ * push(String<TValue, Block<SPACE> >& me)
+  * does the same as appendValue, only that valueConstruct me is not called
+
+ * push_back(String<TValue, Block<SPACE> >& me, TVal const& source)
+  * calls appendValue
+
+ * top(String<TValue, Block<SPACE> > & me)
+ * top(String<TValue, Block<SPACE> > const & me)
+  * returns *me.lastValue;
+
+ * back(String<TValue, Block<SPACE> > & me)
+ * back(String<TValue, Block<SPACE> > const & me)
+  * same as top
+
+ * topPrev(String<TValue, Block<SPACE> > & me)
+ * topPrev(String<TValue, Block<SPACE> > const& me)
+  * returns the element before the top one
+
+ * pop(String<TValue, TSpec> & me)
+  * calls resize
+ * pop(String<TValue, Block<SPACE> >& me)
+  * frees the memory of a block if the block is not needed anymore
+
+ * pop_back(String<TValue, Block<SPACE> >& me)
+  * calls pop
+
+ * empty(String<TValue, Block<SPACE> > const& me)
+  * checks whether length == 0
+
+ * length(String<TValue, Block<SPACE> > const & me)
+  * returns the number of elements by checking the blocks 
+
+ * capacity(String<TValue, Block<SPACE> > const & me)
+  * returns the numer of blocks times the space of the blocks
+
+==== String CStyle ====
+ * move(String<TValue, CStyle> & target, String<TValue, CStyle> & source)
+ * 
+move(String<TValue, CStyle> & target, String<TValue, CStyle> const & source)
+  * clears target and resets the pointer
+
+ * begin(String <TValue, CStyle > & me, Standard const &)
+ * begin(String <TValue, CStyle > const & me, Standard const &)
+  * returs me.data_begin
+
+ * _setBegin(String <TValue, CStyle > & me, TValue2 new_begin)
+
+ * end(String <TValue, CStyle > & me, Standard const &)
+ * end(String <TValue, CStyle > const & me, Standard const &)
+  * returns me.data_end
+
+ * _setEnd(String <TValue, CStyle > & me, TValue2 new_end)
+  * if (new_end != NULL) *new_end = TValue(); 
+  * ist das wirklich sinnvoll fuer typen, die weder char noch wchar_t sind?
+
+ * capacity(String <TValue, CStyle > const & me)
+
+ * _reallocateStorage(String <TValue, CStyle > & me, size_t new_capacity, Exact)
+  * calls allocate
+ 
+ * _deallocateStorage(String <TValue, CStyle > & me, TValue * ptr, size_t capacity)
+  * calls  deallocate(me, ptr, size, TagAllocateStorage());
+
+ * dependent(String <TValue, CStyle > & me)
+  * returns (me.data_size == 0);
+
+ * assign(String <TValue, CStyle > & target, TValue * source)
+  * clears the target and then sets target.data_begin to source and data_end to end(source)
+ * assign(String<TTargetValue, CStyle> & target, TSource & source, Tag<TExpand> tag)
+ * assign(String<TTargetValue, CStyle> & target, TSource const & source, Tag<TExpand> tag)
+ * assign(String<TTargetValue, CStyle> & target, TSource & source, TSize /*limit*/, Tag<TExpand> tag)
+ * assign(String<TTargetValue, CStyle> & target, TSource const & source, TSize limit, Tag<TExpand> tag)
+  * calls create
+ * template <typename TTargetValue, typename TSourceValue, typename TExpand>
+inline void
+ * assign(String<TTargetValue, CStyle> & target, TSourceValue const * source, Tag<TExpand> tag)
+ * assign(String<TTargetValue, CStyle> & target, TSourceValue const * source, TSize limit, Tag<TExpand> tag)
+  * the last two are workarounds for the "const array"-bug of VC++
+
+ * create(String<TTargetValue, CStyle> & target, TSource & source)
+ * create(String<TTargetValue, CStyle> & target, TSource & source, TSize limit)
+ * create(String<TTargetValue, CStyle> & target, TSource & source, Tag<TExpand>)
+ * create(String<TTargetValue, CStyle> & target, TSource & source, TSize limit, Tag<TExpand>)
+ * create(String<TTargetValue, CStyle> & target, TSource const & source, Tag<TExpand>)
+* create(String<TTargetValue, CStyle> & target, TSource const & source, TSize limit, Tag<TExpand>)
+ * create(String<TTargetValue, CStyle> & target, TSourceValue const * source, Tag<TExpand>)
+ * create(String<TTargetValue, CStyle> & target,TSourceValue const * source, TSize limit, Tag<TExpand>)
+  * calls CreateArrayString_
+  * the last two are workarounds for the "const array"-bug of VC++
+
+ * toCString(TValue * me)
+ * toCString(TValue const * me)
+ * toCString(String<TValue, CStyle> & me)
+ * toCString(String<TValue, CStyle> const & me)
+ * _toCStringImpl(String<TValue, TSpec> & me, True)
+ * _toCStringImpl(String<TValue, TSpec> & me, False);
+ * toCString(String<TValue, TSpec> & me)
+ * toCString(String<TValue, TSpec> const & me)
+  * either return me or __toCStringImpl
+
+
+
+
+
+
+

@@ -1,0 +1,112 @@
+= Branching, Tagging, Releases =
+[[TOC()]]
+
+{{{#!WarningBox
+Draft, work in progress.
+}}}
+
+This wiki page describes the proposed development and release process of the SeqAn library (this includes demos and tests) and apps.
+
+== Requirements ==
+
+ * The current project's repository structure should remain the same.
+ * The whole project has a "release version number" and each app can have its individual version number.
+ * It must be possible to create releases of (1) all library code and application binaries together with license and example files, (2) the library code only with license files and demo sources, and (3) each app must be releaseable individually.
+ * The process has to be simple and inflict minimal overhead.
+
+== Repository Structure ==
+
+We use the classic Subversion Repository structure:
+
+ * `http://svn.seqan.de/seqan`
+   * `trunk/`
+   * `tags/`
+   * `branches/`
+
+The `trunk/` directory contains the most current development version of the library and the apps.
+
+The `tags/` directory contains '''stable''' copies of the project's state, each in a subdirectory.
+E.g. an entry `seqan-1.3` gives the SeqAn release for version 1.3.
+Once an entry has been added to `tags/`, modifying it means changing files in something people expect to be stable and leads to confusion: "It worked when I tried it yesterday, now it does not work any more!".
+
+Note that an `svn copy` command does not actually copy file contents and only minimal space is used for storing that there is a new version of a file or directory originating at the soruce place in a certain revision without any changes.
+
+The `branches/` directory contains alternative development branches.
+For example, one might copy the trunk of the SeqAn project repository there a week before a release for "freezing" the state.
+
+== Development Process ==
+
+We consider two kinds of changes to software: (1) adding new features ("development"), and (2) bug fixes.
+Note that there might be corner cases where a change might be classified as either.
+At the moment, development happens quite quickly and we do not have the resources to create a complex branching process.
+Also, since the number of people involved in a module or app is limited, most development happens linearly.
+This leads to the first rule:
+
+{{{#!InfoBox
+'''Rule 1:''' Development happens in the trunk only.
+}}}
+
+This means that new features should be added to the current development version only.
+Once a version is seen fit for release, the whole SeqAn repository at that state should be copied into a tag.
+Once that has been done, the tag should not be modified any more.
+
+{{{#!InfoBox
+'''Rule 2:''' Tags cannot be changed after being created. Use branches for this.
+}}}
+
+How would one go about to create bug fixes for a certain app?
+The answer is to use branches.
+For example, for fixing a bug in the app Masai version 0.2.0 (major version 0, minor version 2, patch level 0) in the tag `/tags/masai-0.2.0`, the developer would copy it over to the branch directory `/branches/masai-0.2.0-bugfix`.
+Here, he would fix the bug, test everything and then release the app with a new version 0.2.1 (with an increase patch level).
+He could then apply the bug fix to previous versions, e.g. 0.1.3 becoming 0.1.4, and also fix the bug in trunk.
+
+== Releases and Freezing ==
+
+The release process for a whole "SeqAn Release" (or an app, although it is not mandatory there) should be as follows:
+
+ * Roughly a week before the release, the current trunk should contain all changes that are to be included in the release.
+ * The release manager copies over `/trunk` to `/branches/seqan-release-X.Y`.
+ * The release is tested, i.e. the programs are run on large inputs and the results are inspected.
+   In contrast to nightly tests, this can catch bugs and corner cases on genomic inputs, for example.
+ * A list of bugs and problems is collected.
+ * A subset is chosen such that the release is a step forward and not a step back (regression).
+ * The bugs are fixed in the release branch.
+ * When the release branch content is considered good, it is copied to `/tags/seqan-release-X.Y` and thus made available to the public.
+
+== Building Releases ==
+
+Note that all releases/tags contain the whole SeqAn repository.
+To build the relevant subset, the tag is checked out of the Subversion repository and then built.
+Depending on CMake variables given on the command line, this leads to building only one app, a library only build or all applications:
+
+Building an application only:
+
+{{{#!ShellBox
+~ # svn co http://svn.seqan.de/tags/masai-0.2.0
+~ # mkdir masai-0.2.0-build && cd masai-0.2.0-build
+masai-0.2.0-build # cmake ../masai-0.2.0 -DSEQAN_RELEASE=APP:masai-0.2.0
+masai-0.2.0-build # make package
+}}}
+
+Building a library-only release:
+
+{{{#!ShellBox
+~ # svn co http://svn.seqan.de/tags/seqan-1.4
+~ # mkdir seqan-1.4-build && cd seqan-1.4-build
+seqan-1.4-build # cmake ../seqan-1.4 -DSEQAN_RELEASE=LIBRARY -DSEQAN_VERSION=1.4
+seqan-1.4-build # make package
+}}}
+
+Creating a package including the library and all applications:
+
+{{{#!ShellBox
+~ # svn co http://svn.seqan.de/tags/seqan-1.4
+~ # mkdir seqan-1.4-build && cd seqan-1.4-build
+seqan-1.4-build # cmake ../seqan-1.4 -DSEQAN_RELEASE=ALL -DSEQAN_VERSION=1.4
+seqan-1.4-build # make package
+}}}
+
+== Release Schedule ==
+
+The more regular releases are, the fewer changes there are and thus the fewer bugs can accumulate.
+The Saros team releases every month, we aimed at once a year but are a year behind the schedule.

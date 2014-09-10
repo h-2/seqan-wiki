@@ -1,0 +1,126 @@
+= Retreat 2010: Ticket Types =
+[[TOC]]
+
+== Medium Issues == 
+
+Need discussion.
+Should be solvable with some effort.
+
+ * Communicate building of forwards more clearly #342, #293 and #294 were caused by this.
+ * Bug in Fragment Store  #332 (DW)
+ * MyersUkkonen has no needle #319 (DW)
+  * Should also add function to compute needle from bit masks, also for Shift-And?
+ * Tutorial on debugging documentation building, add QA on documentation, e.g. nightly, see #331 (MH)
+ * Convert tests to new-style tests.
+ * Index auf StringSet von Segmenten funktioniert nicht #191 (DW)
+ * Think about SupremumValue/supremumValue and infimumValue/InfimumValue
+  * See #336 (MH)
+ * toViewPosition after setSourceBeginPosition #276 (RM)
+ * Memory Leak with "elements are containers" feature #301 (postponed)
+  * Is this worth fixing if elements-are-containers feature is removed later?  -- Manuel 2010/10/04
+ * Write tutorial on scoring matrices #325 (MH) (machen wir ein Howto, KR)
+ * Missing "Raw" specialization for FileReader #59 (wontfix)
+ * inconsistent naming of acronyms #73 (all)
+  * There already is this renaming page somewhere. -- Manuel 2 010/10/04
+ * the fill function should be renamed #77 (DW)
+  * Also see renaming page, discussion today, is the decision documented yet? -- Manuel 2010/10/04
+ * Rename tags to use underscore after name #290 (KLMR+AKE)
+  * write renaming scripts and scripts to gather tags/classes/structs with _[A-Z]... (KLMR+AKE)
+  * Also see renaming stuff. -- Manuel 2010/10/04
+ * Swap function #296 (MH)
+ * InfixSegment constructor behaves unexpectedly #288 (MH)
+  * Maybe we only need to remove the feature? -- Manuel 2010/10/04
+ * Cannot append ModifiedString to std::string #251 (MH)
+ * Cleanup of Martin's Myers-Ukkonen pattern split. (MH)
+  * Remove old file, rename new file.
+  * Will also take care of #330 
+  * In my opinion, we should keep the split versions, remove the old ones if it is not used/needed any more. -- Manuel 2010/10/05
+ * clear(Finder) not working #321 (wontfix)
+ * Latest svn won't compile under gcc 4.4.1 #293
+  * Currently installing gcc 4.4.1 on sequoia. -- Manuel 2010/10/04
+  * Fails with `configure: error: cannot compute suffix of object files: cannot compile`, maybe ask IT services? -- Manuel 2010/10/05
+ * bug in function insertValue #273
+ * Add "is in delta environment around x" assertion macro #327 (MH)
+
+== Major Issues ==
+
+Probably not in 1.3 release.
+
+ * Iterator conversion #280 (postponed)
+ * Cannot iterator over const ModifiedString #250 (postponed/wontfix)
+ * Metafunctions vs. nested types #274 (DW, postponed)
+  * Maybe major? -- Manuel 2010/10/04
+  * It seems to be major to have all Meta-functions and helper functions implemented and documented. Will be done in 1.4
+
+=== Enhancements ===
+
+ * Scientific notation in command line options #295 (MH)
+ * toCString doesn't work #94 (DW)
+  * Discussed this, no showstopp, more semantic enhancement.
+ * Internal defines should not be callable accidentally #289 (all)
+  * Related to renaming.
+ * Implement operator- between different iterators #317 (KLMR)
+
+== Already Fixed? ==
+
+These problems are probably already fixed.
+
+ * Incorrect calculation of max Repeat of size 1 #61
+ * gcc 4.3.2 problems #66
+ * atEnd() doesn't work for StringSet Iterators #84 (RM)
+ * MinGW #97
+ * GPL/LGPL issues #65
+ * Standard iterator should be the default iterator. #269
+  * Probably we do not want this and the ticket is wontfix/invalid. -- Manuel 2010/10/04
+ * _MakeSigned wrong for unsigned long long #75
+  * I remember there was something done here by Dave... -- Manuel 2010/10/04
+
+== Easy Documentation Bugs ==
+
+ * #329
+ * #275
+ * ~~Fix advanced read mapping tutorial with information from Retreat.~~
+
+== Minor Issues ==
+
+Need a bit of discussion.
+
+ * assignSource and globalAlignment bug #263 (BK)
+ * Document class Fragment #326 (AK)
+ * Move interval trees to misc so they can easily be used by anyone and their existence is clear? (JA, AK)
+ * Pattern copy constructor & copy semantics #318 (KLMR)
+ * assign() broken for Suffixes and Prefixes #320 (DW)
+  * Classified as minor since the ticket describes what to do, it will be some work, though. -- Manuel 2010/10/04
+ * Documentation should specify headers to include #25 (MH)
+  * dddoc can do this, there even is a script to add this automatically but there's a pattern matching problem in the script. The main point is to find classes/functions etc. without such a tag.
+  * Hopefully done now.
+
+== Apply naming conventions ==
+ * Collect substitutions under IdentifierRenaming:
+  * ~~[struct|class|?] _Bla => [struct|class|?] Bla_ (KLMR+AKE)~~
+  * ~~_FOO => FOO_ (in Enums …) (KLMR + AKE)~~
+  * Abbreviations SA => SA, LCP => Lcp (all per module)
+  * remove underscores in class/function names Index_ESA => IndexEsa (all per module)
+ * Rename immediately
+  * metafunctions should solely define Type/VALUE, all other local typedefs must end with _ (all per module)
+ * Module assignment
+  * ~~index~~, ~~pipe~~, ~~modifier~~, ~~platform~~, ~~basic~~ (MH)
+  * ~~align~~, ~~blast~~, ~~misc~~, ~~graph_*(4)~~, ~~refinement~~ (BK+AKE)
+  * ~~seeds~~, ~~seeds2~~, ~~score~~, ~~random~~, ~~find~~, ~~find2~~, ~~consensus~~ (MH)
+  * ~~chaining~~, ~~consensus~~, ~~file~~, ~~sequence~~ (RM)
+  * ~~map~~, ~~sequence_journal~~, ~~statistical_index~~ (KLMR)
+  * store, system (KR)
+
+
+== Converting Old Style Tests To New Style ==
+
+ * There should only  one .cpp file, with the same name as the test, e.g. ''test_sequence.cpp''.
+ * All other files should be .h files and included from the .cpp files with appropriate header guards.
+ * Remove all forward declaration in the .cpp files.
+ * Use the SEQAN_BEGIN_TESTSUITE, SEQAN_DEFINE_TEST, SEQAN_CALL_TEST macros for defining tests.
+ * Use the new macros, i.e. do not use SEQAN_TASSERT any more but SEQAN_ASSERT_{TRUE, NOT, EQ, ...}
+
+== Tests To Convert ==
+
+ * ~~file~~ (DW)
+ * ~~index~~ (DW)

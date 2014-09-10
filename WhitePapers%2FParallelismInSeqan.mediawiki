@@ -1,0 +1,72 @@
+= Parallelism In Seqan =
+[[TOC]]
+
+'''This is a DRAFT.'''
+
+At the moment, there is no dedicated support for parallelism in SeqAn.
+However, some applications have support for running parallelism and there is ongoing work for a framework for parallelism.
+
+== Open Requirements ==
+
+ * The user should be able to select the sequential / parallel version from his code.
+ * The user should be able to do basic configuration of parallel running (e.g. through OpenMP settings).
+
+== State Of Parallelism in SeqAn ==
+
+ * OpenMP will be the abstraction of choice for parallelization.
+  * good compiler support
+  * easier to use than raw threads
+  * fork/join interface matches the need for parallel program parts better than raw threads.
+ * Some applications use OpenMP for parallelization.
+
+== Technical Library Support ==
+
+We want to be able to switch on/off support for parallelism.
+All parallel programs should also work when compiled with parallelism disabled.
+If the macro `SEQAN_ENABLE_PARALLELISM` enables/disables parallelism with the values `1`/`0`.
+
+All library code should firstly be written for sequential programs.
+Then, support for parallelism should be added.
+At the moment, this will happen with raw OpenMP pragmas, i.e. by using `#pragma parallel loop`.
+There are two options on how to to do this.
+
+=== #if SEQAN_ENABLE_PARALLELISM ===
+
+The easiest way to do this is with an `#if` on the `SEQAN_ENABLE_PARALLELISM` macro:
+
+{{{
+#!cpp
+#if SEQAN_ENABLE_PARALLELISM
+#pragma omp for
+#endif  // SEQAN_ENABLE_PARALLELISM
+for (int i = 0; i < 1<<20; ++i) {
+  // work
+}
+}}}
+
+=== SEQAN_IF_PARALLEL() ===
+
+While using `#if`s directly is very straightforward, it is a lot of overhead for OpenMP pragmas.
+A second option is to define a macro `SEQAN_PRAGMA_IF_PARALLEL` for this case:
+
+{{{
+#!cpp
+
+#if SEQAN_ENABLE_PARALLELISM
+#define STRINGIFY(a) #a
+#define SEQAN_PRAGMA_IF_PARALLEL(code) \
+  _Pragma(STRINGIFY(code))
+#else // SEQAN_ENABLE_PARALLELISM
+#define SEQAN_PRAGMA_IF_PARALLEL(code)
+#endif // SEQAN_ENABLE_PARALLELISM
+}}}
+
+The conditionally parallel loop then becomes:
+
+{{{
+#!cpp
+SEQAN_PRAGMA_IF_PARALLEL(omp for)
+for (int i = 0; i < 1<<20; ++i) {
+  // work
+}
+}}}

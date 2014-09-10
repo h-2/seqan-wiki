@@ -1,0 +1,9 @@
+This page contains black-listed words for the spam filter.
+The first code block contains the blocked words.
+
+{{{
+[Mm]edical assistan
+paycheck
+business through online
+career
+}}}

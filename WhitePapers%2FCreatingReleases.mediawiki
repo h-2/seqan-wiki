@@ -1,0 +1,22 @@
+= Creating SeqAn Releases =
+
+ 1. Make sure everything is fine:
+  * Nightly builds
+  * Documentation
+  * List of changes and known issues.
+
+ 2. Tag the release
+  * `https://svn.seqan.de/seqan/trunk@REVISION https://svn.seqan.de/seqan/tags/seqan-VERSION`
+
+ 3. Create a new Tutorial version or update the old one on minor releases:
+  * wiki:WhitePapers/VersionizingTheWiki
+
+ 4. Create a new entry on docs.seqan.de with the current version and update links to it.
+  * Create documentation and copy to `/web/docs.seqan.de/htdocs/seqan/VERSION`
+  * Make sure to update `/web/docs.seqan.de/htdocs/index.html` and do `chmod u+xR DIR` to allow reading from the web
+
+ 6. Wait for automatic package building or kick off manually.
+
+ 7. Send an email to the mailing list, e.g. see the [https://lists.fu-berlin.de/pipermail/seqan-dev/2013-April/msg00007.html example for 1.4.0].
+
+ 8. Done.

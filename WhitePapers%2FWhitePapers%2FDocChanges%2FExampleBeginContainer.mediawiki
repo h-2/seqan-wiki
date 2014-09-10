@@ -1,0 +1,57 @@
+{{{#!html
+<small>Function</small>
+}}}
+
+= ContainerConcept # begin =
+
+{{{#!html
+<small>Part of the interface of the Concept <a href="#">ContainerConcept</a></small>
+}}}
+
+{{{#!cpp
+TIterator begin(container[, tag])
+}}}
+
+Return an iterator to the beginning of `container`.
+
+You can specify whether you want a standard or a rooted iterator using `tag`.
+
+== Parameters ==
+
+{{{#!td valign=top
+`TContainer`
+}}}
+{{{#!td valign=top
+`container`
+}}}
+{{{#!td valign=top
+The container to get the begin iterator of.
+`TContainer` must fulfill the concept [# ContainerConcept].
+}}}
+|----------------
+{{{#!td valign=top
+`TTag`
+}}}
+{{{#!td valign=top
+`tag`
+}}}
+{{{#!td valign=top
+The tag to use for selecting the resulting iterator.
+One of `Standard` and `Rooted`.
+Defaults to `Rooted`.
+}}}
+
+== Return Values ==
+
+{{{#!td valign=top
+`TIterator`
+}}}
+{{{#!td valign=top
+An iterator to the beginning of `container`.
+The type depends on the type `TTag` of `tag`.
+`TIterator` is computed as `Iterator<TContainer, TTag>::Type`.
+}}}
+
+== See Also ==
+
+[wiki:WhitePapers/WhitePapers/DocChanges/ExampleEndContainer Container#end]

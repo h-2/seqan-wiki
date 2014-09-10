@@ -1,0 +1,82 @@
+= Schedule Wednesday: What do we fix in the next release? =
+
+ 1. Resolving tickets
+ 1. Discus open questions in naming conventions and function names (fill, supremumValue)? Dna/BWT Index_ESA/data_host -> IdentifierRenaming in the Wiki
+ 1. Documentation System: document include headers, +deprecated/defective/issues tags, Wiki Tutorial/Demos vs. DDDoc Overview/Demos
+   * remove Overview pages, transfer them into Wiki
+   * complete include tag documentation
+ 1. What functionality do we need: swap
+ 1. Release razers2 as the *new* razers
+ 1. Put microRazerS and SplitRazerS into one folder with its razers.h
+ 1. What to do with Seeds/Seeds2 in the release?
+ 1. Include local_swift variation detection tools as *new*?
+ 1. Adjust module responsibilities
+
+= Schedule Thursday =
+
+= Schedule Friday =
+
+= Tasks =
+== Topics to discuss ==
+
+ * Yearly releases or continuously when tests succeed
+ * How to handle external contributions
+ * Naming convention for abbreviations  Dna or BWT?
+ * Naming conventions for helper functions _underdash_joinedCamel_case?
+ * Long term aim: Compiling without generated forwards?
+ * Motif Finding
+ * Seeds/Seeds2
+
+== Renaming/Restructuring tasks ==
+
+ * change fill(obj,size,val) -> resize(obj,size,val) #77
+ * add swap #296 and swapValue
+ * unify reverse and reverseInPlace #359
+ * rename SupremumValue/supremumValue and infimumValue/InfimumValue to [m|M]aximum/[m|M]inimumValue, see #260
+ * make internal typedefs in meta-functions local, see #289 Iterator<T>::Iterator defined, Interne typedefs private or with underscore?
+ * removing auto-containers, i.e. that `int` is a *container* of `int` of length 1. #360
+  * Infixes #288
+ * Requirements for a better I/O infrastructure: Files, streams, `FILE*` #361
+ * Make I/O subroutines public? #362
+ * Holder has to become an auto pointer/smart pointer/shared pointer. #363
+ * Iterator conversion concept. What's automatic? What is not? #280 #250
+ * Rename demo `iterator` to different name since GCC makes `#include <iterator>` look in the current directory which is bad behaviour and include the iterator binary for demos. (#324)
+  * Only a problem if CPATH is set incorrectly.
+
+== Possible tasks for code review days during SeqAn retreat ==
+
+Please suggest issues that we could work on during the code review days of the SeqAn retreat here:
+
+ * Command line parser:
+  * OptionType::List
+  * Scientific notation #295
+ * Journaled Sequence:
+  * Cleanup of Journal type.
+  * Support the clear and copy space functions so infixes work.
+ * Clean alignment algorithms: files, interfaces
+ * razers, care about gapped params
+ * Add function to batch-write FASTA/FASTQ files, also see attachment:util.h
+ * Seed Module
+  * extension algorithms in seeds2 module
+  * see whether new seed module is affected by #277 
+ * Remove multiple entries in documentation, e.g. in seqan:"Tag.Seed Extension".
+   * They are there twice because of module seeds2. -- Manuel
+ * I think Gotoh has problems, maybe banded broken? I don't remember exactly but there were some issues (with score). -- Manuel
+ * ~~Rna alphabet~~
+ * ~~more documentation for score matrices~~
+ * `#include <seqan/file.h>` nötig für stringausgabe
+   * Possible “fix”: rename `file.h` to `io.h` (to make semantics clearer), keep `file.h` for backwards compatibility.
+ * Include tests in attachment:test_align_matrix.cpp
+ * Fix inserts at beginning of alignments in seqan:Class.FragmentStore, requires some more thought.
+ * Minor Tickets: #286 #295 #75 #89 #275 #71 #61 #251 #269 #250 #273 #191 #263 #321 and all other open ones.
+ * Tags should be name TagName_ instead of _TagName, see #290.
+ * Documentation: Search may return multiple results of same name (e.g. `clear`) without hint which is which.
+ * `host` should be an alias to `haystack` for `Finder`s, otherwise certain documentation items (e.g. [http://www.seqan.de/dddoc/html_devel/FUNCTION.begin_Position.html beginPosition]) are incorrect since they only refer to `host`.
+   * Similarly, both `host` and `needle` are defined for `Pattern`s but it’s unclear from the documentation how they differ.
+
+== Infrastructure ==
+
+ * Remove spam from Wiki, what about non-editable changes in tickets? (e.g. #77) wrote email to staff
+ * Toolbox, building/documentation/marking of apps
+ * Documentation system: Add deprecated, defective flag feature.
+ * Have ticket components (categories) for every SeqAn module and demos/apps etc.?

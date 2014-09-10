@@ -1,0 +1,122 @@
+= Holder Replacement =
+
+Note that the name `holder_ptr` is preliminary, probably something like `twostate_ptr` or `magic_ptr` is better?
+
+== Motivation ==
+
+There currently are various issues with the Holder class.
+The main problem is that it tries to implement reference seqmantics.
+The traditional smart pointers implement pointer semantics, however.
+It could thus be wise to follow pointer semantics with a Holder replacement, too.
+
+The spirit of the Holder class is to have a smart pointer that can own its object or be a weak pointer.
+
+== Desired Semantics ==
+
+'''By default, behave just like a pointer.'''
+
+The default behaviour should be similar to the new `std::weak_ptr<>`, for example, the following should be valid.
+The main extension is that you can assign plain pointers into it.
+
+{{{
+#!cpp
+CharString str = "THIS IS DATA";
+holder_ptr<CharString> ptr = &str;
+holder_ptr<CharString> ptr2 = ptr;
+}}}
+
+'''Taking ownership must be easy.'''
+
+In many applications, one object should be able to both use an object on the stack/member of another object or own the object.
+
+{{{
+#!cpp
+CharString str = "STACK DATA";
+holder_ptr<CharString> ptr1(&str);  // not owner
+holder_ptr<CharString> ptr2(new CharString("THIS IS DATA"), Owner());  // take ownership
+}}}
+
+== Drawbacks of Run-Time Ownership Decision ==
+
+The user is responsible for making the new pointer only take ownership on valid objects.
+The following is an error:
+
+{{{
+#!cpp
+CharString str = "STACK DATA";
+holder_ptr<CharString> ptr(&str, Owner());
+}}}
+
+As is the following:
+
+{{{
+#!cpp
+holder_ptr<CharString> ptr1(new CharString("DATA"), Owner());
+holder_ptr<CharString> ptr2(&*ptr1, Owner());
+}}}
+
+== Proposed Interface ==
+
+{{{
+#!cpp
+
+struct Owner_;
+typedef Tag<Owner_> Owner;
+
+struct Slave_;
+typdef Tag<Slave_> Slave;
+
+template <typename T>
+class holder_ptr
+{
+public:
+    enum State { OWNER, SLAVE };
+
+    T *   _ptr;
+    State _state;
+
+    holder_ptr();   // _ptr is 0.
+    ~holder_ptr();  // If _state is OWNER, _ptr is deleted.
+
+    holder_ptr(T * ptr);                 // Copy ptr, become slave.
+    holder_ptr(T * ptr, Slave const &);  // Copy ptr, become slave.
+    holder_ptr(T * ptr, Owner const &);  // Copy ptr, become owner.
+
+    holder_ptr(holder_ptr & other);                 // Copy other.ptr, become slave.
+    holder_ptr(holder_ptr & other, Slave const &);  // Copy other.ptr, become slave.
+    holder_ptr(holder_ptr & other, Owner const &);  // Copy other.ptr, become owner, ptr becomes slave.
+
+    // Functions that make a pointer look like a pointer.
+    T & operator*() const;
+    T * operator->() const;
+};
+
+// Copy rhs.ptr to lhs.ptr, becomes slave.  If lhs was owner, lhs.ptr is deleted.
+template <typename T>
+void assign(holder_ptr<T> & lhs, holder_ptr<T> const & rhs);
+
+// lhs gets ownership of pointer from rhs, rhs becomes slave.  If lhs was owner
+// before, lhs.ptr is deleted.
+template <typename T>
+void takeOwnership(holder_ptr<T> & lhs, holder_ptr<T> const & rhs);
+
+// Equivalent to binary-verbatim swap.
+template <typename T>
+void swap(holder_ptr<T> & lhs, holder_ptr<T> & rhs);
+
+// Return state.
+template <typename T>
+typename holder_ptr<T>::State getState(holder_ptr<T> const & ptr);
+
+// Return pointer.
+template <typename T>
+T * getPointer(holder_ptr<T> & ptr);
+
+// Comparators.
+template <typename T, typename U>
+bool operator==(holder_ptr<T> const & lhs, holder_ptr<U> const & rhs);
+template <typename T, typename U>
+bool operator!=(holder_ptr<T> const & lhs, holder_ptr<U> const & rhs);
+template <typename T, typename U>
+bool operator<(holder_ptr<T> const & lhs, holder_ptr<U> const & rhs);
+}}}

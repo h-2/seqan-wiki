@@ -1,0 +1,190 @@
+= Code Review Process =
+[[TOC()]]
+
+'''PROPOSAL / WORK IN PROGRESS'''
+
+This page contains the discussion to the code review process.
+
+== Code Review Aims ==
+
+The aim should '''not''' be to find bugs through code reviews.
+Such problems should be found through extensive automated tests.
+
+Rather, the aim should be to
+
+ * have '''a second pair of eyes''' look at the code,
+ * verify the '''internal code structure''' and compliance with the code style and general SeqAn code look-and-feel to ensure '''readability and maintainability''', and
+ * verify that the '''public API''' has conformance and '''good usability'''.
+
+'''Code review requests should be as small as possible while being self-contained to make reviewing easy.'''
+
+== Summary ==
+
+This table summarizes the restrictions on code review.
+
+||= '''Code Base Part''' =||= '''Maintainers''' =||= '''Minimum\\Review #''' =||= '''Reviewer\\Restriction''' =||
+|| Core Library || Active Developer & 2+ GLDs || 1-2 || 1+ Maintainers ||
+|| Core Apps || Active Developer & 1+ GLDs || 1-2 || 1+ Maintainers ||
+|| Ext Library/Apps || Active Developer & 1+ GLDs || 1 || 1+ Maintainers ||
+|| Sandboxes || Active Developer || Optional || Optional ||
+
+The following is a rough scheme that helps you to decide on the pre-/post-commit issue and maintainer count.
+
+{{{
+#!cpp
+I_want_to_commit();
+if (I_am_an_active_developer())
+{
+    commit();
+    request_post_commit_review();
+    while (review_not_complete())
+    {
+        read_comments();
+        adjust_code();
+        possibly_commit();
+        post_replies();
+    }
+    possibly_commit();
+}
+else  // I am only a contributor.
+{
+    request_pre_commit_review();
+    while (review_not_complete())
+    {
+        read_comments();
+        adjust_code();
+        update_diff();
+        post_replies();
+    }
+    commit();
+}
+}}}
+
+== The SeqAn Use Case ==
+
+At the moment, mostly David and Manuel work on core and extras.
+Next year, Jochen will join them in the work on the library.
+This would be the "general library developer" team (GLD).
+
+Most other developers will focus on certain modules, e.g. Rene on the seeds module.
+Apps are mostly also developed by one developer at a time.
+
+== Roles ==
+
+We identify the following roles:
+
+ General Library Developer (GLD) ::
+  Developers who spend most of their time working on the library, espescially those that are paid to do this (David, Jochen, Manuel).
+ Active Developer ::
+  A developer who spends most of her/his time on module X or app Z.
+  This is always used connection with a certain part of the code base as in "active developer for module X".
+ Maintainer ::
+  A developer who is responsible for keeping a code base part working and to improve it.
+ Author ::
+  The original author of a piece of code.
+
+== Assigning Maintainers ==
+
+Code reviews should be done by maintainers, if possible (see below).
+
+When a module is in the focus of one or several individual developer (e.g. Rene for the seeds module), she/he is registered as the first maintainer(s).
+Each core module should have at least two maintainers from the GLD team.
+Each extras module should have at least one maintainer from the GLD team.
+
+Each app should have its active developer as the first maintainer.
+Each app should furthermore have an GLD developer who should be mainly concerned with maintainability of the app.
+
+== Code Review Intensity ==
+
+Code reviews for anything but sandboxes is '''mandatory.'''
+
+There should be a differentiation between how thorough, and stringent the code review has to be, however.
+Code in the core library should undergo a strict and thorough review by 1-2 developers.
+Code in core apps should be reviewed by 1-2 developers, also.
+For code in extras, one reviewer should be enough.
+
+Sandbox reviews are optional.
+
+At the beginning, as fewer developer resources are available, the 1-2 means "one, if possible two", later 1-2 should mean "two, one if two are infeasible."
+
+=== Pair Reviews ===
+
+Reviewing code in pairs is encouraged.
+The review happens with the patch author and the reviewer in front of the same computer.
+This counts as 1.5 code reviews.
+
+== Assigning Code Reviews ==
+
+Review Board allows to request users from either users or groups.
+
+The Saros team has made good experiences with assigning all to one group "saros".
+Every contributor can then make a code review.
+If a patch is in the system less than X days, two votes in favour are required for committing.
+If it is an old patch, one request in favour of it is enough.
+
+For SeqAn, this approach could also be tried, however possibly in a modified way.
+
+Changes to the library in core must have at least one review by a maintainer, and should have two if possible.
+For other code in core/extras, there should be at least one review by a maintainer and possibly another one if necessary.
+
+== Review Types ==
+
+For commits by active developers, post-commit reviews for their work on their own code is enough.
+For commits by other developers, pre-commit reviews are mandatory.
+
+Example:
+Manuel is an active developer of the basic module, he can do commits first and then let them be reviewed later.
+
+== Time Constraints ==
+
+Developers should allocate a time interview only for code review, e.g. "at least 2 hours, at most 8 hours per week" for regular code reviews.
+When larger contributions are to be merged, this can be extended.
+
+== Timeline / Evaluation ==
+
+This document should be completed by the end of December 2011.
+The outlined code review process should start from the beginning of January 2012, with the Joure Fixe.
+
+After two months or so, an evaluation should be done on the following metrics:
+
+ * number of commits
+ * number of reviews
+ * number of completed reviews
+
+The following metrics are optional and possibly harder to measure:
+
+ * number of review revision (updated patches)
+ * average request lifetime (how much time passed between review request and commit/rejection)
+ * number of open review requests in average
+ * number of review request that are 3 times older than the average review request
+
+The following should be clarified in short, semistructured interviews with the participants/developers:
+
+ * overall satisfaction
+ * average time needed for one review
+ * average time spent per week
+ * benefits concerning code quality
+ * possible improvements / adjustments
+ * good points / bad points
+
+== Remarks ==
+
+ * We should regularly consider the code review process to (1) generally improve it and (2) adjust it to changes in the project.
+ * There was an alternative proposal by Rene (still available in the source of this page, but hidden) that we decided not to try initially.
+
+{{{
+#!comment
+== Rene's Comments ==
+
+I suggest to perform a fix code review day once in a month.
+Reasons:
+ * Developers have enough time to deliver feature complete code (extensive testing, documentation) as parts of their projects
+ * Developers can better organize their own projects
+ * It is unlikely that feature complete code is changed after it has been reviewed
+ * Reviewers live is simplified and alleviated, since feature complete code is considered to fulfill the suggested standards
+ * Reviewers have a better overall view over the delivered code if it is feature complete - can make better suggestions concerning implementation details...
+ * Reviewers can better schedule time for reviews and their own projects
+ * Reviewers can consult each other, since they have actually time for reviewing
+ * More reviewers can be engaged (also developers of DFG projects to manage sandbox code) 
+ * Avoids the creation of to many to small code review tickets
+}}}

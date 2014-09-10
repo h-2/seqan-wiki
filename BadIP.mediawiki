@@ -1,0 +1,7 @@
+This page contains black-listed IPs for the spam filter.
+The content of the first code block is interpreted.
+
+{{{
+46.17.97.17
+46.37.162.45
+}}}

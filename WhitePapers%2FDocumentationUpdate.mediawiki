@@ -1,0 +1,46 @@
+'''WORK IN PROGRESS'''
+= Documentation Updates =
+[[TOC()]]
+
+== Documentation Structure ==
+
+ * We need to decide and document how the DDDoc tree looks like.
+
+{{{
+.Concept.Container
+..summary:A class for objects that contains other objects of a fixed type.
+
+.Concept.Sequence
+..general:Concept.Container
+..summary:A linear sequence of objects.
+
+.Class.String
+..implements:Concept.Sequence
+..summary:General purpose sequence container for elements.
+..description:
+Strings are at the heart of the SeqAn library.
+There are various specializations, the @Spec.Alloc String@ being the simplest and most widely used one.
+Other specializations provide advantages for special use cases, e.g. @Spec.Packed String@ or @Spec.MMap String@.
+..implements:Concept.Sequence
+
+.Spec.Alloc String
+..class:Class.String
+..summary:Simple @Class.String@ specialization that uses contiguous memory regions.
+..description:
+The Alloc String provides a String specialization based on dynamic arrays.
+
+.Class.Gaps
+..class.Concept.Sequence
+..summary:Wrapper for @Concept.Sequence|sequences@ that stores gaps outside the wrapped object.
+}}}
+
+== Documentation Guideline ==
+
+ * We need to specify how a good documentation page looks like.
+
+ * Class Naming in Documentation
+  * Specializations extend the name "to the left" and must contain the name of their base class, e.g. "Spec.Alloc String" and "Spec.MMap String" are specializations of the class "Class.String".
+
+== DDDoc Syntax ==
+
+ * We need an updated explanation of the DDDoc syntax.

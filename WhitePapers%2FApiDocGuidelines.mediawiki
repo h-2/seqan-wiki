@@ -1,0 +1,178 @@
+= API Documentation Guidelines =
+[[TOC()]]
+
+== Some Nomenclauture ==
+
+=== C++ Classes vs. Classes/Specializations in SeqAn ===
+
+C++ provides us with the mechanism of classing and subclassing.
+
+{{{#!cpp
+class C
+{};
+
+class D : public C
+{};
+}}}
+
+C++ also provides us with class templates:
+
+{{{#!cpp
+template <typename T, template S>
+class A
+{};
+}}}
+
+Class templates can be instantiated, yielding classes of names such as `A<int, double>`.
+Classes can also be partially specialized:
+
+{{{#!cpp
+template <typename T>
+class A<T, int>
+{};
+}}}
+
+This partial specialization of the template `A` is now used for all instantiations of `A` where the second parameter is an integer.
+
+=== Concepts ===
+
+A concept is an informal interface for a type `T` specifying how this type can be used.
+This can define the member functions, interface functions, or global functions working on it.
+
+=== Metafunctions ===
+
+Metafunctions are compile-time functions performing computation on types or constant values.
+They are implemented as template `struct` types and their resulting type/value is given by the `Type`/`VALUE` member.
+
+=== Global Functions, Interface Functions, Member Functions ===
+
+C++ provides us with classes that can have member functions and member variables and it also provides us with global functions.
+In SeqAn, we also use the concept of an interface function which is a global function in the C++ sense but which is bound to a certain type.
+
+For example, the function `globalAlignment()` is a global function since it is not bound to a specific type.
+However, it has certain requirements on its argument (e.g. the `scoringScheme` parameter must be a specialization of the `Score<>` class template.
+
+The Functions `length()`, `begin()`, `end()` are examples of interface functions.
+They are global functions in the sense of C++ but bound to a certain class (or class template) or a concept.
+For example, the class template `String` might have the interface functions `length()`, `begin()`, and `end()` while the class template `Seed` only provides the `length()` function.
+
+While the `length()` function is a global identifier in C++ and the different interface functions are just different overloads of the function in C++ terms, we bind it to a class template or concept.
+For example, the interface functions for the `String` are called `String#begin`, `String#end`, and `String#length`, the interface function `length()` for `Seed` is called `Seed#length`.
+
+Metafunctions can also be part of an interface, e.g. `SequenceConcept#Size`, `String#Size`, `String#Value`.
+
+Member functions are called by their respective C++ names, e.g. `String::String` for the constructor or `Bar::foo` for a possible member function `foo` of class `Bar`.
+
+Interface functions and metafunctions are also linked to the owning type via a `.class` or a `.concept` link.
+
+=== Uniqueness of Class Template and Concept Names ===
+
+The names of all class templates and concepts as well as their specialization must be unique.
+
+All Concept names have the suffix `Concept`, e.g. `SequenceConcept`, `ContainerConcept`.
+
+Specializations in SeqAn work by further specializing on the last template argument:
+
+ * `String<TValue, TSpec>`, `String<TValue, Alloc<> >`, `String<TValue, Packed<> >`
+ * `StringSet<TString, TSpec>`, `StringSet<TString, Owner<> >`, `StringSet<TString, Owner<ConcatDirect<> > >`, `StringSet<TString, Owner<JournaledSet> >`
+ * `Iter<T, TSpec>`, `Iter<TGraph, GraphIterator<> >`, `Iter<TGraph, GraphIterator<InternalAdjacencyIterator<> > >`
+
+Specialization of class templates are named by the following schema:
+
+ * Go from the innermost specialization tag name to the outermost and put them in this order.
+ * Remove duplicates from this sequence and keep the outermost instance.
+ * The list is separated by one space.
+
+For the examples above, the results are:
+
+ * `String`, `Alloc String`, `Packed String`
+ * `StringSet`, `Owner StringSet`, `ConcatDirect Owner StringSet`, `Journaled Owner StringSet`.
+ * `Iter`, `Graph Iter`, `InternalAdjecency Graph Iter`
+
+=== Synonyms ===
+
+Since some widely used types contain too many details, sometimes implementations details.
+We introduce synonyms for these types and also for certain iterators that are returned by the metafunction `Iterator`.
+The aim is to improve how easy it is to write about a certain type but at the same time to keep the documentation name close to the source code.
+The list of synonyms should be kept small.
+
+When being redirected in the API documentation when accessing a synonym, the user is notified about the redirection like in the Wikipedia.
+
+Examples are:
+
+ * `ConcatDirect StringSet`.
+   `ConcatDirect Owner StringSet` is too verbose for the very widely used string set.
+   The fact that it is implemented as an `Owner StringSet` is an implementation detail.
+   We add the synonym `ConcatDirect StringSet`.
+ * `Mums BottomUp VSTree Iter`.
+   This name is too verbose and also contains implementation details.
+   The user only gets it through `Iterator<TIndex, MumsIterator>::Type`.
+   We add the synonym `Mums Iterator`.
+ * `Pack Pair`.
+   Because the template tag `Packed` is already taken for strings, there is no `Pair<TValue, Packed>`, the specialization is named `Pair<TValue, Pack>`.
+   We add the synonym `Packed Pair`.
+
+=== Specialization Tag Names ===
+
+Only use alphanumeric CamelCase names.
+
+Use the naming scheme `SpecializationTag BaseTag`, for example `Gaps<TValue, ArrayGaps<> >`, `Gaps<TValue, AnchorGaps<> >` for any new class.
+
+In certain areas, another naming schema is used.
+One example are indices: `Index<TText, IndexEsa<> >`, `Index<TText, IndexQGram<> >`.
+Here, go to the schema that most existing types use to reduce incompatibilities in users' code.
+For example, `FMIndex` is renamed to `IndexFM` since it is introduced in the current trunk only and was not there in the 1.3 release.
+
+In the next "major version" release, i.e. 2.0, go to the first rule for all types.
+
+=== Inheritance of Interface Functions ===
+
+Interface functions will be inherited in the documentation following Java method inheritance rules.
+
+== Return and Parameter Types ==
+
+The return type of a function should always be documented.
+If it is a builtin type such as `int`, directly give it in the signature, e.g.:
+
+{{{#!cpp
+bool atEnd(it)
+}}}
+
+If it is more complex, use the naming scheme `T` followed by a class, concept, or metafunction name.
+
+For example:
+
+For `String#begin`:
+
+{{{#!cpp
+TIter begin(str, tag)
+}}}
+
+For `String#value`:
+
+{{{#!cpp
+TReference value(str, pos)
+}}}
+
+The return type should then be defined in the "Results" section, e.g.
+
+For `String#begin`:
+
+|| `TIter` || The iterator to the beginning of `str`, as returned by `Iterator<TString, TTag>::Type` where `TString` is the type of `str` and `TTag` is the type of `tag`. ||
+
+For `String#value`:
+
+|| `TReference` || A reference to the value of `str` at position `pos`. Is of type `Reference<TString>::Type` where `TString` is the type of `str`. ||
+
+Parameter types are not given in the signature.
+They are given in the Parameters section, however, with the rules for return types:
+
+For `String#begin`:
+
+|| `str` || `String` || The String object to get the begin iterator of. ||
+|| `tag` || `TTag` || The tag to select the iterator kind. Can be `Standard` or `Rooted`. ||
+
+For `String#value`:
+
+|| `str` || `String` || The String object to get a value from. ||
+|| `pos` || `TPos` || The position to get the string. Must be an integer. ||

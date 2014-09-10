@@ -1,0 +1,11 @@
+= SeqAn Infrastructure =
+
+This part of the Wiki describes the infrastructure and software tools supporting the SeqAn project.
+This includes a description of the repository structure, an overview of the CMake-based build system and the nightly build (aka continuous integration) system.
+
+ * [wiki:Infrastructure/RepositoryStructure Repository Structure]
+   This page describes the SeqAn repository structure, including the [wiki:Infrastructure/RepositoryStructure#Sandboxes structure of sandboxes]
+ * [wiki:Infrastructure/BuildSystem The CMake-Based Build System]
+   This page describes the CMake-based build system of SeqAn and the CMake modules shipped with SeqAn.
+ * [wiki:Infrastructure/NightlyBuilds Nightly Builds and Continuous Integration System]
+   This page describes the nightly build system and how to set it up your own nightly builds.

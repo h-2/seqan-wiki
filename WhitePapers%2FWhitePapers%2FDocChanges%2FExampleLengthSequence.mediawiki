@@ -1,0 +1,38 @@
+{{{#!html
+<small>Function</small>
+}}}
+
+= SequenceConcept # length =
+
+{{{#!html
+<small>Part of the interface of the Concept <a href="#">SequenceConcept</a></small>
+}}}
+
+{{{#!cpp
+TSize length(sequence)
+}}}
+
+Returns the number of items in a container.
+
+== Parameters ==
+
+{{{#!td valign=top
+`TSequence`
+}}}
+{{{#!td valign=top
+`sequence`
+}}}
+{{{#!td valign=top
+The sequence to query.
+`TSequence` must fulfill the concept [# SequenceConcept].
+}}}
+
+== Return Values ==
+
+{{{#!td valign=top
+`TSize`
+}}}
+{{{#!td valign=top
+The length of the sequence.
+`TSize` is the [# Size] type of `TSequence` (`Size<TSequence>::Type`)
+}}}

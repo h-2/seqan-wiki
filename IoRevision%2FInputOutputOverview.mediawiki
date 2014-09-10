@@ -1,0 +1,34 @@
+= I/O Overview =
+[[TOC()]]
+
+== Input System ==
+
+The Input system consists of the following layers:
+
+ File Input ::
+  This layer is responsible for accessing the data in files.
+  Here, a file is the usual Unix abstraction, and could also be a pipe etc.
+  The two types of input sources are types implementing the seqan:Concept.Stream concept and seqan:Class.String types.
+  The earlier is required for reading from standard input if is a pipe (Manuel: Really, memory mapped not also possible with pipes?) and for compressed streams such as gzip and bzip2 streams.
+  The latter allows to uses seqan:"Spec.MMap String" and seqan:"Spec.External String" objects for efficient I/O with few/no copies.
+  Furthermore, it allows to use `CharString` objects as input source, however, there are Stream adaptions for it, too.
+ Tokenizing ::
+  The tokenizing layer extracts delimited tokens from the input layer, i.e. streams and strings.
+  For example, this could be FASTA/FASTQ records which have very simple delimiters, SAM header or alignment records.
+  ''No interpretation'' of the input is performed, however line endings might be thrown out, as is useful for FASTA/FASTQ.
+  This is comparable to the functionality of the preprocessor in the C programming language.
+  Bioinformatics formats are usually very simple, so for some formats this is already enough, e.g. for FASTA/FASTQ, where assignment of whitespace-free char strings to Dna strings completes the loading of data.
+ File Format APIs ::
+  This layer performs interpretation of the data and provides two types of access to file formats:
+  Record-streaming and bulk-reading functionality.
+  The first variant allows to access the records step-by-step whereas the second variant reads a whole file, e.g. FASTA/FASTQ into a pair of seqan:Class.StringSet objects.
+  The bulk-reading can use the record streaming interface, but in the case of FASTA/FASTQ, it might be beneficial to pass over data two times in order to optimize memory allocation.
+ Type Parsing Library ::
+  The file format API uses the type parsing library.
+  We should incorporate something similar to Boost's `lexical_cast<>()` into SeqAn for this.
+  This is for integer parsing and to replace the currently used `atoi()`, `atof()` calls.
+
+== Output System ==
+
+Output is a bit simpler, tokenization is not required, type parsing is not really, needed, there should be a layer around the streams to "put types", though.
+Care has to be taken with locales.

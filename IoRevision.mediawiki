@@ -1,0 +1,131 @@
+[[TOC]]
+
+I(h4nn3s) finished my work on the IO-Revision, a guide on using the new Code can be found here: 
+https://trac.mi.fu-berlin.de/seqan/browser/trunk/misc/guide.pdf
+
+This wiki might not by up to date. Please refer to the guide instead.
+
+
+= I/O Revision =
+
+The I/O part of Seqan could use some love.
+This wiki page describes the planned and also additional possible changes.
+
+ * [wiki:IoRevision/StreamInterface Stream Interface]
+ * [wiki:IoRevision/ParseNotes Notes on Parsing]
+ * [wiki:IoRevision/DataFormatNotes Notes on Data Formats]
+ * [wiki:IoRevision/InputOutputOverview]
+ * [wiki:WhitePapers/QualityHandling]
+ * [wiki:IoRevision/FileFormats]
+
+== Steps ==
+
+The following work packages will put the I/O and parsing subsystem on a solid foundation.
+Each part is tagged with a time estimate.
+
+=== Collect Current Status ===
+
+In this step, the current status is to be collected and evaluated.
+They should go into their own wiki page in the IoRevision namespace, e.g. wiki:IoRevision/CurrentStatus
+
+==== I/O System Status ====
+
+ * Collect all headers, classes, structs, functions, typedefs related to I/O.
+
+ * Classify by how well documented, tested, working the code is.
+ * Document roughly which function they fulfill, if not done so.
+ * Known to be broken: File read iterator, maybe also string.
+
+ * Classify by "is batch-reading" (a whole file, e.g. SAM at the moment), by "is record-reading" (FASTA/FASTQ at the moment).
+ * Clarify whether there are any other categories to cluster by.
+
+==== Parsing System Status ====
+
+ * Collect headers, classes, structs, functions, typedefs related to parsing.
+ * Function names to look out for begin with `_parse` or `_stream` or `_is`
+ * Document which functionality each function fulfills, maybe with a regular expression, if non-regular functionality (probably rare or not there at all), specify simple grammar or describe.
+ * Classify functions by "has a pass-by-reference variable c that stores the last read value" or "uses peek or */getValue" to get the front character
+ * Collect where this code is used, review whether this is the intended use there (e.g. alphanumeric parsing function also allows `[-/\.]` and is not mean there. '''[postpone]'''
+ * Collect what the functions do if the parsing fails. Garbage in, garbage out?
+
+'''Attention:'''
+Formerly, atEnd returned true only after reading the last character and then reading one EOF character again.
+To also be able to use Rooted Iterators like streams we changed that behavior, so atEnd on streams behaves as expected. After reading the last character in the file it now returns true.
+Some parsers seem to rely on the old atEnd behavior.
+
+=== Plan Changes ===
+
+This is based on the current status collection, there should be regular discussions with Seqan core developers.
+Document results in wiki:IoRevision/PlannedChanges
+
+==== Plan Changes to I/O System ====
+
+ * Decide on the I/O mechanisms to use, see "Supported I/O mechanisms" below.
+ * Find out whether there can be overloads for the functions for each of the raw data types (i.e. `int`s for posix streams, `FILE*` for C streams, memory pointers for memory mapped files) without any collision or whether wrapper structs (e.g. `struct FileStarWrapper { FILE * data };`) are in order.
+ * Decide whether to kick out file reader streams and iterators.
+ * Propose a future list of supported `read`/`write` functions, whether to use batch or record reading/writing. Mark which ones are supported and which ones are not.
+
+==== Plan Changes To Parsing System ====
+
+ * Which functions do not do what they appear to do by their name?
+ * Which functions to introduce, which ones to remove, is there duplicative functionality.
+ * Where should their usage be changed?
+ * Which functionality is required?
+ * If functions are not used correctly, should there be multiple variants of these functions or is a more tolerant parsing function OK, too?
+ * Write a list of parsing functions.
+ * Figure out how to support all I/O methods above transparently for reading, with `_peekChar` and `_nextChar` functions?
+ * Do we want to have functions for easy writing, too? Or is output via STL streams only, OK?
+
+'''Useful Resources'''
+
+ * Builtin [http://www.cplusplus.com/reference/clibrary/cstdlib/atof/ atof], atoi, etc.
+ * [http://www.boost.org/doc/libs/1_46_1/libs/conversion/lexical_cast.htm Boost lexical_cast<>]
+ * [http://www.cplusplus.com/reference/iostream/stringstream/ std::stringstream]
+
+=== Apply Changes ===
+
+The progress should be tracked in a changelog in wiki:IoRevision/ApplyChanges
+
+==== Changes to I/O ====
+
+ * Apply the changes that were decided on above.
+ * Change the library and the applications.
+ * Document all changes.
+
+==== Changes to Parsing ====
+
+ * Apply the changes that were decided on above.
+ * Change the library and the applications.
+ * Document all changes.
+
+== Decisions / Choices ==
+
+=== Error Handling / Exceptions / Return Codes ===
+
+We should use int return codes for error handling.
+Adding Exceptions adds additional complexity that is hard to evaluate this point.
+Also, they might inflict some performance overhead.
+An informed decision should be made at a later point, based on benchmarks when parsing FASTA/SAM data.
+
+=== Supported I/O mechanisms ===
+
+Ideally, the parsing should work transparently on the following types.
+It should not be too hard to make this work with generic programming in C++.
+
+ * POSIX streams, i.e. ints, maybe wrapped in a PosixStream struct?
+ * `FILE*` C streams.
+ * STL streams
+ * Pointers to memory mapped strings, maybe wrapped together with EOF pointers?
+ * Maybe file reader iterators, probably superseded by memory mapped file pointers.
+
+== Odds And Ends / Ideas For The Future ==
+
+These are not parts of the work packages but rather ideas for changes and enhancements in the future.
+Feel free to add ideas lest they might be forgotten.
+
+ * If parsing of a file fails somewhere, it should not do so quietly. For SAM files, for example, the parser should be able to detect whether it is obviously invalid, e.g. when the user feeds in a BAM or FASTA file.
+ * We should clearly document the preference in using which I/O functionality. Memory mapped files, for example, will be fastest in most cases and only need one copy of the data if the operating system is implemented well. On the other hand, C++ fstreams do not have the reputation for being fast. File Reader Strings and Iterators are mostly icing, right? They are not meant to be particularly fast?
+ * It should be clearly specified what a parsing primitive function parses, how it reacts to errors, etc.
+ * For tool functions, we also need functions that truncate strings after the first whitespace etc.
+ * What about porting a typesafe `printf` to SeqAn strings. (''ultra''low priority)
+ * Make it easy to parse out a header/file type identifier and switch between two or more file versions. There won't be a fool-proof way to do this but at least the tutorial/documentation should give an explicit example how to do this and tell the user that it is a good idea to provide this so file format versions don't have to be guessed as phred scaling in FASTQ files.

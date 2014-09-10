@@ -1,0 +1,224 @@
+= White Paper: 2D Seeds =
+
+[[TOC()]]
+
+This document describes the new interface for the seeds module.
+The seeds module provides seeds between to sequences.
+
+We consider seeds between a query sequence (dimension 0) and a database sequence (dimension 1).
+
+== Class Seed ==
+
+Seeds are described by a left and a right position in each dimension, i.e. `left0`, `left1` for the left and `right0`, `right1` for the right point in each dimension.
+
+{{{
+                                        database / dimension 1
+
+ left1                   right1
+        ,-+----------------+--------------------->
+        |
+  left0 + *
+        |  \
+        |   `--------.
+        |             `---.
+ right0 +                  *
+        |
+        V
+  query / dimension 0
+}}}
+
+Also, each seed as a lower and an upper diagonal, `diag0` and `diag1`, identified by a signed integer.
+The middle diagonal is diagonal `0`, the ''k''-th diagonal to the lower left is `-k`, the ''k''-th diagonal to the upper right is ``k``.
+
+The class seed describes a seed.
+It specifies the following interface (`DefaultSeedConfig` configures the internally used types).
+
+{{{
+#!cpp
+
+struct DefaultSeedConfig
+{
+  typedef size_t TPosition;
+  typedef size_t TSize;
+  typedef typename _MakeSigned<TPosition>::Type TDiagonal;
+};
+
+class Seed<TSpec, TConfig=DefaultSeedConfig>
+{
+  Seed();
+  Seed(left0, right0, left1, right1, diag0, diag1);
+  // Construct a seed that consist of matches and mismatches only.
+  Seed(left0, right0, length);
+};
+
+// Getters.
+TPosition _getLeft0(seed);
+TPosition _getRight0(seed);
+TPosition _getLeft1(seed);
+TPosition _getRight1(seed);
+TDiagonal _getDiag0(seed);
+TDiagonal _getDiag1(seed);
+}}}
+
+Note that so far, no setters are specified.
+The main reason is that the `ChainedSeed` specialization cannot support `set{Left,Right}1` because of how it stores the information internally.
+
+Seeds support two main operations: ''Merging'' and ''extension''.
+
+=== Seed Extension ===
+
+The `extension` operation increases a seed's length to the right and down from the right end and to the left and up from the left end:
+
+{{{
+#!cpp
+extendSeed(seed, sequence0, sequence1, direction, MatchExtend);
+extendSeed(seed, sequence0, sequence1, direction, scoreDropOff, scoreMatrix, {UngappedMatchExtend,GappedMatchExtend});
+}}}
+
+=== Seed Merging ===
+
+The `merge` operation takes two seeds and merges the second one into the first one.
+This can be done by simple ''merging'' or by ''chaining''.
+
+{{{
+#!cpp
+mergeSeeds(first, second, Merge);
+mergeSeeds(first, second, sequence0, sequence1, SimpleChain);
+mergeSeeds(first, second, sequence0, sequence1, scoreMatrix, ChaosChain);
+mergeSeeds(first, second, sequence0, sequence1, bandwidth, BlatChain);
+}}}
+
+== Seed Specializations ==
+
+There are two specializations `SimpleSeed` and `ChainedSeed`.
+
+=== `SimpleSeed` ===
+
+Simple seeds simply store the left, right and diag values.
+
+{{{
+#!cpp
+class Seed<Simple>
+{
+  TPosition left0;
+  TPosition right0;
+  TPosition left1;
+  TPosition right1;
+  TDiagonal diag0;
+  TDiagonal diag1;
+};
+}}}
+
+=== `ChainedSeed` ===
+
+Chained seeds store the diagonals the seed consists of with the diagonals in both dimensions.
+
+{{{
+#!cpp
+struct _ChainedSeedDiagonal
+{
+  TPosition left0;
+  TPosition left1;
+  TLength length;
+};
+
+class Seed<Chained>
+{
+  std::list<_ChainedSeedDiagonal> _seedDiagonals;
+  TDiagonal diag0;
+  TDiagonal diag1;
+};
+}}}
+
+== The Class SeedSet ==
+
+The class SeedSet describes how a set of seeds is store.
+The specialization determines how the seeds are managed.
+Seeds can either be stored unsorted, sorted by diagonal or managed in a datastructure that efficiently supports range queries.
+
+{{{
+#!cpp
+class SeedSet<TSpec>
+{
+};
+}}}
+
+=== Adding Seeds ===
+
+{{{
+#!cpp
+addSeed(set, seed, Single);
+addSeed(set, seed, gapThreshold, Merge);
+addSeed(set, seed, sequence0, sequence1, bandwidth, Chaos);
+addSeed(set, seed, sequence0, sequence1, bandwidth, Blat);
+}}}
+
+== SeedSet Specializations ==
+
+There are three specialization for `SeedSet` that differ in how they manage the seeds.
+Seeds can be unsorted (`Unsorted`) sorted in one dimension by their diagonal (`BalancedTree`), or managed in a datastructure that allows efficient range queries by their end point (`KdTree`).
+
+== Local Seed Adding Algorithms ==
+
+=== addSeed: Single ===
+
+Always successful, force-adding the seed.
+
+{{{
+bool addSeed(set, seed, Single)
+{
+  insert(set.seeds, seed);
+}
+}}}
+
+=== addSeed: Merging, Chaos, Blat ===
+
+Try to find a seed for merging.
+If successful, merge new seed into existing one and return true.
+Otherwise, return false.
+
+{{{
+bool addSeed(set, seed, sequence0, sequence1, bandwidth, gapThreshold, algorithmTag)
+{
+  Seed * existing = findMateForMerge(set, seed, bandwidth, gapThreshold, algorithmTag);
+  if (existing == 0)
+    return false;
+  mergeSeeds(set, existing, seed, bandwidth, gapThreshold, algorithmTag);
+  return true;
+}
+}}}
+
+=== findMateForMerge: Merging, Chaos, Blat ===
+
+This function can be simple, based on seeds being sorted by diagonal.
+
+=== mergeSeeds: Merging ===
+
+Very simple, only adjust first, last points and diagonals.
+
+=== mergeSeeds: Chaos ===
+
+Use CHAOS merging.
+
+=== mergeSeeds: Blat ===
+
+Use BLAT merging.
+
+== Banded Chain Alignment ==
+
+Revised global function interface which matches the structure of the globalAlignment interface.
+We added a second score scheme to evaluate different gaps and anchors differently. 
+
+{{{
+#!WarningBox
+At the moment the minimal size of the band extension must be one. The banded chain alignment cannot process bands of size one (Hamming-Distance). This will be added soon!
+}}}
+
+
+{{{
+#!cpp
+bandedChainAlignment(align, seedChain, scoringScheme1, scoringScheme2, alignConfig, bandExtension);
+bandedChainAlignment(gapsH, gapsV, seedChain, scoringScheme1, scoringScheme2, bandExtension);
+bandedChainAlignment(frags, strings, seedChain, scoringScheme1, alignConfig, bandExtension);
+bandedChainAlignment(alignmentGraph, seedChain, scoringScheme1, alignConfig);
+}}}

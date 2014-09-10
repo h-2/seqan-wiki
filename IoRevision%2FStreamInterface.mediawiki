@@ -1,0 +1,194 @@
+Draft for the stream concept, in dddoc.
+Put into ''docs/concepts/Stream.dddoc'' and rebuild docs to see it in HTML.
+
+{{{
+.Concept.Stream
+..summary:Object for I/O.
+
+.Adaption."std::iostream"
+..implements:Concept.Stream
+
+.Adaption."std::FILE *"
+..implements:Concept.Stream
+
+.Adaption."char array"
+..implements:Concept.Stream
+
+.Class.Posix Stream
+..cat:Input / Output
+..implements:Concept.Stream
+..summary:Wrapper around POSIX $int$ streams.
+..signature:PosixStream
+
+.Class.Compressed Stream
+..cat:Input / Output
+..implements:Concept.Stream
+..summary:Base class for wrappers around compression libraries.
+..signature:CompressedStream<TSpec>
+..param.TSpec:Tag for specialization.
+
+.Spec.Gzip Stream
+..cat:Input / Output
+..general:Class.Compressed Stream
+..summary:Base class for Gzip Input / Output Stream.
+..signature:CompressedStream<Gzip<TSpec> >
+..param.TSpec:Tag for specialization.
+
+.Spec.Gzip Input Stream
+..cat:Input / Output
+..general:Spec.Gzip Stream
+..summary:Gzip compressed input stream specialization.
+..signature:CompressedStream<Gzip<Input> >
+
+.Spec.Gzip Output Stream
+..cat:Input / Output
+..general:Spec.Gzip Stream
+..summary:Gzip compressed output stream specialization.
+..signature:CompressedStream<Gzip<Output> >
+
+.Metafunction.Value.concept:Concept.Stream
+
+.Tag.Stream Features
+..cat:Input / Output
+..summary:Tags for querying streams for features using @Metafunction.HasStreamFeature@
+..tag.IsInput:Whether the stream type allows reading.
+..tag.IsOutput:Whether the stream type allows writing.
+..tag.HasPeek:Whether the @Function.streamPeek@ function is supported.
+..tag.HasFileName:Whether the @Function.streamFileName@ function is supported.
+..tag.HasSeek:Whether the @Function.streamSeek@ and @Function.streamRewind@functions is supported.
+..tag.HasTell:Whether the @Function.streamTell@ function is supported.
+..see:Metafunction.HasStreamFeature
+
+.Metafunction.HasStreamFeature
+..cat:Input / Output
+..summary:Query a stream type for features.
+..signature:HasStreamFeature<TStream, TTag>::Type
+..param.TStream:The stream to query.
+..param.TTag:The feature to query for.
+...type:Tag.Stream Features
+..returns:@Tag.Logical Values|Logical Value@ indicating whether the feature is available.
+..concept:Concept.Stream
+
+.Function.streamOpen
+..cat:Input / Output
+..summary:Open a stream
+..signature:open(stream, filename, mode)
+..param.stream:The stream to open
+..param.filename:Path to the file to open
+..param.mode:Mode to open the file with.
+...type:Concept.Stream
+..returns:$int$, I/O error code.
+..concept:Concept.Stream
+
+.Function.streamReopen
+..cat:Input / Output
+..summary:Reopen a stream with different file name or mode.
+..signature:open(stream, filename, mode)
+..param.stream:The stream to reopen
+..param.filename:Path to the file to reopen
+..param.mode:Mode to reopen the file with.
+...type:Concept.Stream
+..returns:$int$, I/O error code.
+..concept:Concept.Stream
+
+.Function.streamClose
+..cat:Input / Output
+..summary:Close a stream
+..signature:close(stream)
+..param.stream:The stream to close
+...type:Concept.Stream
+..returns:$int$, I/O error code.
+..concept:Concept.Stream
+
+.Function.streamEof
+..cat:Input / Output
+..summary:Query whether the stream is at the end.
+..signature:streamEof(stream)
+..param.stream:The stream to query.
+...type:Concept.Stream
+..returns:$int$, I/O error code.
+..returns:$bool$, indicating whether there are any more characters or not.
+..concept:Concept.Stream
+
+.Function.streamPeek
+..cat:Input / Output
+..summary:Read the next character from the stream without advancing stream.
+..signature:streamPeek(c, stream)
+..param.c:Next character from stream.
+...type:nolink:$Value<TStream>::Type$
+..param.stream:The stream to query.
+...type:Concept.Stream
+..returns:$int$, I/O error code.
+..concept:Concept.Stream
+..see:Tag.Stream Features.HasPeek
+
+.Function.streamReadLine
+..cat:Input / Output
+..summary:Read the current line up to and including the line separator.
+..signature:streamReadLine(buffer, stream)
+..param.buffer:A buffer to read the line into.
+...type:Class.String
+..param.stream:The stream to read from.
+...type:Concept.Stream
+..returns:$int$, I/O error code.
+..concept:Concept.Stream
+
+.Function.streamReadChar
+..cat:Input / Output
+..summary:Read the next character from the stream and advance it.
+..signature:streamReadChar(c, stream)
+..param.c:Next character from stream.
+...type:nolink:$Value<TStream>::Type$
+..param.stream:The stream to get the next character from.
+...type:Concept.Stream
+..returns:$int$, I/O error code.
+..concept:Concept.Stream
+
+.Function.streamFileName
+..cat:Input / Output
+..summary:Get the stream's file name.
+..signature:streamFileName(nameString, stream)
+..param.nameString:Buffer to copy file name into.
+...type:Class.String
+..param.stream:The stream to get the next character from.
+...type:Concept.Stream
+..concept:Concept.Stream
+..returns:$int$, I/O error code.
+..see:Tag.Stream Features.HasFileName
+
+.Function.streamReadBlock
+..cat:Input / Output
+..summary:Read a block of data from a stream.
+..signature:streamReadBlock(buffer, stream, count)
+..param.buffer:The buffer to read into.
+..param.stream:The stream to read from.
+...type:Concept.Stream
+..returns:$int$, I/O error code.
+
+.Function.streamFlush
+..cat:Input / Output
+..summary:Flush a stream.
+..signature:streamFlush(stream)
+..param.stream:The stream to read from.
+...type:Concept.Stream
+..returns:$int$, I/O error code.
+
+.Function.streamSeek
+..cat:Input / Output
+..summary:Change position in stream.
+..signature:streamSeek(stream, pos[, origin])
+..param.stream:The stream to read from.
+..param.pos:Position to seek to.
+..param.origin:Origin to start seeking.
+...type:Concept.Stream
+..returns:$int$, I/O error code.
+
+.Function.streamTell
+..cat:Input / Output
+..summary:Change position in stream.
+..signature:streamSeek(pos, stream)
+..param.pos:Out paramer, the position in the stream.
+..param.stream:The stream to get position of.
+...type:Concept.Stream
+..returns:$int$, I/O error code.
+}}}

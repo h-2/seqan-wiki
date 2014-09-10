@@ -1,0 +1,27 @@
+= Known Issues =
+
+This page summarizes the known issues of our SeqAn library and bundled app releases.
+Also see wiki:ChangeLog
+
+== Release 1.4.1 ==
+
+ * All points of 1.4 are still present.
+
+== Release 1.4 ==
+
+ * Clang 3.2 and 3.3 cannot compile graph property maps.
+   The current trunk version for 3.4 contain a fix.
+ * The pointer-is-a-copy behaviour of `Segment` and `ModifiedString` leads to that `host(X)` is not a reference any more if the host of `X` is an object of one of the said classes.
+   For example, this means updating the begin/end position of the host of the base `Finder` does not work any more and that setting the functor of a `ModView ModifiedString` does not work any more either.
+ * #1003 Inconsistent behaviour of Segments and iterators:
+  * `atEnd(it)` exists for generic pointer types `T *`.
+    This means that `atEnd(it)` can be called for non-rooted iterators of SeqAn strings and segments since they use pointers as iterators.
+    We will resolve this soon after the release by removing `template <typename T> bool atEnd(T * it)` and replacing it by `atEnd(it, c)`, i.e. with the additional container.
+  * `Infix<Infix<TString>::Type >::Type` is the same as `Infix<TString>::Type` (so-called "shortcutting") which leads to possible problems when using `set{Begin,End}Position()`.
+  * Since `Pointer<TSegment>::Type` is `TSegment` (such that `TModifiedString(infix(s))` can work), updates to the segment are not reflect in its rooted iterators.
+  * This also causes inconsistencies with rooted iterators, especially the position iterator.
+    If the position iterator iterates over a segment then it has the segment as a copy.
+    If the user assumes that it is a pointer then updating the original segment does not update the segment copy inside the iterator.
+ * #1014 For `String<T, Alloc<> > const`, the `Iterator<>` metafunction returns a non-const pointer.
+   This has not been discovered for a long time and thus there is a lot of code depending on this behaviour.
+   We fixed this in many places in the library and apps but will only fix the metafunction definition after the release.

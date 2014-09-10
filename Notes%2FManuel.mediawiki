@@ -1,0 +1,209 @@
+= Manuel's Random Notes =
+[[TOC]]
+
+== General ==
+
+ * Global operators such as `operator==` are better only specialized for as `template <typename TSpec, typename TOther> operator==(Klass<..., TSpec> const &, TOther const &)` for class `Klass`.
+   The reason for this is that it there will be ambiguities otherwise.
+   This style is generally also closer to specifying the operator in the class itself.
+   However, if the left hand type is a builtin type such as an integer or a pointer, this operator should also be defined (think comparison of char-pointers to strings!)
+ * However, what about `Dna*`.
+   Here, the value 0 is a perfectly nice value, compared to `char*`!
+   Probably, the operator should only be defined for `char` and`wchar_t`?
+ * It appears that the "code structure architecture" is as follows:
+  * There is a `_interface.h` header that defines the tags and metafunctions from the current module and global implementations of facade functions that call a function of the same name with one more parameter, e.g. `begin()`.
+    Furthermore, the interface has a lot of "specialization only" dddoc entries that describes the interface of the module's types.
+    These super-global functions have the property that the error will not be in the user location, where the `begin` function is called for example, but one layer deeper.
+ * Concepts are closer to interfaces in other languages.
+ * The iterator concept could be further subdivided as STL iterators are.
+
+== Ideas For Advanced Tutorials ==
+
+ * Search Algorithm: Regular expression + Index
+ * Implementing Your Own Online Finder
+ * File Converters
+ * Copy Over Some !BioPython Cookbook entries. http://biopython.org/DIST/docs/tutorial/Tutorial.html#htoc208
+
+== Code Formatting ==
+
+The following appears to be useful:
+
+{{{
+#!cpp
+
+// ==========================================================================
+//                 SeqAn - The Library for Sequence Analysis
+// ==========================================================================
+// Copyright (c) 2006-2010, Knut Reinert, FU Berlin
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of Knut Reinert or the FU Berlin nor the names of
+//       its contributors may be used to endorse or promote products derived
+//       from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL KNUT REINERT OR THE FU BERLIN BE LIABLE
+// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+// LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+// DAMAGE.
+//
+// ==========================================================================
+// Author: AUTHOR NAME <AUTHOR EMAIL>
+// ==========================================================================
+// SHORT COMMENT ON WHAT THIS FILE CONTAINS
+// ==========================================================================
+
+#ifndef SEQAN_PATH_TO_HEADER_
+#define SEQAN_PATH_TO_HEADER_
+
+namespace seqan {
+
+// ============================================================================
+// Forwards
+// ============================================================================
+
+// Any manual forwards required in this header.
+
+// ============================================================================
+// Tags, Classes, Enums
+// ============================================================================
+
+// Some tags here
+
+// ----------------------------------------------------------------------------
+// Class MyClass
+// ----------------------------------------------------------------------------
+
+/**
+.Class.MyClass
+..summary:A class with some specializations.
+..signature:MyClass<TSpec>
+..param.TSpec:Specialization
+ */
+
+template <typename TSpec>
+struct MyClass;
+
+// ----------------------------------------------------------------------------
+// Specialization Some Tag
+// ----------------------------------------------------------------------------
+
+struct SomeTag_;
+typedef Template<SomeTag_> SomeTag;
+
+/**
+.Spec.SomeTag
+..general:ClassMyClass
+..summary:Some Tag specialization.
+..signature:MyClass<SomeTag>
+ */
+
+template <>
+struct MyClass<SomeTag>
+{
+    // ...
+};
+
+// ----------------------------------------------------------------------------
+// Specialization Some Other Tag
+// ----------------------------------------------------------------------------
+
+struct SomeOtherTag_;
+typedef Template<SomeOtherTag_> SomeOtherTag;
+
+/**
+.Spec.SomeOtherTag
+..general:ClassMyClass
+..summary:Some Other Tag specialization.
+..signature:MyClass<SomeOtherTag>
+ */
+
+template <>
+struct MyClass<SomeOtherTag>
+{
+    // ...
+};
+
+// ============================================================================
+// Metafunctions
+// ============================================================================
+
+// NOTE that if there was only one class/specialization in this header, the
+// "star separator" (e.g. the one directly below) would not be here.
+
+// ****************************************************************************
+// For Specialization Some Tag
+// ****************************************************************************
+
+// ----------------------------------------------------------------------------
+// Metafunction Value
+// ----------------------------------------------------------------------------
+
+///.Metafunction.Value.param.T.type:Spec.SomeTag
+
+struct Value<MyClass<SomeTag> >
+{
+    typedef int Type;
+};
+
+// ****************************************************************************
+// For Specialization Some Other Tag
+// ****************************************************************************
+
+// ----------------------------------------------------------------------------
+// Metafunction Value
+// ----------------------------------------------------------------------------
+
+///.Metafunction.Value.param.T.type:Spec.SomeOtherTag
+
+struct Value<MyClass<SomeOtherTag> >
+{
+    typedef int Type;
+};
+
+// ============================================================================
+// Functions
+// ============================================================================
+
+// ****************************************************************************
+// For Specialization Some Tag
+// ****************************************************************************
+
+// ----------------------------------------------------------------------------
+// Function operator!=()
+// ----------------------------------------------------------------------------
+
+template <...>
+bool operator!=(...)
+{ ... }
+
+// ****************************************************************************
+// For Specialization Some Other Tag
+// ****************************************************************************
+
+// ----------------------------------------------------------------------------
+// Function operator!=()
+// ----------------------------------------------------------------------------
+
+template <...>
+bool operator!=(...)
+{ ... }
+
+}  // namespace seqan
+
+#ifndef  // #ifndef SEQAN_PATH_TO_HEADER_
+}}}

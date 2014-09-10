@@ -1,0 +1,306 @@
+'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
+= Genome Annotations =
+
+[[TOC()]]
+
+ Learning Objective :: 
+  You will learn how to work with annotations in SeqAn. After this tutorial, you will be able to write your own programs using annotations and analyzing them. You will be ready to continue with the [wiki:Tutorial/FragmentStore], e.g. if you want to combine your annotations with information from alignments. 
+ Difficulty :: Average
+ Duration :: 1h
+ Prerequisites :: [wiki:Tutorial/Sequences], [wiki:Tutorial/Iterators]
+
+This tutorial will present SeqAn's efficient and easy-to-use data structures to work with annotations. 
+They allow to annotate genome regions with features like 'gene', 'mRNA', 'exon', 'intron' and if required with custom features.
+We will give you an understanding of how to load annotations from a [http://genome.ucsc.edu/FAQ/FAQformat.html#format3 GFF]/[http://genome.ucsc.edu/FAQ/FAQformat.html#format4 GTF] file, store them in efficient data structures, as well as how to traverse and access these information.
+
+== AnnotationStore as Part of the FragmentStore ==
+
+This section will give you a short introduction to data structures relevant for working with annotations.  
+
+In SeqAn, annotations are stored in the so-called seqan:Memvar.FragmentStore#annotationStore, which is part of the seqan:Class.FragmentStore. 
+The annotationStore can only be used together with the !FragmentStore, because the latter stores additional information, e.g. the contig names or sequences.
+The !FragmentStore is a data structure specifically designed for read mapping, genome assembly or gene annotation. 
+
+The !FragmentStore can be seen as a database, where each table (called "store") is implemented as a seqan:Class.String. 
+Each row of the table corresponds to an element in the string.
+The position of each element in the string implicitly represents the Id of such element in the table. 
+All such strings are members of the class seqan:Class.FragmentStore, are always present and empty if unused. 
+For example, the member seqan:Memvar.FragmentStore#contigStore is a string of elements, each one containing among others a contig sequence. 
+
+For detailed information about the seqan:Class.FragmentStore read the [wiki:Tutorial/FragmentStore]. 
+
+Accordingly, the seqan:Memvar.FragmentStore#annotationStore is a seqan:Class.String, where each element represents one annotation.
+Each element holds the necessary information, e.g. beginPos, endPos, parentId etc., as data members. 
+
+{{{#!comment
+Like many other stores, the seqan:Memvar.FragmentStore#annotationStore has an associated name store, namely the seqan:Memvar.FragmentStore#annotationNameStore, to store its element names. The name store is a  StringSet that stores the element name at the position of its id.
+}}}
+
+== AnnotationStore ==
+
+In this section you will learn how to work with the seqan:Memvar.FragmentStore#annotationStore itself.
+
+Annotations are represented hierarchically by a tree having at least a root node.
+
+A typical annotation tree looks like this:
+
+|| [[Image(source:tags/seqan-1.4.0/docs2/images/AnnotationTree.png, 400px)]] ||
+|| '''Figure 4:''' Annotation tree example ||
+
+The following entity-relationship diagram shows the tables holding store annotations, their relationships and cardinalities:
+
+|| [[Image(source:tags/seqan-1.4.0/docs2/images/AnnotationStore.png, 600px)]] ||
+|| '''Figure 5:''' Stores involved in gene annotation ||
+
+The instantiation of an seqan:Memvar.FragmentStore#annotationStore happens implicitly with the instantiation of a seqan:Class.FragmentStore. 
+Therefore we simply type:
+
+{{{#!cpp
+FragmentStore<> store;
+}}}
+
+== Loading an Annotation File
+
+Before we deal with the actual annotation tree, we will first describe how you can easily load annotations from a [http://genome.ucsc.edu/FAQ/FAQformat.html#format3 GFF]/[http://genome.ucsc.edu/FAQ/FAQformat.html#format4 GTF] file into the seqan:Class.FragmentStore.
+
+An annotation file can be read from an open input stream with the function seqan:Function.read. 
+A tag specifies if we want to read a GFF, GTF or UCSC file.
+The following example shows how to read an GTF file:
+
+{{{#!cpp
+// Open input stream from the current directory
+std::ifstream file("example.gtf", std::ios_base::in | std::ios_base::binary);
+// Read annotations from the GTF file
+read(file, store, Gtf());    
+}}}
+
+The GFF-reader is also able to detect and read GTF files.
+The UCSC Genome Browser uses two seperate files, the {{{kownGene.txt}}} and {{{knownIsoforms.txt}}}.
+They must be read by two consecutive calls of seqan:Function.read (first {{{knownGene.txt}}} then {{{knownIsoforms.txt}}}).
+
+
+{{{#!InfoBox
+'''Information:''' An annotation can be loaded without loading the corresponding contigs.
+In that case empty contigs are created in the contigStore with names given in the annonation.
+A subsequent call of seqan:Function.loadContigs would load the sequences of these contigs, if they have the same identifier in the contig file.
+}}}
+
+
+== Traversing the Annotation Tree ==
+
+This section will illustrate how to use iterators to traverse the annotation tree.
+
+The annotation tree can be traversed and accessed with the [seqan:"Spec.AnnotationTree Iterator" AnnotationTree iterator].
+Again we use the metafunction seqan:Metafunction.Iterator to determine the appropriate iterator type for our container. 
+A new AnnotationTree iterator can be obtained by calling seqan:Function.begin with a reference to the seqan:Class.FragmentStore and the `AnnotationTree` tag:
+{{{#!cpp
+Iterator<FragmentStore<>, AnnotationTree<> >::Type it;
+it = begin(store, AnnotationTree<>());
+}}}
+
+The AnnotationTree iterator starts at the root node and can be moved to adjacent tree nodes with the functions seqan:"Function.AnnotationTree Iterator#goDown", seqan:"Function.AnnotationTree Iterator#goUp", and seqan:"Function.AnnotationTree Iterator#goRight".
+These functions return a boolean value that indicates whether the iterator could be moved.
+The functions seqan:Function.isLeaf, seqan:Function.isRoot, seqan:Function.isLastChild return the same boolean without moving the iterator.
+With seqan:"Function.AnnotationTree Iterator#goRoot" or seqan:Function.goTo the iterator can be moved to the root node or an arbitrary node given its annotationId.
+If the iterator should not be moved but a new iterator at an adjacent node is required, the functions seqan:"Function.AnnotationTree Iterator#nodeDown", seqan:"Function.AnnotationTree Iterator#nodeUp", seqan:"Function.AnnotationTree Iterator#nodeRight" can be used.
+
+{{{#!cpp
+// Move the iterator down to a leaf
+while (goDown(it));
+// Create a new iterator and if possible move it to the right sibling of the first iterator
+Iterator<FragmentStore<>, AnnotationTree<> >::Type it2;
+if (!isLastChild(it))
+    it2 = nodeRight(it);
+}}}
+
+The AnnotationTree iterator supports a preorder DFS traversal and therefore can also be used in typical begin-end loops with the functions seqan:Function.goBegin (== seqan:"Function.AnnotationTree Iterator#goRoot"), seqan:Function.goEnd, seqan:Function.goNext, seqan:Function.atBegin, seqan:Function.atEnd.
+During a preorder DFS, the descent into subtree can be skipped by seqan:"Function.AnnotationTree Iterator#goNextRight", or seqan:"Function.AnnotationTree Iterator#goNextUp" which proceeds with the next sibling or returns to the parent node and proceeds with the next node in preorder DFS.
+
+{{{#!cpp
+// Move the iterator back to the beginning
+goBegin(it);
+// Iterate over the nodes in preorder DFS while the end is not reached and 
+// output if the current node is a leaf
+for (goBegin(it); !atEnd(it); goNext(it))
+{
+    if (isLeaf(it))
+        std::cout << " current node is leaf" << std::endl; 
+}
+}}}
+
+{{{#!AssignmentBox
+=== Assignment 1
+ Type ::
+  Review
+ Objective ::
+  Copy the code below, which loads the annotations from a given GTF file into the FragmentStore and initializes an iterator on the AnnotationTree. Download the GTF file [http://trac.seqan.de/export/13263/trunk/core/demos/tutorial/annotation_store/assignment_annotations.gtf assignment_annotations.gtf], whose annotations build an AnnotationTree of the typical structure with gene, mRNA and exon level. Adjust the code to go down to the exon level and iteratate over all children of the first mRNA and count them. Print the result. \\
+  Click ''more...'' to see the given code. 
+{{{#!FoldOut
+----
+[[Include(source:tags/seqan-1.4.0/core/demos/tutorial/annotation_store/assignment_1_hint.cpp)]]
+}}}
+ Hints ::
+  In the given data the left-most leaf is a child of mRNA and has siblings.
+  You can use the function seqan:"Function.AnnotationTree Iterator#goRight" to traverse over all siblings.
+ Solution ::
+  Click ''more...'' to see one possible solution.
+{{{#!FoldOut
+----
+[[Include(source:tags/seqan-1.4.0/core/demos/tutorial/annotation_store/assignment_1_solution.cpp)]]
+}}}
+{{{#!ShellBox
+No. of children of the first mRNA: 9
+}}}
+}}}
+
+{{{#!AssignmentBox
+=== Assignment 2
+ Type ::
+  Review
+ Objective ::
+  Reuse the code and the GTF file from above. Instead of counting only the children of the first mRNA adjust the code to count the children for each given mRNA. Print the results.
+ Hints ::
+  After you reached the last child of the first mRNA you can use the functions seqan:Function.goNext and seqan:"Function.AnnotationTree Iterator#goDown" to traverse to the next leaf.
+ Solution ::
+  Click ''more...'' to see one possible solution.
+{{{#!FoldOut
+----
+[[Include(source:tags/seqan-1.4.0/core/demos/tutorial/annotation_store/assignment_2_solution.cpp)]]
+}}}
+{{{#!ShellBox
+9
+2
+2
+}}}
+}}}
+
+== Accessing the Annotation Tree ==
+
+Let us now have a closer look how to access the information stored in the different stores representing the annotation tree.
+
+To access or modify the node an iterator points at, the iterator returns the node's annotationId by the seqan:Function.value function (== operator*).
+With the annotationId the corresponding entry in the annotationStore could be modified manually or by using convenience functions.
+The function seqan:Function.getAnnotation returns a reference to the corresponding entry in the annotationStore.
+seqan:"Function.AnnotationTree Iterator#getName" and seqan:"Function.AnnotationTree Iterator#setName" can be used to retrieve or change the identifier of the annotation element.
+As some annotation file formats don't give every annotation a name, the function seqan:Function.getUniqueName returns the name if non-empty or generates one using the type and id. The name of the parent node in the tree can be determined with seqan:Function.getParentName.
+The name of the annotation type, e.g. 'mRNA' or 'exon', can be determined and modified with seqan:Function.getType and seqan:Function.setType.
+
+Assume we have loaded the file {{{example.gtf}}} with the following content to the seqan:Class.FragmentStore ''store'' and instantiated the iterator ''it'' of the corresponding annotation tree.
+{{{#!cpp
+chr1	MySource	exon	150	200	.	+	.	gene_id "381.000"; transcript_id "381.000.1";
+chr1	MySource	exon	300	401	.	+	.	gene_id "381.000"; transcript_id "381.000.1";
+chr1	MySource	CDS 	380	401	.	+	0	gene_id "381.000"; transcript_id "381.000.1";
+chr1	MySource	exon	160	210	.	+	.	gene_id "381.000"; transcript_id "381.000.2";
+}}}
+
+We now want to iterate to the first exon and output a few information:
+{{{#!cpp
+// Move the iterator to the begin of the annotation tree
+it = begin(store, AnnotationTree<>());
+// Go down to exon level
+while (goDown(it)) ;
+std::cout << "type: " <<  getType(it) << std::endl;
+std::cout << "id: " << value(it) << std::endl;
+std::cout << "begin position: " <<  getAnnotation(it).beginPos << std::endl;
+}}}
+
+For our example the output would be: 
+
+{{{#!ShellBox
+type: exon
+id: 3
+begin position: 149
+}}}
+
+An annotation can not only refer to a region of a contig but also contain additional information given as key-value pairs.
+The value of a key can be retrieved or set by seqan:Function.getValueByKey and seqan:Function.assignValueByKey.
+The values of a node can be cleared with seqan:Function.clearValues.
+
+A new node can be created as first child, last child, or right sibling of the current node with seqan:Function.createLeftChild, seqan:Function.createRightChild, or seqan:Function.createSibling.
+All three functions return an iterator to the newly created node.
+
+{{{#!cpp
+Iterator<FragmentStore<>, AnnotationTree<> >::Type it2;
+// Create a right sibling of the current node and return an iterator to this new node 
+it2 = createSibling(it);
+}}}
+
+The following tables summarizes the functions provided by the AnnotationTree iterator:
+
+||= Function =||= Description =||
+|| seqan:Function.getAnnotation, seqan:Function.value || Return annotation object/id of current node ||
+|| seqan:"Function.AnnotationTree Iterator#getName", seqan:"Function.AnnotationTree Iterator#setName", seqan:Function.getType, seqan:Function.setType || Access name or type of current annotation object ||
+|| seqan:Function.getParentName || Access parent name of current annotation object ||
+|| seqan:Function.clearValues, seqan:Function.getValueByKey, seqan:Function.assignValueByKey || Access associated values ||
+|| seqan:Function.goBegin, seqan:Function.goEnd, seqan:Function.atBegin, seqan:Function.atEnd || Go to or test for begin/end of DFS traversal ||
+|| seqan:Function.goNext, seqan:"Function.AnnotationTree Iterator#goNextRight", seqan:"Function.AnnotationTree Iterator#goNextUp" || go next, skip subtree or siblings during DFS traversal ||
+|| seqan:"Function.AnnotationTree Iterator#goRoot", seqan:"Function.AnnotationTree Iterator#goUp", seqan:"Function.AnnotationTree Iterator#goDown", seqan:"Function.AnnotationTree Iterator#goRight" || Navigate through annotation tree ||
+|| seqan:Function.createLeftChild, seqan:Function.createRightChild, seqan:Function.createSibling || Create new annotation nodes ||
+|| seqan:Function.isRoot, seqan:Function.isLeaf || Test for root/leaf node ||
+
+
+{{{#!AssignmentBox
+=== Assignment 3
+ Type ::
+  Application
+ Objective ::
+  Again use the given GTF file [http://trac.seqan.de/export/13263/trunk/core/demos/tutorial/annotation_store/assignment_annotations.gtf assignment_annotations.gtf] and create an iterator on the annotation tree. Now iterate to the first node of type "exon" and output the following features:\\
+  1) type \\
+  2) begin position \\
+  3) end position \\
+  4) its Id \\
+  5) the Id of its parent \\
+  6) the name of its parent \\
+ Solution ::
+  Click ''more...'' to see one possible solution.
+{{{#!FoldOut
+----
+[[Include(source:tags/seqan-1.4.0/core/demos/tutorial/annotation_store/assignment_3_solution.cpp)]]
+}}}
+{{{#!ShellBox
+  type: exon
+  begin position: 149
+  end position: 200
+  id: 3
+  parent id: 2
+  parent name: 381.000.1
+}}}
+}}}
+
+{{{#!AssignmentBox
+=== Assignment 4
+ Type ::
+  Transfer
+ Objective ::
+  Write a small statistic tool to analyse a given set of annotations. \\
+  1) Load the annotations given in the GTF file [http://trac.seqan.de/export/13263/trunk/core/demos/tutorial/annotation_store/assignment_annotations.gtf assignment_annotations.gtf]. \\
+  2) Output the average number of mRNAs for genes. \\
+  3) Output the average number of exons for mRNAs. \\
+  4) Additionally output the average exon length. \\
+  5) Test your program also on large data, e.g. the annotation of the mouse genome [raw-attachment:Mus_musculus.NCBIM37.61.gtf.zip:wiki:Tutorial/SimpleRnaSeq Mus_musculus.NCBIM37.61.gtf.zip] (don't forget to unzip first).
+ Solution ::
+  Click ''more...'' to see one possible solution.
+{{{#!FoldOut
+----
+[[Include(source:tags/seqan-1.4.0/core/demos/tutorial/annotation_store/assignment_4_solution.cpp)]]
+}}}
+{{{#!ShellBox
+Average number of mRNAs for genes: 1.5
+Average number of exons for mRNAs: 3
+Average length of exons: 95.5556
+}}}
+}}}
+
+== Write an Annotation File
+
+To write an annotation to an open output stream use the function seqan:Function.write and specify the file format with a tag `Gff()` or `Gtf()`.
+{{{#!cpp
+// Open output stream
+std::ofstream fileOut("example_out.gtf", std::ios_base::out | std::ios_base::binary);
+// Write annotations to GTF file
+write(fileOut, store, Gtf());
+}}} 
+
+== Submit a  Comment ==
+If you found a mistake, or have suggestions about an improvement of this page press:
+[/newticket?component=Documentation&description=Tutorial+Enhancement+for+page+http://trac.seqan.de/wiki/Tutorial/Template&type=enhancement submit your comment]

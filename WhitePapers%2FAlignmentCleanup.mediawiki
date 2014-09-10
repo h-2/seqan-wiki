@@ -1,0 +1,241 @@
+= Alignment Cleanup =
+[[TOC()]]
+
+|| '''THIS IS WORK IN PROGRESS''' ||
+
+This page describes the steps to be taken for cleaning up the alignment-related data structures and algorithms in SeqAn.
+This also includes a more complete and streamlined definition of the `Gaps<>` class and the `Align<>` class.
+This cleanup work excludes the seqan:Function.bandedAlignment function for seeds which should be fine the way it is.
+
+== Code Structure ==
+
+=== Current State ===
+
+ * Module ''align'' has the basic data structures, some algorithm implementations, some used, some unused.
+ * Module ''graph_align'' has efficient implementations for most algorithms.
+ * The alignment graph lives in ''refinement''.
+
+=== Future State ===
+
+ * Most stuff should go out of ''graph_align'' into ''align''.
+ * ''align'' should contain all alignment algorithms.
+ * The pairwise alignment algorithms should be implemented such that they can be specialized for alignment graphs in another module.
+ * The ''refinement'' module should become ''graph_align''. (?)
+ * The ''graph_align'' module should specialize the alignment algorithms for alignment graphs.
+ * The ''graph_msa'' module should contain the T-Coffee MSA implementation.
+ * The ''align_msa'' module should contain a wrapper of graph_msa such that normal `Align<>` objects can be used.
+
+== Gaps Class Hierarchy ==
+
+=== General ===
+
+`Gap<>` objects wrap sequence objects and store (1) possibly clipped and (2) gapped versions of the underlying sequence object.
+They are meant to represent rows of tabular global alignments or the part of locally collinear blocks for one location on a sequence.
+In the case of global alignments, no characters are clipped from the beginning or end, in the case of local alignments, only parts of the sequences can be used.
+
+=== Current State ===
+
+There are various possible ways to represent gapped sequences.
+Three are implemented in SeqAn:
+
+ * '''Array Gaps''' store alternating numbers of gaps and ungapped sequence characters in an array.
+ * '''Anchor Gaps''' store an array of pairs (sequence pos, gapped sequence pos) for each position after a gap.
+ * '''Sumlist Gaps''' store the gap information in a sumlist data structure.
+
+=== Issues ===
+
+ * Sumlist Gaps are used nowhere, they are probably (?) slower than the other data structures for real-world applications.
+ * Clipping is not consistent.
+ * Iterating is not consistent.
+ * Clipping is duplicative with `Segment<>` but needed to represent local alignments elegantly.
+
+=== Proposed Changes / Future State ===
+
+ * Keep clipping feature.
+ * All gaps should have the same interface and only differ in the internal implementation.
+ * Drop sumlist gaps for now, maybe add back later with implementation using modern succinct data structures, hopefully using as much as possible from a succinct data structure library.
+ * Make clipping the same everywhere.
+ * It should be possible to have trailing and leading gaps.
+ * Iterating over a `Gaps<>` object should iterate over the whole gapped sequence, it should start with the leading gap and stop after the last trailing gap.
+ * Function `isGap(gaps, i)` should return true for `i < 0` and `i >= length(gaps)`, i.e. there is an infinite number of gaps left and right of the (possibly clipped) sequence.
+ * The alignment row should be a segment (view) of an infinite sequence of gaps interspersed by characters
+ * It should be possible to change  the begin and end position of this view
+
+== Class Align ==
+
+=== General ===
+
+The `Align<>` class represents collinear multi sequence alignments of the same type.
+`Align<>` objects have an array (`String<>`) of `Gaps<>` objects.
+The `AlignCols<>` class allows column-wise access to `Align<>` objects.
+
+=== Issues ===
+
+The main issue lies in the pervasive use of `Align<>` but that it only supports homogenous sequence types.
+The interface of alignment functions should be changed, `Align<>` can most probably stay the way it is.
+
+== Spec Alignment Graph ==
+
+=== General ===
+
+Alignment graphs are a versatile representation for collinear multiple sequence alignments.
+
+=== Current State ===
+
+Most algorithms are implemented on `Graph<Align<> >` and not the `Align<>` class.
+
+=== Proposed Changes / Future State ===
+
+The class can most probably stay the way it is.
+Code should probably be moved around a bit (see above).
+
+== Pairwise Alignment Algorithms (Theory) ==
+
+=== General ===
+
+There are three major "dimensions" for DP based alignment algorithms.
+
+ * '''banded vs. unbanded''' - Do we know the rough position of the best traceback or not?
+ * '''global vs. local''' - Are the whole sequences to be aligned or are we looking for local similarities.
+ * '''score types''' - Main classes supported in SeqAn: (1) more or less free match/mismatch scores with linear gap scores, (2) ibid. with affine gap scores, (3) edit distance.
+
+=== Global Alignments ===
+
+The following are in SeqAn right now:
+
+ * '''Needleman-Wunsch''' - Arbitrary match/mismatch scores, linear gap scores. Both banded and unbanded versions are implemented.
+ * '''Gotoh''' - Arbitrary match/mismatch scores, affine gap scores. Both banded and unbanded versions are implemented.
+ * '''Hirschberg''' - Linear space computation of global edit distance, also implemented in comination with Myers bit-parallel algorithm as '''MyersHirschberg''' (?).
+ * '''Myers''' - Myers bit-parallel algorithm, only computes edit distance.
+  * manuel: Can this go away, it is probably only confusing for users.
+
+=== Local Alignments ===
+
+The following are implemented in a banded an unbanded version.
+
+ * '''Swith-Waterman''' - Flexible match (>=0?)/mismatch (<0?) scores, finds the best local alignment.
+ * '''Waterman-Eggert''' - Similar to SW but can find all local alignments.
+
+== Pairwise Alignment Algorithms (Interface) ==
+
+=== Current State ===
+
+ * Inconsistent interface.
+ * Impossible to align `Dna` to `Dna5` or `Dna5` to `Dna5Q` without copying.
+ * `AlignConfig<>` object hard to use.
+
+=== Proposed Future State ===
+
+The alignment algorithms should work on four types of inputs:
+
+ * One `Align<>` object.
+ * One alignment graph object.
+ * Two `Gaps<>` object that can have different types.
+ * Two sequences, output is a `String<>` of fragments, more of internal usage for MSA.
+
+Replace `AlignConfig<>` object with the following:
+
+{{{
+#!cpp
+struct SemiGlobal_;
+typedef Tag<SemiGlobal_> SemiGlobal;
+
+struct Overlap_;
+typedef Tag<Overlap_> Overlap;
+
+struct AlignConfig {
+  bool seq0BeginFree, seq0EndFree, seq1BeginFree, seq1EndFree;
+
+  AlignConfig() : seq0BeginFree(false), seq0EndFree(false), seq1BeginFree(false), seq1EndFree(false) {}
+  AlignConfig(SemiGlobal const &) : seq0BeginFree(false), seq0EndFree(false), seq1BeginFree(true), seq1EndFree(true) {}
+  AlignConfig(Overlap const &) : seq0BeginFree(false), seq0EndFree(true), seq1BeginFree(true), seq1EndFree(false) {}
+};
+}}}
+
+=== Future Global Alignment Interface ===
+
+{{{
+#!cpp
+int globalAlignment(alignObject, score, alignConfig, NeedlemanWunsch|Gotoh);
+int globalAlignment(alignObject, score, alignConfig, lowDiag, upDiag, BandedNeedlemanWunsch|BandedGotoh);
+
+int globalAlignment(alignmentGraph, score, alignConfig, NeedlemanWunsch|Gotoh);
+int globalAlignment(alignmentGraph, score, alignConfig, lowDiag, upDiag, BandedNeedlemanWunsch|BandedGotoh);
+
+int globalAlignment(gaps0, gaps1, score, alignConfig, NeedlemanWunsch|Gotoh);
+int globalAlignment(gaps0, gaps1, score, alignConfig, lowDiag, upDiag, BandedNeedlemanWunsch|BandedGotoh);
+
+// more or less internal:
+int globalAlignment(fragmentString, seq0, seq1, score, alignConfig, NeedlemanWunsch|Gotoh);
+int globalAlignment(fragmentString, seq0, seq1, score, alignConfig, lowDiag, upDiag, BandedNeedlemanWunsch|BandedGotoh);
+}}}
+
+=== Future Local Alignment Interface ===
+
+We need one interface to find the best local alignment:
+
+{{{
+#!cpp
+int localAlignment(alignObject, score, alignConfig, SmithWaterman);
+int localAlignment(alignObject, score, alignConfig, lowDiag, upDiag, BandedSmithWaterman);
+
+int localAlignment(alignmentGraph, score, alignConfig, SmithWaterman);
+int localAlignment(alignmentGraph, score, alignConfig, lowDiag, upDiag, BandedSmithWaterman);
+
+int localAlignment(gaps0, gaps1, score, alignConfig, SmithWaterman);
+int localAlignment(gaps0, gaps1, score, alignConfig, lowDiag, upDiag, BandedSmithWaterman);
+
+// more or less internal:
+int localAlignment(fragmentString, seq0, seq1, score, alignConfig, SmithWaterman);
+int localAlignment(fragmentString, seq0, seq1, score, alignConfig, lowDiag, upDiag, BandedSmithWaterman);
+}}}
+
+We need another interface to find all local alignments in one batch (Waterman-Eggert).
+The only thing that makes sense here is to collect all matches in a string of fragments.
+
+{{{
+#!cpp
+// more or less internal:
+int localAlignment(fragmentString, seq0, seq1, score, alignConfig, WatermanEggert);
+int localAlignment(fragmentString, seq0, seq1, score, alignConfig, lowDiag, upDiag, BandedWatermanEggert);
+}}}
+
+For enumerating the local alingments on-by-one we need something like the current `LocalAlignmentFinder`.
+Since the name `Finder` is already taken in SeqAn, we could introduce this as `WatermanEggertState`.
+It could also store the cutoff value.
+
+{{{
+#!cpp
+int localAlignment(alignObject, weState, score, alignConfig, SmithWaterman);
+int localAlignment(alignObject, weState, score, alignConfig, lowDiag, upDiag, BandedSmithWaterman);
+
+int localAlignment(alignmentGraph, weState, score, alignConfig, SmithWaterman);
+int localAlignment(alignmentGraph, weState, score, alignConfig, lowDiag, upDiag, BandedSmithWaterman);
+
+int localAlignment(gaps0, weState, gaps1, score, alignConfig, SmithWaterman);
+int localAlignment(gaps0, weState, gaps1, score, alignConfig, lowDiag, upDiag, BandedSmithWaterman);
+
+// more or less internal:
+int localAlignment(fragmentString, weState, seq0, seq1, score, alignConfig, SmithWaterman);
+int localAlignment(fragmentString, weState, seq0, seq1, score, alignConfig, lowDiag, upDiag, BandedSmithWaterman);
+}}}
+
+== Multiple Alignments (Interface) ==
+
+'''TODO: Extend me! '''
+
+=== Proposed Future State ===
+
+This is pretty straightforward:
+
+ * Give an `Align<>` object or alignment graph.
+ * Give a score.
+ * Optionally, give a configuration object that is more or less what T-Coffee exposes to the outside.
+
+{{{
+#!cpp
+msaAlignment(alignObject, score);
+msaAlignment(alignObject, score, options);
+msaAlignment(alignmentGraph, score);
+msaAlignment(alignmentGraph, score, options);
+}}}

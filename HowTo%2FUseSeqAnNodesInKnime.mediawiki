@@ -1,0 +1,79 @@
+= Creating workflows with KNIME =
+[http://www.knime.org KNIME] is a well established data analysis framework which supports the generation of workflows for data analysis. In the following, we describe how to use SeqAn applications in KNIME.
+
+== Install SeqAn in KNIME ==
+The Installation of the SeqAn NGS Toolbox in KNIME is very easy. Download the latest KNIME release from the KNIME website. In KNIME click on Help -> Install new Software.
+[[br]]
+[[br]]
+
+[[Image(install-knime-1.png, 471px)]]
+[[br]]
+[[br]]
+
+In the opening dialog choose “Add…”.
+[[Image(install-knime-2.png, 728px)]]
+[[br]]
+
+In the opening dialog fill in the following Information:
+ Name::
+    KNIME Nightly Unstable[[br]]
+ Location::
+   http://tech.knime.org/update/community-contributions/nightly/
+[[br]]
+
+[[Image(install-knime-3.png, 624px)]]
+[[br]]
+[[br]]
+
+After pressing OK, KNIME will show you all the contents of the added Update Site, containing also the SeqAn nodes.
+
+[[Image(install-knime-4.png, 671px)]]
+[[br]]
+[[br]]
+
+Select the SeqAn NGS Toolbox and click Next. Follow the instructions. After a restart of KNIME the SeqAn nodes will be available under “Community Nodes”.
+
+
+== Add your own application to KNIME ==
+
+Using the CTD and a node generator program, all SeqAn applications that use the [dox:ArgumentParser ArgumentParser] can be made available to run in KNIME. This is done automatically and nightly for all applications in the master branch on [https://github.com/seqan/seqan/tree/master github] that are listed in the CMAKE variable `SEQAN_CTD_EXECUTABLES`.
+The auto-generated KNIME nodes of these apps are then uploaded to the KNIME community node server and can easily be used by all KNIME users.
+
+The following two steps are required to make your application KNIME-ready.
+
+=== Adapt your applications to use the argument parser ===
+Follow the [wiki:Tutorial/ParsingCommandLineArguments ArgumentParser tutorial] and adapt your application to use only the [dox:ArgumentParser ArgumentParser] to parse command line arguments.
+Especially, take care to:
+   1. Declare your input and output file names as such via `ArgParseArgument::INPUTFILE` and `ArgParseArgument::OUTPUTFILE`.
+   1. Detect the file format from the file extension (and not from a dedicated file format option). This can be done, for example, with [dox:guessFormatFromFilename guessFormatFromFilename()] on an [dox:AutoSeqFormat AutoSeqFormat] object to detect a particular sequence format (e.g. Fasta) in the set of formats predefined by [dox:SeqFormats SeqFormats]
+   1. For input/output files define a list of possible extensions via [dox:ArgumentParser#setValidValues setValidValues()] (e.g. "fa fasta"). This list of possible extensions can be generated with [dox:ArgumentParser#getFileFormatExtensions getFileFormatExtensions()] for a [dox:TagSelector TagSelector] of predefined file formats (e.g. AutoSeqFormat).
+   1. Avoid mutual exclusive options or other constraints that cannot be not represented by the ArgumentParser, simply ignore one of them (depending on a behavioral option). See the ArgumentParser tutorial if you need to define a numerical interval of possible values or a finite set of argument options.
+   1. Give default values.
+
+=== Register your application to be considered by the node generator ===
+
+Add the following section to the `CMakeLists.txt` file in your application folder (replace `razers` by your executable name):
+
+{{{
+
+
+# ----------------------------------------------------------------------------
+# Setup Common Tool Description for Generic Workflow Nodes
+# ----------------------------------------------------------------------------
+
+# Include executable razers in CTD structure.
+set (SEQAN_CTD_EXECUTABLES ${SEQAN_CTD_EXECUTABLES} razers CACHE INTERNAL "")
+
+
+}}}
+
+
+== Use existing and contribute new workflows ==
+
+With the steps described above you will be able to set up your own workflows in KNIME. If you want to contribute a workflow to the SeqAn community or use workflows from others you can do that on:
+
+https://github.com/seqan/knime_seqan_workflows
+
+To contribute your own workflow, simply clone the workflow git repository into your own github repository and add a new folder `WORKFLOWNAME_workflow`. In KNIME export your workflow without the data files as a .zip file into that folder. Provide a README, a screenshot and some examples as well. Just have a look into existing workflow folders to get a notion.
+
+After everything is ready, add and commit the new folder into your github repository and make a github pull request to the original workflow repository (https://github.com/seqan/knime_seqan_workflows) and - voila -  it will be shared with the community.

@@ -1,0 +1,32 @@
+= Fixing Gaps in Seqan 2.0 =
+
+== Current Status ==
+
+There are various problems with the `Gaps` class and its specializations.
+
+ * `begin()` does not work with leading gaps
+ * Clipping of alignments is broken, e.g. see wiki:HowTo/ClipAlignments
+ * `SumlistGaps` is more or less just a theoretical experiment, it should go away. In the future, something based on the [http://www.uni-ulm.de/en/in/institute-of-theoretical-computer-science/research/sdsl.html SDSL] could be added back if it proves to be faster in important cases.
+ * The constructors should be changed somewhat such that that interface is coherent.
+
+The basic interface of the `Gaps` class is quite allright, though, the problem lies in thoroughly defining the semantics.
+
+== Plans ==
+
+ * The current interface definitions and semantics should be kept where reasonable, so changes to code using `Gaps` objects are minimal.
+ * All changes should be driven by the following statement:
+
+    Gaps objects represent ''gapped sequences'' of the whole or selected parts of underlying sequences.
+    To the outside, they fulfill the interface of the selected sequence part including gaps.
+    All operations use the coordinate system relative to the currently selected part.
+
+== Actionable Steps ==
+
+Broken down, this comes to the following steps:
+
+ * create a new align module in a sandbox and temporarily remove the align module from core (`rm`, '''not''' `svn rm`, do not commit!)
+ * copy over the `Gaps` class to ''gaps_base.h'', define the class interface there, check that it looks good using `./make.sh ../sandbox/$username/include/seqan/align` in `docs`.
+ * create the `Gaps` class and two specializations `ArrayGaps` and `AnchorGaps`, copy over the implementations from the old module where possible
+ * at the same time, create tests and make sure the implementations work correctly
+ * do the same for `GapsIter`
+ * move the new `Gaps` and `GapsIter` implementations back to core, adjust any broken code.

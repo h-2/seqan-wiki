@@ -1,0 +1,624 @@
+= Concepts In SeqAn =
+[[TOC()]]
+
+== Open Points ==
+
+ * This documents default implementations more or less the way they are right now (except for the `*impl()` stuff?). Do we want it this way?
+ * Usage of a, b, c, t, rc might need some work and be inconsinstent currently.
+ * Rename `eraseFront`/`eraseBack` to `popFront`/`popBack`?
+ * Remove elements-are-sequences feature and size constructors would work.
+ * We want to emulate the move semantics for containers from the new standard.
+
+== Implementing Concepts ==
+
+There are multiple ways to implement concepts and concept checking:
+   1. The BCCL (Boost Concept Checking Library)
+      * pro: well tested (since 2000)
+      * pro: feature rich
+      * pro: the STL also uses BCCL for concept checking, [http://www.sgi.com/tech/stl/table_of_contents.html see here]
+      * pro: it mimics the C++1x concepts (moving to C++1x concepts should be easy)
+      * contra: core dependency to an external library
+   1. By hand using traits, enable_if constructs and static_assert (C++11 Standard)
+      * pro: static_assert allows nice and readable error messages
+      * contra: we don't profit from future BCCL updates
+   1. The C++11 standard itself doesn't not yet include concept checking as it is proposed [http://www.generic-programming.org/software/ConceptGCC/ here], but maybe in the future.
+
+We decide to use the BCCL and maybe incorporate static_assert if this can make error messages more readable.
+In general concept checking requires concepts and archetypes.
+Definitions (partially taken from [http://www.boost.org/community/generic_programming.html#concept here]):
+ Concept::
+    A set of requirements consisting of valid expressions, associated types, invariants, and complexity guarantees. A concept can extend the requirements of another concept, which is called refinement. Requirements can be divided in '''syntax''' and '''semantic''' requirements. Whereas syntax requirement (valid expressions, associated types) can be checked at compile time, semantic requirements (invariants) can only be checked at run-time or can't be checked automatically (complexity guarantees)
+      * '''Valid Expressions''' (syntax) are C++ expressions which must compile successfully for the objects involved in the expression to be considered models of the concept.
+      * '''Associated Types''' (syntax) are types that are related to the modeling type in that they participate in one or more of the valid expressions. Typically associated types can be accessed either through typedefs nested within a class definition for the modeling type, or they are accessed through a traits class.
+      * '''Invariants''' (semantic) are run-time characteristics of the objects that must always be true, that is, the functions involving the objects must preserve these characteristics. The invariants often take the form of pre-conditions and post-conditions.
+      * '''Complexity Guarantees''' (semantic) are maximum limits on how long the execution of one of the valid expressions will take, or how much of various resources its computation will use.
+ Model::
+    A type that satisfies the requirements is said to model the concept.
+ Concept map::
+    A class can fulfill multiple concepts. A concept map maps classes to the fulfilled concepts
+ Archetype::
+    An archetype is a minimal model for a certain concept. It contains empty or dummy implementations of only the functions that are defined in the associated concept.
+    Archetypes helps library developers to check whether a generic function that require certain concepts only use the functions defined in these concepts.
+    If the generic functions calls a function that is not part of the required concepts, the compilation will fail as the archetype doesn't define it.
+    ''It must be taken care to instantiate exactly the concept. If functions are called that are not part of the concept, the concept check may succeed for some but not for all classes implementing the concept.
+    On the other hand, if too few requirements are tested, classes with incomplete interfaces could erroneously pass the concept check.''
+
+=== How the BCCL works ===
+The BCCL only checks syntax requirements. Archetypes must (in contrast to C++11) be defined by hand. The BCCL contains some basic archetypes like "default constructible". More complex concepts must be defined by hand as follows:
+
+== Defining Concepts ==
+{{{
+#!cpp
+#include <boost/utility/enable_if.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/type_traits.hpp>
+#include <boost/concept_check.hpp>
+
+// minimal requirements for the value type of a container
+template <typename TValue>
+struct ContainerValueConcept :
+    boost::Assignable<TValue>,
+    boost::DefaultConstructible<TValue>,
+    boost::CopyConstructible<TValue> {};
+}}}
+
+As in the example above, a concept can refine multiple concepts. In Boost this can be done by inheriting them. We now want to define a mutable container concept:
+
+{{{
+#!cpp
+// mutable container concept
+template <typename TContainer>
+struct ContainerConcept :
+    boost::Assignable<TContainer>,
+    boost::DefaultConstructible<TContainer>,
+    boost::CopyConstructible<TContainer>
+{
+    typedef typename Value<TContainer>::Type                TValue;
+    typedef typename Size<TContainer>::Type                 TSize;
+    typedef typename Position<TContainer>::Type             TPosition;
+    typedef typename Difference<TContainer>::Type           TDifference;
+    typedef typename Iterator<TContainer, Standard>::Type   TIterator;
+
+    TContainer  c, c2;
+    TValue      val;
+    TSize       size;
+    TPosition   pos;
+    TDifference diff;
+    TIterator   iter;
+    
+    BOOST_CONCEPT_ASSERT((ContainerValueConcept<TValue>));
+    BOOST_CONCEPT_ASSERT((boost::SignedInteger<TDifference>));
+    BOOST_CONCEPT_ASSERT((boost::UnsignedInteger<TSize>));
+
+    BOOST_CONCEPT_USAGE(ContainerConcept)
+    {
+        // test return of const values
+        sameType(getValue(c, 0), val);
+
+        // test whether returned references/proxies
+        // can be assigned to val and vice versa
+        val = value(c, 0);
+        value(c, 0) = val;
+        moveValue(c, pos, val);
+
+        // sameType(value(str, 0), val); would not work
+        // for Strings returning proxies, e.g. String<.., Packed>
+
+        // test iterators
+        sameType(iter, begin(c, Standard()));
+        sameType(iter, end(c, Standard()));
+        sameType(diff, end(c, Standard()) - begin(c, Standard()));
+        
+        // length and empty
+        sameType(size, length(c));
+        sameType(true, empty(c));
+        
+        // TODO: infix/suffix/prefix 
+        // maybe we need a SequenceConcept between Container and String
+        
+        // swap containers
+//      swap(c, c2);          // swap is not yet supported by every string
+    }
+};
+}}}
+
+BOOST_CONCEPT_ASSERT is used to check for fulfilled concepts of associated types. Valid expression should be checked in the function BOOST_CONCEPT_USAGE(..). The function is compiled but never called, thus all included expressions can only check syntax requirements, e.g. matching return types or valid expression. All variable should be members of the concept, not local variables ([http://www.boost.org/doc/libs/1_47_0/libs/concept_check/creating_concepts.htm why that]).
+We now want to define a concept for SeqAn strings as a refinement of the mutable container concept:
+
+{{{
+#!cpp
+// a concept for strings
+template <typename TString>
+struct StringConcept :
+    ContainerConcept<TString>
+{
+    typedef typename Value<TString>::Type       TValue;
+    typedef typename Size<TString>::Type        TSize;
+    typedef typename Position<TString>::Type    TPosition;
+    typedef typename Difference<TString>::Type  TDifference;
+    typedef typename Iterator<TString>::Type    TIterator;
+
+    TString     str, str2;
+    TValue      val;
+    TSize       size;
+    TPosition   pos;
+    TDifference diff;
+    TIterator   iter;
+    
+    BOOST_CONCEPT_USAGE(StringConcept)
+    {
+        // append
+        append(str, str2);
+        appendValue(str, val);
+
+        // assign
+        assign(str, str2);
+        
+        // erase
+        erase(str, pos);
+        erase(str, pos, pos);
+        
+        // replace
+        replace(str, pos, pos, str2);
+
+        // front/back
+        val = front(str);
+        val = back(str);
+        
+        // resize/reserve/clear
+        sameType(resize(str, size), size);
+        sameType(resize(str, size, val), size);
+        sameType(reserve(str, size), size);
+        clear(str);
+
+        // capacity
+        sameType(size, capacity(str));
+    }
+};
+}}}
+
+To approve that every string in SeqAn fulfills the String concept we need to make concept assertions in an inline or template function (should only be compiled, not instantiated):
+
+{{{
+#!cpp
+inline void testAlphabetConcepts()
+{
+	BOOST_CONCEPT_ASSERT((ContainerValueConcept<bool>));
+	BOOST_CONCEPT_ASSERT((ContainerValueConcept<char>));
+	BOOST_CONCEPT_ASSERT((ContainerValueConcept<unsigned>));
+	BOOST_CONCEPT_ASSERT((ContainerValueConcept<int>));
+	BOOST_CONCEPT_ASSERT((ContainerValueConcept<double>));
+	BOOST_CONCEPT_ASSERT((ContainerValueConcept<Pair<int, double> >));
+	BOOST_CONCEPT_ASSERT((ContainerValueConcept<Dna>));
+	BOOST_CONCEPT_ASSERT((ContainerValueConcept<Dna5>));
+	BOOST_CONCEPT_ASSERT((ContainerValueConcept<AminoAcid>));
+	BOOST_CONCEPT_ASSERT((ContainerValueConcept<Ascii>));
+}
+
+inline void testStringConcepts()
+{
+    BOOST_CONCEPT_ASSERT((StringConcept<String<char, Alloc<> > >));
+    BOOST_CONCEPT_ASSERT((StringConcept<String<Pair<int, double>, Alloc<> > >));
+//  BOOST_CONCEPT_ASSERT((StringConcept<String<bool, Packed<> > >));  // doesn't compile yet
+//  BOOST_CONCEPT_ASSERT((StringConcept<String<Dna5, Packed<> > >));
+    BOOST_CONCEPT_ASSERT((StringConcept<String<int, Array<50> > >));
+}
+}}}
+
+== Checking concepts ==
+
+Concepts should be checked in every generic function. The checked concepts should:
+   1. be as minimal as possible (don't use String concept, if you only need container functions) and should 
+   1. be as complete as possible, i.e. they should cover all called functions, used associate types and all assumed invariants.
+
+For example, we want to write a generic function to reverse the characters of a string. That could be done as follows:
+
+{{{
+#!cpp
+template <typename TString>
+inline void
+reverse(TString & str) 
+{
+    BOOST_CONCEPT_ASSERT((StringConcept<TString>));
+
+    typedef typename Iterator<TString, Standard>::Type TIter;
+    TIter it1 = begin(str, Standard());
+    TIter it2 = it1 + (length(str) - 1);
+    TIter itMid = it1 + length(str) / 2;
+
+    for(; it1 != itMid; ++it1, --it2)
+        swap(*it1, *it2);
+}
+}}}
+
+At first, all required concepts should be checked. This can be done with BOOST_CONCEPT_ASSERT((..)). The function will work for every string in Seqan. However, it can not only be applied to Strings, but containers (more precisely STL reverse containers) in general as all required functions are provided by the container concept (however, we omitted to put constraints on the container iterator). Thus, the more appropriate way to define reverse would be:
+
+{{{
+#!cpp
+template <typename TContainer>
+inline void
+reverse(TContainer & cont) 
+{
+    BOOST_CONCEPT_ASSERT((ContainerConcept<TContainer>));
+
+    typedef typename Iterator<TContainer, Standard>::Type TIter;    
+    TIter it1 = begin(cont, Standard());
+    TIter it2 = it1 + (length(cont) - 1);
+    TIter itMid = it1 + length(cont) / 2;
+
+    for(; it1 != itMid; ++it1, --it2)
+        swap(*it1, *it2);
+}
+}}}
+
+== Bind the Visibility of Functions to Concepts ==
+
+If we, for example, want to define a length function that can only be applied to types of a certain concept, we could either:
+   1. write a generic length function that checks for the concept container
+   1. write a generic length function that is only available for containers
+
+The latter variant moves errors from the called function to the callee an makes error messages more readable. To realize that approach, we need the enable_if construct of the Boost Utility Library and a boolean meta-function that determines whether a certain type is of the concept container. The latter can be done as follows:
+
+{{{
+#!cpp
+template <typename T>
+struct IsContainer : False {};
+
+template <typename TValue, typename TSpec>
+struct IsContainer< String<TValue, TSpec> > : True {};
+}}}
+
+The meta-function IsContainer inherits the struct True for Strings (must be specialized also for any other container class) and False in the general case. It is necessary for the enable_if construct, that the meta-function defines a boolean enum member "value". We can now use enable_if to make the visibility of our myLength function dependent on the result of the IsContainer meta-function:
+
+{{{
+#!cpp
+template <typename TContainer>
+typename boost::enable_if<
+    IsContainer<TContainer>, 
+    typename Size<TContainer>::Type /* return type */ >::type
+myLength(TContainer & cont) 
+{
+    BOOST_CONCEPT_ASSERT((ContainerConcept<TContainer>));
+    return end(cont) - begin(cont);
+}
+}}}
+
+== Basic Concepts ==
+
+These concepts are generic and apply to all types.
+They are citations of the Tables 30-38 of the [http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3092.pdf C++11 Standard Draft N3092] (p479f).
+
+ * `T` is an object or reference type,
+ * `a`, `b`, and `c` are values of type (possibly `const`) `T`,
+ * `s` and `t` are modifiable lvalues of type `T`.
+ * `u` denotes an identifier,
+ * `rv` is an rvalue of type `T`,
+ * `v` is an lvalue of type (possibly `const`) `T` or an rvalue of type `const T`.
+ * `x` is the value of a container of type `TValue`.
+
+=== Default Constructible (STL) ===
+
+|| '''Expression''' || '''Post-condition''' ||
+|| `T t;` || object `t` is default-initialized ||
+|| `T u{};` || object `u` is default-initialized ||
+|| `T()`, `T{}` || a temporary object of type `T` is value-initialized ||
+
+=== Move Constructible (STL) ===
+
+|| '''Expression''' || '''Post-condition''' ||
+|| `T u(rv);` || `u` is equivalent to the value of `rv` before the construction. ||
+|| `T(rv);` || `T(rv)` is equivalent to the value of `rv` before the construction. ||
+
+Note: `rv` remains a valid object. Its state is unspecified.
+
+=== Copy Assignable (STL) ===
+
+|| '''Expression''' || '''Return Type''' || '''Return Value''' || '''Post-condition''' ||
+|| `t = v` || `T&` || `t` || `t` is equivalent to `v`, the value of `v` is unchanged. ||
+
+SeqAn provides the function `assign()` which is the default implementation for `operator=()`.
+
+|| '''Expression''' || '''Return Type''' || '''Return Value''' || '''Post-condition''' ||
+|| `assign(t, v)` || `T&` || `t` || `t` is equivalent to `v`, the value of `v` is unchanged. ||
+
+=== Move Assignable (STL) ===
+
+|| '''Expression''' || '''Return Type''' || '''Return Value''' || '''Post-condition''' ||
+|| `t = rv` || `T&` || `t` || `t` is equivalent to `rv` ||
+
+Note: `rv` remains a valid object. Its state is unspecified.
+
+=== Equality Comparable (STL) ===
+
+|| '''Expression''' || '''Return type''' || '''Post-condition''' ||
+|| `a == b` || convertible to `bool` || `==` is an equivalence relation ||
+
+=== LessThan Comparable (STL) ===
+
+|| '''Expression''' || '''Return type''' || '''Post-condition''' ||
+|| `a < b` || convertible to `bool` || `<` is a strict weak ordering ||
+
+=== Destructible (STL) ===
+
+|| '''Expression''' || '''Post-condition''' ||
+|| `u.~T()` || All resources owned by `u` are reclaimed, no exception is propagated. ||
+
+== Alphabet-Related Concepts ==
+
+=== LessThan Comparable With Infimum/Supremum ===
+
+Refines concpet ''LessThan Comparable''.
+LessThan Comparable types have infimum and supremum values, in this case required to be `<` and `>` than the smallest and largest value.
+To get them, SeqAn provides the following functions:
+
+|| '''Expression''' || '''Description''' || '''Default Implementation''' ||
+|| `SupremumValue<T>::VALUE` || Returns value that is `>` than all other values of `T` || n/a ||
+|| `supremumValue<T>()` || `SupremumValue<T>::VALUE` as a function || Redirect to `SupremumValue<T>::VALUE` ||
+|| `InfimumValue<T>::VALUE` || Returns value that is `<` than all other values of `T` || n/a ||
+|| `infimumValue<T>()` || `InfimumValue<T>::VALUE` as a function || Redirect to `InfimumValue<T>::VALUE` ||
+
+These concepts apply for "atomic" types that are usually as elements in `seqan::String` or `std::vector` objects, such as `int` but also `seqan::Dna`.
+
+=== Finite ===
+
+For finite types, the set of possible values is, well, finite.
+The alphabet size is `M`.
+Each alphabet element is mapped to the contiguous range `0..M-1`.
+Note that the alphabet's elements do not have to be comparable themselves, though.
+
+|| '''Expression''' || '''Description''' || '''Default Implementation''' ||
+|| `ValueSize<T>::VALUE` || The number of different values for `T`. || n/a ||
+|| `valueSize<T>()` || `ValueSize<T>::VALUE` as a function. || Redirect to `ValueSize<T>::VALUE` ||
+|| `ordValue(a)` || Returns ordinal value, typed `unsigned` || n/a ||
+|| `T x(i)` || Construct variable of type T with value of `unsigned i` || n/a ||
+|| `T(i)` || Construct temporary of type T with value of `unsigned i` || n/a ||
+
+Note that limiting such types to the range of `unsigned int` is not a big problem
+
+=== Finite LessThan Comparable ===
+
+Refines concepts ''LessThan Comparable'' and ''Finite''.
+
+|| '''Expression''' || '''Description''' || '''Default Implementation''' ||
+|| `MinimumValue<T>::VALUE` || Returns value that is `>` than all other values of `T` || n/a ||
+|| `minimumValue<T>()` || `MinimumValue<T>::VALUE` as a function || Redirect to `MinimumValue<T>::VALUE`. ||
+|| `MaximumValue<T>::VALUE` || Returns value that is `<` than all other values of `T` || n/a ||
+|| `maximumValue<T>()` || `MaximumValue<T>::VALUE` as a function || Redirect to `MaximumValue<T>::VALUE`. ||
+
+=== Alphabet with Gaps ===
+
+Contains a gap character than must be a value of the alphabet.
+NB: The class `ModifiedAlphabet` can extend alphabets, for example.
+
+|| '''Expression''' || '''Description''' || '''Default Implementation''' ||
+|| `GapValue<T>::VALUE` || Returns the gap value. || n/a ||
+|| `gapValue<T>()` || `GapValue<T>::VALUE` as a function || Redirect to `GapValue<T>::VALUE`. ||
+
+=== Alphabet with Unknown Value ===
+
+Contains a gap character than must be a value of the alphabet.
+NB: The class `ModifiedAlphabet` can extend alphabets, for example.
+
+|| '''Expression''' || '''Description''' || '''Default Implementation''' ||
+|| `UnknownValue<T>::VALUE` || Returns the value for "unknown". || n/a ||
+|| `unknownValue<T>()` || `UnknownValue<T>::VALUE` as a function. || Redirect to `UnknownValue<T>::VALUE`. ||
+
+=== Alphabet with Qualities ===
+
+An alphabet that stores qualities for its elements besides their alphabet values.
+
+|| '''Expression''' || '''Description''' || '''Default Implementation''' ||
+|| `assignQuality(t, i)`, `assignQuality(t, c)` || Assigns a quality to `t` from integer `i` or char `c`. || n/a ||
+|| `getQuality(a)` || Returns `int` quality value.|| n/a ||
+
+=== Lightweight Type ===
+
+Types that are stored atomically in memory similar to POD types (`sizeof(T)` bytes from `&t`).
+All POD types are lightweight types but not all lightweight types are POD types.
+Lightweight types do not have to be destructed and can be copied and using `memcpy()` and `memmove()`.
+
+Refinement of concept ''Assignable''.
+
+== Iterator-Related Concepts ==
+
+In the following, `x` is an iterator of type `X`, `t` is a valid lvalue of the pointed-to type of `x`, `a` is a valid rvalue (possibly const) of the pointed-to type of `a`.
+
+=== Trivial Iterator (STL) ===
+
+The most basic form, allows dereferencing.
+
+Trivial iterators must be ''Default Constructible'', ''Copy Constructible'', ''Move Constructible'', ''Copy Assignable'', ''Move Assignable''.
+Does not have to be mutable.
+
+|| '''Expression''' || '''Description''' || '''Default Implementation''' ||
+|| `*x` || Dereferentiation || `value(x)` ||
+|| `x->m` || Member access. || n/a ||
+
+SeqAn extends the concept with the following.
+
+|| '''Expression''' || '''Description''' || '''Default Implementation''' ||
+|| `Value<T>::Type` || The type pointed to by an iterator. || n/a ||
+|| `Reference<T>::Type` || Returned by dereferencing an iterator. || n/a ||
+|| `GetValue<T>::Type` || Returned by `getValue()` for fast read-only. || n/a ||
+|| `Difference<T>::Type` || Result when subtracting two iterators. || n/a ||
+|| `value(x) || Dereferentiation || n/a ||
+|| `getValue(x) || Dereferentiation, "fast read-only" || n/a ||
+
+=== Input Iterator (STL) ===
+
+Input Iterators are a refinement of trivial iterators.
+They allow the reading but not necessarily writing of values.
+
+|| '''Expression''' || '''Description''' || '''Default Implementation''' ||
+|| `getValue(s)` || Return value of iterator. || n/a ||
+|| `++s` || Preincrement || n/a ||
+|| `s++` || Postincrement || n/a ||
+
+SeqAn extends this by:
+
+|| '''Expression''' || '''Description''' || '''Default Implementation''' ||
+|| `goNext(s)` || Preincrement || n/a ||
+
+=== Output Iterator (STL) ===
+
+Input Iterators are a refinement of trivial iterators.
+They allow the writing but not necessarily reading of values.
+
+|| '''Expression''' || '''Description''' || '''Default Implementation''' ||
+|| `*s = t` || Dereference assignment || n/a ||
+|| `++s` || Preincrement || n/a ||
+|| `s++` || Postincrement || n/a ||
+|| `*s++ = t` || Postincrement and assign. || n/a ||
+
+SeqAn adds the following:
+
+|| '''Expression''' || '''Description''' || '''Default Implementation''' ||
+|| `setValue(s, t)` || Setting values. || n/a ||
+
+=== Forward Iterator (STL) ===
+
+Refines input iterator and output iterator.
+Allows multiple passes over the same sequence.
+Does not have to be mutable.
+
+=== Bidirectional Iterator (STL) ===
+
+Refinement of concept forward iterator.
+Extends forward iterators by iterating a sequence in reverse order.
+
+|| '''Expression''' || '''Description''' || '''Default Implementation''' ||
+|| `--s` || Predecrement || n/a ||
+|| `s--` || Postdecrement || n/a ||
+
+=== Random Access Iterator (STL) ===
+
+Refinement of concept bidirectional iterator.
+
+|| '''Expression''' || '''Description''' || '''Default Implementation''' ||
+|| `i += n` || Iterator addition || n/a ||
+|| `i + n` or `n + i` || Iterator addition || n/a ||
+|| `i -= n` || Iterator subtraction || n/a ||
+|| `i - n` || Iterator subtraction || n/a ||
+|| `i - j` || Difference || n/a ||
+|| `i[n]` || Element operator || n/a ||
+|| `i[n] = x` || Element assignment || n/a ||
+
+The STL furthermore provides the following.
+
+|| '''Expression''' || '''Description''' || '''Default Implementation''' ||
+|| `advance(i, n)` || Advance `i` by `n`. || `i += n` ||
+|| `distance(i, j)` || Distance between `i` and `j`. || `j - i` ||
+
+=== Rooted Iterator ===
+
+Rooted iterators know their container.
+
+|| '''Expression''' || '''Description''' || '''Default Implementation''' ||
+|| `setContainer(i, h)` || Set host of iterator, position as if default constructed. || n/a ||
+|| `container(i, h)` || Returns host of iterator. || n/a ||
+|| `atEnd(i)` || Returns whether the iterator is at the end. || `i == end(container(i), Rooted())` ||
+|| `atBegin(i)` || Returns whether the iterator is at the end. || `i == begin(container(i), Rooted())` ||
+
+=== Rooted Random Access Iterator ===
+
+Refinement of concepts rooted iterator and random access iterator.
+
+|| '''Expression''' || '''Description''' || '''Default Implementation''' ||
+|| `Position<T>::Type` || Result type of `position`. || n/a ||
+|| `position(i)` || Returns the position of the iterator in the container. || `i - begin(container(i), Rooted())` ||
+
+== Container-Related Concepts ==
+
+=== Container (STL) ===
+
+Contains elements of a single type and can be iterated using an iterator.
+
+|| '''Expression''' || '''Description''' || '''Default Implementation''' ||
+|| `Value<T>::Type` || Contained values. || n/a ||
+|| `Reference<T>::Type` || Reference for item access. || n/a ||
+|| `GetValue<T>::Type` || Fast read-only item access. || n/a ||
+|| `Position<T>::Type` || A position in the container. || n/a ||
+|| `Difference<T>::Type` || Difference of two positions in the container. || n/a ||
+|| `Size<T>::Type` || Non-negative value, has to store largest positive difference. || n/a ||
+|| `begin(a, Tag)` || Returns iterator to beginning of container. || n/a ||
+|| `begin(a)` || Returns iterator to beginning of container. || `begin(a, Standard())` ||
+|| `end(a, Tag)` || Returns iterator to end of container. || n/a ||
+|| `end(a)` || Returns iterator to end of container. || `end(a, Standard()) ||
+|| `length(a)` || Length of a container. || `length(a)` ||
+|| `maxLength(a)` || Maximum length of a container. || n/a ||
+|| `empty(a)` || Returns whether a container is empty. || n/a ||
+|| `swap(a)` || Allows swapping of containers with lowest possible costs. || n/a ||
+
+=== Forward Container (STL) ===
+
+Refinement of container.
+
+Must fulfill concepts equality comparable, less-than comparable.
+
+|| '''Expression''' || '''Description''' || '''Default Implementation''' ||
+|| `a < b` || Lexicographic comparison. || n/a ||
+|| `a > b` || Lexicographic comparison. || n/a ||
+|| `a == b` || Lexicographic comparison. || n/a ||
+|| `a <= b` || Lexicographic comparison. || n/a ||
+|| `a >= b` || Lexicographic comparison. || n/a ||
+|| `a != b` || Lexicographic comparison. || n/a ||
+
+=== Reversible Container (STL) ===
+
+A container whose iterators are bidirectional iterators.
+
+=== Random Access Container (STL) ===
+
+A reversible container whose iterators are random access iterators.
+
+|| '''Expression''' || '''Description''' || '''Default Implementation''' ||
+|| `a[n]` || Access to reference by position. || n/a ||
+|| `value(t, n)` || Access to reference by position. || n/a ||
+|| `getValue(a, n)]` || Access by position for fast reading. || n/a ||
+|| `setValue(t, n, b)]` || Set value at position. || n/a ||
+
+=== Sequence (STL) ===
+
+Variable-sized container that supports insertion, replacement and deletion of elements.
+
+Refines concept Random Access Container.
+
+|| '''Expression''' || '''Description''' || '''Default Implementation''' ||
+|| `front(a)` || Return reference to first element. || n/a ||
+|| `back(a)` || Return reference to last element. || n/a ||
+|| `insert(a, n, b)` || Insert sequence `b` into `a` at position `n`. || n/a ||
+|| `insertValue(a, n, x)` || Insert element `x` into sequence `a` at position `n` || n/a ||
+|| `erase(a, n, m)` || Erase `m` characters from `a`, starting with `n`th. || n/a ||
+|| `eraseValue(a, n)` || Erase the `n`th character from `m`.|| n/a ||
+|| `replace(a, n, m, b)` || Replace `m` characters in `a` starting with `m`th by `b`. || n/a ||
+|| `replaceValue(a, n, x)` || Replce the `n`th character from `m` with `x`.|| n/a ||
+|| `clear(a)` || Clear string. || n/a ||
+|| `resize(a, n, [o])` || Resize `a` to `n` characters, possibly filling up free space with `o` (defaults to `Value()`). || n/a ||
+
+NB: `clear()` does ''not'' guarantee that the capacity is reduced (see `std::vector` swap trick).
+
+=== Front Insertion Sequence (STL) ===
+
+Sequence that allows fast front insertion and deletion.
+
+|| '''Expression''' || '''Description''' || '''Default Implementation''' ||
+|| `front(a)` || Return reference to first element. || n/a ||
+|| `pushFront(a, x)` || Push element to front of container. || n/a ||
+|| `eraseFront(a)` || Erase element from front of container. || n/a ||
+
+=== Back Insertion Sequence (STL) ===
+
+Sequence that allows fast back insertion and deletion.
+
+|| '''Expression''' || '''Description''' || '''Default Implementation''' ||
+|| `back(a)` || Return reference to first element. || n/a ||
+|| `pushBack(a, x)` || Push element to back of container. || n/a ||
+|| `eraseBack(a)` || Erase element from back of container. || n/a ||
+
+== Stream-Related Concepts ==
+
+=== Concept Stream ===
+
+A lot of variations are possible and given by Metafunctions.
+
+The current concept should be OK.

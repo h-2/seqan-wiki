@@ -1,0 +1,238 @@
+= Getting Started With SeqAn On Windows Using Eclipse CDT =
+
+{{{
+#!WarningBox
+'''Work In Progress'''
+
+ * Test this step for step.
+ * More detailed explanation of how to install CDT plugins on Windows?
+ * Replace Linux pictures by Windows pictures.
+}}}
+
+{{{
+#!ImportantBox
+'''Known Problems'''
+
+ * Currently, there is [https://bugs.eclipse.org/bugs/show_bug.cgi?id=236330 a known bug] with the 64 bit version of Eclipse and CDT 8.0.0. The console displays no output.
+   The bug has been already fixed but the bug fix becomes available first with the next minor release of CDT 8.0.1.
+}}}
+
+[[TOC()]]
+
+== Prerequisites ==
+
+We assume that you have the following software installed:
+
+ * [http://tortoisesvn.net/downloads.html TortoiseSVN] for version control and retrieving 
+ * [http://www.cmake.org/cmake/resources/software.html CMake] for generating project files
+   When installing CMake, let the installer add `cmake` to your `PATH` environment variable.
+ * [http://python.org/download/ Python 2.x] for the code generator.
+   Note that Python 3 will not work, you a Python 2 version.
+   Make sure that the `python.exe` program is added to your `PATH` environment variable when installing.
+ * [http://www.mingw.org/ MinGW] is used as the C++ compiler.
+   Please follow the instructions below because CMake does not work if MinGW is installed with MSYS or the Developer !ToolKit.
+ * [http://www.eclipse.org/cdt/ Eclipse CDT].
+   Please follow the instructions below to install Eclipse with CDT.
+
+'''Installing MinGW'''
+
+You can download the installer from the [http://www.mingw.org/ MinGW homepage]
+During the installation you are prompted to choose your installation packages.
+Select C++ compiler and make sure that '''MSYS and MinGW Developer ToolKit are NOT checked'''.
+
+[[Image(source:/trunk/core/demos/tutorial/getting_started/mingw_installation.png, 300px, align=center)]]
+
+After the installation you are required to add the '''bin''' folder of the MinGW installation to the '''PATH''' environment variable (e.g., `%PATH%;drive:\path\to\MinGW\bin`).
+For a detailed description on how to permanently change environment variables see [http://vlaurie.com/computers2/Articles/environment.htm this article].
+
+'''Installing Eclipse CDT'''
+
+Download Eclipse from the project's site.
+Install the CDT plugins:
+
+ * ''Programming Languages -> C/C++ Development Tools''
+ * ''Programming Languages -> C/C++ Library API Documentation Hover Help (Incubation)'''
+
+== Installing SeqAn From Subversion ==
+
+First, create a new folder in your Windows Explorer for the SeqAn files.
+Right click on this folder and choose ''SVN Checkout...'' from the context menu.
+
+[[Image(source:/trunk/core/demos/tutorial/getting_started/win_tortoise.jpg, 400px, align=center)]]
+
+Type the following in the field ''URL of repository''
+
+{{{
+#!IdeBox
+https://github.com/seqan/seqan/branches/master
+}}}
+
+The ''Checkout repository'' should be the folder you just created.
+Leave the other settings set to their default (''fully recursive'', ''HEAD revision'') and click ''OK''.
+
+The checkout may take a few minutes.
+
+== Sanity Check: Creating A First Build ==
+
+We will now use CMake to create Eclipse CDT project files.
+This will generate the Eclipse CDT project files and the MinGW Makefiles used by Eclipse CDT to perform the build.
+Note that as for Makefiles, we have to create separate projects for for debug builds (including debug symbols with no optimization) and release builds (debug symbols are stripped, optimization is high).
+For Eclipse, the directory `seqan-trunk-build` should be a sibling of the checkout directory `seqan-trunk`.
+
+Now, start a Windows Command Prompt (''Start -> All Programs -> Accessories -> Command Prompt'').
+Then, go to the folder containing the SeqAn directory and create a new folder for project files.
+
+{{{
+#!ShellBox
+> Z:
+> cd \
+> mkdir seqan-trunk-build
+> mkdir seqan-trunk-build\Debug-eclipse
+> cd mkdir seqan-trunk-build\Debug-eclipse
+> cmake ..\..\seqan-trunk -G "Eclipse CDT4 - MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug
+}}}
+
+Now, open Eclipse.
+If this is your first Eclipse start then you have to select a workspace.
+This is unrelated to the SeqAn project files generated earlier and you can pick any directory, e.g. use the default.
+
+We will now import the generated CDT project:
+Select the ''Project Explorer'' in Eclipse (''C++'' perspective) and right click somewhere into the view.
+Select ''Import...'' and choose ''Existing Project into Workspace'' in the current dialog.
+Select ''Next'' and browse to your build directory in your workspace.
+Eclipse recognizes that there is a project file and selects it automatically.
+Confirm the selection with ''Finish''.
+
+[[Image(wiki:Tutorial/GettingStarted/DraftLinuxEclipse:eclipse_linux_import_build_project.png,width=800px,align=center)]]
+
+Before you build any target you should change the launch preferences of Eclipse.
+In the menu select ''Window -> Preferences''.
+Go to the menu ''Run/Debug -> Launching'' and uncheck ''Build (if required) before launching''.
+This prevents the project for building the target '''all''' (default preference), which can take quite a while depending on the system you are using.
+This can happen if, e.g. you accidentally run a binary before building the target after you changed some code.
+
+[[Image(wiki:Tutorial/GettingStarted/DraftLinuxEclipse:eclipse_linux_preference_build_on_launch.png,width=400px,align=center)]]
+
+Now you have successfully setup Eclipse and can build your targets using the ''Make Target'' view (usually on the right hand side of the workbench).
+To build RazerS 2, open the folder ''core/apps/razers2'' in the ''Make Target'' view.
+Then, right-click on ''[exe] razers2'' and select ''Build Target''.
+This will build the program `razers2`
+
+[[Image(wiki:Tutorial/GettingStarted/DraftLinuxEclipse:eclipse_linux_build_razers2.png, width=800, align=center)]]
+
+The last line you see on the console at the bottom of the screen should be
+
+{{{
+#!WarningBox
+'''TODO:''' Update the following for Windows output.
+}}}
+{{{
+#!IdeBox
+Built target razers2
+make[2]: Leaving directory `/home/USER/Development/seqan-trunk-build/Debug-eclipse'
+/usr/bin/cmake -E cmake_progress_start /home/USER/Development/seqan-trunk-build/Debug-eclipse/CMakeFiles 0
+make[1]: Leaving directory `/home/USER/Development/seqan-trunk-build/Debug-eclipse'
+}}}
+
+== Your Sandbox: Hello World! ==
+
+You can create new applications using the code generator.
+
+But beforehand, we have to create a new sandbox using the code generator.
+This sandbox will be your local workspace and you might want to have it versionized on your own Subversion repository at a later point.
+All of your development will happen in your sandbox.
+
+We use the code generator to create a new sandbox:
+
+{{{
+#!ShellBox
+> cd ..\..\seqan-trunk
+> python util\bin\skel.py repository sandbox\my_sandbox
+}}}
+
+Within this sandbox, we can now create a new application using the code generator.
+
+{{{
+#!ShellBox
+> python util\bin\skel.py app first_app sandbox\my_sandbox
+}}}
+
+Details about the code generator are explained in [wiki:HowTo/UseTheCodeGenerator How To: Use the code generator].
+
+Now, we go back into the build directory and call CMake again to make it detect the added app.
+
+{{{
+#!ShellBox
+C:\Development\seqan-trunk> cd ..\seqan-trunk-build\vs9
+C:\Development\seqan-trunk-build\debug-eclipse> cmake .
+}}}
+
+{{{
+#!InfoBox
+'''Information:''' When and where do you have to call CMake?
+
+CMake is a cross-platform tool for creating and updating build files (IDE projects or Makefiles).
+When you first create the build files, you can configure things such as the build mode or the type of the project files.
+
+Whenever you add a new application, a demo or a test or whenever you make changes to `CMakeLists.txt` you need to call CMake again.
+Since CMake remembers the settings you chose the first time you called CMake in a file named `CMakeCache.txt`, all you have to do is to switch to your `debug` or `release` build directory and call "`cmake .`" in there.
+
+{{{
+#!ShellBox
+~ # cd $HOME/Development/seqan-trunk-build/debug
+debug # cmake .
+}}}
+
+Do not try to call "`cmake .`" from within the `seqan-trunk` directory '''but only from your build directory'''.
+}}}
+
+The step above creates the starting point for a real-world application, including an argument parser and several other things that are a bit too complicated to fit into the Getting Started tutorial.
+Therefore, we will replace the program of the app ''first_app'' with a very simple example program.
+
+Open the file `sandbox\my_sandbox\first_app\first_app.cpp` and replace its contents with the following:
+
+{{{
+#!cpp
+#include <iostream>
+#include <seqan/sequence.h>  // CharString, ...
+#include <seqan/file.h>      // to stream a CharString into cout
+
+int main(int, char const **)
+{
+    std::cout << "Hello World!" << std::endl;
+    seqan::CharString mySeqanString = "Hello SeqAn!";
+    std::cout << mySeqanString << std::endl;
+    return 1;
+}
+}}}
+
+After CMake is done with building the project files you can simply refresh the imported build project in Eclipse in order to make the applied changes working:
+In the ''Project Explorer'' view, right-click on ''seqan-Debug@Debug-eclipse'' and select ''Refresh (F5)''.
+
+Then, browse to your target in the ''Make Target'' view.
+Double-click on the target of your application and the binary is built immediately.
+
+After the build is complete go into the menu and select ''Run -> Run Configurations''.
+Add a new ''C/C++ Application''.
+Under ''Project'' select the seqan-build project.
+Then you can select your recently built binary under ''C/C++ Application:''.
+Finally, you can give your application a name. 
+Confirm your selection with ''Apply'' and hit the ''Run'' button in the bottom of the dialog. Done! 
+
+[[Image(source:/trunk/core/demos/tutorial/getting_started/eclipse_run_configurations.png, 700px, align=center)]]
+
+If everything went well, you will see something similar to this:
+
+[[Image(source:/trunk/core/demos/tutorial/getting_started/eclipse_hello_world.png, align=center)]]
+
+Congratulations, you have successfully created your first application within the SeqAn build system using Eclipse and CDT.
+
+== Further Steps ==
+
+As a next step, we suggest the following:
+
+ * [wiki:Tutorial Continue with the Tutorial]
+ * If you have not done so, install optional dependencies of SeqAn.
+   To read and write compressed files, follow [wiki:HowTo/InstallContribsWindows How To: Install Contribs On Windows].
+ * [wiki:Infrastructure/RepositoryStructure Learn about the SeqAn SVN repository structure]
+ * Look around in the files in `sandbox/my_sandbox/apps/first_app` or the demos in `core/demos` and `extras/demos`.

@@ -1,0 +1,135 @@
+= Conversion Revision =
+[[TOC()]]
+
+Alphabets stand at the very core of sequence analysis.
+This document tries to shed some light on alphabets in general, the current state of conversion between alphabet characters and possible future improvements.
+
+== Alphabet Interface ==
+
+== Conversion ==
+
+=== Basic Infrastructure ===
+
+Explicit conversion can be done using seqan:Function.convert:
+
+{{{
+#!cpp
+template <typename TTarget, typename TSource>
+TTarget 
+convert(TSource const & source);
+
+// ...
+
+convert<Dna5>('A');
+}}}
+
+Internally, this function calls seqan:Function.convertImpl which performs the actual conversion and should be overridden.
+The main difference is that it uses the seqan:Metafunction.Convert Metafunction in its arguments so it can be called without any explicit function template arguments:
+
+{{{
+#!cpp
+template <typename TTarget, typename TSource>
+struct Convert
+{
+  typedef TTarget Type;
+};
+
+template <typename TTarget, typename T, typename Source>
+Convert<TTarget, TSource>::Type
+convertImpl(Convert<TTArget, T> const, TSource const & source);
+
+}}}
+
+In fact, seqan:Function.convert also uses the seqan:Metafunction.Convert for its return value:
+
+{{{
+#!cpp
+template <typename TTarget, typename TSource>
+Convert<TTarget, TSource>::Type
+convert(TSource const & source);
+}}}
+
+By default, seqan:Function.convertImpl returns the source value.
+This means, the conversion operator is used by default.
+
+{{{
+#!cpp
+
+template <typename TTarget, typename T, typename TSource>
+inline typename Convert<TTarget, TSource>::Type
+convertImpl(Convert<TTarget, T> const, TSource const & source)
+{
+	return source;
+}
+}}}
+
+=== Different Types ===
+
+The integer types `__int8`, `__uint8`, `__int16`, `__uint16`, `__int32`, `__uint32`, `__int64` and `__uint64` are aliases to the available types of the C++ compiler.
+''Note: The naming might change in a future Seqan version.''
+Conversions between these types are defined by the compiler.
+
+The simplest alphabet type in SeqAn is the seqan:Class.SimpleType.
+It defines conversions operators to all builtin integer types.
+The reason for this is that we cannot extend the built-in types so they get copy constructors accepting user-defined typed values.
+These conversion operators all use the seqan:Function.assign function to a temporary of the return type.
+
+Also, seqan:Class.SimpleType defines a templated assignment operators and copy constructors.
+These functions use seqan:Function.assign for the actual assignment.
+
+{{{
+#!cpp
+template <typename TValue, typename TSpec>
+class SimpleType
+{
+// ...
+    SimpleType(SimpleType const & other);
+    template <typename T>
+    SimpleType(T const & other);
+
+    SimpleType & operator=(SimpleType const & other);
+    template <typename T>
+    SimpleType & operator=(T const & other);
+};
+}}}
+
+Furthermore, the function seqan:Function.convertImpl is defined for simple types to arbitrary types, calling the seqan:Function.assign function.
+
+Thus, all conversions are implemented by the seqan:Function.assign function.
+
+=== Conversion Tables ===
+
+For the conversion between certain sets of characters, simple type specializations etc., conversion tables are defined.
+
+=== Defined Conversions ===
+
+Simple types have the following general conversions:
+
+|| '''target''' || '''source''' || '''means'''
+|| builtin integers || simple type || conversion operator ||
+|| simple type || arbitrary type || copy/assignment constructor ||
+
+The following assignment conversions are defined for the different alphabets via an seqan:Function.assign specialization.
+
+|| '''target''' || '''source''' ||
+|| `SimpleType<T, TSpec>` || `SimpleType<T2, TSpec2>` ||
+|| `SimpleType<T, TSpec>` || `TSource` ||
+|| `SimpleType<T, TSpec>` || `Proxy<T2>` ||
+|| builtin integers || `SimpleType<TValue, TSpec>` ||
+
+The types `Dna`, `Dna5`, `Rna`, `Rna5`, `Iupac`, `AminoAcid` can all be assigned to `Ascii`.
+
+Types `__uint8`, `Ascii`, `Unicode`, `Dna`, `Dna5`, `Rna`, `Rna5`, `Iupac` can be assigned to `Dna`, `Dna5`, `Rna`, `Rna5`, `Iupac` (assignment with itself is not defined).
+Types `__uint8`, `Ascii`, `Unicode` can be assigned to`AminoAcid`.
+''Iupac to AminoAcid appears to be missing.''
+Types `DnaQ` `Dna5Q` can be assigned to `Dna` and `Dna5`.
+Type `DnaQ` can be assigned `__uint8` `Ascii` `Dna5` `Dna5Q` `Dna` `DnaQ` `Iupac` `Unicode` and arbitrary via conversion into `Dna`.
+Type `Dna5Q` can be assigned `__uint8` `Ascii` `Dna5` `Dna5Q` `Dna` `DnaQ` `Iupac` `Unicode` and arbitrary via conversion into `Dna5`.
+
+=== More on Alphabets ===
+
+ * Explain all related functions and metafunctions.
+
+=== More on SimpleTypes ===
+
+ * Explain how the quality versions are implemented.

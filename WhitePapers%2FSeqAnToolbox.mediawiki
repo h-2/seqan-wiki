@@ -1,0 +1,41 @@
+
+
+
+== General description of the SeqAn toolbox ==
+The SeqAn toolbox has two goals:  
+  * it should offer SeqAn functionality to users that are not trained in directly using the template library.The functionality will be offered in two levels
+    * '''Analysis packages (AP)'''. Here larger analysis pipelines will be presented, for example a complete read mapper, or an RNA-Seq pipeline
+    * '''Algorithmic components (AC) '''. Here the basic algorithmic components in SeqAn will be offered as executables in a standardized form which also allows scripting bindings. 
+  * it should be a platform for external groups to offer their tools programmed in SeqAn
+
+The  presentation of the SeqAn toolbox will hence contain three major parts
+  1. The list of contributing groups with their affiliation and crosslinks to projects on which they participate
+  2. The list of APs with name, short description of purpose, links to contributors, links to a standardized long description. The APs are grouped according to research topics (e.g. NGS variant detection or Genome comparison). The list of research topics can be expanded. APs could be listed under several topics.
+  3. The list of basic ACs with name, short description of purpose,  links to contributors, links to a standardized long description.
+
+== Detailed Items to consider ==
+'''Long descriptions of analysis package'''[[BR]]
+We agreed to use the following fields (inspired by the current projects).
+  1. Authors,  main publication link, Bibtex entry
+  2.  Abstract (in length similar to a paper abstract)
+  3.  Main features of the  AP
+  4.  Download link (will contain binaries for standard platforms (Windows, Mac OS, Linux, Solaris) in 32 and 64 bit, a sample input, a README which will explain the parameters in detail and the use using a provided sample file
+  5. a version history
+  6. the contact information
+  7. a list of papers using the AP
+
+'''General setup for ACs'''
+In order to circumvent an combinatorial explosion in combinations of template instantiations in SWIG we will take the following approach:[[BR]]
+Each AC will be a standardized C++ program doing three steps:
+  1. Reading the input
+  2. Compute a function (or a la OpenMS instantiate a wrapper class derived from a base class with a run method) and return a pointer to a return data structure
+  3. Write output depending on parameters using the return value.
+
+This scheme should allow us to easily use SWIG to provide scripting bindings for this core functionality (e.g. pairAlign will has as input two char strings and i told via parameters whether it is a local or global protein or DNA alignment)
+
+== TODOs ==
+
+  * change the cmake system to compile cross platform all APs and ACs (in addition scripting binding).
+  * provide README and sample input for each AC
+  * provide sample pipelines using AC in shell scripts and python scripts etc.
+  * change cmake system to support SWIG bindungs in the ACs

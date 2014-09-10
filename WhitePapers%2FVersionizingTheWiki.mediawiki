@@ -1,0 +1,71 @@
+= Versionizing The Wiki =
+
+Quick instructions, see [https://groups.google.com/forum/?fromgroups=#!starred/trac-users/waamXBHCU-I this google groups discussion] (see below for a copy).
+
+{{{#!sh
+VERSION=1.4
+VERSION_LONG=1.4
+/usr/bin/trac-admin /web/trac.seqan.de/trac wiki dump pages Tutorial* HowTo* BuildManual*
+
+pushd pages
+for f in $(ls * | grep "%2F"); do
+  mv ${f} ${f}.bak
+  echo "'''Note: this page documents the ${VERSION} version of SeqAn, see [wiki:$(echo $f | sed "s/^${VERSION}%2F//g" | sed "s/%2F.*//g")] if you need the documentation for the trunk version.'''" > ${f}
+  cat ${f}.bak >> ${f}
+  rm ${f}.bak
+done
+for f in *; do mv {,${VERSION}%2F}${f}; done
+perl -p -i -e "s/source:trunk/source:tags\/seqan-${VERSION_LONG}/g" *
+perl -p -i -e "s/<b>trunk<\/b>/<b>${VERSION_LONG}<\/b>/g" *
+popd
+
+for x in $(/usr/bin/trac-admin /web/trac.seqan.de/trac wiki list | grep '^Tutorial\/' | awk '{ print $1 }'); do
+    for y in $(/usr/bin/trac-admin /web/trac.seqan.de/trac attachment list wiki:${x} | tail -n +4 | awk '{ print $1 }'); do
+        echo $x $y
+        /usr/bin/trac-admin /web/trac.seqan.de/trac attachment export wiki:${x} $y $y
+        /usr/bin/trac-admin /web/trac.seqan.de/trac attachment add wiki:${VERSION}/${x} $y
+        rm $y
+    done
+done
+}}}
+
+{{{
+me (Manuel Holtgrewe change) 	
+Apr 23
+
+
+Dear all,
+
+the Trac Wiki at trac.edgewall.org uses version namespaces to keep around multiple versions of the manual concurrently.
+
+I would like to do the same with tutorials for our software project.
+
+I imaging that copying over the pages manual is pretty tedious. What is the best way to copy all pages, say below "Tutorial/", to "/1.4/Tutorial/"? Does anyone of you have a script using the HTTP API of Trac, is this best done using direct database access, or is there even a plugin for that (I could not find any)?
+
+Thanks,
+Manuel
+Click here to Reply
+
+
+
+RjOllos 	
+Apr 25
+
+
+- show quoted text -
+
+Hi Manuel, I think you can accomplish this using trac-admin [1] or XmlRpcPlugin [2].
+
+If you'd like to use trac-admin, which is probably easier, the following commands move all pages starting with "Trac" to a 0.12 directory (on Linux):
+
+trac-admin tracdev wiki dump pages Trac*
+cd pages
+for filename in *; do mv {,0.12%2F}"$filename"; done;
+cd ..
+trac-admin tracdev wiki load pages
+
+
+[1] http://trac.edgewall.org/wiki/TracAdmin#FullCommandReference 
+[2] http://trac-hacks.org/wiki/XmlRpcPlugin
+
+}}}

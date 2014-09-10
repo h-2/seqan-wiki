@@ -1,0 +1,68 @@
+'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
+= Multiple Sequence Alignment =
+
+[[TOC]]
+
+ Learning Objective ::
+  You will learn how to compute a multiple sequence alignment using SeqAn's alignment data structures and algorithms.
+ Difficulty ::
+  Basic
+ Duration ::
+  0:15h
+ Prerequisites ::
+  [wiki:Tutorial/Basics Basics], [wiki:Tutorial/Sequences Sequences], [wiki:Tutorial/Alphabets Alphabets], [wiki:Tutorial/AlignmentRepresentation Alignment Representation]
+
+Apart from pairwise alignments, also multiple sequence alignments can be computed in SeqAn. The easiest way to do this is by using the function seqan:Function.globalMsaAlignment. This function computes a heuristic alignment based on a consistency-based progressive alignment strategy as described in [http://bioinformatics.oxfordjournals.org/cgi/content/abstract/24/16/i187  Seqan::TCoffee] paper. 
+
+In the following example, we align four amino acid sequences using the seqan:"Spec.Alignment Graph" data structure and the [seqan:"Spec.Score Matrix" Blosum62] scoring matrix with gap extension penalty -11 and gap open penalty -1.
+The required header for multiple sequence alignments is {{{seqan/graph_msa.h}}}.
+[[Include(source:tags/seqan-1.4.0/core/demos/tutorial/alignments/alignment_msa.cpp, fragment=main)]]
+
+First, the sequence type {{{TSequence}}} is defined and a seqan:Class.StringSet is declared. The four sequences to be aligned are appended to the StringSet {{{seq}}}.
+[[Include(source:tags/seqan-1.4.0/core/demos/tutorial/alignments/alignment_msa.cpp, fragment=init)]]
+
+Now we initialize our seqan:"Spec.Alignment Graph" with the sequences. The graph and the [seqan:"Spec.Score Matrix" Blosum62] scoring matrix are handed to the function seqan:Function.globalMsaAlignment which computes the desired alignment.
+[[Include(source:tags/seqan-1.4.0/core/demos/tutorial/alignments/alignment_msa.cpp, fragment=alignment)]]
+
+And here is the output of this example program:
+{{{
+#!html
+<pre class="wiki" style="background-color:black;color:lightgray">
+Alignment matrix:
+      0     .    :    .    :    .    :    .    :    .    :
+        DPKKPRGKMSSYAFFVQTSREEHKKKHPDASVNFSEFSKKCSERWKTMSA
+          | |   |          |       |      || ||     ||
+        RVKRP---MNAFIVWSRDQRRKMALENP--RMRNSEISKQLGYQWKMLTE
+          | |              | | |   |   | |    | |    | | |
+        FPKKP---LTPYFRFFMEKRAKYAKLHP--EMSNLDLTKILSKKYKELPE
+          |||   |        | ||                  ||      |
+        HIKKP---LNAFMLYMKEMRANVVAEST--LKESAAINQILGRRWHALSR
+
+     50     .    :    .    :    .    :    .    :
+        KEKGKFEDMAKADKARYEREMKTY----------IPPKGE
+         ||  |   |    |        |
+        AEKWPFFQEAQKLQAMHREKYPNYKYRP---RRKAKMLPK
+          |    |  |                            |
+        KKKMKYIQDFQREKQEFERNLARFREDH---PDLIQNAKK
+            ||      | |                        |
+        EEQAKYYELARKERQLHMQLYPGWSARDNYGKKKKRKREK
+}}}
+
+==== Assignment 1 ====
+{{{#!AssignmentBox
+
+ Type :: Review
+ Objective :: Repeat the above example using the Align data structure and the Blosum80 scoring matrix.
+
+ Solution ::
+{{{
+#!FoldOut
+----
+A complete solution can be found [wiki:Tutorial/Alignments/AssignmentMultipleAlignment1 here].
+}}}
+
+}}}
+
+=== Submit a  comment ===
+If you found a mistake, or have suggestions about an improvement of this page press:
+[/newticket?component=Documentation&description=Tutorial+Enhancement+for+page+http://trac.seqan.de/wiki/Tutorial/Alignments&type=enhancement submit your comment]

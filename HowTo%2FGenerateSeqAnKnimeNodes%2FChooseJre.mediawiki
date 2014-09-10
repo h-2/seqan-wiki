@@ -1,0 +1,27 @@
+In order to change the JRE to be used by KNIME go to Eclipse [[MenuTrace(Preferences)]] and select the [[MenuTrace(Java)]] menu.
+
+[[Image(Preferences.png, width=400, align=center)]]
+
+Afterwards you can add the right JRE. Under MacOs you choose the entry [[MenuTrace(MacOS X VM)]] 
+
+[[Image(MacOSJre.png, width=400, align=center)]]
+
+then press next and select the right path, which should be ''/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home''
+
+ash shown here:
+
+[[Image(JreHome.png, width=600, align=center)]]
+
+Press [[MenuTrace(Finish)]] and the right JRE will be added.
+
+Afterwards you have to set the compiler options. In order to do so go to [[MenuTrace(Project)]] and select [[MenuTrace(Properties)]]
+
+[[Image(ProjectProperties.png, width=400, align=center)]]
+
+No select [[MenuTrace(Java Compiler)]] and select the correct JRE at the [[MenuTrace(Compiler compliance level:)]]
+
+[[Image(JavaCompiler.png, width=400, align=center)]]
+
+If you run the project now KNIME should start without problems.
+
+

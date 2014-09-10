@@ -1,0 +1,22 @@
+Ideas for a revised Iterator Design:
+
+Current Problems with the Iterator Interface.
+
+Different design implementations of the Iter class. Compare Container Iterator with Index Iterator
+
+Iterator Adapter causes problems for buil-in types like chars. 
+begin and end functions return different iterators than it was specialized using the Metafunction Iterator<>::Type
+
+IteratorDesign:
+
+Iter<TObject, TIterSpec>
+
+TIterSpec: 
+categories: 
+Container -> Input, Output, Forward, Bidirectional, RandomAccess
+Tree -> TopDown, BottomUp,
+Index -> ParentLink
+
+Than if a iterator needs to be overloaded for a special object overload it using the left Argument: TObject to specialize the function. Maybe use heredity here.
+
+Draft concept:

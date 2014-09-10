@@ -1,0 +1,64 @@
+= How To: Use Git =
+
+[[TOC]]
+
+== Getting Started ==
+
+Install the command line client, download a GUI and have a look at the basic Atlassian tutorial.
+
+=== GUI ===
+
+  * [http://www.sourcetreeapp.com SourceTree] - Windows or MacOS X.
+  * [http://wiki.gnome.org/Gitg Gitg] - Linux/GNOME.
+
+=== Documentation ===
+
+  * [https://www.atlassian.com/git/tutorial/git-basics Atlassian] git tutorials - easy and recommended.
+  * [http://git-scm.com/doc Official] git manual - complete but more advanced.
+
+
+=== Clone the SeqAn repository ===
+
+SeqAn is hosted on [http://github.com/seqan/ GitHub]. Execute the following command to get the last sources:
+
+{{{
+#!html
+<pre class="wiki" style="background-color:black;color:lightgray">
+$ git clone https://github.com/seqan/seqan.git SeqAn
+}}}
+
+
+== SeqAn Workflow == 
+
+The SeqAn workflow is based on the [https://www.atlassian.com/git/workflows#!workflow-gitflow Gitflow] workflow by [https://www.atlassian.com Atlassian]. The workflow is based on two persistent branches: [https://github.com/seqan/seqan/tree/master master] and [https://github.com/seqan/seqan/tree/develop develop]. Development of new library and app features usually occurs on develop. The master branch receives only new library and app releases, in addition to hot-fixes to previous releases. Thus, the master branch is always stable and safe to use, and the develop branch contains the last development but might occasionally break overnight. The most frequent development use cases are documented below.
+
+=== Develop a feature in a core module or app ===
+
+Follow the [https://www.atlassian.com/git/workflows#!workflow-gitflow steps] in “Mary and John begin new features” and “Mary finishes her feature”.
+
+  * Create a new feature [https://www.atlassian.com/git/tutorial/git-branches#!branch branch] based on [https://github.com/seqan/seqan/tree/develop develop].
+  * Perform your changes and [https://www.atlassian.com/git/tutorial/git-basics#!commit commit] them onto your feature branch.
+  * When the development is complete, push the feature branch to your repository on GithHub.
+  * [https://github.com/seqan/seqan/compare/develop Create a GitHub pull request] to [https://github.com/seqan/seqan/tree/develop develop].
+  * Delete your feature branch once it has been merged.
+
+=== Fix an existing bug in a core module or app ===
+
+Follow the [https://www.atlassian.com/git/workflows#!workflow-gitflow steps] in “End-user discovers a bug”.
+
+  * Create a new hotfix [https://www.atlassian.com/git/tutorial/git-branches#!branch branch] based on [https://github.com/seqan/seqan/tree/master master].
+  * Perform your changes and [https://www.atlassian.com/git/tutorial/git-basics#!commit commit] them onto your hotfix branch.
+  * When the fix is read, push your hotfix branch to repository on GitHub. Then:
+     1. [https://github.com/seqan/seqan/compare/master Create a GitHub pull request] to [https://github.com/seqan/seqan/tree/master master].
+     2. [https://github.com/seqan/seqan/compare/develop Create a GitHub pull request] to [https://github.com/seqan/seqan/tree/develop develop].
+     3. The pull requests should contain only the commits from your hotfix branch.
+  * Delete your hotfix branch once it has been merged through the pull request.
+
+=== Develop new modules and apps ===
+
+Create a new module or app [https://www.atlassian.com/git/tutorial/git-branches#!branch branch] where to develop your new module or application. The branch should be based on master if your module or application doesn’t rely on any recently developed features. If a new feature becomes necessary later on, the branch can be [https://www.atlassian.com/git/tutorial/rewriting-git-history#!rebase rebased] onto develop. When the development is complete, the branch can be merged back into the corresponding base branch - either master or develop.
+
+== Rules ==
+
+  * Never push feature branches to the SeqAn repository.
+  * Sumbit code reviews through GitHub.

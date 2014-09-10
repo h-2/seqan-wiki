@@ -1,0 +1,90 @@
+= Logging In SeqAn =
+
+This page describes how a logging mechanism could work in SeqAn.
+
+== Motivation ==
+
+Logging is very useful to have for debugging but also for detailed error/warning reports in a library.
+Traditionally, log messages are written to stderr in Unix.
+In SeqAn, we currently do logging to stderr only.
+Any activation and log messages is manual and inconsistent.
+Thus, a unified logging mechanism would be nice.
+
+== Requirements ==
+
+ * Easy to use, use familiar interfaces.
+ * Multiple log levels (e.g. info, warning, error).
+ * It should be possible to control log levels statically and dynamically.
+   When developing, users might want to enable all log levels, a distributed build might only include warning and error logs.
+   The info log calls should not infer any overhead, e.g. by replacing log calls by nops.
+
+== Proposal ==
+
+Introduce a global function `seqan::errs()` that returns a reference to a C++ stream.
+Thus, `operator<<()` is available for the returned object.
+The type is available through a metafunction.
+Users can override this by using metafunctions.
+
+The definition in SeqAn could look as follows:
+
+{{{
+#!cpp
+
+namespace seqan {
+
+struct Info_;
+typedef Tag<Info_> Info;
+
+struct Warning_;
+typedef Tag<Warning_> Warning;
+
+struct Error_;
+typedef Tag<Error_> Error;
+
+template <typename TLevel>
+struct LogStream
+{
+    typedef std::ostream Type;
+};
+
+template <typename TLevel>
+typename LogStream<TLevel>::Type & logStream(TLevel const & /*tag*/)
+{
+    return std::cerr;
+}
+
+LogStream<Info>::Type infos()
+{
+    return logStream(Info());
+}
+
+LogStream<Warning>::Type warns()
+{
+    return logStream(Warning());
+}
+
+LogStream<Error>::Type errs()
+{
+    return logStream(Error());
+}
+
+}  // namespace seqan
+}}}
+
+Users could override it like this:
+
+{{{
+#!cpp
+
+namespace seqan {
+
+template <>
+struct LogStream<Info>
+{
+    typedef NullStream Type;
+};
+
+}  // namespace seqan
+}}}
+
+Where `NullStream` is a class defined in the SeqAn library and implements the interface of `std::ostream`, [http://www.cplusplus.com/reference/iostream/ostream/operator%3C%3C/ as documented here].

@@ -1,0 +1,58 @@
+== Results ==
+
+Tagging and categorizing code complete.
+
+Results available inside source and gathered here:
+
+http://trac.mi.fu-berlin.de/seqan/browser/trunk/misc/iorev_report_overview
+
+
+
+
+== Tagging ==
+
+Tag all functions, structs, classes in the following format
+
+1st line after { shall include an 
+//IOREV
+
+and multiple tags of the form _tagname_
+
+i.e.
+
+//IOREV _todo_ _delcandidate_ _nottested_
+
+possible tags:[[BR]]
+_todo_          This function/struct… is not fully classified by me (default tag)[[BR]]
+_nottested_     This code may not work at all[[BR]]
+_docnottested_  This code is documented but may behave different from doc[[BR]]
+_nodoc_         This code should be documented but isn't[[BR]]
+_duplicate_     This code reimplements functionality found elsewhere[[BR]]
+_delcandidate_  This code should probably just be deleted[[BR]]
+_batchreading_  Function is Batch-Reading[[BR]]
+_record_reading_ Function is record-reading[[BR]]
+…
+
+typedefs just get a //IOREV appended to the end of the line they are defined in
+
+
+
+== Howto find functions, structs etc ==
+
+Everything relevant will be tagged with "//IOREV _todo_" in this step
+
+Step1: Identify files completely dedicated to IO and Parsing (all content shall be tagged):
+
+seqan/file/*[[BR]]
+seqan/misc/misc_parsing.h[[BR]]
+TODO finish list
+
+Step 2: find specific functions/classes in above files that are obviously IO-related, look all through seqan for reimplementions/overwrites
+
+Step 3: look for custom IO-Code (not related to known IO-Code) in all of the rest of seqan, maybe consult with developers to speed this up.
+
+== Analyze code and finish ==
+
+Step 1: Scan for all IOREV tags in seqan, read code, understand(!) code, test(!) code and replace the _todo_ tag with proper tags for the piece of code
+
+Step 2: Create some sort of summary, overview

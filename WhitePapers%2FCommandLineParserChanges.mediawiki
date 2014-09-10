@@ -1,0 +1,73 @@
+= !CommandLineParser Changes =
+
+[[TOC()]]
+
+'''Disclaimer''': This page is not the documentation of the new argument parser but describes future ideas we plan to implement in the future.
+
+== Named Parameters ==
+
+ * Helps with many optional parameters.
+ * Follow implementation of [http://www.boost.org/doc/libs/1_37_0/libs/parameter/doc/html/index.html Boost.Parameter] but without all the generic fluff.
+
+== Load Flags From File/Env ==
+
+ * Similar to Google command line parser.
+ * Add `--flag-file` parameter to load flags from, just like command line options.
+ * Add `--from-env` parameter to get parameters from `ENV` environment variable.
+
+== Boolean Flags ==
+
+ * For each boolean flag `--flag`, automatically add `--noflag`.
+
+== Utility Functions ==
+
+ * Get string of command line arguments.
+
+
+
+== Implemented Ideas ==
+
+For historical and documentation reasons we keep a list of implemented ideas.
+
+
+=== Supporting CTD File Export ===
+
+=== Supporting Input/Output File And File List Types ===
+
+Dependency of [#SupportingCTDFileExport Supporting CTD File Export].
+
+=== Supporting Restrictions of filetypes and values ===
+
+Dependency of [#SupportingCTDFileExport Supporting CTD File Export].
+
+{{{
+#!cpp
+
+addOption("a", .. , OptionType::Double , ..);
+restrict("a", -1.0, 1.0);
+
+addOption("a", .. , OptionType::INPUTFILE , ..);
+restrict("a", "*.FASTA");
+
+addOption("a", .. , OptionType::STRING , ..);
+restrict("a", "VALUE1"); // howto define lists here????
+}}}
+
+=== Changing `parse()` Return Values ===
+
+Currently, returns `true`/`false`.
+However, no distinction is made between failure and "already has printed `--version` or `--help`.
+
+
+=== Text Formatting Improvements ===
+
+ * Add simple substitution macros, e.g. `%{prog}` for program name.
+ * Float text to console width.
+ * Allow `*highlighted*` and `*strongly highlighted*` support.
+
+=== Rich Documentation Export ===
+
+ * Embed richer information about usage in program text.
+ * Allow generation of extended command line documentation with `--help=full`.
+ * Generate HTML files or man pages using `--help=html`, `--help=man`.
+  * man pages: http://www.linuxfocus.org/English/November2003/article309.shtml

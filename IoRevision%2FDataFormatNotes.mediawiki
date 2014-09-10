@@ -1,0 +1,168 @@
+= Notes on Data Formats =
+[[TOC()]]
+
+Bioinformatics file formats, as far as we are concerned with sequence analysis in SeqAn contain strongly structured data only.
+Many data formats use plain text for storage.
+
+== Format Patterns ==
+
+Most data formats can be described as:
+It consists of a list of sections, each section contains uniform records.
+Each record might be subdivided again into sections.
+Each section contains uniform data only, where the uniform data are records again.
+The main property of records and sections is that they are stored contiguously in the file.
+
+FASTA and FASTQ fit in by consisting of records, each record has a (1) meta field, (2) sequence field, (3) separator field, and (4) quality field (3, 4 only for FASTQ).
+SAM files consists of two sections: The header and the alignments.
+Each MAF file consists of a header section, followed by a list of alignments.
+The GENEBANK format can be interpreted in this fashion, too.
+
+A notable special case are tabular data files with one entry per line.
+[http://samtools.sourceforge.net/tabix.shtml Tabix] can index such files that refer to loci on a genome (identified by reference sequence name, start and end position).
+
+== Access Patterns ==
+
+Access patterns fall into one of the following categories:
+
+ Streaming access ::
+  The file is streamed through the program, a computation is performed for each entry.
+  The result is often written out in a streaming fashion, too.
+  A very simple example are file converters.
+ Random access / Document reading ::
+  Random access on the file's data is required.
+  This is the case if complex operations have to be performed globally.
+  For example, when the data needs to be sorted by a certain field and external memory sorting is not implemented.
+  The whole file is read as a document into main memory.
+
+Streaming access means that at most one record has to be stored in main memory.
+Random access has higher memory requirements but allows a global view of the data.
+
+SeqAn should support both modes.
+However, for performance considerations, the streaming interface should be able to read a whole block ("batch") of entries at the same time in oder to reduce function call, error checking overhead, and improve cache locality.
+
+One question is whether tokenizers/parsers can be implemented in a way that there only needs to be one implementation for streaming and batch reading.
+
+When doing streaming or batch I/O, we can assume that the user wants to see each record only once and all but very few cases, the record passed into the I/O function is overwritten.
+This means that data should be read in the fastest possible fashion, possibly at the cost of a constant space overhead in buffers, e.g. SeqAn strings in the buffer (e.g. with growing/shrinking strings in O(n)-amortized mode).
+
+When doing document I/O, we can assume that the user wants to keep the whole file's content in memory for large parts of her program.
+Accordingly, data should be read in a fashion that wastes the smallest amount of memory once read.
+This usually means that the data can be stream-read multiple times:
+For FASTA, for example, the data is first read to identify the number of sequences and memory store the identifiers and sequences.
+Then, the exact amount of memory is allocated.
+Finally, the file is read a second time, filling the allocated memory.
+This approach can be adapted to many important cases.
+
+== Stream Types ==
+
+'''Files''' can usually be accessed in a random fashion, however seeks beyond the current buffer are expected to be slow.
+Streaming access, except for seeks with a high locality is fast, random access is slow.
+
+'''Compressed Files''' can usually only be accessed in a streaming fashion.
+Usually, files are uncompressed block-wise, so reading should happen in blocks, too.
+
+'''FIFOs''' such as pipes only allow reading each character once.
+Supporting this is important to allow programs to read their input from `stdin`/`std::cin`.
+
+== One-Pass vs. Two-Pass I/O ==
+
+In One-Pass I/O, the data from a file is never read twice, the stream does not need to be rewound, there is no buffering performed on the read data, the record's fields must be resizeable.
+This makes it feasible to read from FIFO queues without file buffers.
+
+In Two-Pass I/O, the data is first streamed, lengths and positions are counted.
+Then, memory is allocated/reserved.
+Finally, the stream is rewound and memory is filled.
+
+Two-Pass I/O requires buffering of the whole "passed" data or a rewindable stream.
+Depending on the underlying stream, either might be better:
+For record I/O, buffering will probably better than too much non-sequential I/O.
+
+== Requirements ==
+
+There are the following non-functional requirements on a tokenizing/parsing interface.
+It should be
+
+ * reasonably fast and
+ * reasonably easy to write code for.
+
+Functional requirements are that
+
+ * streaming I/O and
+ * document-reading I/O have to be supported.
+
+Streaming I/O should be implemented on buffers and use the existing buffers of streams when supported (the `<iostream>` allow assigning of manual buffers).
+Ideally, data is only buffered in the kernel and then mapped into the user space.
+The main challenge is that record lengths are usually unpredictable and not limited.
+(FASTA and FASTQ files are a good example).
+
+In the second case, the interface should also enable lazy loading of records.
+This is mostly useful for reading large records, where there are few random seeks followed by long sequential reads.
+An example would be loading reference sequence parts from a FASTA genome file.
+
+== Stream Adaptions ==
+
+The following adaptions should exist, i.e. the stream reader interface should work with the following underlying stream types:
+
+ * `<cstdio>` streams,
+ * the IOstreams library from C++, and
+ * `gzFile`, `BZFILE` streams for gz/bz2 compressed data.
+
+== Document Reading ==
+
+The fastest way to read a gigantic file into main memory if data has to be available, is to use memory mapped strings, analoguely to [https://trac.mi.fu-berlin.de/seqan/wiki/HowTo/EfficientImportOfMillionsOfSequences efficiently importing sequences].
+Here, the parsing code has to be split into two routines, one for each pass.
+However each can work on pointers, no streams are required.
+
+   Manuel: Maybe, stream reading code can be used on these pointers then?
+
+== Stream Reading ==
+
+Generic for one-pass reading.
+There has to be a parser state object that allows the continuation of the parsing of a record if the end of the buffer is reached without reaching the end of the record.
+
+{{{
+template <typename TPass>
+void recordReadingDemo(TPass const & /*tag*/)
+{
+    // Would work for std::cin, std::ifstream, gzFile, BZFILE as well.
+    FILE * f = fopen("myfile.fasta");
+    // RecordReader object hosts the buffers, generic!
+    RecordReader<TPass> recordReader(f);
+    Pair<CharString, Dna5String> record;
+    while (readRecord(record, recordReader, Fasta())) {
+        std::cout << record.i1 << "\t" << record.i2 << std::endl;
+    }
+    fclose(f);
+}
+
+int main()
+{
+    recordReadingDemo(SinglePass());
+    recordReadingDemo(DoublePass());
+    return 0;
+}
+}}}
+
+== File Formats ==
+
+The following exists in SeqAn right now.
+
+input
+
+ * FASTQ, FASTA
+ * Genbank
+ * qseq
+ * embl
+ * cgviz
+ * score matrix
+ * Gff
+ * Gtf
+ * Ucsc
+ * UcscIsoforms
+ * Amos
+ * SAM
+
+output
+
+ * graphviz
+ * see above

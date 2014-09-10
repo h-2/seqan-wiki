@@ -1,0 +1,135 @@
+= String Implementation Draft =
+
+== DefaultConstructible ==
+
+ * String::String()
+
+== Copy Constructible ==
+
+ * String::String(String const & other)
+
+== Assignable ==
+
+ * assign(dst, src)
+ * String::operator=(String const & other)
+ * swap(String & lhs, String & rhs)
+
+== AutoConvertSequence Interface ==
+
+ * template <typename TSequence> String::String(TSequence const & other)
+ * template <typename TSequence> String::operator=(TSequence const & other)
+
+== Container Interface ==
+
+'''Size Query'''
+
+ * TSize length(String const & s)
+   * bool empty(String const & s)
+ * TSize capacity(String const & s)
+
+'''Size Update'''
+
+ * `void shrinkToFit(String const & s)`
+ * `void clear(String & s)`
+ * `void reserve(String & s, TSize len)`
+
+'''Iteration'''
+
+ * `TIterator begin(String [const] & s, TTag tag)`
+ * `TIterator end(String [const] & s, TTag tag)`
+
+== Sequence Interface ==
+
+'''Element Access'''
+
+ * `TReference operator[](String [const] & s, TPos p)`
+   * `TReference value(String [const] & s, TPos p)`
+ * `TGetValue getValue(String const & s, TPos p)`
+
+'''Element Update'''
+
+ * void assignValue(String & s, TPos p, TValue const & other)
+ * erase(String & s, TPos beginPos, TPos endPos)
+ * eraseBack(String & s)
+ * eraseFront(String & s)
+ * replace(String & s, TPos beginPos, TPos endPos, String const & other)
+ * replace(String & s, TPos beginPos, TPos endPos, TSequence const & other)
+ * append(String & dest, String const & other)
+ * append(String & dest, TSequence const & other)
+ * appendValue(String & dest, TValue const & v)
+
+'''Size Updates'''
+
+ * void resize(String const & s, TSize len, [TValue v = TValue()])
+
+'''Sequence Identification'''
+
+These are more of internal use than part of the public interface.
+
+ * const void * getObjectId(String const & s)
+ * bool shareResources(String const & s, String const & other)
+ * bool shareResources(String const & s, TSegment const & other)
+
+'''Convenience'''
+
+ * TReference back(String & s)
+ * TReference front(String & s)
+ * bool startsWith(String const & s, TSequence const & other)
+ * bool endsWith(String const & s, TSequence const & other)
+ * void eraseFront(String const & s)
+ * void eraseBack(String const & s)
+
+'''Convenience: Iteration'''
+
+ * TIterator iter(String [const] & s, TPos p)
+
+'''Segment'''
+
+ * TInfix infix(String [const] & s, TPos beginPos, TPos endPos);
+ * TInfix infixWithLength(String [const] & s, TPos beginPos, TSize length);
+ * TInfix prefix(String [const] & s, TPos endPos);
+ * TInfix suffix(String [const] & s, TPos beginPos);
+
+== Text Interface ==
+
+ * TStringSetLimits stringSetLimits
+
+== Minimal String Interface ==
+
+ * default constructor
+ * append(TIterator itBegin, TIterator itEnd)
+   * copy constructor
+   * sequence conversion copy constructor
+   * operator=()
+     * assign() (deprecate?)
+   * sequence conversion operator=()
+ * swap()
+ * length()
+ * capacity()
+ * shrinkToFit()
+ * begin()
+ * end()
+ * operator[]
+   * value() (deprecate?)
+ * getValue() (deprecate?)
+ * assignValue() (deprecate?)
+ * _resizeSpace()  (does '''not''' expose uninitialized memory)
+   * Interface: `void _resizeSpace(String & str, beginPos, endPos, TIter itBegin, TIter itEnd, size_t newCapacity)
+   * reserve(str, len)
+     * _resizeSpace(str, 0, 0, NULL, NULL, len);
+   * clear(str)
+     * _resizeSpace(str, 0, length(str), NULL, NULL, capacity(str));
+   * erase(str, beginPos, endPos)
+     * _resizeSpace(str, beginPos, endPos, NULL, NULL, capacity(str));
+   * eraseFront(str)
+     * _resizeSpace(str, 1, length(str), NULL, NULL, capacity(str));
+   * eraseBack(str)
+     * _resizeSpace(str, 0, length(str) - 1, NULL, NULL, capacity(str));
+   * replace(str, beginPos, endPos, TSequence const & src)
+     * _resizeSpace(str, beginPos, endPos, begin(src, Standard()), end(src, Standard()), capacity(str));
+   * resize()
+   * assign()
+ * resize()
+ * getObjectId()
+ * shareResources()
+ * stringSetLimits()

@@ -1,0 +1,7 @@
+'''Note: this page documents the 1.4 version of SeqAn, see [wiki:HowTo] if you need the documentation for the trunk version.'''
+= How To: Write Portable Code =
+
+ * sort comparators have to be strong enough
+ * floating point arithmetics
+  * comparison of equality `fabs(a - b) < epsilon`
+  * comparison of `<` with `+ DELTA`.

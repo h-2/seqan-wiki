@@ -1,0 +1,35 @@
+= Retreat 2010: Developer Discussion =
+[[TOC]]
+
+These are refined notes from the developer break-out discussion.
+
+== Core Topics ==
+
+The following topics were identified as focal points:
+
+ * Communication
+ * Integration of !SeqAn
+ * Patches, Fixes, Improvements, Submission, Quality Control
+
+== Misc Notes == 
+
+ * What roles are there?
+  * !SeqAn Developer
+  * External Contributor
+  * Occasional Contributor of Patches
+  * User
+ * What wishes of separate groups?
+  * fast fixes, patches
+  * tests
+  * announcements, feature visibility, changelogs
+  * processes for stability
+  * how to contribute an app centrally
+  * minor releases, communication, deprecated/defective tags, links to bug tracker
+  * Distinction between Seqan CMake Framework and Seqan as a library
+  * faster response times on tickets, what's the best way to contribute patches?
+  * toolbox, future? advertisement, future, advantages, disadvantages
+  * community future: Open contribution
+  * Vision of Seqan
+  * Specialization, trade-offs of different specialization, e.g. Open Adressing, why is this no the default
+  * gap from trunk to release
+  * bug categories are unclear

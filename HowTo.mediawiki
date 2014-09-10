@@ -1,0 +1,18 @@
+{{{
+#!comment
+BEGIN versionized-howto-section
+}}}
+{{{#!html
+<div id="notice" class="system-message">
+These How-Tos use the current SeqAn <b>trunk</b> version and not a previous released version.
+The How-Tos are also available for the versions <a href="/wiki/1.4/HowTo">1.4</a>.<br />
+</div>
+}}}
+{{{
+#!comment
+END versionized-howto-section
+}}}
+
+After reading the [wiki:Tutorial] we recommend to read some of the following HowTos:
+
+[[TOC(HowTo/*, depth=1, inline, heading=All pages)]]

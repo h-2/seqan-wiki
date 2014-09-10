@@ -1,0 +1,60 @@
+== The global TODO ==
+
+=== Status ===
+
+||= Module =||= Status =||
+|| align || pending align module update||
+|| arg_parse || done ||
+|| basic || NA ||
+|| chaining || NA ||
+|| consensus || ||
+|| file || ||
+|| find || NA ||
+|| graph_algorithms || NA ||
+|| graph_align || done ||
+|| graph_msa || done ||
+|| graph_types || done ||
+|| index || under review ||
+|| map || NA ||
+|| misc || ||
+|| modifier || NA ||
+|| parallel || NA ||
+|| pipe || NA ||
+|| platform || NA ||
+|| random || NA ||
+|| refinement || done ||
+|| score || done ||
+|| seeds || NA ||
+|| seeds2 || NA ||
+|| sequence || ||
+|| sequence_journaled || NA ||
+|| store || ||
+|| stream || NA ||
+|| system || NA ||
+
+=== New Implementations ===
+
+MUST DO:
+ 1. write and test reading support for Sequence Formats (Single-Pass)
+ 1. write and test reading support for Sequence Formats (Double-Pass for FASTA, FASTQ)
+ 1. write and test writing support for Sequence Formats
+
+IF TIME PERMITS:
+ 4. write and test reading support for Store-IO Formats (Single-Pass)
+ 1. write and test writing support for Store-IO Formats (Single-Pass)
+
+WITH EVEN MORE TIME:
+ 6. write and test reading support for Alignment and Alignment-Graph Formats (Single-Pass)
+ 1. write and test writing support for Alignment and Alignment-Graph Formats (Single-Pass)
+
+=== Adapt Apps ===
+
+ 1. Put Compiler-Guards in place
+ 1. convert existing apps to new library
+ 1. deactivate old IO by default, if all apps could be converted, otherwise allow coexistance
+ 1. document changes
+
+=== Clean-Up ===
+
+ 1. Remove code that is no longer required, especially private helper functions etc
+ 1. Scan seqan for IOREV-leftovers, especially comments by tagger. Decide what to do about those.

@@ -1,0 +1,15 @@
+= Tentative Book Errata =
+
+== 9.3.1 '''Sellers' Algorithm''' p.155 ==
+
+''"SeqAn supports both variants for linear and for non-linear gap costs, and selects it according to the applied scoring scheme."''
+
+This is not true, at the moment, SeqAn only support linear gap costs.
+
+''"That is, we change lines 3 and 4 in Sellers to `v <- i * g` and `v <- (i - 1) * g`." should read "That is, we change lines 3 and 4 in Sellers to `v <- j * g` and `v <- (j - 1) * g`.".''
+
+`j` is meant instead of `i`.
+
+== Gotoh's Algorithm ==
+
+The initialization is wrong.

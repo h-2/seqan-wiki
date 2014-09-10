@@ -1,0 +1,642 @@
+{{{#!FoldOut
+See [wiki:Infrastructure/RepositoryStructure SeqAn Repository Structure]
+----
+= Repository Structure = 
+[[TOC()]]
+
+{{{
+#!comment
+Remark Knut 07.04.2011:
+the sandbox script allows now the distinction into app/test/module...
+
+Shall we use it maybe for another "main" script
+e.g. new_seqan_proj.py
+
+which produces  
+* an app file and header file template 
+* a corresponding test skeleton 
+* a demo skeleton
+and promote that script as the main method for starting a project? 
+The reason being as to expose people early to testing and to writing small demo(s) (including toy input) of their programs/ algorithmic components?
+
+Also, should we try to enforce that for all apps in extras and core ?
+Or maybe at at least in the combination module/testing/demo    app/testing
+}}}
+
+
+
+'''This is work in progress'''
+
+   The main changes are (1) adding an "extras" and "sandbox" structure, (2) changing the way CMake is used, and (3) introducing INFO files for each app/module.
+
+This page describes the structure of the SeqAn repository.
+
+The intended audience is:
+
+ * SeqAn users that work directly with a repository checkout
+ * SeqAn developers and contributors,
+ * Students of the FU Berlin, working inside the SeqAn repository.
+
+The intended audience does not include SeqAn users who just want to use the Release version.
+
+== Aims ==
+
+The aims of the repository structure is to
+
+ * be easy to understand,
+ * be similar to traditional C/C++ project structures, in keeping the build files parallel to the sources (yet out of source builds are prefered),
+ * have different areas for rock-solid mature code, recently contributed but stable code, and for possibly unstable code actively developed by each SeqAn contributor.
+
+== Main Repository Structure ==
+
+The main repository structure, including LICENSE files and some example directories and files is as follows:
+
+{{{
+seqan
+|-- LICENSE
+|-- README
+|-- GETTING_STARTED
+|-- core
+|   |-- apps
+|   |-- tests
+|   |-- demos
+|   |-- includes
+|   `-- docs
+|       `-- globals.dddoc
+|-- extras
+|   |-- apps
+|   |-- tests
+|   |-- demos
+|   |-- includes
+|   `-- docs
+|-- sandbox
+|   |-- seqan_team
+|   |-- contributor_a
+|   |-- contributor_b
+|   `-- ...
+|-- build
+|-- ext
+|   |-- zlib
+|   `-- ...
+`-- util
+    |-- dddoc
+    |-- tpl
+    |   |-- app_skel
+    |   |-- test_skel
+    |   |-- demo_skel
+    |   |-- module_skel
+    |   |-- new_app.py
+    |   |-- new_test.py
+    |   |-- new_demo.py
+    |   `-- new_module.py
+    |-- CMake
+    |   |-- FindTBB
+    |   `-- ...
+    |-- py_lib
+    |   |-- README
+    |   |-- threadpool
+    |   |   |-- INFO
+    |   |   `-- __init__.py
+    |   `-- ...
+    |-- misc
+    `-- ...
+}}}
+
+The directory contents are as follows:
+
+ core ::
+  Area for rock-solid mature code.
+ extras ::
+  Area for recently contributed but stable code.
+ sandbox ::
+  Area for code actively developed by SeqAn contributors.
+ build ::
+  Builds are meant to happen here, inside a subdirectory for each build type.
+  See below for more info.
+ ext ::
+  External libraries bundled with SeqAn, such as zlib.
+  Each library must have an INFO file (described below).
+ util ::
+  Tools such as dddoc, one directory for each tool or "real package". 
+ util/misc ::
+  Misc things such as the logo, awk scripts, stuff that does not fit in anywhere else.
+  No fixed structure, try to be consistent with what's already here.
+ util/skel ::
+  Code templates / skelletons.
+ util/dddoc ::
+  The documentation system.
+ util/py_lib ::
+  Reuseable Python code from the SeqAn project, bundled non-standard Python modules such as threadpool.
+
+== Core Area ==
+
+Code that lives here is built and tested nightly by the core team, the results posted to CDash.
+It has to pass a code review, be tested, well-documented, proven to work and be useful.
+It has the highest priority to be stable.
+
+The code here is mostly maintained by SeqAn developers or selected contributors with write access to the core library.
+
+The structure of this area follows the apps, test, demos, include, docs pattern:
+
+{{{
+core
+|-- apps
+|-- tests
+|   |-- basic
+|   `-- ...
+|-- demos
+|-- include
+|   |-- seqan
+|       |-- basic.h
+|       |-- basic
+|       `-- ...
+`-- docs
+}}}
+
+The directory contents are as follows:
+
+ apps ::
+  Applications, each app in a subdirectory.
+ tests ::
+  Tests, each test suite in a subdirectory.
+ demos ::
+  Demos and tutorials, flat C++ files.
+ include ::
+  Contains the directory ''seqan'' with the library only.
+  This directory is added to the include path of the compiler, e.g. the `-I` switch in SeqAn.
+ docs ::
+  The documentation is built here.
+  This directory contains a CMakeLists.txt file for building the documentation and the file ''globals.dddoc'' (the configuration file).
+  The documentation is built in the subdirectory ''html''.
+
+
+== Extras Area ==
+
+It is where stable, contributed applications and modules (with demos and test) live.
+The code has to pass a rough code review.
+The apps, tests, demos are built and tested nightly by the core team on all supported platforms, results posted to CDash.
+The code here has to be tested, well-documented.
+Its stability has a high priority.
+
+The code here is maintained by SeqAn developers (probably more recent code, not in the library yet) or externally maintained.
+
+The structure of this area follows the apps, test, demos, include, docs pattern:
+
+{{{
+extras
+|-- apps
+|   |-- razers4
+|   |   `-- razers.cpp
+|   `-- ...
+|-- tests
+|   |-- cute_module
+|   |   `-- test_cute_module.cpp
+|   `-- ...
+|-- demos
+|   |-- cute_module.cpp
+|   `-- ...
+|-- include
+|   `-- seqan
+|       |-- parsing.h
+|       |-- parsing
+|       |   `-- parsing_stuff.h
+|       `-- ...
+`-- docs
+}}}
+
+== Sandbox Area ==
+
+This is the location for actively developed code. Code located here, if proven to be stable, will move into the extra library.
+
+Each contributor or contributing group has one subdirectory whose structure should follow the standard apps, test, demos, include, docs pattern:
+
+{{{
+sandbox
+|-- fu_berlin_students
+|   |-- student1
+|   |   |-- apps
+|   |   `-- ...
+|   `-- student2
+|       |-- apps
+|       `-- ...
+|-- seqan_team
+|   |-- project1
+|   |   |-- apps
+|   |   |-- test
+|   |   |-- demos
+|   |   |-- include
+|   |   `-- docs
+|   `-- project 2
+|       `-- ...
+|-- contributor_a
+|   |-- apps
+|   |-- test
+|   `-- include
+|-- contributor_b
+|   `-- ...
+`-- ...
+}}}
+
+CDash builds do not have to be setup.
+However, if at one point one aims at having his code moved into the extra library, he should to setup CDash builds for at least one platform and should keep the code here pass building and testing.
+
+
+== Code Life Cycle ==
+
+Code that lives in the SeqAn repository should eventually be made possible to the whole community, thus go into ''extras'' or SeqAn core. 
+(One exception is code in the fu_berlin sandbox where also MSc code from students and PhD students lives that might eventually be abandoned). 
+Thus, development should not start in the SeqAn repository but only go there once a reasonable maturity has been reached (again, the core team takes the privilege to break this rule). 
+Code in sandboxes can break and does not have to build continuously. However, it is stronly recommended to integrate code into the CDash build system as soon as possible so feedback is as immediate as possible.
+The aim should be that the code here should eventually go into extras. 
+
+The code in extras contains stable, usable code.
+To get here, it has to pass a rough code review, as it is built on the core teams' servers and should not be harmful.
+Furthermore, the code should be understandable so if small changes in the library break code in extras, the core team can fix it easily.
+The aim here is to fix problems in at most 2-7 days by the maintainer.
+The code authors are prefered as maintainers and will be given write-access on their code.
+
+Code in the library should be as stable as possible, well-documented, actively maintained and tested.
+This area is only writeable by core developers and "distinguished" developers, who either contributed code to extra that has moved into the core repository or have distinguished themselves over a span of time by good patches and other contributions.
+This will be decided on a case-by-case basis. 
+Otherwise, changes to the core are made attaching patches to the Ticket tracker.
+
+
+== Current Modules ==
+
+ * Core Modules
+   * align
+   * basic
+   * chaining
+   * consensus
+   * file
+   * find
+   * find2
+   * graph_algorithms
+   * graph_align
+   * graph_decomposition
+   * graph_msa
+   * graph_types
+   * index
+   * map
+   * misc
+   * modifier
+   * parallel
+   * pipe
+   * platform
+   * random
+   * refinement
+   * score
+   * seeds
+   * seeds2
+   * sequence
+   * sequence_journaled
+   * store
+   * synopsis
+   * system
+
+ * Extra Modules
+   * blast
+   * find_motif
+   * statistics
+   * stream
+
+ * Sandbox Modules
+
+
+== Current Apps ==
+
+ * Core Apps
+   * dfi
+   * mason
+   * micro_razers
+   * pair_align
+   * mason
+   * rabema
+   * razers
+   * sak
+   * seqan_tcoffee
+   * seqcons
+   * snp_store
+   * splazers
+   * stellar
+   * tree_recon
+
+ * Extra Apps
+   * indel_simulator
+   * insegt ?
+   * param_chooser
+   * read_analyzer
+   * rep_sep
+   * variant_comp
+
+ * Sandbox Apps
+   * fiona (weese)
+   * hsa (bkehr)
+   * prob_spec (reinert)
+   * razers2 (emde)
+   * razers3 (emde)
+   * seqan_lagan (rausch / holtgrew ?)
+   * transquant (weese)
+
+
+== Current Demos ==
+
+ * Core Demos
+   * alignment.cpp
+   * alignment_local.cpp
+   * alignment_msa.cpp
+   * allocator.cpp
+   * alphabet.cpp
+   * annotation_converter.cpp
+   * file_format.cpp
+   * file_readwrite.cpp
+   * file_speed.cpp
+   * filter_sam.cpp
+   * find_approx.cpp
+   * find_exact.cpp
+   * find_wild.cpp
+   * gff2gtf.cpp
+   * graph_algo_bfs.cpp
+   * graph_algo_dfs.cpp
+   * graph_algo_flow_fordfulkerson.cpp
+   * graph_algo_his.cpp
+   * graph_algo_lcs.cpp
+   * graph_algo_lis.cpp
+   * graph_algo_path_allpairs.cpp
+   * graph_algo_path_bellmanford.cpp
+   * graph_algo_path_dag.cpp
+   * graph_algo_path_dijkstra.cpp
+   * graph_algo_path_floydwarshall.cpp
+   * graph_algo_path_transitive.cpp
+   * graph_algo_scc.cpp
+   * graph_algo_topsort.cpp
+   * graph_algo_tree_kruskal.cpp
+   * graph_algo_tree_prim.cpp
+   * graph_hmm.cpp
+   * graph_hmm_silent.cpp
+   * index_find.cpp
+   * index_find_stringset.cpp
+   * index_maxrepeats.cpp
+   * index_mummy.cpp
+   * index_mums.cpp
+   * index_node_predicate.cpp
+   * index_qgram_counts.cpp
+   * index_sufarray.cpp
+   * index_supermaxrepeats.cpp
+   * interval_tree.cpp
+   * iterator.cpp
+   * lagan.cpp, lagan1.fasta, lagan2.fasta
+   * modifier_modreverse.cpp
+   * modifier_modview.cpp
+   * modifier_nested.cpp
+   * rooted_iterator.cpp
+   * sam2svg.cpp
+   * seeds.cpp
+   * segmentalignment.cpp, sequence_1.fa, sequence_2.fa
+   * sequence_length.cpp
+   * swift_verification.cpp
+   * template_subclassing.cpp
+
+ * Extra Demos
+   * benchmark_stream.cpp
+   * blast_report.cpp, ecoln.out
+   * find_motif.cpp
+   * zscore.cpp, zscore_example_mm.3, zscore_human_mm.3
+
+ * Sandbox Demos
+
+== The INFO File Format ==
+
+Each app and library module contains an INFO file.
+This file describes the component.
+The information is collected and regularly made available on a website.
+
+It has a key/value structure:
+
+{{{
+Name: NAME
+Author: AUTHOR <EMAIL>
+Maintainer: MAINTAINER <EMAIL>
+Copyright: YEAR, OWNER
+Homepage: URL
+Version: MAJOR.MINOR
+Source: SOURCE
+Status: STATUS
+License: LICENSE
+Description: SINGLE LINE
+ EXTENDED DESCRIPTION
+}}}
+
+There can be multiple Author, Maintainer and Copyright fields.
+
+ Name ::
+  Name of the SeqAn module, or app.
+ Author ::
+  Name and email of the code's author.
+  This field is required.
+ Maintainer ::
+  Name and email of the maintainer ''within SeqAn''.
+  If the INFO file describes an external library like zlib or a Python module, for example, this is the person resposible for keeping this piece of software up to date.
+  A missing entry means unmaintained.
+  The person in the first maintainer line is the primary contact person.
+ Copyright ::
+  Copyright entry, can be specified multiple times in case it is based on other code.
+  This field is required.
+ Homepage ::
+  The homepage of the related project, if any.
+ Version ::
+  The version field is increased on every release.
+ Status ::
+  The status of the code.
+  A proposal for states are: ''stable'' (well-tested on all platforms), ''testing'' (e.g. tested on one platform but might not build on others), ''development'' (non-experimental, but might still undergo large changes).
+ Dependencies ::
+  Hard dependencies on another package.
+  Currently, for information purpose only.
+ Recommends::
+  If another package improves this module then it is specified here.
+  Currently, for information purpose only.
+ Source::
+  Describes where the given package was retrieved from.
+  This field is optional and only given for external libraries.
+  For packages from external sources, changes should be described in the Description section.
+  If the given package has an INFO file of itself, that file should be renamed to INFO.orig and the change should be described under Description.
+ License ::
+  The license of the package.
+ Description ::
+  This field is followed by a single line synopsis, to be used as the short description in listings.
+  It has to be the last field in the INFO file.
+  The extended description can span multiple lines.
+  Text in the descripton field should be wrapped to 78 characters and has to be wrapped to 80 characters.
+  Format, as in [http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Description Debian controlfields]:
+  The lines in the extended description can have these formats:
+   * Those starting with a single space are part of a paragraph. Successive lines of this form will be word-wrapped when displayed. The leading space will usually be stripped off.
+   * Those starting with two or more spaces. These will be displayed verbatim. If the display cannot be panned horizontally, the displaying program will line wrap them "hard" (i.e., without taking account of word breaks). If it can they will be allowed to trail off to the right. None, one or two initial spaces may be deleted, but the number of spaces deleted from each line will be the same (so that you can have indenting work correctly, for example).
+   * Those containing a single space followed by a single full stop character. These are rendered as blank lines. This is the only way to get a blank line[36].
+   * Those containing a space, a full stop and some more characters. These are for future expansion. Do not use them.
+   * Do not use tab characters. Their effect is not predictable.
+
+The following shows an example:
+
+{{{
+Name: RazerS
+Author: David Weese <first.last@example.net>
+Author: Anne-Katrin Emde <first.last@example.net>
+Author: Manuel Holtgrewe <first.last@example.net>
+Maintainer: David Weese <first.last@example.net>
+License: GPL 3 or later
+Copyright: 2008-2011, FU Berlin
+Homepage: http://www.seqan.de/projects/razers.html
+Version: 3.0
+Status: stable
+Description: RazerS is a fully sensitive read mapping tool.
+ RazerS is a fast read mapping tool with full sensitivity using Hamming and
+ Levenshtein distance.  Given a reference sequence and a set of reads, it
+ guarantees to find all occurences of the given reads in the reference
+ sequence.
+ .
+ The program uses the implementation of the semi-global SWIFT algorithm by
+ Rasmussen et al.
+}}}
+
+
+== Out Of Source Builds ==
+
+Our CMake files do not allow in-source builds, e.g. calling `cmake` in the `apps` directory to build all apps.
+Instead, the builds have to be made in another place, this is called ''out-of-source'' builds.
+
+The repository contains the empty folder ''build'' for just this purpose.
+We recommend to create one subfolder in this directory to create the builds in.
+This allows you to compile debug and optimized binaries without having to clean all built files and calling CMake in between.
+It also allows you to generate Eclipse, XCode and Visual Studio projects at the same time.
+
+Here is an example of creating multiple Makefiles in debug and release mode and creating an XCode project.
+The [wiki:Tutorial/GettingStarted Getting Started] article from the tutorial contains detailed information for generating projects for other IDEs such as Visual Studio.
+
+{{{
+$ cd build
+$ mkdir Debug
+$ cd Debug
+$ cmake ../.. -DCMAKE_BUILD_TYPE=Debug
+$ cd ..
+
+$ mkdir Release
+$ cd Release
+$ cmake ../.. -DCMAKE_BUILD_TYPE=Release
+$ cd ..
+
+$ mkdir XCode
+$ cd XCode
+$ cmake ../.. -G Xcode
+$ cd ..
+}}}
+
+== In Source Builds for Eclipse CDT 4 ==
+
+As described in the VTK Wiki, [http://www.vtk.org/Wiki/Eclipse_CDT4_Generator VTK Wiki generating out-of-source builds for Eclipse CDT 4] has drawbacks.
+In-source builds should, exceptionally, be allowed here.
+The CMakeLists.txt allows in-source builds if the user creates the file "I_WANT_IN_SOURCE_BUILDS" and prompts him about this if he tries to build in-source without having this file.
+
+ * Note that while the VTK Wiki page tells you to check "copy project into workspace", this will make all targets disappear in the right-hand side "Make" tab. '''Uncheck "copy project into workspace"'''.
+ * Make sure to '''disable indexing''' (Preferences -> C++ -> Indexer) '''before importing''' the generated project and disable autobuilding "Project -> Build Automatically".
+
+Now arises a second problem:
+When doing in source builds, the SeqAn applications clash with the existing directories.
+The binary "razers", for example, would be crated at the path "apps/razers" which already is a directory.
+
+We work around this by appending ".exe" to all binary names / names of all targets when doing in-source builds on Non-Windows platforms.
+
+== CMake Usage ==
+
+Enrico and Manuel discussed the current CMake system.
+The predominant feature is that there is not one CMakeLists.txt per directory with .cpp files but only four such files: One global one, one for apps, one for tests, and one for demos.
+
+The advantage of the current system that a new test and app can be created by a new directory, a new .cpp file and a CMake run.
+
+However, the drawbacks are:
+
+ * There are few, monolithic and complex CMakeLists.txt that build all app, for example. The handling of special cases is non-trivial and a bit overwhelming for a new developer.
+ * Each group's project subdirectory should have its own CMakeLists.txt so the maintainers can tweak linked libraries, for example. However, it will be a bit hard to explain all the things in the CMakeLists.txt files.
+ * Also, CMake generates one project file per CMakeLists.txt file. These grow very large in the current system.
+ 
+We propose to change the system in the following way: 
+
+ * There is one CMakeLists.txt in each subdirectory of apps, tests and one in demos.
+ * The CMakeLists.txt in '''demos''' uses a simple loop to add all demos to one project file.
+ * For each '''app,''' there is a CMakeLists.txt file that builds all binaries for this app.
+ * The same is true for each test.
+ * Inside the "apps" and "tests" directory, a CMakeLists.txt loops over all subdirectories and simply does `add_subdir`.
+
+This has the following advantages:
+
+ * Now, for each CMakeLists.txt, a new project file is generated, this has a finer granularity.
+ * It appears to be more "the way CMake is intended to be used," with fewer special case handlings.
+ * Each maintainer can write his own CMakeFile, linking against external libraries if he is writing an adaption module for LARA, for example.
+ * The old approach was generally limiting  : It is now possible to create more than one binary for each app, see old Razers with param chooser. Cmp. bowtie & bowtie-build
+
+It has the following "neutral" property:
+
+ * Instead of "apps/razers", there will now be the binary "apps/razers/razers".
+
+It has the disadvantage that
+
+ * a new CMakeLists.txt is required for each project.
+
+This problem can be fixed by providing skelleton-creation scripts.
+Providing such scripts is a good idea, anyway.
+
+The root CMakeLists.txt file would add some new CMake functions, that allow the simple creation of new binaries using SeqAn. For example, they would add linking against ''librt'' on Linux.
+
+Examples for Skelleton creation.
+
+{{{
+$ ./util/tpl/new_app.py core razers4
+# --> ask user for name and email or read from environment variabl SEQAN_USER
+# --> cp ./util/tpl/app_tpl/app.cpp -> apps/razers4/razers4.cpp
+# --> cp ./util/tpl/app_tpl/app.h -> apps/razers4/razers4.h
+# --> cp ./util/tpl/app_tpl/CMakeLists.txt -> apps/razers4/CMakeLists.txt
+# --> replace name and email, adjust used symbol in "#ifndef ...", etc.
+}}}
+
+{{{
+$ ./util/tpl/new_contrib.py foo
+# --> create new entry in contrib directory "foo", copy over skelleton, adjust
+$ ./util/tpl/new_app.py contrib/foo myniceprogram
+# --> ...
+}}}
+
+Example for CMakeLists.txt for a SeqAn app:
+
+{{{
+cmake_minimum_required (VERSION 2.6)
+project (FUB_Sandbox_my_app)
+add_seqan_executable(my_app my_app.cpp some_func.h)
+add_seqan_executable(some_support some_support.cpp some_func.h)
+}}}
+
+== CMake Generation Scripts ==
+
+Initial proposal in attached util.zip.
+
+{{{
+$ ./util/bin/skel.py 
+Usage: skel.py [options] create [module|test|app|demo|repository] NAME LOCATION
+       skel.py [options] info [module|test|app|demo|repository]
+
+SeqAn code generator.  The create command uses the template to code of the
+given type with the given NAME in the given LOCATION.  The info command
+displays information on the template.  The LOCATION is the repository name and
+could be "core", "extras" or "sandbox/fub_students".
+
+Options:
+  -h, --help            show this help message and exit
+  -s SKEL_ROOT, --skel-root=SKEL_ROOT
+                        Set path to the directory where the skelletons live
+                        in.  Taken from environment variable SEQAN_SKELS if
+                        available.
+  -a AUTHOR, --author=AUTHOR
+                        Set author to use.  Should have the format USER
+                        <EMAIL>.  Taken from environment variable SEQAN_AUTHOR
+                        if it exists.
+  -d, --dry-run         Do not change anything, just simulate.
+}}}
+}}}

@@ -1,0 +1,3 @@
+= SeqAn JavaScript Style Guide =
+
+Follow the [wiki:StyleGuide/Cpp SeqAn C++ Style Guide] in spirit.

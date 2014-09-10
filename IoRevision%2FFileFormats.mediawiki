@@ -1,0 +1,198 @@
+= File Formats =
+[[TOC()]]
+
+Generally, BioPerl has a huge list of supported formats, we can only hope to implement a subset.
+Even the developer of BioPerl explicitely say that they do not implement/guarantee round-trip for formats.
+Reading a file and writing it out again might add or remove certain features, e.g. line widths, etc.
+
+SeqAn is concerned with sequence analysis, so the support for FASTA/FASTQ import is essential and should be most advanced.
+For alignments, a few formats should be supported, which are right now?
+Basic graph loading should work, although at lower priority, conversion of labels should be done with a `lexicalCast<>()` function.
+
+People can always contribute their parsers later on...
+
+Output is much simpler, so it is probably easier to support formats there.
+
+ * http://bioperl.org/wiki/Sequence_formats
+ * http://bioperl.org/wiki/Multiple_alignment_formats
+
+== Sequences ==
+
+ * FASTA
+  * distinction between alphabets
+  * Dna
+  * Dna5
+  * AminoAcid
+ * FASTQ
+  * alphabet as in FASTA
+  * fastq-sanger ("fastq")
+  * fastq-illumina
+  * fastq-solexa
+ * RAW
+  * alphabet as for FASTA
+ * Illumina pipeline output files with internal file formats.
+
+== Alignments ==
+
+ * http://bioperl.org/wiki/Multiple_alignment_formats
+
+== File Format Guessing ==
+
+File formats can be guessed by either looking at the file name or the file contents.
+The BioPerl wiki [http://bioperl.org/wiki/HOWTO:SeqIO lists common extensions] for file names.
+Guessing by file name is not possible when reading from stdin, guessing by content is harder for streams, has to happen in a buffered way, e.g. RecordReader/StreamBuffer object.
+
+One should be able to give hints to the file format guesser, but there should be a sensible set of defaults.
+In SeqAn, we do not have to deal with the same issues as in BioPerl, the resulting type is known at compile time.
+Thus, when loading data into a `StringSet<String<Dna5> >`, one can assume that the input file is a sequence type.
+If the guessed file type is different than the target type then the reader should warn the programmer/user in some way.
+Maybe an optional check function `isCompatible` is enough?
+
+{{{
+#!cpp
+
+int
+guessFileFormat(FileFormat<Sequence> & format, CharString fileName)
+{
+    if (suffix(fileName, 4) == ".fasta") {
+        format.format = SEQ_FORMAT_FASTA;
+    } else (/*...*/) {
+        // ...
+    }
+}
+
+template <typename TStream>
+int
+guessFileFormat(FileFormat<Sequence> & format, TStream & stream)
+{
+    // static assertion: can seek, otherwise we need stream buffer
+}
+
+template <typename TStream, typename TSpec>
+int
+guessFileFormat(FileFormat<Sequence> & format, StreamBuffer<TStream, TSpec> & streamBuffer)
+{
+    if (!hasMore(streamBuffer))
+        return -1;  // I/O error
+    // guess file format
+    if (value(streamBuffer) == '>')
+        format.format = SEQ_FORMAT_FASTA;
+    else if (value(streamBuffer) == '@')
+        format.format = SEQ_FORMAT_FASTA;
+    else if ((value(streamBuffer) >= 'A' && value(streamBuffer) <= 'Z') || (value(streamBuffer) >= 'a' && value(streamBuffer) <= 'z'))
+        format.format = SEQ_FORMAT_RAW;
+    else
+        return 1;  // Could not guess.
+    memoizePosition(streamBuffer);
+    // guess alphabet, a good value for X could be 4096, or the buffer size
+    if (format.format == SEQ_FORMAT_FASTA)
+        // ... mini-parser for FASTA, look into first sequence, give up after X characters
+    else if (format.format == SEQ_FORMAT_FASTQ)
+        // ... mini-parser for FASTQ, look into first sequence and qualities, give up after X characters
+    else if (format.format == SEQ_FORMAT_RAW)
+        // ... look at first X characters
+    returnToPosition(streamBuffer);
+    return 0;
+}
+
+template <typename TTarget>
+bool isCompatible(TTarget const &, FileFormat<Sequence> const &);
+
+template <>
+int isCompatible(String<Dna> const &, FileFormat<Sequence> const & fmt)
+{
+    if (fmt.alphabet == SEQ_ALPHABET_DNA5)
+        return 1;  // can be assigned but not well
+    else if (fmt.alphabet == SEQ_ALPHABET_DNA)
+        return 0;
+    else
+        return 2;
+}
+
+// prototype for a file format class structure.
+
+template <typename TSpec>
+class FileFormat;
+
+enum SequenceFormat
+{
+    SEQ_FORMAT_UNKNOWN = 0,
+    SEQ_FORMAT_FASTA = 1,
+    SEQ_FORMAT_FASTQ = 2,
+    SEQ_FORMAT_RAW = 4
+};
+
+enum SequenceAlphabet
+{
+    SEQ_ALPHABET_CHAR = 0,
+    SEQ_ALPHABET_DNA = 1,
+    SEQ_ALPHABET_DNA5 = 2,
+    SEQ_ALPHABET_AMINOACID = 4
+};
+
+enum SequenceQualityScale
+{
+    SEQ_QSCALE_NONE = 0,
+    SEQ_QSCALE_INVALID = 1,
+    SEQ_QSCALE_SANGER = 2,
+    SEQ_QSCALE_SOLEXA = 3,
+    SEQ_QSCALE_ILLUMINA = 4
+};
+
+struct Sequence_;
+typedef Tag<Sequence_> Sequence;
+
+template <>
+class FileFormat<Sequence>
+{
+public:
+    __uint32 format;    // bit mask
+    __uint32 alphabet;    // bit mask
+    __uint32 qualityScale;    // bit mask
+    bool lineBreaks;  // line breaks within sequences/qualities
+
+    FileFormat()
+        : format(SEQ_FORMAT_UNKNOWN), alphabet(SEQ_ALPHABET_CHAR),
+          qualityScale(SEQ_QSCALE_NONE), hasLineBreaks(false)
+    {}
+};
+
+enum AlignmentFormat
+{
+    AL_FORMAT_UNKNOWN = 0,
+    AL_FORMAT_CLUSTALW = 1,
+    AL_FORMAT_MSF = 2,
+    AL_FORMAT_MAF = 3,
+    AL_FORMAT_MEGA = 4,  // interleaved, non-interleaved
+    AL_FORMAT_NEXUS = 5,  // can also store other information, skip for now?
+    AL_FORMAT_PHYLIP = 6,  // interleaved, non-interleaved
+    AL_FORMAT_POA = 7,  // POA, not even in bioperl
+    AL_FORMAT_STOCKHOLM = 8,  // multiple variants
+    AL_FORMAT_MASE = 9,
+    AL_FORMAT_MSF = 10,
+    AL_FORMAT_XMFA = 11,
+};
+
+struct Alignment_;
+typedef Tag<Alignment_> Alignment;
+
+template <>
+class FileFormat<Alignment>
+{
+public:
+    __uint32 alphabet;    // bit mask
+    __uint32 format;  // bit mask
+    bool isInterleaved;  // only valid for some variants
+    // For some variants, but only necessary for picking the right parser.
+    __uint32 someOtherFeature;
+
+    FileFormat()
+        : alphabet(SEQ_ALPHABET_CHAR), format(AL_FORMAT_UNKNOWN)
+    {}
+}
+}}}
+
+== Resources ==
+
+ * [http://bioperl.org/wiki/HOWTO:SeqIO BioPerl Sequence I/O]
+ * [http://biopython.org/wiki/SeqIO BioPython Sequence I/O]

@@ -1,0 +1,42 @@
+
+{{{#!html
+<small>Function</small>
+}}}
+= Gaps # length =
+
+{{{#!html
+<small>Part of the interface of the Class <a href="#">Gaps</a></small>
+}}}
+
+{{{#!cpp
+TSize length(gaps)
+}}}
+
+Returns the length of the clipped view of a [# Gaps] object.
+
+This length is the number of characters and gaps.
+You can change the begin and end position of the clipping using [# Gaps#setClippedBeginPosition] and [# Gaps#setClippedEndPosition].
+Use [# Gaps#unclippedLength] to get the length of the whole Gaps object without clipping.
+
+== Parameters ==
+
+{{{#!td valign=top
+`TGaps`
+}}}
+{{{#!td valign=top
+`gaps`
+}}}
+{{{#!td valign=top
+The Gaps object to query.
+`TGaps` is a specialization of the `Gaps` class template.
+}}}
+
+== Return Values ==
+
+{{{#!td valign=top
+`TSize`
+}}}
+{{{#!td valign=top
+The length of the sequence.
+`TSize` is the [# Size] type of `TGaps` (`Size<TGaps>::Type`)
+}}}

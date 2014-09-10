@@ -1,0 +1,141 @@
+= Documentation Changes =
+[[TOC()]]
+
+We need to do update the documentation.
+This page describes the steps that are to be taken in the near future.
+
+== Review: Global Functions and Interface Functions ==
+
+Some functions are part of the interface of a type, e.g. the function `length()` that is implemented for all containers and sequences.
+Other functions are global, such as `globalAlignment()` and do not belong to the interface.
+
+== Unique Type Names ==
+
+Currently, documentation items are identified by their path in the DDDoc tree.
+There are different namespaces for functions, enums, classes, specializations etc.
+This means that there can be both a concept named `String` and a class named `String` since their paths/ids are `Concept.String` and `Class.String`.
+
+In the future, this might become inconvenient since one could want to refer to the global interface function `length()` of the concept as `String#length` and the same for the class String: `String#length`.
+We decided that all type names should be unique.
+
+Two new rules for naming types are:
+
+ * All type names should be unique.
+ * Concepts always have the suffix `Concept`, e.g. `SequenceConcept`, `StringConcept`.
+   No non-concept type should have the suffix `Concept`.
+
+Enforcing the second rule with current concepts will make the type names unique.
+
+== Namespacing of Global Interface Functions ==
+
+Currently, there is only one node for global interface functions.
+However, we should allow more than one.
+This can be done using "namespaces", e.g. documenting the function `func()` for the type `Type` as `Function.Type#func`.
+This is already possible in the documentation system but not enforced in the SeqAn API documentation.
+
+The documentation of a global interface function should be connected to a type.
+This is already possible with the `..class` and `..concept` DDDoc nodes.
+
+A new rule for naming function documentation is:
+
+ * The DDDoc path for the global function `globalFunction()` is `.Function.globalFunction`, e.g. `.Function.globalAlignment`.
+ * If there are multiple variants for global functions, e.g. `readRecord()`, the DDDoc path should be `.Function.Variant Name#readRecord`, e.g. `.Function.Sequence I/O#readRecord`, `.Function.SAM/BAM I/O#readRecord`.
+   The resulting title in the documentation should be ''readRecord() (Sequence I/O)'' or ''readRecord() (SAM/BAM I/O)''.
+ * For functions that are part of a global interface, they should be named `.Function.Type#functionName`, e.g. `.Function.Container#length`, `.Function.Sequence#length`.
+   If the semantics of a function become different (in terms of documentation) for a class implementing a concept or a specialization, the function should be re-documented and assigned to the type it belongs to.
+   Example: `.Function.Container#length`, `.Function.Sequence#length`, and `Function.Gaps#length` might have the summaries "Returns number of elements in container.", "Returns the length of the sequence", and "Returns the length of the gapped sequence view, including gaps.".
+
+== Documenting Return Parameters ==
+
+Most of the documented signatures do not have a return type.
+Return types of functions should always be documented.
+
+The general "Result" section structure in the built section is as follows:
+
+|| `Type` || `${Description of the return value as free text}`. `${Description of the return type as free text}`. ||
+
+For simple, built-in types that do not depend on the parameter types, the signature should read like:
+
+{{{#!cpp
+void functionName(param1, param2)
+int functionName2(param1, param2)
+}}}
+
+The "Result" section should look as follows in the built documentation
+
+|| `void` || No return value. ||
+|| `int`  || Status code. 0 on success, a different value on errors. ||
+
+For more complex types, the signature should use `TType` types, e.g.
+
+{{{#!cpp
+TIterator begin(str, [tag])
+TSize length(str)
+}}}
+
+The "Result" section should look as follows in the built documentation
+
+|| `TIterator` || Iterator to the beginning of `str`. The type depends on the type `TTag` of tag and is the same as the result of `Iterator<TString, TTag>::Type`. ||
+|| `TSize` || Length of the string. The type is the size type of the string (see seqan:Metafunction.Size). ||
+
+== Class / Specialization Paths ==
+
+ * Ideally, we would like to link the name of classes in the documentation with the source code.
+ * However, this is problematic.
+ * ''TODO: Describe why, tag specialization not unique, clumsy class names.''
+
+== How to Proceed ==
+
+ * Rename the concepts, they should be linked from almost nowhere outside the API documentation at the moment.
+ * Rename the functions.
+ * Prototype the layout of some function documentations and check this.
+   * [wiki:WhitePapers/DocChanges/ExampleLengthContainer Ex: Container#length]
+   * [wiki:WhitePapers/DocChanges/ExampleLengthSequence Ex: Sequences#length]
+   * [wiki:WhitePapers/DocChanges/ExampleLengthGaps Ex: Gaps#length]
+   * [wiki:WhitePapers/DocChanges/ExampleBeginContainer Ex: Container#begin]
+   * [wiki:WhitePapers/DocChanges/ExampleEndContainer Ex: Container#end]
+   * [wiki:WhitePapers/DocChanges/ExampleGlobalAlignment Ex: globalAlignment]
+ * Decide on a rule to name classes in their documentation, based on their specialization paths.
+
+== Instructions for "Namespacing" a Function ==
+
+The following is only importing when adding a namespace to a function documentation since this changes the API documentation structure.
+
+ 1. Make the change and create all function documentation nodes (e.g. create `.Function.Container#length`, `.Function.Sequence#length`, `.Function.Gaps#length` from `.Function.length`)
+ 2. Go through the API documentation and update the references accordingly.
+ 3. Go through the Wiki (e.g. search for seqan:Function.length) and update references accordingly.
+
+== Naming Convention for DDDoc Class/Spec Identifiers ==
+
+We need a rule to unify dddoc identifiers. Many of them are simple and easy to name, e.g. String<.., Packed<> > => Packed String. However, some classes are not straight-forward or sound awkward if named following the subclass pattern:
+  * "Packed Pair" has the signature Pair<..., Pack> because Packed<THost> is blocked, but "Pack Pair" sounds unnatural
+  * Index subclasses are IndexEsa, IndexQGram, IndexWotd, FMIndex, PizzaChili, which we need to unify first to either IndexFM or EsaIndex. Their identifiers are currently their signature, e.g. IndexQGram (except for "Pizza & Chili Index", need to be changed)
+  * Some specs contain the name of their base class, as they otherwise would be too short, appending again the name of the base class sounds awkward:
+     * "IndexQGram Index" or "QGramIndex Index"
+     * "AnchorGaps Gaps" and "ArrayGaps Gaps"
+     * "PositionIterator Iterator"
+  * Unimportant implementation details should be hidden from the user, e.g.
+     * The "Adjacency Iterator" with signature ''Iterator<TGraph, AdjacencyIterator >'' is actually a ''Iter<TGraph, GraphIterator<InternalAdjacencyIterator<TSpec> > >''
+     * All Suffix Tree iterators are subclasses of abstract ''Iter<.., VSTree<*> >'' (to provide a minimal common interface)
+     * "Mums Iterator" is implemented as ''Iter<TContainer, VSTree< BottomUp<Mums> > >'' with signature ''Iterator<TContainer, Mums>::Type''
+     * "TopDownHistory Iterator" is a ''Iterator<TContainer, TopDown< ParentLinks<TSpec> > >::Type''
+     * "ConcatDirect" has signature ''StringSet<TString, Owner<ConcatDirect<> > >''
+     * "Journaled Set" is actually a ''StringSet<TString, Owner<JournaledSet> >''
+     * "Word Graph" has class hierarchy ''Graph->Automaton->Word Graph''
+
+== Decision for Naming Conventions ==
+
+ * We need to go through all class names/tags and look for inconsistencies such as `IndexEsa`, `IndexWotd`, `FMIndex`, and `PizzaChili`.
+   We should go to something (a) consistent and (b) that requires the fewest changes between two SeqAn releases.
+   Here, we go to `IndexEsa`, `IndexWotd`, `IndexFM`, and `IndexPizzaChili`.
+ * Duplicates such as "PositionIterator Iterator" are not desirable.
+ * Fully qualified names should be "from the innermost nested type outwards, removing duplicates while keeping the outermost copy".
+   Consider the following examples:
+   * `Iter<TContaiener, VSTree<BottomUp<Mums> > >` -> "Mums BottomUp VSTree Iter"
+   * `StringSet<TString, Owner<ConcatDirect<> > >` -> "ConcatDirect Owner StringSet"
+   * `StringSet<TString, Owner<JournaledSet> >` -> "Journaled Owner StringSet"
+   * `Iter<TGraph, GraphIterator<InternalAdjacencyIterator<TSpec> > >` -> "InternalAdjacency Graph Iterator"
+ * In some rare cases, the name of the class differs from the above rule, e.g. `Pair<T, Pack>` is named "Packed Pair".
+ * We add '''synonyms''' for very common too verbose names, e.g. "ConcatDirect StringSet" maps to "ConcatDirect Owner StringSet" and the user is given a help text "Redirected from ..." text at the top of the page as in Wikipedia.
+ * Most clumsy names such as the "InternalAdjacency Graph Iter" are OK since the user will not use the type directly but be directed from the `Iterator<TGraph, AdjacencyIterator>::Type` metafunction.
+ * It is yet undecided where to put spaces.

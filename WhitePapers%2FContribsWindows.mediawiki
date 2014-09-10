@@ -1,0 +1,66 @@
+= SeqAn Contribs For Windows =
+[[TOC()]]
+
+== Introduction ==
+
+External dependencies that SeqAn uses are called '''contribs'''.
+At the moment, these libraries are
+
+ * [http://zlib.net zlib]
+ * [http://bzlib.org bzlib]
+
+These libraries are usually available by default on Unixoids.
+Things are more tricky on Windows.
+Thus, we provide binary distributions for these libraries on Windows, the "SeqAn Contribs".
+
+== Subversion Repository ==
+
+There is a Subversion repository for the contribs at [http://svn.mi.fu-berlin.de/seqan-contrib/trunk/].
+
+== Versioning ==
+
+These come in two flavours: 32 bit and 64 bit (x86 and x64).
+They are distributed in ZIP files downloadable from the SeqAn downloads page.
+They are named `seqan-contrib-${VERSION}-${ARCH}`.
+The version is a string `D${YEAR}${MONTH}${DAY}` at the moment.
+
+Later, we could bind them to the SeqAn releases.
+However, we might need to update them seperately.
+
+== Supported Compilers/Platforms ==
+
+We limit the compilers to support on Windows to Visual C++ 8, 9, and 10 as well as GCC from MinGW32.
+We aim to support Windows XP and later both 32 and 64 bit.
+
+Contribs will not be available for other platforms:
+Linux and Mac Os X have sufficiently good package managers for third-party programs.
+
+== Static vs. Dynamic Libraries ==
+
+In general, it should not matter whether we provide static or dynamic libraries since CMake recognizes all.
+However, after 10 days of trial-and-error, it appears that providing static libraries is most robust.
+We provide a statically compiled library for each compiler on both x86 and x64 (32 and 64 bit) Windows.
+
+== Debug vs. Optimized Libraries ==
+
+Apparently, there is a distinction between debug and optimized builds in MSVC++.
+Thus, we provide both debug (postfix "_d") and release libraries as well as CMake `find_package()` scripts to find the libraries.
+These are located in ''util/cmake'' and override the built-in `find_package()` scripts.
+
+== Build System ==
+
+We provide CMakeLists.txt files for the libraries when missing and adjust the existing files if necessary.
+We always commit the original version to SVN and then any patches as additional commits.
+This makes it clear what has been adjusted.
+
+Then, Windows Batch scripts do the necessary platform and path, and call CMake.
+We use the Makefiles (MinGW and NMake) generators since this gives us install targets.
+We collect the output in `$OUT_PATH/$COMPILER_ABBREVIATION`.
+
+Finally, `$OUT_PATH` can be compressed to a ZIP archive and distributed to users.
+
+The SeqAn CMakeLists.txt is adjusted such that it looks for the latest contrib version in `C:\`, in `C:\Program Files` and `C:\Program Files (x86)`.
+
+== Testing ==
+
+The test test_stream is a good example since it uses both zlib and bzlib.

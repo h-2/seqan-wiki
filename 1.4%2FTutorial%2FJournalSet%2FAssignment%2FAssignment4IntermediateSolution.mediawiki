@@ -1,0 +1,58 @@
+'''Note: this page documents the 1.4 version of SeqAn, see [wiki:Tutorial] if you need the documentation for the trunk version.'''
+= Assignment 4: Complete Solution =
+
+Include the necessary headers.
+
+[[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/data_journaling/solution_online_search_assignment4.cpp, fragment=include)]]
+
+Search at the border the current node for the pattern.
+
+[[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/data_journaling/solution_online_search_assignment4.cpp, fragment=searchAtBorder)]]
+
+Search for the pattern in the insertion region covered by the current node.
+
+[[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/data_journaling/solution_online_search_assignment4.cpp, fragment=findInPatchNode)]]
+
+Check if hit was reported for this region in the reference sequence.
+
+[[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/data_journaling/solution_online_search_assignment4.cpp, fragment=findInOriginalNode)]]
+
+Implementing the backbone of the search for the Journaled String.
+
+[[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/data_journaling/solution_online_search_assignment4.cpp, fragment=findPatternInJournalStringPart1)]]
+
+Implementing the search for the reference sequence.
+
+[[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/data_journaling/solution_online_search_assignment4.cpp, fragment=findPatternInReference)]]
+
+The backbone of the search method.
+
+[[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/data_journaling/solution_online_search_assignment4.cpp, fragment=searchPatternPart1)]]
+
+Loading and joining the sequences.
+
+[[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/data_journaling/solution_online_search_assignment4.cpp, fragment=loadAndJoin)]]
+
+Implementing the main function.
+
+[[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/data_journaling/solution_online_search_assignment4.cpp, fragment=main)]]
+
+Reporting the identified hits.
+
+[[Include(source:tags/seqan-1.4.0/extras/demos/tutorial/data_journaling/solution_online_search_assignment4.cpp, fragment=printResult)]]
+
+And here is the result.
+
+{{{
+#!html
+<pre class="wiki" style="background-color:black;color:lightgray">
+Search for: GTGGT:
+Hit in reference  at 311: GTGGT	644: GTGGT	
+Hit in sequence 0 at 151: GTGGT	312: GTGGT	
+Hit in sequence 1 at 308: GTGGT	
+Hit in sequence 2 at 311: GTGGT	507: GTGGT	
+Hit in sequence 3 at 327: GTGGT	
+Hit in sequence 4 at 307: GTGGT	312: GTGGT	317: GTGGT	
+Hit in sequence 5 at 0: GTGGT	320: GTGGT	986: GTGGT
+}}}
+
